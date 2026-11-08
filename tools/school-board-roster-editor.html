@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>School Board Roster Editor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; font-size: 14px; background: #f5f5f5; color: #222; }
+    header { background: #1e3a5f; color: #fff; padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    header h1 { font-size: 1rem; font-weight: 600; margin-right: auto; }
+    .file-status { font-size: 0.78rem; opacity: 0.8; }
+    .layout { display: grid; grid-template-columns: 280px 1fr; height: calc(100vh - 48px); }
+    .sidebar { background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; overflow: hidden; }
+    .sidebar-top { padding: 0.6rem; border-bottom: 1px solid #eee; display: flex; flex-direction: column; gap: 0.4rem; }
+    .sidebar-top input[type=text] { width: 100%; }
+    .entry-list { flex: 1; overflow-y: auto; }
+    .entry-item { padding: 0.45rem 0.75rem; cursor: pointer; border-bottom: 1px solid #f0f0f0; }
+    .entry-item:hover { background: #f0f7ff; }
+    .entry-item.selected { background: #dbeafe; }
+    .entry-name { font-weight: 500; font-size: 13px; }
+    .entry-id { font-size: 0.68rem; color: #999; }
+    .badge { display: inline-block; font-size: 0.6rem; padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+    .badge.done { background: #dcfce7; color: #166534; }
+    .badge.edited { background: #fef3c7; color: #92400e; }
+    .main { display: flex; flex-direction: column; overflow: hidden; }
+    .toolbar { padding: 0.6rem 1rem; background: #fff; border-bottom: 1px solid #ddd; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .toolbar .title { font-weight: 600; margin-right: auto; }
+    .content { flex: 1; overflow-y: auto; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+    .form-panel { padding: 1rem; overflow-y: auto; }
+    .side-panel { padding: 1rem; overflow-y: auto; background: #f8fafc; border-left: 1px solid #e2e8f0; }
+    h3 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; margin: 0.9rem 0 0.5rem; }
+    h3:first-child { margin-top: 0; }
+    label { font-weight: 500; font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 2px; }
+    input, select, textarea { padding: 0.35rem 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; font-family: inherit; width: 100%; }
+    input:focus, select:focus, textarea:focus { outline: 2px solid #3b82f6; border-color: transparent; }
+    textarea { resize: vertical; min-height: 90px; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+    .row4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+    .hint { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+    .member { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.6rem; margin-bottom: 0.6rem; }
+    .member.bad { border-color: #fca5a5; }
+    .mgrid { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1.2fr; gap: 0.5rem; }
+    .mgrid2 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem; }
+    .msrc { margin-top: 0.5rem; display: flex; gap: 0.5rem; align-items: end; }
+    .msrc > div:first-child { flex: 1; }
+    button { padding: 0.35rem 0.8rem; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500; }
+    .btn-primary { background: #1e3a5f; color: #fff; }
+    .btn-primary:hover { background: #2a4f7f; }
+    .btn-success { background: #16a34a; color: #fff; }
+    .btn-danger { background: #fee2e2; color: #b91c1c; }
+    .btn-secondary { background: #e5e7eb; color: #333; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    pre { background: #0f172a; color: #e2e8f0; padding: 0.7rem; border-radius: 6px; font-size: 11.5px; overflow: auto; white-space: pre; max-height: 55vh; }
+    .msgs { list-style: none; font-size: 12px; margin-bottom: 0.5rem; }
+    .msgs li { padding: 3px 0; }
+    .msgs .err { color: #b91c1c; }
+    .msgs .warn { color: #92400e; }
+    .msgs .ok { color: #166534; }
+    .toast { position: fixed; bottom: 1.25rem; right: 1.25rem; background: #16a34a; color: #fff; padding: 0.5rem 1rem; border-radius: 6px; font-size: 13px; display: none; z-index: 100; }
+    .empty { color: #aaa; text-align: center; padding: 3rem 1rem; grid-column: 1 / -1; }
+    details { margin-top: 0.8rem; }
+    summary { cursor: pointer; font-size: 12px; color: #475569; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>School Board Roster Editor</h1>
+  <button class="btn-primary" id="btnOpen">Open school_districts.yml</button>
+  <button class="btn-success" id="btnSave" disabled>Save to file</button>
+  <span class="file-status" id="fileStatus">No file loaded</span>
+</header>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-top">
+      <input type="text" id="search" placeholder="Search district name or id…">
+      <label style="text-transform:none"><input type="checkbox" id="onlyOpen" style="width:auto"> hide districts that already have a roster</label>
+    </div>
+    <div class="entry-list" id="list"></div>
+  </div>
+
+  <div class="main">
+    <div class="toolbar">
+      <span class="title" id="curTitle">Open the file, then pick a district</span>
+      <button class="btn-secondary" id="btnRevert" disabled>Revert district</button>
+      <button class="btn-primary" id="btnApply" disabled>Apply to file (in memory)</button>
+    </div>
+    <div class="content" id="content"><div class="empty">Nothing selected.</div></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===== Contract: mirrors scripts/validate_school_districts.py. Keep in step. ===== */
+const ROLES = ['Chair', 'Vice Chair', 'Board Member', 'Superintendent'];
+const PARTIES = ['Republican', 'Democratic', 'Independent', 'Nonpartisan'];
+const APPOINTED = ['Superintendent'];
+const MEMBER_KEYS = ['name', 'role', 'title', 'seat', 'party', 'last_elected', 'term_end', 'next_election', 'voting', 'source'];
+const INT_KEYS = ['last_elected', 'term_end', 'next_election'];
+const MANAGED = ['board_size', 'term_years', 'partisan', 'official_url', 'members'];
+
+const blank = v => v === undefined || v === null || String(v).trim() === '';
+const isUrl = v => /^https?:\/\//.test(String(v));
+
+/* ----- file text -> districts (block = lines from "  - id:" to the next one) ----- */
+function splitDistricts(text) {
+  const eol = text.includes('\r\n') ? '\r\n' : '\n';
+  const lines = text.split(/\r?\n/);
+  const starts = [];
+  lines.forEach((l, i) => { if (/^  - id: "\d+"\s*$/.test(l)) starts.push(i); });
+  const out = [];
+  starts.forEach((s, k) => {
+    let e = k + 1 < starts.length ? starts[k + 1] : lines.length;
+    // a block ends before a column-0 line (next section header comment / key)
+    for (let j = s + 1; j < e; j++) { if (/^\S/.test(lines[j])) { e = j; break; } }
+    // trailing blank lines belong to the gap, not the block
+    let t = e; while (t > s + 1 && lines[t - 1].trim() === '') t--;
+    out.push({ start: s, end: t, id: lines[s].match(/"(\d+)"/)[1] });
+  });
+  return { lines, eol, blocks: out };
+}
+
+function scalar(v) {
+  v = String(v).trim();
+  if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) return v.slice(1, -1);
+  return v.replace(/\s+#.*$/, '');
+}
+
+/* ----- parse one district block ----- */
+function parseBlock(blockLines) {
+  const d = { fields: {}, members: null, keptLines: [] };
+  let i = 0, inMembers = false, cur = null;
+  const kept = [];
+  for (; i < blockLines.length; i++) {
+    const l = blockLines[i];
+    if (inMembers) {
+      if (l.trim() === '' || /^\s+#/.test(l)) { continue; }
+      const ind = l.match(/^ */)[0].length;
+      if (ind <= 4) { inMembers = false; } else {
+        const mm = l.match(/^\s+-\s+(\w+):\s*(.*)$/);
+        const kv = l.match(/^\s+(\w+):\s*(.*)$/);
+        if (mm) { cur = { extra: {} }; d.members.push(cur); setM(cur, mm[1], mm[2]); }
+        else if (kv && cur) setM(cur, kv[1], kv[2]);
+        continue;
+      }
+    }
+    const m = l.match(/^    (\w+):\s*(.*)$/);
+    if (m && MANAGED.includes(m[1])) {
+      if (m[1] === 'members') { inMembers = true; d.members = []; }
+      else d.fields[m[1]] = scalar(m[2]);
+      continue;
+    }
+    kept.push(l);
+  }
+  d.keptLines = kept;
+  return d;
+}
+function setM(m, k, raw) {
+  const v = scalar(raw);
+  if (MEMBER_KEYS.includes(k)) m[k] = v; else m.extra[k] = v;
+}
+
+/* ----- emit ----- */
+function q(v) {
+  v = String(v);
+  return /^[A-Za-z][\w .,'’-]*$/.test(v) && !/^(true|false|null|yes|no)$/i.test(v) ? v : JSON.stringify(v);
+}
+function emitMember(m) {
+  const o = ['      - name: ' + q(m.name)];
+  const add = (k, val) => { if (!blank(val)) o.push('        ' + k + ': ' + val); };
+  add('role', m.role);
+  if (!blank(m.title)) add('title', q(m.title));
+  if (!blank(m.seat)) add('seat', q(m.seat));
+  add('party', m.party);
+  INT_KEYS.forEach(k => add(k, m[k]));
+  if (APPOINTED.includes(m.role)) o.push('        voting: false');
+  else if (m.voting === 'false') o.push('        voting: false');
+  if (!blank(m.source)) add('source', JSON.stringify(m.source));
+  Object.entries(m.extra || {}).forEach(([k, v]) => { if (!blank(v)) o.push('        ' + k + ': ' + q(v)); });
+  return o;
+}
+function emitBlock(d) {
+  const o = d.keptLines.slice();
+  const f = d.fields;
+  if (!blank(f.board_size)) o.push('    board_size: ' + f.board_size);
+  if (!blank(f.term_years)) o.push('    term_years: ' + f.term_years);
+  if (f.partisan === 'true' || f.partisan === 'false') o.push('    partisan: ' + f.partisan);
+  if (!blank(f.official_url)) o.push('    official_url: ' + JSON.stringify(f.official_url));
+  const ms = (d.members || []).filter(m => !blank(m.name) || !blank(m.seat) || !blank(m.source));
+  if (ms.length) { o.push('    members:'); ms.forEach(m => o.push(...emitMember(m))); }
+  return o;
+}
+
+/* ----- validate (same rules as validate_school_districts.py) ----- */
+function validate(d) {
+  const errors = [], warnings = [];
+  const f = d.fields;
+  const partisan = f.partisan === 'true' ? true : f.partisan === 'false' ? false : null;
+  ['board_size', 'term_years'].forEach(k => {
+    if (!blank(f[k]) && !(/^\d+$/.test(f[k]) && +f[k] > 0)) errors.push(k + ' must be a positive integer');
+  });
+  if (!blank(f.official_url) && !isUrl(f.official_url)) errors.push('official_url must be a URL');
+  const ms = (d.members || []).filter(m => !blank(m.name) || !blank(m.seat) || !blank(m.source));
+  let elected = 0; const chairs = [];
+  ms.forEach((m, i) => {
+    const w = 'Member ' + (i + 1) + (m.name ? ' (' + m.name + ')' : '');
+    m._bad = false;
+    const e = s => { errors.push(w + ': ' + s); m._bad = true; };
+    ['name', 'role', 'seat', 'source'].forEach(k => { if (blank(m[k])) e(k + ' is required'); });
+    if (m.role && !ROLES.includes(m.role)) e('role not in vocabulary');
+    if (!blank(m.party) && !PARTIES.includes(m.party)) e('party not in vocabulary');
+    if (!blank(m.party) && partisan === false && m.party !== 'Nonpartisan')
+      e('party ' + m.party + ' but district is partisan: false (record Nonpartisan, or fix the district flag)');
+    if (partisan === true && m.party === 'Nonpartisan') e('Nonpartisan on a partisan district');
+    if (!blank(m.source) && !isUrl(m.source)) e('source must be a URL');
+    INT_KEYS.forEach(k => { if (!blank(m[k]) && !/^\d{4}$/.test(m[k])) e(k + ' must be a 4-digit year'); });
+    if (APPOINTED.includes(m.role)) {
+      INT_KEYS.forEach(k => { if (!blank(m[k])) warnings.push(w + ': a ' + m.role + ' has no election; ' + k + ' will still be written, clear it'); });
+    } else { elected++; }
+    if (m.role === 'Chair') chairs.push(m.name);
+  });
+  if (chairs.length > 1) warnings.push('More than one Chair: ' + chairs.join(', '));
+  const size = +f.board_size;
+  if (size > 0 && ms.length) {
+    if (elected > size) errors.push(elected + ' elected members but board_size is ' + size);
+    else if (elected < size) warnings.push(elected + ' of ' + size + ' seats captured');
+  }
+  return { errors, warnings, count: ms.length };
+}
+
+/* ----- parse pasted drafter output (draft_school_boards.py) ----- */
+function parseDraft(text) {
+  const out = { fields: {}, members: [] };
+  let cur = null;
+  text.split(/\r?\n/).forEach(raw => {
+    const l = raw.replace(/\s+#.*$/, '');
+    if (!l.trim()) return;
+    const p = l.match(/^\s*partisan:\s*(true|false)/);
+    if (p) { out.fields.partisan = p[1]; return; }
+    const m = l.match(/^\s*-\s+name:\s*(.*)$/);
+    if (m) { cur = { extra: {}, voting: 'true' }; out.members.push(cur); cur.name = scalar(m[1]); return; }
+    const kv = l.match(/^\s+(\w+):\s*(.*)$/);
+    if (kv && cur && MEMBER_KEYS.includes(kv[1])) { const v = scalar(kv[2]); if (v) cur[kv[1]] = v; }
+  });
+  return out;
+}
+if (typeof module !== 'undefined') module.exports = { splitDistricts, parseBlock, emitBlock, validate, parseDraft };
+</script>
+
+<script>
+/* ===== UI ===== */
+let handle = null, text = '', model = null;   // model: {lines, eol, blocks}
+const edits = new Map();                      // id -> working district object
+let curId = null;
+const $ = id => document.getElementById(id);
+
+function nameOf(lines, b) {
+  for (let i = b.start; i < b.end; i++) { const m = lines[i].match(/^    name:\s*(.*)$/); if (m) return scalar(m[1]); }
+  return '(unnamed)';
+}
+function loadModel() {
+  model = splitDistricts(text);
+  model.blocks.forEach(b => {
+    b.name = nameOf(model.lines, b);
+    b.parsed = parseBlock(model.lines.slice(b.start + 1, b.end));
+  });
+}
+function blockFor(id) { return model.blocks.find(b => b.id === id); }
+function working(id) {
+  if (!edits.has(id)) edits.set(id, structuredClone(blockFor(id).parsed));
+  return edits.get(id);
+}
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2200); }
+
+function renderList() {
+  if (!model) return;
+  const s = $('search').value.toLowerCase(), hide = $('onlyOpen').checked;
+  $('list').innerHTML = '';
+  model.blocks.forEach(b => {
+    const has = b.parsed.members && b.parsed.members.length;
+    if (hide && has) return;
+    if (s && !(b.name.toLowerCase().includes(s) || b.id.includes(s))) return;
+    const div = document.createElement('div');
+    div.className = 'entry-item' + (b.id === curId ? ' selected' : '');
+    div.innerHTML = '<div class="entry-name"></div><div class="entry-id">id ' + b.id + '</div>';
+    const nm = div.querySelector('.entry-name'); nm.textContent = b.name;
+    if (has) nm.insertAdjacentHTML('beforeend', '<span class="badge done">' + b.parsed.members.length + ' members</span>');
+    if (edits.has(b.id) && dirty(b.id)) nm.insertAdjacentHTML('beforeend', '<span class="badge edited">edited</span>');
+    div.onclick = () => select(b.id);
+    $('list').appendChild(div);
+  });
+}
+function dirty(id) { return JSON.stringify(edits.get(id)) !== JSON.stringify(blockFor(id).parsed); }
+
+function select(id) {
+  curId = id;
+  const b = blockFor(id);
+  $('curTitle').textContent = b.name + ' (id ' + id + ')';
+  $('btnRevert').disabled = $('btnApply').disabled = false;
+  working(id);
+  renderForm();
+  renderList();
+}
+
+function field(label, key, val, attrs = '', hint = '') {
+  return '<div><label>' + label + '</label><input data-f="' + key + '" value="' + esc(val) + '" ' + attrs + '>' + (hint ? '<div class="hint">' + hint + '</div>' : '') + '</div>';
+}
+function esc(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+function opts(list, cur, blankLabel) {
+  return (blankLabel !== undefined ? '<option value="">' + blankLabel + '</option>' : '') +
+    list.map(o => '<option' + (o === cur ? ' selected' : '') + '>' + o + '</option>').join('');
+}
+
+function renderForm() {
+  const d = working(curId), f = d.fields;
+  const ms = d.members || [];
+  let h = '<div class="form-panel"><h3>District</h3><div class="row4">' +
+    field('Board size', 'board_size', f.board_size, 'inputmode="numeric"', 'elected seats') +
+    field('Term years', 'term_years', f.term_years, 'inputmode="numeric"') +
+    '<div><label>Partisan</label><select data-f="partisan">' +
+      '<option value=""' + (!f.partisan ? ' selected' : '') + '>unknown</option>' +
+      '<option value="true"' + (f.partisan === 'true' ? ' selected' : '') + '>true (party labels)</option>' +
+      '<option value="false"' + (f.partisan === 'false' ? ' selected' : '') + '>false (nonpartisan)</option></select></div>' +
+    field('Official board URL', 'official_url', f.official_url, 'type="url"') + '</div>' +
+    '<h3>Members</h3>';
+  ms.forEach((m, i) => {
+    h += '<div class="member' + (m._bad ? ' bad' : '') + '" data-i="' + i + '"><div class="mgrid">' +
+      mf('Name', 'name', m.name) +
+      '<div><label>Role</label><select data-m="role">' + opts(ROLES, m.role, '—') + '</select></div>' +
+      mf('Seat', 'seat', m.seat, 'placeholder="District 3 / Post 1 / At-large"') +
+      '<div><label>Party</label><select data-m="party">' + opts(PARTIES, m.party, '—') + '</select></div></div>' +
+      '<div class="mgrid2">' + mf('Last elected', 'last_elected', m.last_elected, 'inputmode="numeric"') +
+      mf('Term end', 'term_end', m.term_end, 'inputmode="numeric"') +
+      mf('Next election', 'next_election', m.next_election, 'inputmode="numeric"') +
+      mf('Display title', 'title', m.title, 'placeholder="Board President"') + '</div>' +
+      '<div class="msrc"><div>' + mf('Source URL', 'source', m.source) + '</div>' +
+      '<button class="btn-secondary" data-act="fillsrc" title="Copy the district board URL here">use board URL</button>' +
+      '<button class="btn-danger" data-act="del">remove</button></div></div>';
+  });
+  h += '<button class="btn-secondary" data-act="add">+ Add member</button> ' +
+    '<button class="btn-secondary" data-act="fillseats">Add empty seats up to board size</button>' +
+    '<details><summary>Paste drafter output for this district</summary>' +
+    '<textarea id="paste" placeholder="Paste the members: block (or the whole district block) from draft_school_boards.py"></textarea>' +
+    '<div style="margin-top:.4rem"><button class="btn-primary" data-act="paste">Import (merge by seat)</button></div></details></div>' +
+    '<div class="side-panel"><h3>Checks</h3><ul class="msgs" id="msgs"></ul><h3>YAML preview</h3><pre id="yaml"></pre></div>';
+  $('content').innerHTML = h;
+  refresh();
+}
+function mf(label, key, val, attrs = '') {
+  return '<div><label>' + label + '</label><input data-m="' + key + '" value="' + esc(val) + '" ' + attrs + '></div>';
+}
+
+function refresh() {
+  const d = working(curId);
+  const v = validate(d);
+  document.querySelectorAll('.member').forEach((el, i) => el.classList.toggle('bad', !!(d.members[i] && d.members[i]._bad)));
+  let h = '';
+  v.errors.forEach(e => h += '<li class="err">✖ ' + esc(e) + '</li>');
+  v.warnings.forEach(e => h += '<li class="warn">⚠ ' + esc(e) + '</li>');
+  if (!v.errors.length) h += '<li class="ok">✔ valid' + (v.count ? ' — ' + v.count + ' member(s)' : ' — no members yet (district stays “not researched”)') + '</li>';
+  $('msgs').innerHTML = h;
+  $('yaml').textContent = emitBlock(d).filter(l => /^    (board_size|term_years|partisan|official_url|members)|^      |^        /.test(l)).join('\n') || '(nothing to write)';
+  $('btnApply').disabled = v.errors.length > 0;
+}
+
+$('content').addEventListener('input', e => {
+  const d = working(curId), t = e.target;
+  if (t.dataset.f) { d.fields[t.dataset.f] = t.value.trim(); }
+  else if (t.dataset.m) {
+    const i = +t.closest('.member').dataset.i;
+    d.members[i][t.dataset.m] = t.value.trim();
+  } else return;
+  refresh();
+});
+$('content').addEventListener('change', e => { if (e.target.tagName === 'SELECT') { renderForm(); renderList(); } });
+$('content').addEventListener('click', e => {
+  const a = e.target.dataset.act; if (!a) return;
+  const d = working(curId); d.members = d.members || [];
+  const i = e.target.closest('.member') ? +e.target.closest('.member').dataset.i : -1;
+  if (a === 'add') d.members.push({ extra: {}, role: 'Board Member' });
+  if (a === 'del') d.members.splice(i, 1);
+  if (a === 'fillsrc') d.members[i].source = d.fields.official_url || '';
+  if (a === 'fillseats') {
+    const n = +d.fields.board_size || 0;
+    const have = d.members.filter(m => !APPOINTED.includes(m.role)).length;
+    for (let k = have; k < n; k++) d.members.push({ extra: {}, role: 'Board Member', seat: '', source: d.fields.official_url || '' });
+  }
+  if (a === 'paste') {
+    const dr = parseDraft($('paste').value);
+    if (dr.fields.partisan && !d.fields.partisan) d.fields.partisan = dr.fields.partisan;
+    dr.members.forEach(nm => {
+      const ex = d.members.find(m => !blank(m.seat) && m.seat === nm.seat);
+      if (ex) Object.assign(ex, nm, { extra: ex.extra }); else d.members.push(nm);
+    });
+    toast(dr.members.length + ' draft member(s) merged');
+  }
+  renderForm(); renderList();
+});
+
+$('btnRevert').onclick = () => { edits.delete(curId); select(curId); };
+$('btnApply').onclick = () => { applyOne(curId); toast('Applied to file text — press Save to write it'); renderList(); };
+$('search').oninput = $('onlyOpen').onchange = renderList;
+
+function applyOne(id) {
+  const b = blockFor(id), d = edits.get(id);
+  const newBlock = [model.lines[b.start]].concat(emitBlock(d));
+  const delta = newBlock.length - (b.end - b.start);
+  model.lines.splice(b.start, b.end - b.start, ...newBlock);
+  text = model.lines.join(model.eol);
+  const keep = new Map([...edits].filter(([k]) => k !== id && dirty(k)));
+  loadModel();               // re-index everything from the new text
+  edits.clear(); keep.forEach((v, k) => edits.set(k, v));
+  $('btnSave').disabled = false;
+  select(id);
+}
+
+$('btnOpen').onclick = async () => {
+  try {
+    [handle] = await window.showOpenFilePicker({ types: [{ description: 'YAML', accept: { 'text/yaml': ['.yml', '.yaml'] } }] });
+    text = await (await handle.getFile()).text();
+    loadModel(); edits.clear(); curId = null;
+    $('fileStatus').textContent = handle.name + ' — ' + model.blocks.length + ' districts, ' +
+      model.blocks.filter(b => b.parsed.members && b.parsed.members.length).length + ' with rosters';
+    renderList();
+  } catch (err) { if (err.name !== 'AbortError') alert(err.message); }
+};
+$('btnSave').onclick = async () => {
+  try {
+    const w = await handle.createWritable(); await w.write(text); await w.close();
+    $('btnSave').disabled = true; toast('Saved ' + handle.name + ' — now run scripts/validate_school_districts.py');
+  } catch (err) { alert(err.message); }
+};
+</script>
+</body>
+</html>
