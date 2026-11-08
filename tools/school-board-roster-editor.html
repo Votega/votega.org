@@ -21,6 +21,7 @@
     .entry-id { font-size: 0.68rem; color: #999; }
     .badge { display: inline-block; font-size: 0.6rem; padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
     .badge.done { background: #dcfce7; color: #166534; }
+    .badge.draft { background: #e0e7ff; color: #3730a3; }
     .badge.edited { background: #fef3c7; color: #92400e; }
     .main { display: flex; flex-direction: column; overflow: hidden; }
     .toolbar { padding: 0.6rem 1rem; background: #fff; border-bottom: 1px solid #ddd; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
@@ -65,6 +66,7 @@
 <header>
   <h1>School Board Roster Editor</h1>
   <button class="btn-primary" id="btnOpen">Open school_districts.yml</button>
+  <button class="btn-secondary" id="btnDrafts">Load drafter output</button>
   <button class="btn-success" id="btnSave" disabled>Save to file</button>
   <span class="file-status" id="fileStatus">No file loaded</span>
 </header>
@@ -227,6 +229,18 @@ function validate(d) {
   return { errors, warnings, count: ms.length };
 }
 
+/* ----- split a whole draft_school_boards.py run into {districtId: text} ----- */
+function splitDrafts(text) {
+  const out = {}; let id = null, buf = [];
+  const flush = () => { if (id) out[id] = buf.join('\n'); buf = []; };
+  text.split(/\r?\n/).forEach(l => {
+    const h = l.match(/^\s*#\s*---\s.*\(id (\d+)\)/);
+    if (h) { flush(); id = h[1]; } else if (/^={5,}/.test(l)) { flush(); id = null; } else if (id) buf.push(l);
+  });
+  flush();
+  return out;
+}
+
 /* ----- parse pasted drafter output (draft_school_boards.py) ----- */
 function parseDraft(text) {
   const out = { fields: {}, members: [] };
@@ -243,12 +257,12 @@ function parseDraft(text) {
   });
   return out;
 }
-if (typeof module !== 'undefined') module.exports = { splitDistricts, parseBlock, emitBlock, validate, parseDraft };
+if (typeof module !== 'undefined') module.exports = { splitDrafts, splitDistricts, parseBlock, emitBlock, validate, parseDraft };
 </script>
 
 <script>
 /* ===== UI ===== */
-let handle = null, text = '', model = null;   // model: {lines, eol, blocks}
+let handle = null, text = '', model = null, drafts = {};   // model: {lines, eol, blocks}
 const edits = new Map();                      // id -> working district object
 let curId = null;
 const $ = id => document.getElementById(id);
@@ -284,6 +298,7 @@ function renderList() {
     div.innerHTML = '<div class="entry-name"></div><div class="entry-id">id ' + b.id + '</div>';
     const nm = div.querySelector('.entry-name'); nm.textContent = b.name;
     if (has) nm.insertAdjacentHTML('beforeend', '<span class="badge done">' + b.parsed.members.length + ' members</span>');
+    if (!has && drafts[b.id]) nm.insertAdjacentHTML('beforeend', '<span class="badge draft">draft</span>');
     if (edits.has(b.id) && dirty(b.id)) nm.insertAdjacentHTML('beforeend', '<span class="badge edited">edited</span>');
     div.onclick = () => select(b.id);
     $('list').appendChild(div);
@@ -336,6 +351,7 @@ function renderForm() {
       '<button class="btn-secondary" data-act="fillsrc" title="Copy the district board URL here">use board URL</button>' +
       '<button class="btn-danger" data-act="del">remove</button></div></div>';
   });
+  if (drafts[curId]) h += '<button class="btn-primary" data-act="importdraft">Import loaded draft (' + parseDraft(drafts[curId]).members.length + ' members)</button> ';
   h += '<button class="btn-secondary" data-act="add">+ Add member</button> ' +
     '<button class="btn-secondary" data-act="fillseats">Add empty seats up to board size</button>' +
     '<details><summary>Paste drafter output for this district</summary>' +
@@ -384,8 +400,8 @@ $('content').addEventListener('click', e => {
     const have = d.members.filter(m => !APPOINTED.includes(m.role)).length;
     for (let k = have; k < n; k++) d.members.push({ extra: {}, role: 'Board Member', seat: '', source: d.fields.official_url || '' });
   }
-  if (a === 'paste') {
-    const dr = parseDraft($('paste').value);
+  if (a === 'paste' || a === 'importdraft') {
+    const dr = parseDraft(a === 'paste' ? $('paste').value : drafts[curId]);
     if (dr.fields.partisan && !d.fields.partisan) d.fields.partisan = dr.fields.partisan;
     dr.members.forEach(nm => {
       const ex = d.members.find(m => !blank(m.seat) && m.seat === nm.seat);
@@ -421,6 +437,14 @@ $('btnOpen').onclick = async () => {
     $('fileStatus').textContent = handle.name + ' — ' + model.blocks.length + ' districts, ' +
       model.blocks.filter(b => b.parsed.members && b.parsed.members.length).length + ' with rosters';
     renderList();
+  } catch (err) { if (err.name !== 'AbortError') alert(err.message); }
+};
+$('btnDrafts').onclick = async () => {
+  try {
+    const [h] = await window.showOpenFilePicker({ types: [{ description: 'Drafter output', accept: { 'text/plain': ['.txt'] } }] });
+    drafts = splitDrafts(await (await h.getFile()).text());
+    toast(Object.keys(drafts).length + ' district draft(s) loaded');
+    renderList(); if (curId) renderForm();
   } catch (err) { if (err.name !== 'AbortError') alert(err.message); }
 };
 $('btnSave').onclick = async () => {
