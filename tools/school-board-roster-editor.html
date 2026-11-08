@@ -41,6 +41,7 @@
     .member.bad { border-color: #fca5a5; }
     .mgrid { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1.2fr; gap: 0.5rem; }
     .mgrid2 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem; }
+    .mgrid3 { display: grid; grid-template-columns: 3fr 1fr; gap: 0.5rem; margin-top: 0.5rem; }
     .msrc { margin-top: 0.5rem; display: flex; gap: 0.5rem; align-items: end; }
     .msrc > div:first-child { flex: 1; }
     button { padding: 0.35rem 0.8rem; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500; }
@@ -96,9 +97,10 @@
 const ROLES = ['Chair', 'Vice Chair', 'Board Member', 'Superintendent'];
 const PARTIES = ['Republican', 'Democratic', 'Independent', 'Nonpartisan'];
 const APPOINTED = ['Superintendent'];
-const MEMBER_KEYS = ['name', 'role', 'title', 'seat', 'party', 'last_elected', 'term_end', 'next_election', 'voting', 'source'];
+const MEMBER_KEYS = ['name', 'role', 'title', 'seat', 'party', 'last_elected', 'term_end', 'next_election', 'voting', 'source', 'statusNote', 'statusDate', 'notes'];
 const INT_KEYS = ['last_elected', 'term_end', 'next_election'];
-const MANAGED = ['board_size', 'term_years', 'partisan', 'official_url', 'members'];
+const MANAGED = ['board_size', 'term_years', 'partisan', 'official_url', 'notes', 'members'];
+const TEXT_KEYS = ['notes', 'statusNote'];   // free text: always written as a JSON-quoted string
 
 const blank = v => v === undefined || v === null || String(v).trim() === '';
 const isUrl = v => /^https?:\/\//.test(String(v));
@@ -123,7 +125,8 @@ function splitDistricts(text) {
 
 function scalar(v) {
   v = String(v).trim();
-  if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) return v.slice(1, -1);
+  if (v.startsWith('"') && v.endsWith('"') && v.length > 1) { try { return JSON.parse(v); } catch (e) { return v.slice(1, -1); } }
+  if (v.startsWith("'") && v.endsWith("'") && v.length > 1) return v.slice(1, -1).replace(/''/g, "'");
   return v.replace(/\s+#.*$/, '');
 }
 
@@ -177,6 +180,11 @@ function emitMember(m) {
   if (APPOINTED.includes(m.role)) o.push('        voting: false');
   else if (m.voting === 'false') o.push('        voting: false');
   if (!blank(m.source)) add('source', JSON.stringify(m.source));
+  if (!blank(m.statusNote)) {
+    add('statusNote', JSON.stringify(m.statusNote));
+    if (!blank(m.statusDate)) add('statusDate', JSON.stringify(m.statusDate));
+  }
+  if (!blank(m.notes)) add('notes', JSON.stringify(m.notes));
   Object.entries(m.extra || {}).forEach(([k, v]) => { if (!blank(v)) o.push('        ' + k + ': ' + q(v)); });
   return o;
 }
@@ -187,6 +195,7 @@ function emitBlock(d) {
   if (!blank(f.term_years)) o.push('    term_years: ' + f.term_years);
   if (f.partisan === 'true' || f.partisan === 'false') o.push('    partisan: ' + f.partisan);
   if (!blank(f.official_url)) o.push('    official_url: ' + JSON.stringify(f.official_url));
+  if (!blank(f.notes)) o.push('    notes: ' + JSON.stringify(f.notes));
   const ms = (d.members || []).filter(m => !blank(m.name) || !blank(m.seat) || !blank(m.source));
   if (ms.length) { o.push('    members:'); ms.forEach(m => o.push(...emitMember(m))); }
   return o;
@@ -214,6 +223,8 @@ function validate(d) {
       e('party ' + m.party + ' but district is partisan: false (record Nonpartisan, or fix the district flag)');
     if (partisan === true && m.party === 'Nonpartisan') e('Nonpartisan on a partisan district');
     if (!blank(m.source) && !isUrl(m.source)) e('source must be a URL');
+    if (!blank(m.statusDate) && !/^\d{4}-\d{2}-\d{2}$/.test(m.statusDate)) e('statusDate must be YYYY-MM-DD');
+    if (!blank(m.statusDate) && blank(m.statusNote)) e('statusDate needs a statusNote (the date belongs to the note)');
     INT_KEYS.forEach(k => { if (!blank(m[k]) && !/^\d{4}$/.test(m[k])) e(k + ' must be a 4-digit year'); });
     if (APPOINTED.includes(m.role)) {
       INT_KEYS.forEach(k => { if (!blank(m[k])) warnings.push(w + ': a ' + m.role + ' has no election; ' + k + ' will still be written, clear it'); });
@@ -336,6 +347,8 @@ function renderForm() {
       '<option value="true"' + (f.partisan === 'true' ? ' selected' : '') + '>true (party labels)</option>' +
       '<option value="false"' + (f.partisan === 'false' ? ' selected' : '') + '>false (nonpartisan)</option></select></div>' +
     field('Official board URL', 'official_url', f.official_url, 'type="url"') + '</div>' +
+    '<div style="margin-top:.6rem"><label>District notes <span style="text-transform:none">(internal, never shown on the site)</span></label>' +
+      '<textarea data-f="notes" style="min-height:60px;font-family:inherit;font-size:13px" placeholder="e.g. Seat 5 turns over Jan 2027; D1/D3/D5 certified Nov 2026">' + esc(f.notes) + '</textarea></div>' +
     '<h3>Members</h3>';
   ms.forEach((m, i) => {
     h += '<div class="member' + (m._bad ? ' bad' : '') + '" data-i="' + i + '"><div class="mgrid">' +
@@ -347,6 +360,10 @@ function renderForm() {
       mf('Term end', 'term_end', m.term_end, 'inputmode="numeric"') +
       mf('Next election', 'next_election', m.next_election, 'inputmode="numeric"') +
       mf('Display title', 'title', m.title, 'placeholder="Board President"') + '</div>' +
+      '<div class="mgrid3">' + mf('Public status note', 'statusNote', m.statusNote, 'placeholder="Shown under the member, e.g. Seat changes in January 2027"') +
+      mf('As of (YYYY-MM-DD)', 'statusDate', m.statusDate, 'placeholder="2026-11-08"') + '</div>' +
+      '<div style="margin-top:.5rem"><label>Internal notes <span style="text-transform:none">(never shown on the site)</span></label>' +
+      '<textarea data-m="notes" style="min-height:44px;font-family:inherit;font-size:13px">' + esc(m.notes) + '</textarea></div>' +
       '<div class="msrc"><div>' + mf('Source URL', 'source', m.source) + '</div>' +
       '<button class="btn-secondary" data-act="fillsrc" title="Copy the district board URL here">use board URL</button>' +
       '<button class="btn-danger" data-act="del">remove</button></div></div>';

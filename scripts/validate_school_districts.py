@@ -67,6 +67,29 @@ NONPARTISAN_ONLY = {"Nonpartisan"}
 PRESIDING_ROLES = {"Chair"}
 
 REQUIRED_MEMBER = ("name", "role", "seat", "source")
+_ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def check_notes(where, node, errors):
+    """Optional free-text fields, validated only when present.
+
+    `notes` is INTERNAL curator context (source quirks, what is pending
+    certification) and is never rendered. `statusNote` is the PUBLIC one-liner
+    the board section prints under a member, with `statusDate` (ISO date) saying
+    when it was true. Same names and rules as local_officials.yml.
+    """
+    for key in ("notes", "statusNote"):
+        v = node.get(key)
+        if v is not None and (not isinstance(v, str) or not v.strip()):
+            errors.append("%s: %s must be a non-empty string when present "
+                          "(omit the key rather than leaving it blank), got %r"
+                          % (where, key, v))
+    sd = node.get("statusDate")
+    if sd is not None and not _ISO_DATE_RE.match(str(sd)):
+        errors.append("%s: statusDate must be YYYY-MM-DD, got %r" % (where, sd))
+    if sd is not None and node.get("statusNote") is None:
+        errors.append("%s: statusDate without a statusNote — the date belongs to "
+                      "the note" % where)
 _FIPS_RE = re.compile(r"^13\d{3}$")
 _ID_RE = re.compile(r"^[0-9]{3,7}$")
 
@@ -110,6 +133,7 @@ def validate_member(where, m, errors, warnings, partisan=None):
     src = m.get("source")
     if not _blank(src) and not str(src).startswith(("http://", "https://")):
         errors.append("%s: source must be a URL, got %r" % (where, src))
+    check_notes(where, m, errors)
 
     appointed = role in APPOINTED_ROLES
     if appointed:
@@ -200,6 +224,8 @@ def validate_district(kind, d, idx, places, seen_ids, errors, warnings):
     url = d.get("official_url")
     if not _blank(url) and not str(url).startswith(("http://", "https://")):
         errors.append("%s: official_url must be a URL, got %r" % (where, url))
+
+    check_notes(where, d, errors)
 
     members = d.get("members")
     if members is None:

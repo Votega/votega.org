@@ -208,6 +208,26 @@ check('presiding role' in warns(counties=[two_chairs]),
 check('board_size' in errs(counties=[county(board_size=0)]),
       'board_size must be a positive integer')
 
+print('\nNotes: internal `notes` vs public `statusNote`')
+check(not errs(counties=[county(notes='Seat turns over Jan 2027',
+                                members=[member(notes='Not on the 2026 ballot',
+                                                statusNote='Seat changes in January 2027',
+                                                statusDate='2026-11-08')])]),
+      'notes on a district and notes/statusNote/statusDate on a member all pass')
+check('notes must be a non-empty string' in errs(counties=[county(members=[member(notes='  ')])]),
+      'a blank member note is an error (omit the key instead)')
+check('notes must be a non-empty string' in errs(counties=[county(notes='')]),
+      'a blank district note is an error')
+check('statusNote must be a non-empty string' in errs(
+          counties=[county(members=[member(statusNote='')])]),
+      'a blank statusNote is an error')
+check('statusDate must be YYYY-MM-DD' in errs(
+          counties=[county(members=[member(statusNote='x', statusDate='Nov 2026')])]),
+      'a malformed statusDate is an error')
+check('without a statusNote' in errs(
+          counties=[county(members=[member(statusDate='2026-11-08')])]),
+      'a statusDate with no statusNote is an error')
+
 print('\nStructural guards')
 e2, _ = V.validate({"countyDistricts": [county()], "cityDistricts": [city()]}, PLACES)
 check(any('expected 159' in x for x in e2) and any('expected 21' in x for x in e2),
