@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:56:22Z",
+  "generatedAt": "2026-11-09T19:15:43Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
   "count": 25
@@ -13,22 +13,32 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-05",
+  "lastActivity": "2026-11-10",
   "topicTotals": {
-   "alpr": 2,
-   "budget": 1,
+   "appointment": 8,
+   "budget": 2,
    "contract": 25,
-   "development": 13,
-   "local-taxes": 15,
    "rezoning": 18,
-   "special-land-use": 6,
+   "special-land-use": 7,
    "variance": 12,
-   "millage-budget": 21,
-   "comprehensive-plan": 6,
-   "appointment": 7
+   "alpr": 2,
+   "development": 12,
+   "local-taxes": 15,
+   "millage-budget": 20,
+   "comprehensive-plan": 6
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Work Session",
+    "date": "2026-11-10",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5407,plainText=false)",
+    "tags": [
+     "rezoning",
+     "special-land-use",
+     "variance"
+    ]
+   },
    {
     "title": "Board of Commissioners Regular Meeting",
     "date": "2026-11-05",
@@ -220,14 +230,6 @@
      "rezoning",
      "variance"
     ]
-   },
-   {
-    "title": "Board of Commissioners Work Session",
-    "date": "2026-05-12",
-    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5101,plainText=false)",
-    "tags": [
-     "rezoning"
-    ]
    }
   ],
   "landUseMeetings": 21,
@@ -377,6 +379,16 @@
   "localTaxCitations": 15,
   "budgetItems": [
    {
+    "title": "Board of Commissioners Work Session",
+    "date": "2026-11-10",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5407,plainText=false)",
+    "terms": [
+     "budget resolution"
+    ],
+    "excerpt": "… 3180) - Director, Department of Fleet and Environmental Services (3) Board consideration and approval of the Budget Resolution to fund 2026 prorated costs for the appointment of the 3rd State Court Judge, support staff and required …",
+    "excerptTerm": "budget resolution"
+   },
+   {
     "title": "Board of Commissioners Regular Meeting",
     "date": "2026-11-05",
     "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5398,plainText=false)",
@@ -387,12 +399,86 @@
     "excerptTerm": "budget resolution"
    }
   ],
-  "budgetCitations": 1,
+  "budgetCitations": 2,
   "landUseCitations": 21,
   "alprCitations": 2,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "440",
+   "date": "2026-11-10",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5407,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5407,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 14995,
+   "pdfSha256": "68600a289a79e79a1886760a563a281e522bddf9a72506b7d212bc97a60fdcd8",
+   "topics": {
+    "appointment": 1,
+    "budget": 1,
+    "contract": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "budget",
+    "contract",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget resolution",
+    "conditional use",
+    "contract",
+    "rezon",
+    "task order",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… (3) Board consideration and approval of the Budget Resolution to fund 2026 prorated costs for the appointment of the 3rd State Court Judge, support staff and required capital. Staff requests this Item be conside …",
+     "context": "agenda-action"
+    },
+    "budget": {
+     "term": "budget resolution",
+     "excerpt": "… 3180) - Director, Department of Fleet and Environmental Services (3) Board consideration and approval of the Budget Resolution to fund 2026 prorated costs for the appointment of the 3rd State Court Judge, support staff and required …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "task order",
+     "excerpt": "… ogram – Director, Department of Parks and Recreation (2) Board consideration and approval of a Task Order with United Pump and Controls, Inc. in the amount of $109,664.25 to provide services for the installation …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Page 5 November 10, 2026 (35) Board consideration and possible direction of a Board generated rezoning for ZA4108, Vijay Garlapati. In accordance with UDC 8-5.5(I), if an application for a …",
+     "context": "unknown"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… and October 20, 2026 Agendas) (36) Board consideration and possible direction regarding a County-Initiated Conditional Use Permit (CUP) to build a new dance studio on property zoned Commercial Business District (CBD) with a var …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Use Permit (CUP) to build a new dance studio on property zoned Commercial Business District (CBD) with a variance to 1. Reduce the buffer abutting Georgia Highway 400 adjacent to the existing drainage easement only fro …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "461",
    "date": "2026-11-05",
@@ -2004,72 +2090,6 @@
      "term": "rezon",
      "excerpt": "… a \"Time Sensitive\" basis – CIO, Department of IS&T (6) Board consideration and possible direction regarding rezoning of Parcel 118-200 from Res3 to Res1 — District 1 - Planner II, Department of Planning and Community …",
      "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "449",
-   "date": "2026-05-07",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Regular Meeting",
-   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5092,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5092,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 25180,
-   "pdfSha256": "a04c8eae8790c5ed99296c615502216b5b2c5e709171ffb4665620f38fe270d5",
-   "topics": {
-    "contract": 1,
-    "development": 1,
-    "millage-budget": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "contract",
-    "development",
-    "millage-budget",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "apartment",
-    "budget",
-    "contract",
-    "rezon",
-    "task order",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… nt Training Center, with a Pre-Construction Phase Cost of $8,218,311.00 and a Contractor's Fee of 17.66% for the Department of Capital Projects, with approval of the associated Progress …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "apartment",
-     "excerpt": "… New Business (1) Robin Kemper - CP250053 - to operate a 1,425 sq. ft. detached accessory apartment with an overall site including an existing 2,451 sq. ft. single-family dwelling on 1.313 acres zoned Sin …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… providing security at World Cup events in the Atlanta Metro area and approval of the corresponding Budget Resolution and authorization for the Chairman to sign the documents required to accept the award - …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… and March 5, 2026 Agendas) IX. Public Comments X. Old Business (1) Rishi Gankidi - ZA4230 - to rezone from Single Family Residential Restricted District (R2R) and Agricultural District (A1) to Single Famil …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… (1) Public Hearing and possible vote regarding an Alternate Design for Teresa Curry with the following variance to: 1. Increase the maximum percentage of accent materials per vertical wall plane from 25% to 46% (UDC 2 …",
-     "context": "agenda-action"
     }
    },
    "flags": [

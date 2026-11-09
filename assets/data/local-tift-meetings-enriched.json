@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:57:47Z",
+  "generatedAt": "2026-11-09T19:17:04Z",
   "source": "Tift County (htmltable agenda/minutes PDFs, poppler+OCR)",
   "place": "Tift County",
   "count": 25
@@ -10,11 +10,11 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-03",
+  "lastActivity": "2026-11-09",
   "topicTotals": {
    "appointment": 19,
-   "contract": 9,
-   "local-taxes": 8,
+   "contract": 10,
+   "local-taxes": 9,
    "millage-budget": 9
   },
   "dataCenterItems": [],
@@ -23,6 +23,16 @@
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
+   {
+    "title": "November 9, 2026 Commission Regular Session",
+    "date": "2026-11-09",
+    "sourceUrl": "https://www.tiftcounty.org/Commission%20Agendas/Agenda%20-%20Regular%20Session%20-%2011.09.26.pdf",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… lia Blvd and Ty Ty Sparks Rd (Salem Church Rd to Hwy 319) for an Estimated Cost of $3M to be funded from SPLOST VI and LMIG. 7.2 Motion to Approve a Temporary Easement Agreement with the Tifton-Tift Count …",
+    "excerptTerm": "splost"
+   },
    {
     "title": "September 14, 2026 Commission Regular Session",
     "date": "2026-09-14",
@@ -104,7 +114,7 @@
     "excerptTerm": "splost"
    }
   ],
-  "localTaxCitations": 8,
+  "localTaxCitations": 9,
   "budgetItems": [],
   "budgetCitations": 0,
   "landUseCitations": 0,
@@ -112,6 +122,54 @@
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "2026-11-09-commission-regular-session",
+   "date": "2026-11-09",
+   "body": "Board of Commissioners",
+   "title": "November 9, 2026 Commission Regular Session",
+   "sourceUrl": "https://www.tiftcounty.org/Commission%20Agendas/Agenda%20-%20Regular%20Session%20-%2011.09.26.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.tiftcounty.org/Commission%20Agendas/Agenda%20-%20Regular%20Session%20-%2011.09.26.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 3569,
+   "pdfSha256": "0f110d0c3e8fef6e9a34c690ad48b1eea60829bde7ea1bc276a885905dd69d17",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ssioner District 6 1. CALL TO ORDER/INVOCATION/PLEDGE OF ALLEGIANCE 2. PUBLIC COMMENTS 3. APPOINTMENTS 4. ITEMS TO BE ADDED TO THE AGENDA 4.1 Scrap Tire Amnesty Event Agreement 5. MINUTES …",
+     "context": "public-comment"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ift County Airport Authority to Harvest Timber Behind the Animal Shelter 7.3 Motion to Approve Contract with Professional Court Services for Misdemeanor Probation Services for State Court 7.4 Motion t …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… lia Blvd and Ty Ty Sparks Rd (Salem Church Rd to Hwy 319) for an Estimated Cost of $3M to be funded from SPLOST VI and LMIG. 7.2 Motion to Approve a Temporary Easement Agreement with the Tifton-Tift Count …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2026-11-03-commission-work-session",
    "date": "2026-11-03",
@@ -994,36 +1052,6 @@
    "flags": [
     "local-taxes"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-02-03-commission-work-session",
-   "date": "2026-02-03",
-   "body": "Board of Commissioners",
-   "title": "February 3, 2026 Commission Work Session",
-   "sourceUrl": "https://www.tiftcounty.org/Commission%20Agendas/Agenda%20-%20Work%20Session%20-%2002.03.26.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.tiftcounty.org/Commission%20Agendas/Agenda%20-%20Work%20Session%20-%2002.03.26.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 2234,
-   "pdfSha256": "acdbeee45b3741bde65e6cfe9acdf89cd7784a442ba57d9ff879c9b5759e4b28",
-   "topics": {
-    "appointment": 1
-   },
-   "tags": [
-    "appointment"
-   ],
-   "matchedTerms": [
-    "appoint"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… District 5 Greg Wood, Commissioner District 6 1. INVOCATION 2. PUBLIC COMMENTS 3. APPOINTMENTS 4. PUBLIC HEARINGS 4.1 TC-TA-26-01: Resolution No. 2026-04, Zoning Text Amendment to the Unified …",
-     "context": "public-comment"
-    }
-   },
-   "flags": [],
    "dataCenterItems": []
   }
  ]

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:56:23Z",
+  "generatedAt": "2026-11-09T19:15:44Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
@@ -16,13 +16,13 @@
   "lastActivity": "2026-12-09",
   "topicTotals": {
    "variance": 8,
+   "special-land-use": 7,
    "appointment": 6,
    "budget": 1,
    "contract": 10,
    "local-taxes": 6,
    "development": 4,
    "rezoning": 5,
-   "special-land-use": 6,
    "annexation": 4,
    "millage-budget": 6,
    "data-center": 2
@@ -44,6 +44,16 @@
     "tags": [
      "variance"
     ]
+   },
+   {
+    "title": "BOC Zoning Hearing",
+    "date": "2026-11-17",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10335,plainText=false)",
+    "tags": [
+     "special-land-use"
+    ],
+    "excerpt": "… d 9. Z-52-2026 District 2 - 465 Big Shanty Road 10. LUP-35-2026 District 4 - 448 Hurt Road 11. SLUP-9-2026 District 2 - 114 Townpark Drive 12. SLUP-11-2026 District 2 - 465 Big Shanty Road BOC REGULAR CASES AND …",
+    "excerptTerm": "slup"
    },
    {
     "title": "Board of Zoning Appeals Variance Hearing",
@@ -179,7 +189,7 @@
     "excerptTerm": "slup"
    }
   ],
-  "landUseMeetings": 16,
+  "landUseMeetings": 17,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
@@ -260,7 +270,7 @@
    }
   ],
   "budgetCitations": 1,
-  "landUseCitations": 14,
+  "landUseCitations": 15,
   "alprCitations": 0,
   "dataCenterCitations": 1
  },
@@ -320,17 +330,31 @@
    "date": "2026-11-17",
    "body": "Board of Commissioners",
    "title": "BOC Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10299,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10335,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10299,plainText=false)",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10335,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 738,
-   "pdfSha256": "75f0cde144239f9bb557202d242eed06151bb0696e299dc75b063489cd215479",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
+   "textChars": 2630,
+   "pdfSha256": "5104f87ba5ab73d57be1d71a2eadb89ca748496ceb2761562a6be8ad8be3bdf2",
+   "topics": {
+    "special-land-use": 1
+   },
+   "tags": [
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "slup"
+   ],
+   "topicExcerpts": {
+    "special-land-use": {
+     "term": "slup",
+     "excerpt": "… d 9. Z-52-2026 District 2 - 465 Big Shanty Road 10. LUP-35-2026 District 4 - 448 Hurt Road 11. SLUP-9-2026 District 2 - 114 Townpark Drive 12. SLUP-11-2026 District 2 - 465 Big Shanty Road BOC REGULAR CASES AND …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
    "dataCenterItems": []
   },
   {

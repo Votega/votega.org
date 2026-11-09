@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:56:24Z",
+  "generatedAt": "2026-11-09T19:16:05Z",
   "source": "Paulding County (municode agenda/minutes PDFs, poppler+OCR)",
   "place": "Paulding County",
   "count": 25
@@ -8,29 +8,31 @@
  "summary": {
   "flags": [
    "alpr",
+   "budget",
    "data-center",
    "land-use",
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-13",
+  "lastActivity": "2026-11-10",
   "topicTotals": {
-   "alpr": 11,
+   "budget": 1,
    "contract": 20,
-   "data-center": 21,
+   "data-center": 22,
    "local-taxes": 23,
-   "special-land-use": 1,
-   "appointment": 6,
    "rezoning": 9,
    "variance": 6,
+   "alpr": 11,
+   "special-land-use": 1,
+   "appointment": 5,
    "development": 3,
    "millage-budget": 8
   },
   "dataCenterItems": [
    {
     "title": "Board of Commissioners",
-    "date": "2026-10-13",
-    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-a88da877e646483ba6b071a44c21485e.pdf"
+    "date": "2026-11-10",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-7211d0cb7c9746478f52e3659b15a1a6.pdf"
    }
   ],
   "landUseItems": [
@@ -124,6 +126,16 @@
   ],
   "alprMeetings": 11,
   "localTaxItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-11-10",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-7211d0cb7c9746478f52e3659b15a1a6.pdf",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… on to approve the purchase of listed vehicles for the Sheriff's Office from Hardy Family Ford utilizing SPLOST funds in the amount of $602,995.00. 6. Discuss action to approve the purchase of listed motorcycles for t …",
+    "excerptTerm": "splost"
+   },
    {
     "title": "Board of Commissioners",
     "date": "2026-10-13",
@@ -228,14 +240,112 @@
     ]
    }
   ],
-  "localTaxCitations": 12,
-  "budgetItems": [],
-  "budgetCitations": 0,
+  "localTaxCitations": 13,
+  "budgetItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-11-10",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-7211d0cb7c9746478f52e3659b15a1a6.pdf",
+    "terms": [
+     "budget amendment",
+     "budget-then-decision",
+     "capital budget",
+     "decision-then-budget"
+    ],
+    "excerpt": "… , under the Sourcewell Contract (#99999-001-SPD0000229-0004). This purchase was approved in the FY 2027 Capital Budget and will be funded through the Paulding County DOT General Fund. 10. Approve the purchase of needed equip …",
+    "excerptTerm": "capital budget"
+   }
+  ],
+  "budgetCitations": 1,
   "landUseCitations": 1,
   "alprCitations": 9,
   "dataCenterCitations": 1
  },
  "meetings": [
+  {
+   "id": "7211d0cb7c9746478f52e3659b15a1a6",
+   "date": "2026-11-10",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-7211d0cb7c9746478f52e3659b15a1a6.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-7211d0cb7c9746478f52e3659b15a1a6.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 13793,
+   "pdfSha256": "adc6218e5109e09e3516b0ed1ff6d52b606ea88720c947fc8756b4ba5d351929",
+   "topics": {
+    "budget": 1,
+    "contract": 1,
+    "data-center": 1,
+    "local-taxes": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "budget",
+    "contract",
+    "data-center",
+    "local-taxes",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "budget amendment",
+    "budget-then-decision",
+    "capital budget",
+    "contract",
+    "data center",
+    "decision-then-budget",
+    "rezon",
+    "splost",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "budget": {
+     "term": "capital budget",
+     "excerpt": "… , under the Sourcewell Contract (#99999-001-SPD0000229-0004). This purchase was approved in the FY 2027 Capital Budget and will be funded through the Paulding County DOT General Fund. 10. Approve the purchase of needed equip …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… f Atlanta, in the amount of $143,280.69 from the Water Fund. 3. Discuss action to execute a Contract with KM Davis Contracting Company, Inc. in the amount of $1,027,741.75, for the Macland Road (SR360) Wa …",
+     "context": "unknown"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… AR BUSINESS PUBLIC PARTICIPATION ON NON-AGENDA ITEMS: o Bob Sirignano re: The destruction of land by Data Centers and the effects on Homeowners o Debra Gray re: Proposed Monopole Tower/ Data Center o Taylor Wyatt …",
+     "context": "public-comment"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… on to approve the purchase of listed vehicles for the Sheriff's Office from Hardy Family Ford utilizing SPLOST funds in the amount of $602,995.00. 6. Discuss action to approve the purchase of listed motorcycles for t …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… 1130199 OLD BUSINESS: 17. 2025-19-Z: Application by ARTISAN BUILT COMMUNITIES requesting to rezone 15.07 acres from R-2 (Suburban Residential District) & PRD (Planned Residential Development …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… District) for the proposed development of 18 single-family detached homes. Applicant is also requesting a variance to reduce the front setback from 30ft to 20ft for all lots and a buffer reduction from 50ft to 0ft along …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center",
+    "budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Board of Commissioners",
+     "date": "2026-11-10",
+     "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-7211d0cb7c9746478f52e3659b15a1a6.pdf"
+    }
+   ]
+  },
   {
    "id": "a88da877e646483ba6b071a44c21485e",
    "date": "2026-10-13",
@@ -1796,71 +1906,6 @@
     "rezoning": {
      "term": "rezon",
      "excerpt": "… located in Post 4. 22. Discuss action to intitate an application to amend the official zoning map to rezone approximately 122 acres from R-2 to AML (Advances Manufacturing Logistics). AML zoning …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "17453c2f44b641d6b8cdab849b6021a9",
-   "date": "2026-04-14",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-17453c2f44b641d6b8cdab849b6021a9.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-17453c2f44b641d6b8cdab849b6021a9.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 17586,
-   "pdfSha256": "d9f2b325abca13bb3ed20c9b69085e336d155c1f4e3c8cd56b343681dc2fb096",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "local-taxes": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "local-taxes",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract",
-    "rezon",
-    "splost",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… r DOT Unit 133 2000 CAT 963 Loader 02DS01097 13. Appoint Brett Wardlaw to serve on the Northwest Georgia Region One Emergency Medical Advisory Council for the …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… _____ against: __________________ Abstain: ________________ 3. Action to award the FY2026 Asphalt Project Contract I to the lowest reliable bidder, South Georgia Milling, LLC in the amount of $7,027,926.66. Funding of …",
-     "context": "unknown"
-    },
-    "local-taxes": {
-     "term": "splost",
-     "excerpt": "… reliable bidder, CMES Inc. in the amount of $762,909.70. Funds for the project will be allocated from SPLOST. This project is located in Posts 2 and 3. Motion: ____________________ By: ______________________ 2nd: _ …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… _____ Abstain: ________________ 22. Action to initiate an application to amend the official zoning map to rezone approximately plus/minus 160.57 acres from R-2 to AML (Advances Manufacturing Logistics). AML zoning …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… strict) for the proposed development of 18 single-family detached homes. Applicant is also requesting a variance to reduce the front setback from 30ft to 20ft for all lots and a buffer reduction from 50ft to 0ft alon …",
      "context": "agenda-action"
     }
    },

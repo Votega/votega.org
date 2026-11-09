@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:56:22Z",
+  "generatedAt": "2026-11-09T19:15:43Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -13,19 +13,19 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-04",
+  "lastActivity": "2026-11-16",
   "topicTotals": {
+   "development": 5,
+   "variance": 6,
    "comprehensive-plan": 2,
-   "development": 4,
    "rezoning": 4,
-   "contract": 15,
+   "contract": 14,
    "local-taxes": 17,
-   "millage-budget": 18,
+   "millage-budget": 17,
    "annexation": 5,
-   "variance": 5,
-   "appointment": 6,
+   "appointment": 5,
    "data-center": 2,
-   "alpr": 3
+   "alpr": 2
   },
   "dataCenterItems": [
    {
@@ -40,6 +40,17 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Planning Zoning Variance",
+    "date": "2026-11-16",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7628,plainText=false)",
+    "tags": [
+     "development",
+     "variance"
+    ],
+    "excerpt": "… ariance Meeting. AGENDA V2026-14 David Pounds – a request for a Hardship Variance for a large lot subdivision located at 3331 Richardson Road, Villa Rica, 30180. Land lot(s) 137, District 2, Section 5 & Parcel(s) 4 …",
+    "excerptTerm": "subdivision"
+   },
    {
     "title": "Planning Zoning and BOC",
     "date": "2026-11-04",
@@ -146,7 +157,7 @@
     "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 13,
+  "landUseMeetings": 14,
   "alprItems": [
    {
     "title": "BOC Commission Meeting",
@@ -167,19 +178,9 @@
     ],
     "excerpt": "… ar agreement, with automatic annual renewals for a total term of five (5) years (Dec. 1, 2026 – Nov. 30, 2031), with Axon Enterprise, Inc. for tasers, at a cost of $80,860 for the first year and $149,078.28 per year for each subsequent year, and to …",
     "excerptTerm": "axon enterprise"
-   },
-   {
-    "title": "BOC Commission Meeting",
-    "date": "2026-07-21",
-    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7439,plainText=false)",
-    "terms": [
-     "avigilon"
-    ],
-    "excerpt": "… 7. Approval of a corrective total amount for the previously approved Comcast Smart Solutions contract for Eagle Eye Avigilon video management hardware in the amount of $1,796.40, (Difference of $46.70) with the total monthly service amount …",
-    "excerptTerm": "avigilon"
    }
   ],
-  "alprMeetings": 3,
+  "alprMeetings": 2,
   "localTaxItems": [
    {
     "title": "BOC Combined Work Session and Commission Meeting 11-02-26",
@@ -349,11 +350,51 @@
   "localTaxCitations": 17,
   "budgetItems": [],
   "budgetCitations": 0,
-  "landUseCitations": 11,
-  "alprCitations": 3,
+  "landUseCitations": 12,
+  "alprCitations": 2,
   "dataCenterCitations": 2
  },
  "meetings": [
+  {
+   "id": "1379",
+   "date": "2026-11-16",
+   "body": "Planning & Zoning",
+   "title": "Planning Zoning Variance",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7628,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7628,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 595,
+   "pdfSha256": "3ddef3eca2ca9d86127feb8e53755edd999b3bc1c2a6a32e9c2dc6816324ce63",
+   "topics": {
+    "development": 1,
+    "variance": 1
+   },
+   "tags": [
+    "development",
+    "variance"
+   ],
+   "matchedTerms": [
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… ariance Meeting. AGENDA V2026-14 David Pounds – a request for a Hardship Variance for a large lot subdivision located at 3331 Richardson Road, Villa Rica, 30180. Land lot(s) 137, District 2, Section 5 & Parcel(s) 4 …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "DOUGLAS COUNTY ZONING VARIANCE HEARING AGENDA November 16, 2026 Call to Order - Plannin …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1378",
    "date": "2026-11-04",
@@ -1594,63 +1635,6 @@
    "flags": [
     "millage-budget",
     "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1176",
-   "date": "2026-07-21",
-   "body": "Board of Commissioners",
-   "title": "BOC Commission Meeting",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7439,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7439,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 10846,
-   "pdfSha256": "cb5dfed5f66b50972c542fb84c719e1a828b0ddb8d717b537db5442d153e7bfd",
-   "topics": {
-    "alpr": 1,
-    "appointment": 1,
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "alpr",
-    "appointment",
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "avigilon",
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "alpr": {
-     "term": "avigilon",
-     "excerpt": "… 7. Approval of a corrective total amount for the previously approved Comcast Smart Solutions contract for Eagle Eye Avigilon video management hardware in the amount of $1,796.40, (Difference of $46.70) with the total monthly service amount …",
-     "context": "agenda-action"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… appropriations account and authorize the Chairman to sign all related documents pending final legal review. 21. Appointment of Jerry Williams and Lisa McIntyre to the Douglas County Housing Authority. 22. Motion to proceed as discussed …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… venile Court and authorize the Chairman to sign all related documents pending final legal review. 13. Approval of a contract with Daikin Applied Americas, Inc. for a maintenance agreement at the Boundary Waters Aquatic Center in the amount …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… ting 2 July 21, 2026 30, 2027 for Douglas CORE, establish the budget and authorize the Chairman to sign all related documents pending final legal review. 8. Approval to accept the CJCC …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget",
-    "alpr"
    ],
    "dataCenterItems": []
   }

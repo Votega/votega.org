@@ -1,19 +1,21 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:56:21Z",
+  "generatedAt": "2026-11-09T19:15:37Z",
   "source": "Augusta-Richmond County (teammunicode agenda/minutes PDFs, poppler+OCR)",
   "place": "Augusta-Richmond County",
-  "count": 11
+  "count": 17
  },
  "summary": {
   "flags": [
+   "budget",
    "data-center",
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-03",
+  "lastActivity": "2026-11-10",
   "topicTotals": {
-   "contract": 7,
+   "contract": 9,
+   "budget": 1,
    "data-center": 1,
    "development": 2,
    "appointment": 1,
@@ -54,13 +56,171 @@
   "alprMeetings": 0,
   "localTaxItems": [],
   "localTaxCitations": 0,
-  "budgetItems": [],
-  "budgetCitations": 0,
+  "budgetItems": [
+   {
+    "title": "Finance Committee Meeting",
+    "date": "2026-11-10",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-976b661ff32e4afdb73747fe82ead06f.pdf",
+    "terms": [
+     "decision-then-budget"
+    ],
+    "excerpt": "… Tuesday, November 10, 2026 1:05 PM FINANCE 1. Motion to approve the adoption of the FY 2027 Budget. 2. Motion to approve the minutes of October 27, 2026 Finance Committee Minutes Meeting.",
+    "excerptTerm": "decision-then-budget"
+   }
+  ],
+  "budgetCitations": 1,
   "landUseCitations": 2,
   "alprCitations": 0,
   "dataCenterCitations": 1
  },
  "meetings": [
+  {
+   "id": "96",
+   "date": "2026-11-10",
+   "body": "Augusta Commission",
+   "title": "Special Called Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-e982d0033f2341818a7fffa215acb7a2.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-e982d0033f2341818a7fffa215acb7a2.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 361,
+   "pdfSha256": "ef772eae7ef002886f378201c7e1fb96198fa2b9fb7ad4ca294981963cf58533",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "87",
+   "date": "2026-11-10",
+   "body": "Public Safety Committee",
+   "title": "Public Safety Committee Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-efa0c6b1aab64df888aa960965da43d8.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-efa0c6b1aab64df888aa960965da43d8.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 1015,
+   "pdfSha256": "4ad058d51adbfb8133f04c978f468f69e38e1eacadaf95a86dcc48701ee5c9f6",
+   "topics": {
+    "contract": 1
+   },
+   "tags": [
+    "contract"
+   ],
+   "matchedTerms": [
+    "award of",
+    "procurement"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "award of",
+     "excerpt": "… 05,405.50 federal fund and authorize the required non-federal cost share of $30,540.55. 2. Motion to approve the award of RFP #26-264, Architectural Design Services for the Augusta- Richmond County Joint Operations Center, to MPS Archit …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "86",
+   "date": "2026-11-10",
+   "body": "Public Services Committee",
+   "title": "Public Services Committee Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-eae828a6c10f43f3b4a8be646a129e50.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-eae828a6c10f43f3b4a8be646a129e50.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 1366,
+   "pdfSha256": "adf1adc5152247389ef955ef433de245687922bf4c50ac2439e6c6ec7d4dacde",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "402",
+   "date": "2026-11-10",
+   "body": "Administrative Services Committee",
+   "title": "Administrative Services Committee Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-7f04a8c934a64c0b82387dfc66bb9f7c.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-7f04a8c934a64c0b82387dfc66bb9f7c.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 868,
+   "pdfSha256": "6779c42e28eedad3339388b5f04579920cd6dc9afc786345b73b255875ec23bc",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "239",
+   "date": "2026-11-10",
+   "body": "Engineering Services Committee",
+   "title": "Engineering Services Committee Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-489b1276e75b4b4dbf8c6d5e9a6df53d.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-489b1276e75b4b4dbf8c6d5e9a6df53d.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 1632,
+   "pdfSha256": "d38e9fcf157ee3fa4796390129f3dff4252a81ddee384beaa13a4e79cb9502dc",
+   "topics": {
+    "contract": 1
+   },
+   "tags": [
+    "contract"
+   ],
+   "matchedTerms": [
+    "contract"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… executed by the Augusta, GA Legal Counsel and the Mayor / AE 3. Approve supplement funds (SA1) for construction contract supplement to The Reeves Construction Company in the amount $113,000 for Jones Alley Improvement project. AE/ Bid …",
+     "context": "unknown"
+    }
+   },
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "139",
+   "date": "2026-11-10",
+   "body": "Finance Committee",
+   "title": "Finance Committee Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-976b661ff32e4afdb73747fe82ead06f.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-976b661ff32e4afdb73747fe82ead06f.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 343,
+   "pdfSha256": "0758050231ae97d1700e78d3492f5e4afe386f63cc713e051b52fdd28392409c",
+   "topics": {
+    "budget": 1
+   },
+   "tags": [
+    "budget"
+   ],
+   "matchedTerms": [
+    "decision-then-budget"
+   ],
+   "topicExcerpts": {
+    "budget": {
+     "term": "decision-then-budget",
+     "excerpt": "… Tuesday, November 10, 2026 1:05 PM FINANCE 1. Motion to approve the adoption of the FY 2027 Budget. 2. Motion to approve the minutes of October 27, 2026 Finance Committee Minutes Meeting.",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "90",
    "date": "2026-11-03",
@@ -178,7 +338,7 @@
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-0ccef173829d47ff9542d1668bff8212.pdf",
    "textMethod": "pdftotext",
    "textChars": 1598,
-   "pdfSha256": "4fd5313c8b51d33cbc47882ea62db7011a930fcedc70442fdd4f882fb4eedbf8",
+   "pdfSha256": "9d63a09b3eb3380521f44007a69ebdd129854022d2de4b4cbdc75812c385d5ae",
    "topics": {
     "contract": 1
    },

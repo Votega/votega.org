@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:56:26Z",
+  "generatedAt": "2026-11-09T19:17:01Z",
   "source": "Meriwether County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Meriwether County",
   "count": 25
@@ -13,20 +13,24 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-27",
+  "lastActivity": "2026-11-09",
   "topicTotals": {
-   "appointment": 15,
-   "contract": 16,
-   "data-center": 2,
+   "appointment": 16,
+   "contract": 17,
+   "data-center": 3,
+   "local-taxes": 15,
    "development": 1,
    "millage-budget": 17,
    "rezoning": 7,
-   "local-taxes": 14,
    "variance": 1,
-   "alpr": 1,
-   "annexation": 1
+   "alpr": 1
   },
   "dataCenterItems": [
+   {
+    "title": "Agenda November 9, 2026, Regular Meeting 6:00 p.m.",
+    "date": "2026-11-09",
+    "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_11092026-662"
+   },
    {
     "title": "Agenda October 27, 2026, Regular Meeting 6:00 p.m.",
     "date": "2026-10-27",
@@ -96,16 +100,6 @@
     "tags": [
      "rezoning"
     ]
-   },
-   {
-    "title": "Agenda March 23, 2026, Special Called Meeting 4:00 p.m.",
-    "date": "2026-03-23",
-    "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_03232026-637",
-    "tags": [
-     "annexation"
-    ],
-    "excerpt": "… PLEDGE TO THE FLAG IV. ADOPT AGENDA V. NEW BUSINESS 1. Discussion of the City of Greenville's Proposed Annexation of Property for Residential Development VI. EXECUTIVE SESSION 1. Litigation 2. Personnel 3. Rea …",
-    "excerptTerm": "annexation"
    }
   ],
   "landUseMeetings": 10,
@@ -122,6 +116,14 @@
   ],
   "alprMeetings": 1,
   "localTaxItems": [
+   {
+    "title": "Agenda November 9, 2026, Regular Meeting 6:00 p.m.",
+    "date": "2026-11-09",
+    "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_11092026-662",
+    "terms": [
+     "splost"
+    ]
+   },
    {
     "title": "Agenda October 12, 2026 Regular Meeting 6:00 p.m.",
     "date": "2026-10-12",
@@ -254,14 +256,57 @@
     ]
    }
   ],
-  "localTaxCitations": 14,
+  "localTaxCitations": 15,
   "budgetItems": [],
   "budgetCitations": 0,
-  "landUseCitations": 8,
+  "landUseCitations": 7,
   "alprCitations": 1,
-  "dataCenterCitations": 2
+  "dataCenterCitations": 3
  },
  "meetings": [
+  {
+   "id": "662",
+   "date": "2026-11-09",
+   "body": "Board of Commissioners",
+   "title": "Agenda November 9, 2026, Regular Meeting 6:00 p.m.",
+   "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_11092026-662",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_11092026-662",
+   "textMethod": "ocr",
+   "textChars": 16742,
+   "pdfSha256": "1d8a5b1cb915754c8ec667aba133a242bf68282ce6e63879929d55c7d8652928",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "data-center": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "data-center",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "data center",
+    "splost"
+   ],
+   "topicExcerpts": {},
+   "flags": [
+    "land-use",
+    "data-center",
+    "local-taxes"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Agenda November 9, 2026, Regular Meeting 6:00 p.m.",
+     "date": "2026-11-09",
+     "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_11092026-662"
+    }
+   ]
+  },
   {
    "id": "661",
    "date": "2026-10-27",
@@ -1106,38 +1151,6 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "637",
-   "date": "2026-03-23",
-   "body": "Board of Commissioners",
-   "title": "Agenda March 23, 2026, Special Called Meeting 4:00 p.m.",
-   "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_03232026-637",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_03232026-637",
-   "textMethod": "pdftotext",
-   "textChars": 986,
-   "pdfSha256": "14f8c4b317218dca81ed2abfa92fd991bf3ae0bd41d5c17a5e843eeb86bc8f59",
-   "topics": {
-    "annexation": 1
-   },
-   "tags": [
-    "annexation"
-   ],
-   "matchedTerms": [
-    "annexation"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… PLEDGE TO THE FLAG IV. ADOPT AGENDA V. NEW BUSINESS 1. Discussion of the City of Greenville's Proposed Annexation of Property for Residential Development VI. EXECUTIVE SESSION 1. Litigation 2. Personnel 3. Rea …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
    "dataCenterItems": []
   }
  ]

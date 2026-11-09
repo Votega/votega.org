@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:56:25Z",
+  "generatedAt": "2026-11-09T19:16:06Z",
   "source": "Hall County (agendapub agenda/minutes PDFs, poppler+OCR)",
   "place": "Hall County",
-  "count": 17
+  "count": 19
  },
  "summary": {
   "flags": [
@@ -12,13 +12,13 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-02",
+  "lastActivity": "2026-11-16",
   "topicTotals": {
-   "appointment": 12,
-   "development": 12,
-   "contract": 10,
-   "rezoning": 11,
-   "variance": 11,
+   "development": 14,
+   "rezoning": 13,
+   "variance": 13,
+   "appointment": 13,
+   "contract": 11,
    "millage-budget": 6,
    "special-land-use": 2,
    "comprehensive-plan": 6,
@@ -28,6 +28,30 @@
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission Meeting",
+    "date": "2026-11-16",
+    "sourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-359-vm-20261109134614061094.pdf",
+    "tags": [
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… 27 Planning Commission Meeting Schedule New Business 3 3411 Springdale Forrest Circle | Special Use | for a minor subdivision | on a 2.09± acre tract located on the north side of Springdale Forrest Circle approximately 330 feet nor …",
+    "excerptTerm": "subdivision"
+   },
+   {
+    "title": "Work Session",
+    "date": "2026-11-09",
+    "sourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-334-ws-20261106214017107348.pdf",
+    "tags": [
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… Agreement for streets, stormwater management facilities, sewer, and sidewalks in Clark Farms Phase 2 Subdivision. Commission District 1. County Administrator Public Comments (PUBLIC HEARING ITEMS (i.e. ZONINGS, ORDINANCE CHANGES, ET …",
+    "excerptTerm": "subdivision"
+   },
    {
     "title": "Planning Commission Meeting",
     "date": "2026-11-02",
@@ -180,7 +204,7 @@
     "excerptTerm": "comprehensive plan"
    }
   ],
-  "landUseMeetings": 12,
+  "landUseMeetings": 14,
   "alprItems": [
    {
     "title": "Voting Meeting",
@@ -249,11 +273,123 @@
   "localTaxCitations": 4,
   "budgetItems": [],
   "budgetCitations": 0,
-  "landUseCitations": 12,
+  "landUseCitations": 14,
   "alprCitations": 2,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "2041",
+   "date": "2026-11-16",
+   "body": "Board of Commissioners",
+   "title": "Planning Commission Meeting",
+   "sourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-359-vm-20261109134614061094.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-359-vm-20261109134614061094.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 9257,
+   "pdfSha256": "af9454219418e19d7d0576cb69ebcffa9f319e25f21dcce5412955cbdb87ba9a",
+   "topics": {
+    "development": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "development",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "rezon",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… 27 Planning Commission Meeting Schedule New Business 3 3411 Springdale Forrest Circle | Special Use | for a minor subdivision | on a 2.09± acre tract located on the north side of Springdale Forrest Circle approximately 330 feet nor …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Proposed Use: 2-lot subdivision | ** Commission District 2 | KD South, LLC, applicant 4 1646 March Drive | Rezone | from Highway Business (H-B) to Residential (R- 1) | on a 0.11± acre tract located on the northwest side of Ma …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… sed Use: Storage lot | ** Commission District 4 | Chris Patton, applicant 6 (B) 1555C Calvary Church Road | Variance to Section 8.2 | to reduce the required buffer | on a 41.98± acre tract located on the east side of Calvary …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2040",
+   "date": "2026-11-09",
+   "body": "Board of Commissioners",
+   "title": "Work Session",
+   "sourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-334-ws-20261106214017107348.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-334-ws-20261106214017107348.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 9563,
+   "pdfSha256": "8b7e4a0cfd1b99c7b5c0a415533dacf6932b5113e5836f3bd1a0187bf03cd3b6",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "award of",
+    "rezon",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… to install a manual transfer switch at the Chicopee Woods Agricultural Center in the amount of $46,250.00, and appoint the Grants Manager as the Program Designee and authorize the Chairman to execute all related application and …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "award of",
+     "excerpt": "… ding Inspections, subject to review and approval by the County Attorney. Emergency Management 10 Approve the award of RFQ/P #46-033 Cloud-Based Computer-Aided Dispatch (CAD) System for Central Communications to 10-8 Systems LLC of …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… Agreement for streets, stormwater management facilities, sewer, and sidewalks in Clark Farms Phase 2 Subdivision. Commission District 1. County Administrator Public Comments (PUBLIC HEARING ITEMS (i.e. ZONINGS, ORDINANCE CHANGES, ET …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… LC of Kennesaw, GA. The estimated annual cost is $205,344.00. Planning & Zoning 15 4510 Browns Bridge Road | Rezone | from Agricultural Residential 1 (AR-1) to Highway Business (H-B) | on a 1.384± acre tract located on the nort …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… at the October 22, 2026 Voting Meeting until the November 12, 2026 Voting Meeting. 17 4510 Browns Bridge Road | Variance to Section 6.2 | to GCOD standards | on a 1.384± acre tract located on the north side of Browns Bridge Road a …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2016",
    "date": "2026-11-02",

@@ -183,6 +183,93 @@
  ],
  "mentions": [
   {
+   "body": "City Council",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-12",
+   "docType": "agenda",
+   "excerpt": "… rgetown Water Reclamation Facility Expansion.pdf 25. Authorize the City Manager to Execute a Contract for Phase III for ShotSpotter Subscription with ShotSpotter in the Amount of $262,500. (SPD) Exhibit 1: Funding Verification - ShotSpotter Phase 3.pd …",
+   "excerptTerm": "shotspotter",
+   "fips": null,
+   "placeId": "savannah",
+   "placeName": "City of Savannah",
+   "placeType": "city",
+   "region": "Coastal Georgia",
+   "sourceType": "granicus",
+   "sourceUrl": "https://agenda.savannahga.gov/publishing/november-12-2026-city-council-regular-meeting/agenda.html",
+   "tags": [],
+   "terms": [
+    "shotspotter"
+   ],
+   "vendors": [
+    "ShotSpotter (SoundThinking)"
+   ]
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-12",
+   "docType": "minutes",
+   "excerpt": "… 000 to the recreation multi-use facility, some to the East Fayetteville gym, $2.4 million into the Sheriff’s Office for body cameras and dash cameras, $133,000 for the Fire Department, and $443,000 to 911. The balance went into Fund Balance as staf …",
+   "excerptTerm": "body cam",
+   "fips": "13113",
+   "placeId": "fayette",
+   "placeName": "Fayette County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda/11-12-2026%20BOC%20Agenda.pdf",
+   "tags": [],
+   "terms": [
+    "body cam",
+    "dash cam"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "City Utilities Committee",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-11-10",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": null,
+   "placeId": "atlanta",
+   "placeName": "City of Atlanta",
+   "placeType": "city",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=3963&Inline=True",
+   "tags": [],
+   "terms": [
+    "surveillance camera"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "City Council",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-09",
+   "docType": "agenda",
+   "excerpt": "… to renew an annual contract for sanitation services (Huhn) 4. Recommendation to renew a contract for police in-car camera systems (Huhn) 5. Recommendation to procure a computer voice stress analyzer system, computer …",
+   "excerptTerm": "in-car camera",
+   "fips": null,
+   "placeId": "fort-oglethorpe",
+   "placeName": "City of Fort Oglethorpe",
+   "placeType": "city",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/26-AGENDA-Preliminary-November-9.pdf",
+   "tags": [],
+   "terms": [
+    "in-car camera"
+   ],
+   "vendors": []
+  },
+  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
@@ -1182,29 +1269,6 @@
    ]
   },
   {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-07-21",
-   "docType": "agenda",
-   "excerpt": "… 7. Approval of a corrective total amount for the previously approved Comcast Smart Solutions contract for Eagle Eye Avigilon video management hardware in the amount of $1,796.40, (Difference of $46.70) with the total monthly service amount …",
-   "excerptTerm": "avigilon",
-   "fips": "13097",
-   "placeId": "douglas",
-   "placeName": "Douglas County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7439,plainText=false)",
-   "tags": [],
-   "terms": [
-    "avigilon"
-   ],
-   "vendors": [
-    "Avigilon (Motorola)"
-   ]
-  },
-  {
    "body": "Board of County Commissioners",
    "confidence": "medium",
    "context": null,
@@ -1882,7 +1946,7 @@
   "consolidatedScanned": 4,
   "countiesScanned": 46,
   "emoji": "📷",
-  "generatedAt": "2026-11-05T17:12:37Z",
+  "generatedAt": "2026-11-09T19:32:17Z",
   "label": "ALPR / surveillance",
   "placesScanned": 59,
   "placesWithMentions": 29,
@@ -1891,7 +1955,6 @@
   "universeConsolidated": 9,
   "universeCounties": 159,
   "vendors": [
-   "Avigilon (Motorola)",
    "Axon Fleet",
    "Flock Safety",
    "Fusus (Axon)",

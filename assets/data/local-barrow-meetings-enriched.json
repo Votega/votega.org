@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:57:47Z",
+  "generatedAt": "2026-11-09T19:19:01Z",
   "source": "Barrow County (granicus agenda HTML)",
   "place": "Barrow County",
   "count": 25
@@ -12,21 +12,43 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-27",
+  "lastActivity": "2026-11-12",
   "topicTotals": {
+   "variance": 14,
+   "annexation": 2,
    "appointment": 14,
-   "contract": 6,
-   "local-taxes": 4,
+   "contract": 7,
+   "rezoning": 10,
+   "local-taxes": 3,
    "comprehensive-plan": 7,
    "development": 9,
-   "rezoning": 10,
-   "variance": 13,
-   "millage-budget": 8,
-   "alpr": 1,
-   "annexation": 1
+   "millage-budget": 7,
+   "alpr": 1
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Appeals",
+    "date": "2026-11-12",
+    "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=771",
+    "tags": [
+     "variance"
+    ],
+    "excerpt": "… res V. Public Hearings a) VAR2026-001 1 1 (XX106 085) 1215 Ridgecrest Dr; William and Joy Skaggs / Applicant and Owner; Variance request to UDC Sec. 89- 218 to allow for an accessory structure larger than 50% of the primary structure. - To be withd …",
+    "excerptTerm": "variance"
+   },
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-11-10",
+    "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=716",
+    "tags": [
+     "annexation",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… Applicant; Greater Northwestern Baptist Association of Georgia / Owner. Request to rezone ± 5.08 acres from AG (Agriculture) to R-1 (Low Density Single Family Residential). Variance request …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Planning Commission",
     "date": "2026-10-15",
@@ -177,20 +199,9 @@
     "tags": [
      "variance"
     ]
-   },
-   {
-    "title": "Board of Commissioners",
-    "date": "2026-06-09",
-    "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1129",
-    "tags": [
-     "rezoning",
-     "variance"
-    ],
-    "excerpt": "… nty Line-Auburn Rd; Jakob Sullins / Applicant; European Construction & Design, LLC / Owner. Request to rezone ± 2.56 acres from AG (Agriculture) to R-1 (Low Density Single Family Residential) fo …",
-    "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 14,
+  "landUseMeetings": 15,
   "alprItems": [
    {
     "title": "Board of Commissioners",
@@ -229,24 +240,150 @@
     ],
     "excerpt": "… Consideration to adopt the FY 2027 Budget and the FY 2027 Budget Resolution. c) Consideration to adopt the Millage Rate for the 2026 Tax Digest. d) Consideration to approve Strongside Solutions as Barrow County's Medical …",
     "excerptTerm": "millage"
-   },
-   {
-    "title": "Board of Commissioners",
-    "date": "2026-06-09",
-    "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1129",
-    "terms": [
-     "splost"
-    ]
    }
   ],
-  "localTaxCitations": 4,
+  "localTaxCitations": 3,
   "budgetItems": [],
   "budgetCitations": 0,
-  "landUseCitations": 14,
+  "landUseCitations": 15,
   "alprCitations": 1,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "771",
+   "date": "2026-11-12",
+   "body": "Board of Appeals",
+   "title": "Board of Appeals",
+   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=771",
+   "textSource": "agenda",
+   "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=771",
+   "textMethod": "html",
+   "textChars": 1526,
+   "contentSha256": "3c597c524cf264cf75e2e659ec86fd6caececb4bdeed4a5cec6dd0dd51c55f38",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… res V. Public Hearings a) VAR2026-001 1 1 (XX106 085) 1215 Ridgecrest Dr; William and Joy Skaggs / Applicant and Owner; Variance request to UDC Sec. 89- 218 to allow for an accessory structure larger than 50% of the primary structure. - To be withd …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "716",
+   "date": "2026-11-10",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners",
+   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=716",
+   "textSource": "agenda",
+   "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=716",
+   "textMethod": "pdftotext",
+   "textChars": 6954,
+   "contentSha256": "8cc93b90ac247eb177f5ceabce4c5c56ceba59b96ec67975b8b44e1270d25508",
+   "topics": {
+    "annexation": 1,
+    "appointment": 1,
+    "contract": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "annexation",
+    "appointment",
+    "contract",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "annexation",
+    "appoint",
+    "contract",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annexation",
+     "excerpt": "… er 10, 2026 1 IX. New Business a) Consideration of an annexation request of (XX077 052A) 0 W Star Street consisting of ±8.95 acres. b) Consideration to appr …",
+     "context": "unknown"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… and Sec. 89-1186 for shared driveway length. VIII. Consent Agenda a) Consideration to approve the re-appointment of Mike Coan to the Joint Development Authority of Northeast Georgia for a two-year term beginning …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… er, GA, in the amount of $31,535.00. f) Consideration to approve the FY 2027 Aging Services Contract for the Barrow County Senior Center from Northeast Georgia Regional Commission in the a …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Applicant; Greater Northwestern Baptist Association of Georgia / Owner. Request to rezone ± 5.08 acres from AG (Agriculture) to R-1 (Low Density Single Family Residential). Variance request …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Request to rezone ± 5.08 acres from AG (Agriculture) to R-1 (Low Density Single Family Residential). Variance request to Sec. 89-402 for required road frontage and Sec. 89-1186 for shared driveway length. VIII …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1182",
+   "date": "2026-11-04",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners",
+   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1182",
+   "textSource": "agenda",
+   "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1182",
+   "textMethod": "pdftotext",
+   "textChars": 3872,
+   "contentSha256": "cb02a0224bf72d3ae87cee8e00f7a6a662ed71e4fa8bd3f4d0358b0e4eae9b98",
+   "topics": {
+    "appointment": 1,
+    "contract": 1
+   },
+   "tags": [
+    "appointment",
+    "contract"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… Discussion of future acquisition, disposition, or lease of real estate Discussing or deliberating upon the appointment, employment, hiring, disciplinary action or dismissal, or performance of a public officer or employee …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ntal capital projects for Barrow County, authorizing the execution and delivery of an Intergovernmental Contract between the Authority and the County, and authorizing the Chairman to execute the agree …",
+     "context": "unknown"
+    }
+   },
+   "flags": [],
+   "dataCenterItems": []
+  },
   {
    "id": "1179",
    "date": "2026-10-27",
@@ -1306,128 +1443,6 @@
    "flags": [
     "land-use"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1129",
-   "date": "2026-06-09",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners",
-   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1129",
-   "textSource": "agenda",
-   "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1129",
-   "textMethod": "pdftotext",
-   "textChars": 8772,
-   "contentSha256": "087296958c41f393857fd7c03a079ed538f1c853c9f8a137dd039304d88666e5",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "local-taxes": 1,
-    "millage-budget": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "local-taxes",
-    "millage-budget",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract",
-    "rezon",
-    "splost",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… ts manufacturing within the M-2 Heavy Industrial. VII. Consent Agenda a) Consideration to approve the appointment of Kelly Robinson to the Barrow County Department of Family and Children Services (DFCS) Board for …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… n to approve Change Order No. 1 for additional funding for the 2025 Local Road Assistance (LRA) Paving Contract from The Scruggs Company d/b/a Sunbelt Asphalt Surfaces, Inc. of Auburn, GA, in the amount of $31,297. …",
-     "context": "unknown"
-    },
-    "local-taxes": {
-     "term": "splost",
-     "excerpt": "… rize the Chairman to execute the application. d) Consideration to approve the RFB2026-17 TSPLOST Sidewalk Improvements with R&B Developers Inc., of Suwanee, GA, in the amount of $1,694,239.00 …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… ,239.00 and authorize the Chairman to execute the agreement and approve the necessary budget amendment. e) Consideration to approve the full design services for the Double Bridges Road …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… nty Line-Auburn Rd; Jakob Sullins / Applicant; European Construction & Design, LLC / Owner. Request to rezone ± 2.56 acres from AG (Agriculture) to R-1 (Low Density Single Family Residential) fo …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… Request to rezone ± 10.89 acres from AG (Agriculture) to R-1 (Low Density Single Family Residential). Variance request to UDC Sec. 89-402 for required road frontage and 89-1186 for shared driveway greater than 100 …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget",
-    "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1128",
-   "date": "2026-06-09",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners",
-   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1128",
-   "textSource": "agenda",
-   "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1128",
-   "textMethod": "pdftotext",
-   "textChars": 3416,
-   "contentSha256": "a1712524a2bf571dc484fe377f942b50e52c2e0a1d67dc9294060ec24d79cab5",
-   "topics": {
-    "appointment": 1
-   },
-   "tags": [
-    "appointment"
-   ],
-   "matchedTerms": [
-    "appoint"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… Discussion of future acquisition, disposition, or lease of real estate Discussing or deliberating upon the appointment, employment, hiring, disciplinary action or dismissal, or performance of a public officer or employee …",
-     "context": "unknown"
-    }
-   },
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1166",
-   "date": "2026-05-29",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners",
-   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1166",
-   "textSource": "agenda",
-   "textSourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1166",
-   "textMethod": "html",
-   "textChars": 815,
-   "contentSha256": "e41edc6ad9b3306234aaee203c5ad14bf72bb73935cbccc68b4a3eb36dd0d9ff",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
    "dataCenterItems": []
   }
  ]

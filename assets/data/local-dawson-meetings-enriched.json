@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:56:25Z",
+  "generatedAt": "2026-11-09T19:16:06Z",
   "source": "Dawson County (municode agenda/minutes PDFs, poppler+OCR)",
   "place": "Dawson County",
   "count": 25
@@ -11,19 +11,30 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-05",
+  "lastActivity": "2026-11-17",
   "topicTotals": {
-   "contract": 7,
+   "rezoning": 5,
+   "variance": 4,
+   "contract": 6,
    "millage-budget": 9,
    "local-taxes": 8,
    "comprehensive-plan": 4,
    "development": 4,
-   "rezoning": 4,
-   "appointment": 9,
-   "variance": 3
+   "appointment": 8
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission",
+    "date": "2026-11-17",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/daga-pubu/MEET-Agenda-06182b1c960447878ce974fb7a402381.pdf",
+    "tags": [
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… mmunity) and is located at 1173 Quail Cove Drive, Jasper, GA 30143, (Parcel No. 024A-048). Application for Rezoning: 2. ZA 26-30: James Terry Cranford has submitted an application to the proper authorities requesting a …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Planning Commission",
     "date": "2026-10-20",
@@ -94,7 +105,7 @@
     "excerptTerm": "future land use"
    }
   ],
-  "landUseMeetings": 6,
+  "landUseMeetings": 7,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
@@ -155,11 +166,51 @@
   "localTaxCitations": 5,
   "budgetItems": [],
   "budgetCitations": 0,
-  "landUseCitations": 6,
+  "landUseCitations": 7,
   "alprCitations": 0,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "06182b1c960447878ce974fb7a402381",
+   "date": "2026-11-17",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/daga-pubu/MEET-Agenda-06182b1c960447878ce974fb7a402381.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/daga-pubu/MEET-Agenda-06182b1c960447878ce974fb7a402381.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 3146,
+   "pdfSha256": "51d0a01e886a17026d9229b5586acf36c938a7505f1ae994b93210b2a7b434d1",
+   "topics": {
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… mmunity) and is located at 1173 Quail Cove Drive, Jasper, GA 30143, (Parcel No. 024A-048). Application for Rezoning: 2. ZA 26-30: James Terry Cranford has submitted an application to the proper authorities requesting a …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… cted official is required to complete a Disclosure of Campaign Contribution Form. I. NEW BUSINESS: Application for Variance: 1. VA 26-44: Payton Anderson has filed an application with the appropriate authorities seeking relief fr …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "d2804cfdc52c43bb835e153809560b9b",
    "date": "2026-11-05",
@@ -1085,44 +1136,6 @@
    "tags": [],
    "matchedTerms": [],
    "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "859aa6eeaddc44a8acb12d5c9dcb343a",
-   "date": "2026-06-18",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/daga-pubu/MEET-Agenda-859aa6eeaddc44a8acb12d5c9dcb343a.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/daga-pubu/MEET-Agenda-859aa6eeaddc44a8acb12d5c9dcb343a.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 2070,
-   "pdfSha256": "2e3056fa3732341d5ec875fbe8313a6207f5eadc141c815365bb45568e2d2216",
-   "topics": {
-    "appointment": 1,
-    "contract": 1
-   },
-   "tags": [
-    "appointment",
-    "contract"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… to Complete Addressing Assignments- Community Development Director Richard Osborne 6. Presentation of Board Appointments: a. Long Range Planning Committee i. Tim Costley- replacing Mandy Power b. Parks …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… y Building- Chestatee Regional Library System Director Leslie Clark 4. Presentation of Request to Approve a Contract with Gresham Smith for Engineering Design Services for the Repair of the Steele Bridge Road Bridge over Amicalol …",
-     "context": "agenda-action"
-    }
-   },
    "flags": [],
    "dataCenterItems": []
   }

@@ -1,23 +1,25 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:56:25Z",
+  "generatedAt": "2026-11-09T19:16:06Z",
   "source": "Columbus-Muscogee County (teammunicode agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbus-Muscogee County",
-  "count": 23
+  "count": 24
  },
  "summary": {
   "flags": [
    "alpr",
+   "budget",
    "data-center",
    "land-use",
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-27",
+  "lastActivity": "2026-11-10",
   "topicTotals": {
-   "appointment": 19,
-   "contract": 18,
-   "development": 11,
+   "appointment": 20,
+   "budget": 1,
+   "contract": 19,
+   "development": 12,
    "millage-budget": 20,
    "alpr": 2,
    "data-center": 14,
@@ -34,6 +36,14 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Council Agenda - Regular Meeting",
+    "date": "2026-11-10",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/columga-pubu/MEET-Agenda-a34e3b3060e441c88066b0f7b0c950d3.pdf",
+    "tags": [
+     "development"
+    ]
+   },
    {
     "title": "Council Agenda - Regular Meeting",
     "date": "2026-10-27",
@@ -67,7 +77,7 @@
     ]
    }
   ],
-  "landUseMeetings": 18,
+  "landUseMeetings": 19,
   "alprItems": [
    {
     "title": "Council Agenda - Regular Meeting",
@@ -157,13 +167,80 @@
    }
   ],
   "localTaxCitations": 7,
-  "budgetItems": [],
-  "budgetCitations": 0,
-  "landUseCitations": 4,
+  "budgetItems": [
+   {
+    "title": "Council Agenda - Regular Meeting",
+    "date": "2026-11-10",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/columga-pubu/MEET-Agenda-a34e3b3060e441c88066b0f7b0c950d3.pdf",
+    "terms": [
+     "decision-then-budget"
+    ]
+   }
+  ],
+  "budgetCitations": 1,
+  "landUseCitations": 5,
   "alprCitations": 2,
   "dataCenterCitations": 1
  },
  "meetings": [
+  {
+   "id": "2026-11-10",
+   "date": "2026-11-10",
+   "body": "City Council",
+   "title": "Council Agenda - Regular Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/columga-pubu/MEET-Agenda-a34e3b3060e441c88066b0f7b0c950d3.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/columga-pubu/MEET-Agenda-a34e3b3060e441c88066b0f7b0c950d3.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 29966,
+   "pdfSha256": "815cd0230d91a9310a5c154c06d2ddd3e3ed65a50f4b581bda1669340d91c6ae",
+   "topics": {
+    "appointment": 1,
+    "budget": 1,
+    "contract": 1,
+    "development": 1
+   },
+   "tags": [
+    "appointment",
+    "budget",
+    "contract",
+    "development"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "decision-then-budget",
+    "multifamily",
+    "reappoint"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ard 10-21-26 Page 6 of 16 Planning Advisory Commission 09-16-26 BOARD APPOINTMENTS - ACTION REQUESTED 5. MAYOR’S APPOINTMENTS – ANY NOMINATIONS MAY BE CONFIRMED FOR THIS MEETING: A. AUDIT C …",
+     "context": "unknown"
+    },
+    "budget": {
+     "term": "decision-then-budget",
+     "excerpt": "… otification Act (SORNA), in the amount of $400,000 or as otherwise awarded, with no local match required, and amend the Multi-governmental Fund budget by the amount of the award. 3. PURCHASES A. Contract Extension for Emergency Medical Supplies (Annual Contract) …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… al match required, and amend the Multi-governmental Fund budget by the amount of the award. 3. PURCHASES A. Contract Extension for Emergency Medical Supplies (Annual Contract) – RFB No. 21- 0013 B. Contract Extension for Pa …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… ated at 2900 12th Avenue (parcel # 029-017-006) from Neighborhood Commercial - (NC) Zoning District to Residential Multifamily – 1 (RMF1) Zoning District with conditions. (Planning Department and PAC recommend approval.) (Councilor Cogle) 4 …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2026-10-27",
    "date": "2026-10-27",

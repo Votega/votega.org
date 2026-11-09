@@ -1,21 +1,23 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:56:21Z",
+  "generatedAt": "2026-11-09T19:15:38Z",
   "source": "Appling County (pdflinks agenda/minutes PDFs, poppler+OCR)",
   "place": "Appling County",
-  "count": 11
+  "count": 12
  },
  "summary": {
   "flags": [
+   "budget",
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-08",
+  "lastActivity": "2026-11-10",
   "topicTotals": {
+   "appointment": 4,
+   "budget": 1,
+   "local-taxes": 9,
    "contract": 3,
-   "local-taxes": 8,
-   "millage-budget": 6,
-   "appointment": 3
+   "millage-budget": 6
   },
   "dataCenterItems": [],
   "landUseItems": [],
@@ -23,6 +25,17 @@
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
+   {
+    "title": "Board of Commissioners 2026-11-10",
+    "date": "2026-11-10",
+    "sourceUrl": "https://applingcountyga.org/wp-content/uploads/2026/11/Agenda-Commissioners-Meeting-November-10-2026-Regular-Meeting.pdf",
+    "terms": [
+     "referendum",
+     "splost"
+    ],
+    "excerpt": "… d of Commissioners Regular Monthly Meeting Schedule D. Truck Purchase for County Extensions Services E. T-SPLOST (TIA3) Referendum F. Oak Street Buildings – Roof Repairs G. Bulldozer – Landfill H. SunCode Energy …",
+    "excerptTerm": "splost"
+   },
    {
     "title": "Board of Commissioners 2026-10-08",
     "date": "2026-10-08",
@@ -96,14 +109,75 @@
     "excerptTerm": "millage"
    }
   ],
-  "localTaxCitations": 8,
-  "budgetItems": [],
-  "budgetCitations": 0,
+  "localTaxCitations": 9,
+  "budgetItems": [
+   {
+    "title": "Board of Commissioners 2026-11-10",
+    "date": "2026-11-10",
+    "sourceUrl": "https://applingcountyga.org/wp-content/uploads/2026/11/Agenda-Commissioners-Meeting-November-10-2026-Regular-Meeting.pdf",
+    "terms": [
+     "decision-then-budget"
+    ],
+    "excerpt": "… OF ALLEGIANCE V. ADOPTION OF AGENDA VI. APPROVAL OF MINUTES • October 1, 2026 Called Meeting/Public Hearing FY’27 County Budget • October 8, 2026 Regular Monthly Meeting VII. PRESENTATIONS/SPECIAL GUESTS/ANNOUNCEMENTS VIII. OLD BUS …",
+    "excerptTerm": "decision-then-budget"
+   }
+  ],
+  "budgetCitations": 1,
   "landUseCitations": 0,
   "alprCitations": 0,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "2026-11-10",
+   "date": "2026-11-10",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners 2026-11-10",
+   "sourceUrl": "https://applingcountyga.org/wp-content/uploads/2026/11/Agenda-Commissioners-Meeting-November-10-2026-Regular-Meeting.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://applingcountyga.org/wp-content/uploads/2026/11/Agenda-Commissioners-Meeting-November-10-2026-Regular-Meeting.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 1247,
+   "pdfSha256": "15565713462fc1279bde43624c3ba016fd396dd0fdc1fd960abb5a5b24037c23",
+   "topics": {
+    "appointment": 1,
+    "budget": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "budget",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "decision-then-budget",
+    "referendum",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… dings – Roof Repairs G. Bulldozer – Landfill H. SunCode Energy INFORMATION ONLY I. Board Appointments w/Expiring Terms X. DEPARTMENT UPDATES XI. EXECUTIVE SESSION Personnel, Litigation, and/or Rea …",
+     "context": "agenda-action"
+    },
+    "budget": {
+     "term": "decision-then-budget",
+     "excerpt": "… OF ALLEGIANCE V. ADOPTION OF AGENDA VI. APPROVAL OF MINUTES • October 1, 2026 Called Meeting/Public Hearing FY’27 County Budget • October 8, 2026 Regular Monthly Meeting VII. PRESENTATIONS/SPECIAL GUESTS/ANNOUNCEMENTS VIII. OLD BUS …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… d of Commissioners Regular Monthly Meeting Schedule D. Truck Purchase for County Extensions Services E. T-SPLOST (TIA3) Referendum F. Oak Street Buildings – Roof Repairs G. Bulldozer – Landfill H. SunCode Energy …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2026-10-08",
    "date": "2026-10-08",

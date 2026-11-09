@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-05T16:56:26Z",
+  "generatedAt": "2026-11-09T19:17:02Z",
   "source": "City of Fort Oglethorpe (wpdatatables agenda/minutes PDFs, poppler+OCR)",
   "place": "City of Fort Oglethorpe",
   "count": 25
@@ -12,16 +12,16 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-26",
+  "lastActivity": "2026-11-09",
   "topicTotals": {
+   "alpr": 3,
    "contract": 14,
    "millage-budget": 8,
-   "rezoning": 24,
+   "rezoning": 23,
    "variance": 9,
    "local-taxes": 3,
-   "appointment": 5,
-   "development": 13,
-   "alpr": 2,
+   "appointment": 4,
+   "development": 12,
    "annexation": 2
   },
   "dataCenterItems": [],
@@ -234,8 +234,16 @@
     ]
    }
   ],
-  "landUseMeetings": 24,
+  "landUseMeetings": 23,
   "alprItems": [
+   {
+    "title": "November 9, 2026 ~ Council Meeting",
+    "date": "2026-11-09",
+    "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/26-AGENDA-Preliminary-November-9.pdf",
+    "terms": [
+     "in-car camera"
+    ]
+   },
    {
     "title": "April 13, 2026 ~ Council Meeting",
     "date": "2026-04-13",
@@ -254,7 +262,7 @@
     ]
    }
   ],
-  "alprMeetings": 2,
+  "alprMeetings": 3,
   "localTaxItems": [
    {
     "title": "September 14, 2026 ~ Council Meeting",
@@ -291,11 +299,51 @@
   "localTaxCitations": 3,
   "budgetItems": [],
   "budgetCitations": 0,
-  "landUseCitations": 24,
-  "alprCitations": 2,
+  "landUseCitations": 23,
+  "alprCitations": 3,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "22-118",
+   "date": "2026-11-09",
+   "body": "City Council",
+   "title": "November 9, 2026 ~ Council Meeting",
+   "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/26-AGENDA-Preliminary-November-9.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/26-AGENDA-Preliminary-November-9.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 2114,
+   "pdfSha256": "2df51900ed2d206da021b51dda0c3e43c3ee18ba0f616fe3f1ed3c43dc7803a7",
+   "topics": {
+    "alpr": 1,
+    "contract": 1
+   },
+   "tags": [
+    "alpr",
+    "contract"
+   ],
+   "matchedTerms": [
+    "contract",
+    "in-car camera"
+   ],
+   "topicExcerpts": {
+    "alpr": {
+     "term": "in-car camera",
+     "excerpt": "… to renew an annual contract for sanitation services (Huhn) 4. Recommendation to renew a contract for police in-car camera systems (Huhn) 5. Recommendation to procure a computer voice stress analyzer system, computer …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… garage (Huhn) 2. Recommendation to renew the City’s workers’ compensation insurance coverage contract for 2027 (Huhn) 3. Recommendation to renew an annual contract for sanitation services (Huhn) 4. …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "alpr"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "22-117",
    "date": "2026-10-26",
@@ -1406,62 +1454,6 @@
      "term": "rezon",
      "excerpt": "… s a zoning amendment for 72 Lillian Drive, Paula Muina Rossville, GA, 30741 (tax parcel #0011A092) to be rezoned from Catoosa Nolan Richardson County R-1 to City of Fort Oglethorpe R-5 for the construction of townhomes. …",
      "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "22-93",
-   "date": "2026-01-26",
-   "body": "City Council",
-   "title": "January 26, 2026 ~ Council Meeting",
-   "sourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/26-AGENDA-Preliminary-January-26.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://fortogov.com/wp-content/uploads/2020/07/26-AGENDA-Preliminary-January-26.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 6385,
-   "pdfSha256": "00231286bb212c6fd8bce42242bc2b63105c22c61f729f95c2b19a3f498e1a75",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "development": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "development",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract",
-    "rezon",
-    "townhome"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… Chickamauga Battlefield Races (Michael Leary, Chattanooga Track Club) 4. Recommendation to appoint a member to the Fort Oglethorpe Regional Tourism Board (Huhn) 5. Recommendation to award a …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… to the Fort Oglethorpe Regional Tourism Board (Huhn) 5. Recommendation to award a blanket contract for advertising services for City events and activities (Huhn) 6. Recommendation to procur …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "townhome",
-     "excerpt": "… 01- Second and Final Reading (Stultz) Requested rezoning of R-1 property to R-5 zoning to construct townhomes Address: 1161 Steele Road, Rossville, Georgia 30741 (MAP 0010C027) Property ow …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… Ordinances 1. Ordinance No. 2026-01- Second and Final Reading (Stultz) Requested rezoning of R-1 property to R-5 zoning to construct townhomes Address: 1161 Steele Road, Rossville, Georg …",
-     "context": "agenda-action"
     }
    },
    "flags": [
