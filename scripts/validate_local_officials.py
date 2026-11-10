@@ -11,10 +11,13 @@ Exit code 0 = valid. Exit code 1 = one or more errors (details printed to stdout
 """
 
 import json
+import os
+import re
 import sys
 from datetime import date, datetime
 
-import yaml
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib import local_terms  # noqa: E402
 
 DATA_PATH = "_data/local_officials.yml"
 PLACES_PATH = "_data/places.yml"
@@ -73,6 +76,13 @@ REQUIRED_MEMBER_FIELDS = [
     "next_election",
     "voting",
 ]
+
+# Seat and title labels spell the phrase exactly "At-Large"; words around it are
+# left alone ("Post 1 At-Large", "District 5 (At-Large)").
+AT_LARGE_RE = re.compile(r"\bat[\s-]+large\b", re.I)
+
+# The date the roster is judged on: which rows are active, former or incoming.
+TODAY = date.today()
 
 errors = []
 warnings = []
@@ -177,6 +187,15 @@ def validate_member(juris_id, index, member, partisan):
         if not ok:
             err(context, f"statusDate must be an ISO date (YYYY-MM-DD) when present, got: {status_date!r}")
 
+    for field in ("seat", "title"):
+        v = member.get(field)
+        if isinstance(v, str):
+            for hit in AT_LARGE_RE.findall(v):
+                if hit != "At-Large":
+                    err(context, f"{field} {v!r}: spell {hit!r} as 'At-Large'")
+
+    validate_term_fields(context, member)
+
     last_elected = check_year(context, "last_elected", member.get("last_elected"))
     term_end = check_year(context, "term_end", member.get("term_end"))
     next_election = check_year(context, "next_election", member.get("next_election"))
@@ -195,6 +214,66 @@ def validate_member(juris_id, index, member, partisan):
         err(context, f"tie_break_only must be true/false, got: {tie_break_only!r}")
     if voting is True and tie_break_only is True:
         err(context, "voting:true and tie_break_only:true are contradictory (a tie-breaker does not vote normally)")
+
+
+def validate_term_fields(context, member):
+    """seat_id / takes_office / leaves_office / leave_reason (see lib/local_terms.py).
+    Gates only on a row that contradicts itself; an undated row stays valid."""
+    seat_id = member.get("seat_id")
+    if seat_id is not None and (not isinstance(seat_id, str)
+                                or not local_terms.SEAT_ID_RE.match(seat_id)):
+        err(context, f"seat_id must be a lowercase slug like 'district-3', got: {seat_id!r}")
+
+    dates = {}
+    for field in ("takes_office", "leaves_office"):
+        try:
+            dates[field] = local_terms.parse_date(member.get(field))
+        except ValueError:
+            err(context, f"{field} must be an ISO date (YYYY-MM-DD) when present, "
+                         f"got: {member.get(field)!r}")
+            dates[field] = None
+    start, end = dates["takes_office"], dates["leaves_office"]
+    if start and end and end <= start:
+        err(context, f"leaves_office ({end}) must be after takes_office ({start})")
+
+    seat = (member.get("seat") or "").strip()
+    if not seat_id and (seat or start or end):
+        why = "a seat label" if seat else "term dates"
+        err(context, f"seat_id is required on a row with {why} — it is the key that "
+                     f"joins a seat's holders (suggested: "
+                     f"{local_terms.suggest_seat_id(member) or 'set by hand'!r})")
+
+    reason = member.get("leave_reason")
+    if reason is not None and reason not in local_terms.LEAVE_REASONS:
+        err(context, f"leave_reason must be one of {sorted(local_terms.LEAVE_REASONS)}, "
+                     f"got: {reason!r}")
+    if reason is not None and end is None:
+        err(context, "leave_reason is set but leaves_office is blank")
+    if end is not None and end <= TODAY and reason is None:
+        warn(context, f"{member.get('name')!r} left office {end} with no leave_reason")
+
+
+def validate_seats(juris_id, members):
+    """Across a jurisdiction's rows: no seat held by two people at once (error),
+    and no seat left without a current or staged holder (reported)."""
+    for seat_id, a, b in local_terms.seat_conflicts(members):
+        err(juris_id, f"seat_id {seat_id!r} is held by {a.get('name')!r} and "
+                      f"{b.get('name')!r} over overlapping dates — set leaves_office / "
+                      f"takes_office, or give them distinct seat_ids")
+    seats = {}
+    for m in members:
+        if isinstance(m, dict) and m.get("seat_id"):
+            seats.setdefault(m["seat_id"], []).append(m)
+    for seat_id, rows in seats.items():
+        try:
+            held = any(local_terms.is_active(m, TODAY)
+                       or (local_terms.parse_date(m.get("takes_office")) or TODAY) > TODAY
+                       for m in rows)
+        except ValueError:
+            continue
+        if not held:
+            warn(juris_id, f"seat {seat_id!r} has no current or incoming holder recorded "
+                           f"(vacant, or the successor still needs adding)")
 
 
 def validate_reserved_block(juris_id, member_key, block, allowed):
@@ -258,12 +337,19 @@ def validate_jurisdiction(index, juris, seen_ids):
         err(context, "members must be a non-empty list")
         return
 
-    presiding = [m for m in members if isinstance(m, dict) and m.get("role") in PRESIDING_ROLES]
+    try:
+        current = local_terms.active_members(juris, TODAY)
+    except ValueError:
+        current = [m for m in members if isinstance(m, dict)]  # bad date: reported per row
+    presiding = [m for m in current
+                 if m.get("role") in PRESIDING_ROLES
+                 and m.get("status") not in local_terms.NOT_COUNTED_FOR_OCCUPANCY]
     if len(presiding) > 1:
         warn(context, f"{len(presiding)} presiding officers (Mayor/Chair) — expected at most 1")
 
     for i, member in enumerate(members):
         validate_member(juris_id, i, member, partisan)
+    validate_seats(juris_id, members)
 
 
 def load_places():
@@ -271,6 +357,7 @@ def load_places():
 
     Officials is a DOMAIN of a place: a jurisdiction's `id` must equal a place
     `slug` (the join key the hub renders on). Absent registry = skip the check."""
+    import yaml  # lazy: scripts/test_*.py import this module in a job with no pip deps
     try:
         with open(PLACES_PATH, encoding="utf-8") as f:
             pdata = yaml.safe_load(f)
@@ -365,8 +452,12 @@ def cross_check_votes(jurisdictions):
             elif len(who) > 1:
                 report(jid, f"roll-call name {n!r} matches more than one member: {sorted(who)}")
 
-        for m in juris.get("members") or []:
-            if not isinstance(m, dict) or m.get("voting") is not True or m.get("status"):
+        try:
+            current = local_terms.active_members(juris, TODAY)
+        except ValueError:
+            current = []
+        for m in current:
+            if m.get("voting") is not True or m.get("status"):
                 continue
             names = {m.get("name")} | set(m.get("vote_roll_names") or [])
             if not names & seen:
@@ -374,6 +465,7 @@ def cross_check_votes(jurisdictions):
 
 
 def main():
+    import yaml  # lazy, as in load_places()
     try:
         with open(DATA_PATH, encoding="utf-8") as f:
             data = yaml.safe_load(f)

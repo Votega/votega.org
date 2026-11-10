@@ -38,6 +38,7 @@ USAGE
 import argparse
 import json
 from lib.atomic_io import atomic_write
+from lib import local_terms
 import re
 import sys
 import time
@@ -149,13 +150,13 @@ def classify(office):
     special = "(special)" in ol
 
     if "chief executive officer" in ol:
-        return ("Chair", "Chief Executive Officer", "At-large", special)
+        return ("Chair", "Chief Executive Officer", "At-Large", special)
     if "sole commissioner" in ol:
-        return ("Chair", "Sole Commissioner", "At-large", special)
+        return ("Chair", "Sole Commissioner", "At-Large", special)
     if "commission" in ol and "chair" in ol:
         # e.g. "Commission Chair", "Board of Commissioners Chairman"
         title = re.sub(r"\s*\(special\)", "", o, flags=re.I).strip()
-        return ("Chair", title, "At-large", special)
+        return ("Chair", title, "At-Large", special)
     # A county-commission member seat. Gate on the county board specifically, then
     # extract the seat from the many label styles GA counties use.
     if re.search(r"commissioner|board of commissioners|county commission", ol):
@@ -169,8 +170,8 @@ def _commission_seat(o, ol):
       'County Commissioner D6' / 'Super District 6'                          -> (Super) District 6
       'County Commission 1' / 'County Commission 5 At Large'  (bare number)  -> District 1 / District 5 (At-Large)
       'County Commission - Anna' / 'Board of Commissioners, Elmodel' (named)  -> Anna / Elmodel
-      'County Commission - At Large'                                          -> At-large
-    Falls back to 'At-large' when nothing else parses."""
+      'County Commission - At Large'                                          -> At-Large
+    Falls back to 'At-Large' when nothing else parses."""
     at_large = "at large" in ol or "at-large" in ol
     # 1) explicit District/Post/Super District N
     m = re.search(r"\b(?:super\s+district|district|dist|post)\s*[-#]?\s*(\d+)", ol)
@@ -185,13 +186,13 @@ def _commission_seat(o, ol):
             return f"Super District {n}"
         return f"District {n} (At-Large)" if at_large else f"District {n}"
     if at_large:
-        return "At-large"
+        return "At-Large"
     # 3) named district: text after 'commission -' / 'commissioners,' that isn't a number
     m = re.search(r"commission(?:ers?)?\s*[-,]\s*([a-z][a-z .'&]+?)\s*(?:\(special\))?$",
                   o.strip(), re.I)
     if m:
         return m.group(1).strip().title()
-    return "At-large"
+    return "At-Large"
 
 
 def winner_of(ballot_item):
@@ -347,6 +348,9 @@ def emit_yaml(county_slug, county_name, draft, jtype="county"):
         if m.get("title"):
             lines.append(f"        title: {m['title']}")
         lines.append(f"        seat: {_yq(m['seat'])}")
+        sid = local_terms.suggest_seat_id(m)
+        if sid:
+            lines.append(f"        seat_id: {sid}            # must match the seat's existing holders")
         lines.append(f"        party: {m['party']}")
         lines.append(f"        email: \"\"")
         lines.append(f"        phone: \"\"")
@@ -410,7 +414,9 @@ def diff_county(slug, draft, curated, changes_only=False):
             return None
         return f"  {slug}: not yet curated ({len(draft['members'])} seats drafted from {SEATING_SLUG})"
     gen = list(draft["members"])
-    man = list(j.get("members") or [])
+    # Compare against who holds the seats today: former rows (kept as history) and
+    # incoming rows (staged ahead of their term) are not the current board.
+    man = local_terms.active_members(j, datetime.now(timezone.utc).date())
     used_g, used_m = set(), set()
     out = [f"  {slug}:"]
     actionable = 0  # '~' mismatches and '+' results-only (real drift signals)
