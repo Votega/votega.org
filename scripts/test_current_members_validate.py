@@ -285,6 +285,35 @@ def tier1_cases():
           "(the old record floors' false positive)", V.tier1(r, i, s), [])
 
 
+def carried_cases():
+    # A carried-forward record is a sound record with an older date: nothing in
+    # tier 1 may object to it, and tier 2 must name it.
+    r, i, s = sound()
+    i["metadata"]["carriedForward"] = {"G001": "2026-10-16T06:00:00Z"}
+    check("a carried-forward record is NOT tier 1", V.tier1(r, i, s), [])
+    heads = dict(V.tier2(r, i))
+    check("tier 2 names the carried member and the date its record was fetched",
+          any("G001" in ln and "2026-10-16" in ln
+              for ln in heads.get("Sponsorship carried forward from an earlier run", [])), True)
+    check("and does not also call it unpublished",
+          "Sponsorship record not published this run" in heads, False)
+
+    r, i, s = sound()
+    i["metadata"]["carriedForward"] = {"Z999": "2026-10-16T06:00:00Z"}
+    check("carriedForward naming a member the index does not publish is tier 1",
+          any("does not publish" in e for e in V.tier1(r, i, s)), True)
+
+    r, i, s = sound()
+    i["metadata"]["carriedForward"] = {"G001": "2026-10-18T06:00:00Z"}
+    check("a carried fetch date later than the run is tier 1",
+          any("is after this run" in e for e in V.tier1(r, i, s)), True)
+
+    r, i, s = sound()
+    i["metadata"]["carriedForward"] = {"G001": None}
+    check("a carried entry with no date is tier 1",
+          any("has no fetch date" in e for e in V.tier1(r, i, s)), True)
+
+
 def tier2_cases():
     r, i, s = sound()
 
@@ -397,6 +426,8 @@ def main():
     tier1_cases()
     print("\ntier 2 — report change, never gate:")
     tier2_cases()
+    print("\ncarried-forward sponsorship:")
+    carried_cases()
     if failures:
         print(f"\nFAIL: {len(failures)} case(s) failed")
         return 1

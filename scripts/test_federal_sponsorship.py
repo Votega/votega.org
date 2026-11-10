@@ -24,7 +24,8 @@ from urllib.parse import urlparse, parse_qs
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from lib.federal_sponsorship import (fetch_member_legislation, most_recent,
+from lib.federal_sponsorship import (carriable, fetch_member_legislation,
+                                     load_previous, most_recent,
                                      write_sponsorship_artifacts)
 from lib.federal_sponsorship import BILL_TYPE_SLUG, ROW_FIELDS
 
@@ -161,6 +162,63 @@ with tempfile.TemporaryDirectory() as tmp:
     print("  %d bytes/row across the heaviest slice (%d rows, %.0f KB)"
           % (stats['maxSliceBytes'] / len(rows2), len(rows2),
              stats['maxSliceBytes'] / 1024))
+
+print("A failed fetch republishes the last complete record instead of dropping it:")
+DAY1, DAY2, DAY3 = ('2026-11-09T15:00:00+00:00', '2026-11-10T14:00:00+00:00',
+                    '2026-11-11T14:00:00+00:00')
+quiet = lambda *a: None
+with tempfile.TemporaryDirectory() as tmp:
+    write_sponsorship_artifacts(tmp, CONGRESS, {
+        'A000001': {'name': 'One', 'primary': rows[:3], 'cosponsored': rows2[:5]},
+        'B000002': {'name': 'Two', 'primary': rows[:2], 'cosponsored': rows2[:7]},
+    }, generated_at=DAY1, log=quiet)
+    day1_b = json.load(open(os.path.join(tmp, 'federal-sponsorship', 'B000002.json')))
+
+    # Day 2: B's fetch fails. The caller reads the previous record BEFORE writing.
+    fetched, prev = load_previous(tmp, CONGRESS)
+    check('the previous slices are read back', sorted(prev), ['A000001', 'B000002'])
+    check('a first-time carry is dated by the previous run', fetched['B000002'], DAY1)
+    summary_b = {'congress': CONGRESS, 'sponsored': 2, 'cosponsored': 7}
+    check('a record whose summary and slice agree is carriable',
+          carriable(summary_b, prev['B000002'], CONGRESS), True)
+    write_sponsorship_artifacts(tmp, CONGRESS, {
+        'A000001': {'name': 'One', 'primary': rows[:4], 'cosponsored': rows2[:5]},
+    }, generated_at=DAY2, carried={'B000002': {'slice': prev['B000002'],
+                                              'fetchedAt': fetched['B000002']}}, log=quiet)
+    idx = json.load(open(os.path.join(tmp, 'federal-sponsorship-index.json')))
+    check('the carried member keeps their counts', idx['members'].get('B000002'), [2, 7])
+    check('the fresh member is updated', idx['members'].get('A000001'), [4, 5])
+    check('totals include the carried record', (idx['metadata']['totalSponsored'],
+          idx['metadata']['totalCosponsored']), (6, 12))
+    check('the index names the carried member with its real fetch date',
+          idx['metadata'].get('carriedForward'), {'B000002': DAY1})
+    check('the carried slice is republished byte-for-byte unchanged',
+          json.load(open(os.path.join(tmp, 'federal-sponsorship', 'B000002.json'))), day1_b)
+
+    # Day 3: still failing. The date must stay DAY1, not become DAY2.
+    fetched, prev = load_previous(tmp, CONGRESS)
+    check('a record carried twice keeps its ORIGINAL fetch date', fetched['B000002'], DAY1)
+
+    # Day 4: B fetches cleanly again; the marker disappears.
+    write_sponsorship_artifacts(tmp, CONGRESS, {
+        'A000001': {'name': 'One', 'primary': rows[:4], 'cosponsored': rows2[:5]},
+        'B000002': {'name': 'Two', 'primary': rows[:2], 'cosponsored': rows2[:8]},
+    }, generated_at=DAY3, log=quiet)
+    idx = json.load(open(os.path.join(tmp, 'federal-sponsorship-index.json')))
+    check('a clean run writes no carriedForward key at all',
+          'carriedForward' in idx['metadata'], False)
+
+    check('a record from another Congress is never carried',
+          load_previous(tmp, CONGRESS + 1), ({}, {}))
+check('a summary that disagrees with its slice is not carriable',
+      carriable({'congress': CONGRESS, 'sponsored': 9, 'cosponsored': 7},
+                {'congress': CONGRESS, 'primary': [[0]] * 2, 'cosponsored': [[0]] * 7},
+                CONGRESS), False)
+check('no previous summary means nothing to carry',
+      carriable(None, {'congress': CONGRESS}, CONGRESS), False)
+with tempfile.TemporaryDirectory() as tmp:
+    check('a first run with no previous files carries nothing',
+          load_previous(tmp, CONGRESS), ({}, {}))
 
 # ---------------------------------------------------------------------------
 # The slice format is split across two languages: this module writes the rows,

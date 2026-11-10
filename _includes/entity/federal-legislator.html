@@ -1538,7 +1538,11 @@
     // Per-block provenance from THIS dataset's own generatedAt - not the roster
     // stamp at the foot of the page, which supplies none of the rows in this panel.
     // Omit the dated clause rather than printing a bare or wrong date.
-    const sponIso  = index?.metadata?.generatedAt || null;
+    // A member whose fetch failed this run has their previous complete record
+    // republished (metadata.carriedForward, scripts/lib/federal_sponsorship.py);
+    // stamp it with the date it was really fetched, not this run's.
+    const carriedIso = index?.metadata?.carriedForward?.[member.bioguideId] || null;
+    const sponIso  = carriedIso || index?.metadata?.generatedAt || null;
     const sponDate = sponIso && window.dataStamp ? window.dataStamp.formatDate(sponIso) : null;
     // The published, archived home for this dataset is the sibling repo, not the
     // build artifact we happen to fetch (CLAUDE.md on linking published datasets).
