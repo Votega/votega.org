@@ -181,6 +181,7 @@
   .po-party.Independent { background: var(--color-party-i-tint); color: var(--color-party-i-text); }
   .po-terms { font-size: 0.84rem; color: var(--color-text); margin: 0.1rem 0 0; line-height: 1.6; }
   .po-terms .po-next { font-weight: 600; color: var(--color-link); }
+  .po-handover { font-size: 0.8rem; color: var(--color-text-muted); margin: 0.15rem 0 0; }
   .po-tiebreak { font-size: 0.78rem; color: var(--color-text-muted); font-style: italic; margin: 0; }
   /* Service-status badge + note (mirrors the ga-legislator status colors). */
   .po-status { align-self: flex-start; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.03em;
@@ -233,14 +234,27 @@
       listed (county chairs use varied titles — "Chief Executive Officer",
       "Commission Chairman/Chairwoman"). This prevents an unlisted role from being
       silently dropped from the roster. {% endcomment -%}
+  {%- comment %} Only rows that hold their seat on the build date. Former rows (past
+      leaves_office) are kept in the data as history and incoming rows (future
+      takes_office) are staged ahead of their term; neither renders. Mirrors
+      is_active() in scripts/lib/local_terms.py — keep the two in step. The swap
+      needs a deploy on or after the date (the twice-daily cron covers it).
+      {% endcomment -%}
+  {% assign today = site.time | date: "%Y-%m-%d" %}
+  {% assign current = "" | split: "" %}
+  {% for m in juris.members %}
+    {% if m.takes_office %}{% assign t0 = m.takes_office | date: "%Y-%m-%d" %}{% if t0 > today %}{% continue %}{% endif %}{% endif %}
+    {% if m.leaves_office %}{% assign t1 = m.leaves_office | date: "%Y-%m-%d" %}{% if t1 <= today %}{% continue %}{% endif %}{% endif %}
+    {% assign current = current | push: m %}
+  {% endfor %}
   {% assign ordered = "" | split: "" %}
   {% for role in role_order %}
-    {% assign chunk = juris.members | where: "role", role %}
+    {% assign chunk = current | where: "role", role %}
     {% assign ordered = ordered | concat: chunk %}
   {% endfor %}
-  {% for m in juris.members %}
+  {% for m in current %}
     {% unless role_order contains m.role %}
-      {% assign chunk = juris.members | where: "role", m.role %}
+      {% assign chunk = current | where: "role", m.role %}
       {% assign ordered = ordered | concat: chunk %}
     {% endunless %}
   {% endfor %}
@@ -276,6 +290,17 @@
             {% if m.term_end %}<br>Term ends {{ m.term_end }}{% endif %}
           </p>
           {% endif %}
+          {%- if m.leaves_office %}
+            {%- assign t1 = m.leaves_office | date: "%Y-%m-%d" -%}
+            {%- assign succ = nil -%}
+            {%- for s in juris.members -%}
+              {%- if s.seat_id and s.seat_id == m.seat_id and s.takes_office -%}
+                {%- assign s0 = s.takes_office | date: "%Y-%m-%d" -%}
+                {%- if s0 >= t1 %}{% assign succ = s %}{% break %}{% endif -%}
+              {%- endif -%}
+            {%- endfor %}
+          <p class="po-handover">{% if succ %}Successor elected: {{ succ.name }}, takes office {{ succ.takes_office | date: "%b %-d, %Y" }}{% else %}Leaves office {{ m.leaves_office | date: "%b %-d, %Y" }}{% endif %}</p>
+          {%- endif %}
           {% if m.tie_break_only %}<p class="po-tiebreak">Votes only to break ties</p>{% endif %}
           {% if m.statusNote and m.statusNote != "" %}
           <p class="po-statusnote">{{ m.statusNote }}

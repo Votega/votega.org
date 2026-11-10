@@ -62,6 +62,15 @@ SEATS = {'House of Representatives': 180, 'Senate': 56}
 # post names them. Two points is the figure the post has always used.
 NARROW_POINTS = 2.0
 
+
+def display_points(margin, total):
+    """The margin in percentage points, to 2 decimals, rounded DOWN. A race
+    listed as inside NARROW_POINTS must never print at or above it: rounding to
+    nearest showed 1,661 of 83,187 (1.997 points) as 2.0 on a list of seats
+    "inside two points". Integer arithmetic, so 1.23 cannot become 1.22 through
+    a float like 122.99999."""
+    return (10000 * margin // total) / 100
+
 PARTY_FROM_SUFFIX = {'Dem': 'Democratic', 'Rep': 'Republican', 'Ind': 'Independent'}
 PARTY_FROM_CONTEST = {'dem': 'Democratic', 'rep': 'Republican'}
 SUFFIX_RE = re.compile(r'\s*\((Dem|Rep|Ind)\w*\)\s*$')
@@ -196,7 +205,7 @@ def build():
                         ('leader', lead['name']), ('party', lead['party']),
                         ('margin', margin), ('marginDisplay', f'{margin:,}'),
                         ('total', lead['total']), ('totalDisplay', f"{lead['total']:,}"),
-                        ('points', round(points, 2)),
+                        ('points', display_points(margin, lead['total'])),
                     ]))
 
     members.sort(key=lambda m: (m['chamber'], m['district']))

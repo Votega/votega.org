@@ -95,6 +95,35 @@
 #                 `assumed`  = derived (e.g. last_elected + term_years); `unknown` = no
 #                 basis. Omit while a roster is unreviewed. See LOCALDATAEXPORT.md.
 #
+#   SEAT LABELS spell the phrase "At-Large" exactly (the validator enforces it);
+#   words around it stay as the body writes them ("Post 1 At-Large").
+#
+# ----------------------------------------------------------------------------
+# TERMS & HISTORY — a row is one person's hold on one seat; NEVER delete a row
+# ----------------------------------------------------------------------------
+#   seat_id       : REQUIRED when `seat` is set. Stable lowercase slug for the seat
+#                   ("district-3", "post-1-at-large", "mayor"). Every holder of a seat,
+#                   past, present and incoming, carries the SAME seat_id: it is the key
+#                   that joins a seat's history. Never rename one; relabel `seat`.
+#   takes_office  : optional ISO date the person began (or will begin) holding the seat.
+#                   Blank = held since before history was recorded.
+#   leaves_office : optional ISO date the hold ENDS — the first day they no longer hold
+#                   it, normally the successor's takes_office (both 1 January).
+#   leave_reason  : term-ended | resigned | removed | deceased (with leaves_office).
+#
+#   The site shows only rows active on the build date:
+#     (takes_office blank or <= today) and (leaves_office blank or > today).
+#   So to STAGE an election winner ahead of their term: add a new row with the seat's
+#   seat_id and takes_office, and set leaves_office + leave_reason: term-ended on the
+#   outgoing row. The outgoing card says "Successor elected: …" until the date, and
+#   the swap happens on the first deploy on/after it. A RE-ELECTED incumbent needs no
+#   new row: just update last_elected / term_end / next_election.
+#   When someone leaves, set leaves_office + leave_reason and KEEP the row: former rows
+#   are history (published to ga-local-government), not clutter. Only dated
+#   contradictions fail CI (two holders of one seat at once, leaves before takes); a
+#   seat with no current or incoming holder is reported, never gated.
+#   One implementation: scripts/lib/local_terms.py (place.html mirrors is_active()).
+#
 #   OPTIONAL jurisdiction structural fields (feed an eventual sibling-repo publish;
 #   a publisher DERIVES counts/vacancies from members[] — don't store those):
 #     term_years      : per-county term length (GA local act; most 4). Lets term_end
@@ -139,7 +168,11 @@
 #       # full_name: ""               # optional: complete name for matching (see vocab)
 #       role: Council Member          # see controlled vocab above
 #       # title: ""                   # optional: verbatim office label (see vocab)
-#       seat: ""                      # "Ward 1", "District 2", "At-large"
+#       seat: ""                      # "Ward 1", "District 2", "At-Large"
+#       seat_id: ""                   # "ward-1", "district-2", "at-large" (see TERMS)
+#       # takes_office: 2027-01-01    # optional — see TERMS & HISTORY
+#       # leaves_office:              # optional
+#       # leave_reason:               # with leaves_office
 #       party: Nonpartisan            # Republican | Democratic | Nonpartisan
 #       email: ""
 #       phone: ""
@@ -171,6 +204,7 @@ jurisdictions:
         role: Chair
         title: Mayor
         seat: "At-Large"
+        seat_id: mayor
         party: 
         email: ""
         phone: "770-463-3377"
@@ -262,6 +296,7 @@ jurisdictions:
         role: Chair
         title: Mayor
         seat: "At-Large"
+        seat_id: mayor
         party: Nonpartisan
         email: "mayorjohnson@augustaga.gov"
         phone: "706-821-1831"
@@ -274,6 +309,7 @@ jurisdictions:
       - name: "Jordan Johnson"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: Nonpartisan
         email: "CJohnson4@augustaga.gov"
         phone: "706-564-9356"
@@ -285,6 +321,7 @@ jurisdictions:
       - name: "Stacy Pulliam"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: Nonpartisan
         email: "spulliam@augustaga.gov"
         phone: "762-328-8256"
@@ -296,6 +333,7 @@ jurisdictions:
       - name: "Catherine Smith-Rice"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: Nonpartisan
         email: "CMcKnight@augustaga.gov"
         phone: "706-834-1082"
@@ -307,6 +345,7 @@ jurisdictions:
       - name: "Lonnie Wimberly"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: Nonpartisan
         email: "lwimberly@augustaga.gov"
         phone: "706-564-3099"
@@ -318,6 +357,7 @@ jurisdictions:
       - name: "Don Clark"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: Nonpartisan
         email: "dclark@augustaga.gov"
         phone: "706-945-4953"
@@ -329,6 +369,7 @@ jurisdictions:
       - name: "Tony Lewis"
         role: Commissioner
         seat: "District 6"
+        seat_id: district-6
         party: Nonpartisan
         email: "tony.lewis@augustaga.gov"
         phone: "762-328-8491"
@@ -340,6 +381,7 @@ jurisdictions:
       - name: "Tina Slendak"
         role: Commissioner
         seat: "District 7"
+        seat_id: district-7
         party: Nonpartisan
         email: "tslendak@augustaga.gov"
         phone: "706-945-3289"
@@ -351,6 +393,7 @@ jurisdictions:
       - name: "Brandon Garrett"
         role: Commissioner
         seat: "District 8"
+        seat_id: district-8
         party: Nonpartisan
         email: "bgarrett@augustaga.gov"
         phone: "706-564-2983"
@@ -362,6 +405,7 @@ jurisdictions:
       - name: "Francine Scott"
         role: Commissioner
         seat: "District 9"
+        seat_id: district-9
         party: Nonpartisan
         email: "FScott@augustaga.gov"
         phone: "706-564-8712"
@@ -373,6 +417,7 @@ jurisdictions:
       - name: "Wayne Guilfoyle"
         role: Commissioner
         seat: "District 10"
+        seat_id: district-10
         party: Nonpartisan
         email: "wguilfoyle@augustaga.gov"
         phone: "762-328-0766"
@@ -397,6 +442,7 @@ jurisdictions:
         role: Chair
         title: City Council President
         seat: "At-Large"
+        seat_id: at-large
         party: Nonpartisan
         email: "MCOverstreet@atlantaga.gov"
         phone: "404-330-6052"
@@ -408,7 +454,8 @@ jurisdictions:
         source: "https://citycouncil.atlantaga.gov/council-members/council-president-marci-collier-overstreet"
       - name: "Michael Julian Bond"
         role: Council Member
-        seat: "Post 1 At Large"
+        seat: "Post 1 At-Large"
+        seat_id: post-1-at-large
         party: Nonpartisan
         email: "mbond@atlantaga.gov"
         phone: "404-330-6770"
@@ -419,7 +466,8 @@ jurisdictions:
         source: "https://citycouncil.atlantaga.gov/council-members/michael-julian-bond"
       - name: "Matt Westmoreland"
         role: Council Member
-        seat: "Post 2 At Large"
+        seat: "Post 2 At-Large"
+        seat_id: post-2-at-large
         party: Nonpartisan
         email: "mwestmoreland@atlantaga.gov"
         phone: "404-330-6302"
@@ -430,7 +478,8 @@ jurisdictions:
         source: "https://citycouncil.atlantaga.gov/council-members/matt-westmoreland"
       - name: "Eshé Collins"
         role: Council Member
-        seat: "Post 3 At Large"
+        seat: "Post 3 At-Large"
+        seat_id: post-3-at-large
         party: Nonpartisan
         email: "EsheCollins@atlantaga.gov"
         phone: "404-330-6041"
@@ -442,6 +491,7 @@ jurisdictions:
       - name: "Jason Winston"
         role: Council Member
         seat: "District 1"
+        seat_id: district-1
         party: Nonpartisan
         email: "jwinston@atlantaga.gov"
         phone: "404-330-6039"
@@ -453,6 +503,7 @@ jurisdictions:
       - name: "Kelsea Bond"
         role: Council Member
         seat: "District 2"
+        seat_id: district-2
         party: Nonpartisan
         email: "Kbond@atlantaga.gov"
         phone: "470-831-9487"
@@ -464,6 +515,7 @@ jurisdictions:
       - name: "Byron Amos"
         role: Council Member
         seat: "District 3"
+        seat_id: district-3
         party: Nonpartisan
         email: "bdamos@atlantaga.gov"
         phone: "404-330-6046"
@@ -475,6 +527,7 @@ jurisdictions:
       - name: "Jason S. Dozier"
         role: Council Member
         seat: "District 4"
+        seat_id: district-4
         party: Nonpartisan
         email: "jdozier@atlantaga.gov"
         phone: "404-330-6047"
@@ -486,6 +539,7 @@ jurisdictions:
       - name: "Liliana Bakhtiari"
         role: Council Member
         seat: "District 5"
+        seat_id: district-5
         party: Nonpartisan
         email: "Lbakhtiari@atlantaga.gov"
         phone: "404-330-6048"
@@ -497,6 +551,7 @@ jurisdictions:
       - name: "Alex Wan"
         role: Council Member
         seat: "District 6"
+        seat_id: district-6
         party: Nonpartisan
         email: "awan@atlantaga.gov"
         phone: "404-330-6049"
@@ -508,6 +563,7 @@ jurisdictions:
       - name: "Thomas Worthy"
         role: Council Member
         seat: "District 7"
+        seat_id: district-7
         party: Nonpartisan
         email: "Tworthy@atlantaga.gov"
         phone: "404-330-6050"
@@ -519,6 +575,7 @@ jurisdictions:
       - name: "Mary Norwood"
         role: Council Member
         seat: "District 8"
+        seat_id: district-8
         party: Nonpartisan
         email: "mnorwood@atlantaga.gov"
         phone: "404-330-6051"
@@ -530,6 +587,7 @@ jurisdictions:
       - name: "Dustin Hillis"
         role: Council Member
         seat: "District 9"
+        seat_id: district-9
         party: Nonpartisan
         email: "drhillis@atlantaga.gov"
         phone: "404-330-6044"
@@ -541,6 +599,7 @@ jurisdictions:
       - name: "Andrea L. Boone"
         role: Council Member
         seat: "District 10"
+        seat_id: district-10
         party: Nonpartisan
         email: "aboone@atlantaga.gov"
         phone: "404-330-6055"
@@ -552,6 +611,7 @@ jurisdictions:
       - name: "Wayne Martin"
         role: Council Member
         seat: "District 11"
+        seat_id: district-11
         party: Nonpartisan
         email: "Wmartin@atlantaga.gov"
         phone: "404-330-6054"
@@ -563,6 +623,7 @@ jurisdictions:
       - name: "Antonio Lewis"
         role: Council Member
         seat: "District 12"
+        seat_id: district-12
         party: Nonpartisan
         email: "anlewis@atlantaga.gov"
         phone: "404-330-6053"
@@ -592,7 +653,8 @@ jurisdictions:
     members:
       - name: Betty B. Cason
         role: Mayor
-        seat: At-large              # mayor is elected citywide, not by ward
+        seat: At-Large              # mayor is elected citywide, not by ward
+        seat_id: mayor
         party: Nonpartisan
         email: ""
         phone: ""
@@ -608,6 +670,7 @@ jurisdictions:
       - name: Don North
         role: Council Member
         seat: Ward 1 (NW)                  # West ward — verify exact ward/post label
+        seat_id: ward-1-nw
         party: Nonpartisan
         email: "dnorth@carrollton-ga.gov"
         phone: ""
@@ -622,6 +685,7 @@ jurisdictions:
       - name: Brett Ledbetter
         role: Council Member
         seat: Ward 2 (N)                  # West ward — verify exact ward/post label
+        seat_id: ward-2-n
         party: Nonpartisan
         email: "bledbetter@carrollton-ga.gov"
         phone: ""
@@ -636,6 +700,7 @@ jurisdictions:
       - name: Stacie Gibbs
         role: Council Member
         seat: Ward 3 (SE)                  # West ward — verify exact ward/post label
+        seat_id: ward-3-se
         party: Nonpartisan
         email: "sgibbs@carrollton-ga.gov"
         phone: ""
@@ -650,6 +715,7 @@ jurisdictions:
       - name: Bob Uglum
         role: Council Member
         seat: Ward 4 (SW)                  # West ward — verify exact ward/post label
+        seat_id: ward-4-sw
         party: Nonpartisan
         email: "buglum@carrollton-ga.gov"
         phone: ""
@@ -697,7 +763,8 @@ jurisdictions:
     members:
       - name: Fleeta Baggett
         role: Mayor
-        seat: At-large              # mayor is elected citywide, not by ward
+        seat: At-Large              # mayor is elected citywide, not by ward
+        seat_id: mayor
         party: Nonpartisan
         email: "fbaggett@cityofcovington.org"
         phone: ""
@@ -713,6 +780,7 @@ jurisdictions:
       - name: Charika Davis
         role: Council Member
         seat: West Post 2                  # West ward — verify exact ward/post label
+        seat_id: west-post-2
         party: Nonpartisan
         email: "cdavis@cityofcovington.org"
         phone: ""
@@ -728,6 +796,7 @@ jurisdictions:
       - name: Anthony Henderson
         role: Council Member
         seat: West Post 3                  # West ward — verify exact ward/post label
+        seat_id: west-post-3
         party: Nonpartisan
         email: "ahenderson@cityofcovington.org"
         phone: ""
@@ -743,6 +812,7 @@ jurisdictions:
       - name: Kim Johnson
         role: Council Member
         seat: West Post 1                 # West ward — verify exact ward/post label
+        seat_id: west-post-1
         party: Nonpartisan
         email: "kjohnson@cityofcovington.org"
         phone: ""
@@ -758,6 +828,7 @@ jurisdictions:
       - name: Travis Moore
         role: Council Member
         seat: East Post 3                  # East ward — verify exact ward/post label
+        seat_id: east-post-3
         party: Nonpartisan
         email: "tmoore@cityofcovington.org"
         phone: ""
@@ -773,6 +844,7 @@ jurisdictions:
       - name: Jared Rutberg
         role: Council Member
         seat: East Post 2                  # East ward — verify exact ward/post label
+        seat_id: east-post-2
         party: Nonpartisan
         email: "jrutberg@cityofcovington.org"
         phone: ""
@@ -788,6 +860,7 @@ jurisdictions:
       - name: Dwayne Turner
         role: Council Member
         seat: East Post 1                  # East ward — verify exact ward/post label
+        seat_id: east-post-1
         party: Nonpartisan
         email: "dturner@cityofcovington.org"
         phone: ""
@@ -836,7 +909,8 @@ jurisdictions:
         title: "Interim Chairman"
         actingFor: "Marcello Banes"           # serves during his suspension
         actingSince: 2026-10-23               # date of the appointing EO 10.23.26.01
-        seat: At-large
+        seat: At-Large
+        seat_id: at-large
         party: ""                             # not yet confirmed — fill in from a source
         email: ""
         phone: ""
@@ -853,7 +927,8 @@ jurisdictions:
         title: "Chairman (suspended)"
         replacedBy: "Tommy Davis"             # interim appointee, EO 10.23.26.01
         replacedDate: 2026-10-23              # interim named; his suspension began 2026-09-24 (statusDate)
-        seat: At-large
+        seat: At-Large
+        seat_id: at-large
         party:                    # Republican | Democratic
         email: "mbanes@co.newton.ga.us"
         phone: "678-625-1201"
@@ -872,6 +947,7 @@ jurisdictions:
       - name: "Stan Edwards"
         role: Commissioner
         seat: "District 1"                    # e.g. "District 1"
+        seat_id: district-1
         party: 
         email: "asedwards@co.newton.ga.us"
         phone: "678-294-9166"
@@ -886,6 +962,7 @@ jurisdictions:
       - name: "T. Demond Mason"
         role: Commissioner
         seat: "District 2"                    # e.g. "District 1"
+        seat_id: district-2
         party: 
         email: "dmason@co.newton.ga.us"
         phone: "678-544-5212"
@@ -900,6 +977,7 @@ jurisdictions:
       - name: "Andre Cooper"
         role: Commissioner
         seat: "District 3"                    # e.g. "District 1"
+        seat_id: district-3
         party: 
         email: "acooper@co.newton.ga.us"
         phone: "678-625-1200"
@@ -914,6 +992,7 @@ jurisdictions:
       - name: "JC Henderson"
         role: Commissioner
         seat: "District 4"                    # e.g. "District 1"
+        seat_id: district-4
         party: 
         email: "jchenderson@co.newton.ga.us"
         phone: "770-896-3826"
@@ -928,6 +1007,7 @@ jurisdictions:
       - name: "LeAnne Long"
         role: Commissioner
         seat: "District 5"                    # e.g. "District 1"
+        seat_id: district-5
         party: 
         email: "llong@co.newton.ga.us"
         phone: "678-625-1200"
@@ -954,7 +1034,8 @@ jurisdictions:
     members:
       - name: "Lisa Cupid"
         role: Chair                 # countywide-elected board chair
-        seat: At-large
+        seat: At-Large
+        seat_id: at-large
         party:                   # Republican | Democratic
         email: "lisa.cupid@cobbcounty.gov"
         phone: "678-625-1201"
@@ -969,6 +1050,7 @@ jurisdictions:
       - name: "Keli Gambrill"
         role: Commissioner
         seat: "District 1"                    # e.g. "District 1"
+        seat_id: district-1
         party: 
         email: "keli.gambrill@cobbcounty.gov"
         phone: "770-528-3313"
@@ -983,6 +1065,7 @@ jurisdictions:
       - name: "Erick Allen"
         role: Commissioner
         seat: "District 2"                    # e.g. "District 1"
+        seat_id: district-2
         party: 
         email: "erick.allen@cobbcounty.gov"
         phone: "770-528-3315"
@@ -997,6 +1080,7 @@ jurisdictions:
       - name: "JoAnn Birrell"
         role: Commissioner
         seat: "District 3"                    # e.g. "District 1"
+        seat_id: district-3
         party: 
         email: "joann.birrell@cobbcounty.gov"
         phone: "770-528-3317"
@@ -1011,6 +1095,7 @@ jurisdictions:
       - name: "Monique Sheffield"
         role: Commissioner
         seat: "District 4"                    # e.g. "District 1"
+        seat_id: district-4
         party: 
         email: "monique.sheffield@cobbcounty.gov"
         phone: "770-528-3312"
@@ -1039,7 +1124,8 @@ jurisdictions:
         vote_roll_names: []
         role: Chair               # countywide-elected board chair
         title: Chief Executive Officer   # verbatim office title (DeKalb has a CEO form of govt)
-        seat: At-large
+        seat: At-Large
+        seat_id: at-large
         party:                   # Republican | Democratic
         email: ""
         phone: ""
@@ -1055,6 +1141,7 @@ jurisdictions:
         vote_roll_names: ["Robert Patrick"]
         role: Commissioner
         seat: "District 1"                    # e.g. "District 1"
+        seat_id: district-1
         party: 
         email: "district1@dekalbcountyga.gov"
         phone: "404-371-3052"
@@ -1070,6 +1157,7 @@ jurisdictions:
         vote_roll_names: ["Michelle Long Spears"]
         role: Commissioner
         seat: "District 2"                    # e.g. "District 1"
+        seat_id: district-2
         party: 
         email: "district2@dekalbcountyga.gov"
         phone: "404-371-2863"
@@ -1085,6 +1173,7 @@ jurisdictions:
         vote_roll_names: ["Nicole Massiah"]
         role: Commissioner
         seat: "District 3"                    # e.g. "District 1"
+        seat_id: district-3
         party: 
         email: "District3@dekalbcountyga.gov"
         phone: "404-371-2425"
@@ -1100,6 +1189,7 @@ jurisdictions:
         vote_roll_names: ["Chakira Johnson"]
         role: Commissioner
         seat: "District 4"                    # e.g. "District 1"
+        seat_id: district-4
         party: 
         email: "chakira@dekalbcountyga.gov"
         phone: "404-371-4907"
@@ -1115,6 +1205,7 @@ jurisdictions:
         vote_roll_names: ["Mereda Davis Johnson"]
         role: Commissioner
         seat: "District 5"                    # e.g. "District 1"
+        seat_id: district-5
         party: 
         email: "mdjohnson@dekalbcountyga.gov"
         phone: "404-371-2159"
@@ -1130,6 +1221,7 @@ jurisdictions:
         vote_roll_names: ["Ted Terry"]
         role: Commissioner
         seat: "Super District 6"                    # e.g. "District 1"
+        seat_id: super-district-6
         party: 
         email: "ted@dekalbcountyga.gov"
         phone: "404-371-4909"
@@ -1145,6 +1237,7 @@ jurisdictions:
         vote_roll_names: ["LaDena Bolton"]
         role: Commissioner
         seat: "Super District 7"                    # e.g. "District 1"
+        seat_id: super-district-7
         party: 
         email: "district7@DeKalbCountyGA.gov"
         phone: "404-371-2899"
@@ -1172,7 +1265,8 @@ jurisdictions:
       - name: "Dr. Romona Jackson Jones"
         role: Chair            # countywide-elected board chair
         title: Commission Chairman   # verbatim office title
-        seat: At-large
+        seat: At-Large
+        seat_id: at-large
         party: "Democratic"                   # Republican | Democratic
         email: ""
         phone: "770-920-7269"
@@ -1187,6 +1281,7 @@ jurisdictions:
       - name: "Henry Mitchell III"
         role: Commissioner
         seat: "District 1"                    # e.g. "District 1"
+        seat_id: district-1
         party: "Democratic"
         email: "hmitchell@douglascountyga.gov"
         phone: "770-920-7204"
@@ -1201,6 +1296,7 @@ jurisdictions:
       - name: "Whitney Kenner Jones"
         role: Commissioner
         seat: "District 2"                    # e.g. "District 1"
+        seat_id: district-2
         party: "Democratic"
         email: "wkennerjones@douglascountyga.gov"
         phone: "770-920-7266"
@@ -1215,6 +1311,7 @@ jurisdictions:
       - name: "Martin Raxton"
         role: Commissioner
         seat: "District 3"                    # e.g. "District 1"
+        seat_id: district-3
         party: "Democratic"
         email: "mraxton@douglascountyga.gov"
         phone: "770-616-3996"
@@ -1229,6 +1326,7 @@ jurisdictions:
       - name: "Mark Alcarez"
         role: Commissioner
         seat: "District 4"                    # e.g. "District 1"
+        seat_id: district-4
         party: "Republican"
         email: "malcarez@douglascountyga.gov"
         phone: "770-920-7266"
@@ -1256,7 +1354,8 @@ jurisdictions:
       - name: "Robb Pitts"
         role: Chair            # countywide-elected board chair
         title: Commission Chairman   # verbatim office title
-        seat: At-large
+        seat: At-Large
+        seat_id: at-large
         party:                   # Republican | Democratic
         email: "robb.pitts@fultoncountyga.gov"
         phone: "404-613-2330"
@@ -1271,6 +1370,7 @@ jurisdictions:
       - name: "Bridget Thorne"
         role: Commissioner
         seat: "District 1"                    # e.g. "District 1"
+        seat_id: district-1
         party: 
         email: "bridget.thorne@fultoncountyga.gov"
         phone: ""
@@ -1285,6 +1385,7 @@ jurisdictions:
       - name: "Bob Ellis"
         role: Commissioner
         seat: "District 2"                    # e.g. "District 1"
+        seat_id: district-2
         party: 
         email: "bob.ellis@fultoncountyga.gov"
         phone: "404-612-8216"
@@ -1299,6 +1400,7 @@ jurisdictions:
       - name: "Dana Barrett"
         role: Commissioner
         seat: "District 3"                    # e.g. "District 1"
+        seat_id: district-3
         party: 
         email: "dana.barrett@fultoncountyga.gov"
         phone: "404-612-9800"
@@ -1313,6 +1415,7 @@ jurisdictions:
       - name: "VACANT"
         role: Commissioner
         seat: "District 4"                    # e.g. "District 1"
+        seat_id: district-4
         party: 
         email: ""
         phone: ""
@@ -1327,6 +1430,7 @@ jurisdictions:
       - name: "Marvin S. Arrington, Jr."
         role: Commissioner
         seat: "District 5"                    # e.g. "District 1"
+        seat_id: district-5
         party: 
         email: "Marvin.Arrington@fultoncountyga.gov"
         phone: "404-613-0202"
@@ -1341,6 +1445,7 @@ jurisdictions:
       - name: "Khadijah Abdur-Rahman"
         role: Commissioner
         seat: "District 6"                    # e.g. "District 1"
+        seat_id: district-6
         party:
         email: "Khadijah.Abdur-Rahman@fultoncountyga.gov"
         phone: "404-612-8222"
@@ -1368,6 +1473,7 @@ jurisdictions:
       - name: "Leslie Burch"
         role: Chair
         seat: "At-Large"
+        seat_id: at-large
         party: 
         email: ""
         phone: ""
@@ -1379,6 +1485,7 @@ jurisdictions:
       - name: "Randy Sellers"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: ""
         phone: ""
@@ -1390,6 +1497,7 @@ jurisdictions:
       - name: "Jakharis Jones"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: ""
         phone: ""
@@ -1401,6 +1509,7 @@ jurisdictions:
       - name: "Daryl Edwards"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: ""
         phone: ""
@@ -1412,6 +1521,7 @@ jurisdictions:
       - name: "Chad Kent"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: ""
         phone: ""
@@ -1423,6 +1533,7 @@ jurisdictions:
       - name: "Ricky Barnes"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: ""
         phone: ""
@@ -1447,6 +1558,7 @@ jurisdictions:
       - name: "Benjamin Liles"
         role: Chair
         seat: "At-Large"
+        seat_id: at-large
         party: 
         email: ""
         phone: "912-422-3391"
@@ -1458,6 +1570,7 @@ jurisdictions:
       - name: "Buddy Willis"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: ""
         phone: "912-422-3391"
@@ -1469,6 +1582,7 @@ jurisdictions:
       - name: "Gloria Farrell"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: ""
         phone: "912-422-3391"
@@ -1480,6 +1594,7 @@ jurisdictions:
       - name: "Charlton Gillis"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: ""
         phone: "912-422-3391"
@@ -1491,6 +1606,7 @@ jurisdictions:
       - name: "Johnny Durrance"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: ""
         phone: "912-422-3391"
@@ -1502,6 +1618,7 @@ jurisdictions:
       - name: "Tom Morris"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party:
         email: ""
         phone: "912-422-3391"
@@ -1526,6 +1643,7 @@ jurisdictions:
       - name: "Shane Taylor"
         role: Chair
         seat: "At-Large"
+        seat_id: at-large
         party:
         email: ""
         phone: "912-632-5214"
@@ -1538,6 +1656,7 @@ jurisdictions:
         full_name: "Lee A. Hagans"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party:
         email: ""
         phone: "912-632-5214"
@@ -1549,6 +1668,7 @@ jurisdictions:
       - name: "Lonann Sweat"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party:
         email: ""
         phone: "912-632-5214"
@@ -1560,6 +1680,7 @@ jurisdictions:
       - name: "Corey Tyre"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: ""
         phone: "912-632-5214"
@@ -1571,6 +1692,7 @@ jurisdictions:
       - name: "Rusty Sears"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party:
         email: ""
         phone: ""
@@ -1582,6 +1704,7 @@ jurisdictions:
       - name: "Sammy Boatright"
         role: Commissioner
         seat: "District 6"
+        seat_id: district-6
         party:
         email: ""
         phone: "912-632-5214"
@@ -1606,6 +1729,7 @@ jurisdictions:
       - name: "Matt Bryan"
         role: Commissioner
         seat: "Anna District"
+        seat_id: anna-district
         party: Democratic
         email: ""
         phone: ""
@@ -1618,6 +1742,7 @@ jurisdictions:
         full_name: "Connie C. Hobbs"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "Elmodel District"
+        seat_id: elmodel-district
         party: Democratic
         email: ""
         phone: ""
@@ -1629,6 +1754,7 @@ jurisdictions:
       - name: "Chris Moore"
         role: Commissioner
         seat: "Hogards Mill District"
+        seat_id: hogards-mill-district
         party: Democratic
         email: ""
         phone: ""
@@ -1640,6 +1766,7 @@ jurisdictions:
       - name: "Tommy Rentz"
         role: Commissioner
         seat: "Milford District"
+        seat_id: milford-district
         party: Democratic
         email: ""
         phone: ""
@@ -1651,6 +1778,7 @@ jurisdictions:
       - name: "Vann Irvin"
         role: Commissioner
         seat: "Newton District"
+        seat_id: newton-district
         party: Democratic
         email: ""
         phone: ""
@@ -1676,6 +1804,7 @@ jurisdictions:
         full_name: "Emily C. Davis"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: Democratic
         email: "ecdavis@baldwincountyga.com"
         phone: "478-451-7105"
@@ -1688,6 +1817,7 @@ jurisdictions:
         full_name: "Kendrick B. Butts"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: Democratic
         email: "kbutts@baldwincountyga.com"
         phone: "478-288-6835"
@@ -1699,6 +1829,7 @@ jurisdictions:
       - name: "Sammy Hall"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: Republican
         email: "shall@baldwincountyga.com"
         phone: "478-932-5662"
@@ -1710,6 +1841,7 @@ jurisdictions:
       - name: "Andrew Strickland"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: Republican
         email: "astrickland@baldwincountyga.com"
         phone: "478-454-8447"
@@ -1721,6 +1853,7 @@ jurisdictions:
       - name: "Scott Little"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: Republican
         email: "slittle@baldwincountyga.com"
         phone: "478-234-7602"
@@ -1745,6 +1878,7 @@ jurisdictions:
         role: Mayor
         title: Mayor
         seat: "At-Large"
+        seat_id: mayor
         party: Nonpartisan
         email: "mayorcopelan@milledgevillega.us"
         phone: "478-414-4092"
@@ -1757,6 +1891,7 @@ jurisdictions:
       - name: "Dr. Collinda J. Lee"
         role: Council Member
         seat: "District 1"
+        seat_id: district-1
         party: Nonpartisan
         email: "collinda.lee@milledgevillega.us"
         phone: "478-452-4217"
@@ -1768,6 +1903,7 @@ jurisdictions:
       - name: "Ariene Simmons"
         role: Council Member
         seat: "District 2"
+        seat_id: district-2
         party: Nonpartisan
         email: "arlene.simmons@milledgevillega.us"
         phone: "478-363-5539"
@@ -1779,6 +1915,7 @@ jurisdictions:
       - name: "Denese R. Shinholster"
         role: Council Member
         seat: "District 3"
+        seat_id: district-3
         party: Nonpartisan
         email: "denese.shinholster@milledgevillega.us"
         phone: "478-363-4585"
@@ -1790,6 +1927,7 @@ jurisdictions:
       - name: "Morgan Pendergast"
         role: Council Member
         seat: "District 4"
+        seat_id: district-4
         party: Nonpartisan
         email: "morgan.pendergast@milledgevillega.us"
         phone: "478-363-3539"
@@ -1801,6 +1939,7 @@ jurisdictions:
       - name: "Shonya A. Mapp"
         role: Council Member
         seat: "District 5"
+        seat_id: district-5
         party: Nonpartisan
         email: "shonyamapp@milledgevillega.us"
         phone: "478-251-5409"
@@ -1812,6 +1951,7 @@ jurisdictions:
       - name: "Dr. Jeffery Wells"
         role: Council Member
         seat: "District 6"
+        seat_id: district-6
         party: Nonpartisan
         email: "jeffery.wells@milledgevillega.us"
         phone: "478-363-7534"
@@ -1836,7 +1976,8 @@ jurisdictions:
       - name: "Taylor Griffith"
         role: Chair
         title: County Commission Chairman
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "chairman@co.banks.ga.us"
         phone: "678-858-4603"
@@ -1848,6 +1989,7 @@ jurisdictions:
       - name: "Danny Maxwell"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "djmaxwell@co.banks.ga.us"
         phone: "706-654-8326"
@@ -1859,6 +2001,7 @@ jurisdictions:
       - name: "Bo Garrison"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "bogarrison@co.banks.ga.us"
         phone: "706-201-5910"
@@ -1870,6 +2013,7 @@ jurisdictions:
       - name: "Chris Ausburn"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "causburn@co.banks.ga.us"
         phone: "678-858-4603"
@@ -1881,6 +2025,7 @@ jurisdictions:
       - name: "Keith Roberts"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: "bkroberts@co.banks.ga.us"
         phone: "678-858-4603"
@@ -1905,7 +2050,8 @@ jurisdictions:
       - name: "Pat Graham"
         role: Chair
         title: County Commission Chairman
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "pgraham@barrowga.org"
         phone: "678-300-5367"
@@ -1917,6 +2063,7 @@ jurisdictions:
       - name: "Joe Goodman"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "jgoodman@barrowga.org"
         phone: "770-883-5609"
@@ -1928,6 +2075,7 @@ jurisdictions:
       - name: "Kenny Shook"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "kshook@barrowga.org"
         phone: "770-307-3005"
@@ -1939,6 +2087,7 @@ jurisdictions:
       - name: "Rolando Alvarez"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "ralvarez@barrowga.org"
         phone: "770-307-3005"
@@ -1950,6 +2099,7 @@ jurisdictions:
       - name: "Alex Ward"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "ralvarez@barrowga.org"
         phone: "770-307-3005"
@@ -1961,6 +2111,7 @@ jurisdictions:
       - name: "Tim Walker"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "twalker@barrowga.org"
         phone: "770-307-3005"
@@ -1972,6 +2123,7 @@ jurisdictions:
       - name: "Deborah Lynn"
         role: Commissioner
         seat: "District 6"
+        seat_id: district-6
         party: 
         email: "dlynn@barrowga.org"
         phone: "770-307-3005"
@@ -1995,7 +2147,8 @@ jurisdictions:
     members:
       - name: "Steve Taylor"
         role: Commissioner
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "commissionerpublic@bartowcountyga.gov"
         phone: "770-387-5030"
@@ -2020,6 +2173,7 @@ jurisdictions:
       - name: "Lester Miller"
         role: Mayor
         seat: "At-Large"
+        seat_id: mayor
         party: 
         email: "miller@maconbibb.us"
         phone: 
@@ -2031,6 +2185,7 @@ jurisdictions:
       - name: "Valerie Wynn"
         role: Mayor Pro Tem
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "mbcwynn@maconbibb.us"
         phone: "478-957-3020"
@@ -2042,6 +2197,7 @@ jurisdictions:
       - name: "Paul Bronson"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "mbcbronson@maconbibb.us"
         phone: "478-737-9553"
@@ -2053,6 +2209,7 @@ jurisdictions:
       - name: "Stanley Stewart"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "mbcstewart@maconbibb.us"
         phone: "478-229-1550"
@@ -2064,6 +2221,7 @@ jurisdictions:
       - name: "Joey Hulett"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "mbchulett@maconbibb.us"
         phone: "478-407-4619 "
@@ -2075,6 +2233,7 @@ jurisdictions:
       - name: "Andrea Cooke"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "MBCcooke@maconbibb.us"
         phone: "478-718-0265"
@@ -2086,6 +2245,7 @@ jurisdictions:
       - name: "Raymond Wilder"
         role: Commissioner
         seat: "District 6"
+        seat_id: district-6
         party: 
         email: "mbcwilder@maconbibb.us"
         phone: "478-737-9506 "
@@ -2097,6 +2257,7 @@ jurisdictions:
       - name: "Bill Howell"
         role: Commissioner
         seat: "District 7"
+        seat_id: district-7
         party: 
         email: "mbchowell@maconbibb.us"
         phone: "478-731-9178"
@@ -2108,6 +2269,7 @@ jurisdictions:
       - name: "Donice Bryant"
         role: Commissioner
         seat: "District 8"
+        seat_id: district-8
         party: 
         email: "mbcbryant@maconbibb.us"
         phone: "478-407-4618"
@@ -2119,6 +2281,7 @@ jurisdictions:
       - name: "Brendalyn Bailey"
         role: Commissioner
         seat: "District 9"
+        seat_id: district-9
         party: 
         email: "mbcbailey@maconbibb.us"
         phone: "478-382-0459 "
@@ -2143,6 +2306,7 @@ jurisdictions:
       - name: "Mike Wilson"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "mwilson@buttscounty.org"
         phone: 
@@ -2154,6 +2318,7 @@ jurisdictions:
       - name: "Jeremiah Hosford"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "jhosford@buttscounty.org"
         phone: 
@@ -2166,6 +2331,7 @@ jurisdictions:
         full_name: "Joe Brown Jr."
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "jbrown@buttscounty.org"
         phone: 
@@ -2177,6 +2343,7 @@ jurisdictions:
       - name: "J. Keith Douglas"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "kdouglas@buttscounty.org"
         phone: 
@@ -2188,6 +2355,7 @@ jurisdictions:
       - name: "Russ Crumbley"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "rcrumbley@buttscounty.org"
         phone: 
@@ -2212,7 +2380,8 @@ jurisdictions:
       - name: "Michelle Morgan"
         role: Chair
         title: County Commission Chairman
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party:
         email: "mmorgan@carrollcountyga.gov"
         phone: "770-830-5800"
@@ -2224,6 +2393,7 @@ jurisdictions:
       - name: "Montrell McClendon"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party:
         email: "mmcclendon@carrollcountyga.gov"
         phone: "404-387-8823"
@@ -2235,6 +2405,7 @@ jurisdictions:
       - name: "Clint Chance"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "cchance@carrollcountyga.gov"
         phone: "404-313-4990"
@@ -2246,6 +2417,7 @@ jurisdictions:
       - name: "Tommy Lee"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party:
         email: "tlee@carrollcountyga.gov"
         phone: "678-633-4954"
@@ -2257,6 +2429,7 @@ jurisdictions:
       - name: "Steve Fuller"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "sfuller@carrollcountyga.gov"
         phone: "770-301-3221"
@@ -2268,6 +2441,7 @@ jurisdictions:
       - name: "Ben Hicks"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party:
         email: "bhicks@carrollcountyga.gov"
         phone: "470-521-3534"
@@ -2279,6 +2453,7 @@ jurisdictions:
       - name: "Danny Bailey"
         role: Commissioner
         seat: "District 6"
+        seat_id: district-6
         party: 
         email: "dbailey@carrollcountyga.gov"
         phone: "678-378-6291"
@@ -2304,7 +2479,8 @@ jurisdictions:
         full_name: "Chester A. Ellis"   # authoritative full name (matching); site shows `name`
         role: Chair
         title: County Commission Chair
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party:
         email: "chairman@chathamcounty.org"
         phone: ""
@@ -2316,6 +2492,7 @@ jurisdictions:
       - name: "Anthony Wayne Noha"
         role: Commissioner
         seat: "1st District"
+        seat_id: 1st-district
         party: 
         email: "district1@chathamcounty.org"
         phone: ""
@@ -2327,6 +2504,7 @@ jurisdictions:
       - name: "Malinda Scott Hodge"
         role: Commissioner
         seat: "2nd District"
+        seat_id: 2nd-district
         party:
         email: "district2@chathamcounty.org"
         phone: ""
@@ -2338,6 +2516,7 @@ jurisdictions:
       - name: "Bobby Lockett"
         role: Commissioner
         seat: "3rd District"
+        seat_id: 3rd-district
         party: 
         email: "district3@chathamcounty.org"
         phone: ""
@@ -2349,6 +2528,7 @@ jurisdictions:
       - name: "Brian Hussey"
         role: Commissioner
         seat: "4th District"
+        seat_id: 4th-district
         party: 
         email: "district4@chathamcounty.org"
         phone: ""
@@ -2360,6 +2540,7 @@ jurisdictions:
       - name: "Tanya Milton"
         role: Commissioner
         seat: "5th District"
+        seat_id: 5th-district
         party: 
         email: "district5@chathamcounty.org"
         phone: ""
@@ -2372,6 +2553,7 @@ jurisdictions:
         full_name: "Aaron \"Adot\" Whitely"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "6th District"
+        seat_id: 6th-district
         party: 
         email: "district6@chathamcounty.org"
         phone: ""
@@ -2383,6 +2565,7 @@ jurisdictions:
       - name: "Dean Kicklighter"
         role: Commissioner
         seat: "7th District"
+        seat_id: 7th-district
         party: 
         email: "deankicklighter@yahoo.com"
         phone: ""
@@ -2394,6 +2577,7 @@ jurisdictions:
       - name: "Marsha Buford"
         role: Commissioner
         seat: "8th District"
+        seat_id: 8th-district
         party:
         email: "district8@chathamcounty.org"
         phone: ""
@@ -2418,6 +2602,7 @@ jurisdictions:
       - name: "Harry Johnston"
         role: Chair
         seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "hjohnston@cherokeecountyga.gov"
         phone: ""
@@ -2429,6 +2614,7 @@ jurisdictions:
       - name: "Will Cagle"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "wcagle@cherokeecountyga.gov"
         phone: ""
@@ -2440,6 +2626,7 @@ jurisdictions:
       - name: "Richard Weatherby"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party:
         email: "rbweatherby@cherokeecountyga.gov"
         phone: ""
@@ -2451,6 +2638,7 @@ jurisdictions:
       - name: "Benny Carter"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party:
         email: "bcarter@cherokeecountyga.gov"
         phone: ""
@@ -2462,6 +2650,7 @@ jurisdictions:
       - name: "Corey Ragsdale"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "caragsdale@cherokeecountyga.gov"
         phone: ""
@@ -2486,6 +2675,7 @@ jurisdictions:
       - name: "Kelly Girtz"
         role: Mayor
         seat: "At-Large"
+        seat_id: mayor
         party: 
         email: "kelly.girtz@accgov.com"
         phone: "706-613-3010 "
@@ -2497,6 +2687,7 @@ jurisdictions:
       - name: "Patrick Davenport"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "patrick.davenport@accgov.com"
         phone: "706-202-4339"
@@ -2508,6 +2699,7 @@ jurisdictions:
       - name: "Melissa Link"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "melissa.link@accgov.com"
         phone: "706-372-3382"
@@ -2520,6 +2712,7 @@ jurisdictions:
         full_name: "Tiffany S. Taylor"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "tiffany.taylor@accgov.com"
         phone: "762-772-0708"
@@ -2531,6 +2724,7 @@ jurisdictions:
       - name: "Allison Wright"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "allison.wright@accgov.com"
         phone: "762-772-0831"
@@ -2542,6 +2736,7 @@ jurisdictions:
       - name: "Dexter Fisher"
         role: Mayor Pro Tem
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "dexter.fisher@accgov.com"
         phone: "762-772-0750"
@@ -2553,6 +2748,7 @@ jurisdictions:
       - name: "Stephanie Johnson"
         role: Commissioner
         seat: "District 6"
+        seat_id: district-6
         party: 
         email: "stephanie.johnson@accgov.com"
         phone: "762-402-3315"
@@ -2564,6 +2760,7 @@ jurisdictions:
       - name: "John Culpepper"
         role: Commissioner
         seat: "District 7"
+        seat_id: district-7
         party: 
         email: "john.culpepper@accgov.com"
         phone: "770-354-5444 "
@@ -2575,6 +2772,7 @@ jurisdictions:
       - name: "Carol Myers"
         role: Commissioner
         seat: "District 8"
+        seat_id: district-8
         party: 
         email: "carol.myers@accgov.com"
         phone: "706-296-1948"
@@ -2586,6 +2784,7 @@ jurisdictions:
       - name: "Ovita Thornton"
         role: Commissioner
         seat: "District 9"
+        seat_id: district-9
         party: 
         email: "ovita.thornton@accgov.com"
         phone: "762-772-0687"
@@ -2597,6 +2796,7 @@ jurisdictions:
       - name: "Mike Hamby"
         role: Commissioner
         seat: "District 10"
+        seat_id: district-10
         party: 
         email: "mike.hamby@accgov.com"
         phone: "706-338-3970 "
@@ -2621,7 +2821,8 @@ jurisdictions:
       - name: "Dr. Alieka Anderson-Henry"
         role: Chair
         title: County Commission Chair
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party: Democratic
         email: ""
         phone: "770-477-3208"
@@ -2633,6 +2834,7 @@ jurisdictions:
       - name: "Alaina Reaves"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "alaina.reaves@claytoncountyga.gov"
         phone: "770-477-3213"
@@ -2644,6 +2846,7 @@ jurisdictions:
       - name: "Gail Hambrick"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: Democratic
         email: "gail.hambrick@claytoncountyga.gov"
         phone: "770-603-4135"
@@ -2655,6 +2858,7 @@ jurisdictions:
       - name: "Tashe Allen"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: Democratic
         email: "Tashe.Allen@claytoncountyga.gov"
         phone: "770-473-5465"
@@ -2666,6 +2870,7 @@ jurisdictions:
       - name: "DeMont Davis"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "demont.davis@claytoncountyga.gov"
         phone: "770-477-3216"
@@ -2690,6 +2895,7 @@ jurisdictions:
       - name: "Doug Duncan"
         role: Chair
         seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "commissioners@columbiacountyga.gov"
         phone: "706-868-3379"
@@ -2701,6 +2907,7 @@ jurisdictions:
       - name: "Connie Melear"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "commissioners@columbiacountyga.gov"
         phone: "706-868-3379"
@@ -2712,6 +2919,7 @@ jurisdictions:
       - name: "Jim Steed"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "commissioners@columbiacountyga.gov"
         phone: "706-868-3379"
@@ -2724,6 +2932,7 @@ jurisdictions:
         full_name: "Michael W. Carraway"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: Republican
         email: "commissioners@columbiacountyga.gov"
         phone: "706-868-3379"
@@ -2736,6 +2945,7 @@ jurisdictions:
         full_name: "Alison Couch"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "commissioners@columbiacountyga.gov"
         phone: "706-868-3379"
@@ -2762,7 +2972,8 @@ jurisdictions:
       - name: "Skip Henderson"
         full_name: "B.H. \"Skip\" Henderson III"
         role: Mayor
-        seat: At-large
+        seat: At-Large
+        seat_id: mayor
         party: 
         email: 
         phone: 
@@ -2774,6 +2985,7 @@ jurisdictions:
       - name: "Simi Barnes"
         role: Council Member
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "barnes.simi@columbusga.org"
         phone: "706-780-6880"
@@ -2785,6 +2997,7 @@ jurisdictions:
       - name: "Glenn Davis"
         role: Council Member
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "glenndavis@columbusga.org"
         phone: "706-323-1005"
@@ -2796,6 +3009,7 @@ jurisdictions:
       - name: "Bruce Huff"
         role: Council Member
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "bhuff@columbusga.org"
         phone: "706-653-4013"
@@ -2807,6 +3021,7 @@ jurisdictions:
       - name: "Toyia Tucker"
         role: Council Member
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "tucker.toyia@columbusga.org"
         phone: "706-225-9783"
@@ -2818,6 +3033,7 @@ jurisdictions:
       - name: "Charmaine Crabb"
         role: Council Member
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "crabb.charmaine@columbusga.org"
         phone: "505-333-8532"
@@ -2829,6 +3045,7 @@ jurisdictions:
       - name: "Gary Allen"
         role: Council Member
         seat: "District 6"
+        seat_id: district-6
         party: 
         email: "gallen@columbusga.org"
         phone: "706-464-8476"
@@ -2840,6 +3057,7 @@ jurisdictions:
       - name: "JoAnne Cogle"
         role: Council Member
         seat: "District 7"
+        seat_id: district-7
         party: 
         email: "cogle.joanne@columbusga.org"
         phone: "706-478-7579"
@@ -2851,6 +3069,7 @@ jurisdictions:
       - name: "Walker Garrett"
         role: Council Member
         seat: "District 8"
+        seat_id: district-8
         party: 
         email: "wgarrett@columbusga.org"
         phone: "706-761-8028"
@@ -2862,6 +3081,7 @@ jurisdictions:
       - name: "Cathy Cook"
         role: Council Member
         seat: "District 9"
+        seat_id: district-9
         party: 
         email: "Cook.Cathy@columbusga.org"
         phone: "706-905-1938 "
@@ -2874,6 +3094,7 @@ jurisdictions:
         full_name: "Travis L. Chambers"
         role: Council Member
         seat: "District 10"
+        seat_id: district-10
         party: 
         email: "chambers.travis@columbusga.org"
         phone: "706-225-4988"
@@ -2899,6 +3120,7 @@ jurisdictions:
         full_name: "Jeffrey Fisher"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "jfisher@coweta.ga.us"
         phone: "678-621-9409"
@@ -2911,6 +3133,7 @@ jurisdictions:
         full_name: "Bill McKenzie"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "bpmckenzie@coweta.ga.us"
         phone: "770-780-3962"
@@ -2923,6 +3146,7 @@ jurisdictions:
         full_name: "Bob Blackburn"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "bblackburn@coweta.ga.us"
         phone: "404-630-4351"
@@ -2935,6 +3159,7 @@ jurisdictions:
         full_name: "John J. Reidelbach"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: "jreidelbach@coweta.ga.us"
         phone: "943-242-2234"
@@ -2947,6 +3172,7 @@ jurisdictions:
         full_name: "Alphonso \"Al\" Smith"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party:
         email: "alsmith@coweta.ga.us"
         phone: "404-409-7557"
@@ -2971,6 +3197,7 @@ jurisdictions:
       - name: "Billy Thurmond"
         role: Chair
         seat: "At-Large"
+        seat_id: at-large
         party:
         email: "chairman@dawsoncountyga.gov"
         phone: 
@@ -2982,6 +3209,7 @@ jurisdictions:
       - name: "Seth Stowers"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party:
         email: "district1@dawsoncountyga.gov"
         phone: 
@@ -2993,6 +3221,7 @@ jurisdictions:
       - name: "Chris Gaines "
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party:
         email: "district2@dawsoncountyga.gov"
         phone: 
@@ -3004,6 +3233,7 @@ jurisdictions:
       - name: "Alexa Bruce"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "district3@dawsoncountyga.gov"
         phone: 
@@ -3015,6 +3245,7 @@ jurisdictions:
       - name: "Chad Turkett "
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: "district4@dawsoncountyga.gov"
         phone: 
@@ -3040,6 +3271,7 @@ jurisdictions:
         full_name: "Eric K. Maxwell"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party:
         email: "Emaxwell@fayettecountyga.gov"
         phone: "678-684-7094"
@@ -3051,6 +3283,7 @@ jurisdictions:
       - name: "Lee Hearn"
         role: Chair
         seat: "District 2"
+        seat_id: district-2
         party:
         email: "Lhearn@fayettecountyga.gov"
         phone: "770-401-0088"
@@ -3063,6 +3296,7 @@ jurisdictions:
         full_name: "Edward G. Gibbons Jr."   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "EGibbons@fayettecountyga.gov"
         phone: "678-708-1262"
@@ -3075,6 +3309,7 @@ jurisdictions:
         full_name: "Charles D. Rousseau"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "CRousseau@fayettecountyga.gov"
         phone: "470-217-2214"
@@ -3087,6 +3322,7 @@ jurisdictions:
         full_name: "Charles W. Oddo"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 5 (At-Large)"
+        seat_id: district-5-at-large
         party:
         email: "COddo@fayettecountyga.gov"
         phone: "770-843-4034"
@@ -3111,6 +3347,7 @@ jurisdictions:
       - name: "Kerry Hill"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "kmhill@forsythco.com"
         phone: "678-513-5881"
@@ -3122,6 +3359,7 @@ jurisdictions:
       - name: "Alfred John"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party:
         email: "ajohn@forsythco.com"
         phone: "770-888-8878"
@@ -3133,6 +3371,7 @@ jurisdictions:
       - name: "Todd Levent"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "tlevent@forsythco.com"
         phone: "678-513-5883"
@@ -3144,6 +3383,7 @@ jurisdictions:
       - name: "Mendy Moore"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: "mpmoore@forsythco.com"
         phone: "678-513-5884"
@@ -3155,6 +3395,7 @@ jurisdictions:
       - name: "Laura Semanson"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party:
         email: "losemanson@forsythco.com"
         phone: "678-513-5885"
@@ -3179,7 +3420,8 @@ jurisdictions:
       - name: "Nicole Love Hendrickson"
         role: Chair
         title: County Commission Chairman
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party:
         email: "nicole.hendrickson@gwinnettcounty.com"
         phone: "770-822-7010"
@@ -3191,6 +3433,7 @@ jurisdictions:
       - name: "Kirkland Dion Carden"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party:
         email: "kirkland.carden@gwinnettcounty.com"
         phone: "770-822-7001"
@@ -3202,6 +3445,7 @@ jurisdictions:
       - name: "Ben Ku"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "ben.ku@gwinnettcounty.com"
         phone: "770-822-7002"
@@ -3213,6 +3457,7 @@ jurisdictions:
       - name: "Jasper Watkins, III"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party:
         email: "jasper.watkins@gwinnettcounty.com"
         phone: "770-822-7003"
@@ -3224,6 +3469,7 @@ jurisdictions:
       - name: "Matthew Holtkamp"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "matthew.holtkamp@gwinnettcounty.com"
         phone: "770-822-7004"
@@ -3248,7 +3494,8 @@ jurisdictions:
       - name: "David Gibbs"
         role: Chair
         title: Hall County Board of Commissioners Chair
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party:
         email: "dgibbs@hallcounty.org"
         phone: "770-535-8288"
@@ -3260,6 +3507,7 @@ jurisdictions:
       - name: "Kathy Cooper"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "kcooper@hallcounty.org"
         phone: "770-535-8288"
@@ -3271,6 +3519,7 @@ jurisdictions:
       - name: "Billy Powell"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party:
         email: "bpowell@hallcounty.org"
         phone: "770-535-8288"
@@ -3282,6 +3531,7 @@ jurisdictions:
       - name: "Gregg Poole"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "gpoole@hallcounty.org"
         phone: "770-535-8288"
@@ -3294,6 +3544,7 @@ jurisdictions:
         full_name: "Jeffrey R. Stowe"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: "jstowe@hallcounty.org"
         phone: "770-535-8288"
@@ -3318,7 +3569,8 @@ jurisdictions:
       - name: "Carlotta Harrell"
         role: Chair
         title: County Commission Chairman
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party:
         email: "charrell@henrycountyga.gov"
         phone: ""
@@ -3331,6 +3583,7 @@ jurisdictions:
         full_name: "Johnny R. Wilson"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party:
         email: "johnnywilson@henrycountyga.gov"
         phone: ""
@@ -3342,6 +3595,7 @@ jurisdictions:
       - name: "Neat Robinson"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party:
         email: "nrobinson@henrycountyga.gov"
         phone: ""
@@ -3354,6 +3608,7 @@ jurisdictions:
         full_name: "Derrell Winsor Anglyn III"   # GA SoS 2026 qualifying list
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party:
         email: "danglyn@henrycountyga.gov"
         phone: ""
@@ -3366,6 +3621,7 @@ jurisdictions:
         full_name: "Michael Todd Price"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: "MPrice@henrycountyga.gov"
         phone: ""
@@ -3378,6 +3634,7 @@ jurisdictions:
         full_name: "Kevin Jeremaine Lewis"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party:
         email: "klewis@henrycountyga.gov"
         phone: ""
@@ -3402,7 +3659,8 @@ jurisdictions:
       - name: "Rhett Stringer"
         role: Chair
         title: County Commission Chairperson
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "rhett.stringer@lumpkincounty.gov"
         phone: "770-540-2436"
@@ -3414,6 +3672,7 @@ jurisdictions:
       - name: "Tucker Greene"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "tucker.greene@lumpkincounty.gov"
         phone: "706-864-3742"
@@ -3425,6 +3684,7 @@ jurisdictions:
       - name: "Bobby Mayfield"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "bobby.mayfield@lumpkincounty.gov"
         phone: "706-864-3742"
@@ -3436,6 +3696,7 @@ jurisdictions:
       - name: "Nathan Davis"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "nathan.davis@lumpkincounty.gov"
         phone: "706-864-3742"
@@ -3447,6 +3708,7 @@ jurisdictions:
       - name: "Jeff Moran"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "jeff.moran@lumpkincounty.gov"
         phone: "706-864-3742"
@@ -3471,6 +3733,7 @@ jurisdictions:
       - name: "Gene King"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party:
         email: "g.king@meriwethercountyga.gov"
         phone: "706-672-1314"
@@ -3482,6 +3745,7 @@ jurisdictions:
       - name: "Jennifer Snelson"
         role: Vice Chair
         seat: "District 2"
+        seat_id: district-2
         party:
         email: "j.snelson@meriwethercountyga.gov"
         phone: "706-672-1314"
@@ -3493,6 +3757,7 @@ jurisdictions:
       - name: "Emmett Collins"
         role: Chair
         seat: "District 3"
+        seat_id: district-3
         party:
         email: "e.collins@meriwethercountyga.gov"
         phone: "706-672-1314"
@@ -3504,6 +3769,7 @@ jurisdictions:
       - name: "Bryan Threadgill"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: "b.threadgill@meriwethercountyga.gov"
         phone: "706-672-1314"
@@ -3515,6 +3781,7 @@ jurisdictions:
       - name: "Adam Worsley"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party:
         email: "a.worsley@meriwethercountyga.gov"
         phone: "706-672-1314"
@@ -3539,6 +3806,7 @@ jurisdictions:
       - name: "Carl Jones"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "carl.jones@morgancountyga.gov"
         phone: "706-342-0725"
@@ -3550,6 +3818,7 @@ jurisdictions:
       - name: "Blake McCormack"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "bmccormack@morgancountyga.gov"
         phone: "706-342-0725"
@@ -3562,6 +3831,7 @@ jurisdictions:
         full_name: "Ben M. Riden, Jr."   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party:
         email: "briden@morgancountyga.gov"
         phone: "706-342-0725"
@@ -3573,6 +3843,7 @@ jurisdictions:
       - name: "Philipp von Hanstein"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: ""
         phone: "706-342-0725"
@@ -3584,6 +3855,7 @@ jurisdictions:
       - name: "Nathan Park"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "nathan.park@morgancountyga.gov"
         phone: "706-342-0725"
@@ -3608,7 +3880,8 @@ jurisdictions:
       - name: "Tim Estes"
         role: Chair
         title: Commission Chair
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "commissioners@paulding.gov"
         phone: "770-443-7550"
@@ -3620,6 +3893,7 @@ jurisdictions:
       - name: "Keith Dunn"
         role: Commissioner
         seat: "Post 1"
+        seat_id: post-1
         party:
         email: "commissioners@paulding.gov"
         phone: "770-443-7550, ext. 4001"
@@ -3631,6 +3905,7 @@ jurisdictions:
       - name: "Sandy Kaecher"
         role: Commissioner
         seat: "Post 2"
+        seat_id: post-2
         party: 
         email: "commissioners@paulding.gov"
         phone: "770-443-7550, ext. 4007"
@@ -3642,6 +3917,7 @@ jurisdictions:
       - name: "Virginia Galloway"
         role: Commissioner
         seat: "Post 3"
+        seat_id: post-3
         party: 
         email: "commissioners@paulding.gov"
         phone: "770-443-7550, ext. 4008"
@@ -3653,6 +3929,7 @@ jurisdictions:
       - name: "Dean Schneider"
         role: Commissioner
         seat: "Post 4"
+        seat_id: post-4
         party: 
         email: "commissioners@paulding.gov"
         phone: "770-443-7550, ext. 4009"
@@ -3678,7 +3955,8 @@ jurisdictions:
         full_name: "Kristopher \"Kris\" Stancill"   # authoritative full name (matching); site shows `name`
         role: Chair
         title: County Commission Chair
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party:
         email: ""
         phone: ""
@@ -3690,6 +3968,7 @@ jurisdictions:
       - name: "Josh Tippens"
         role: Commissioner
         seat: "Post 1 (West)"
+        seat_id: post-1-west
         party: 
         email: ""
         phone: ""
@@ -3701,6 +3980,7 @@ jurisdictions:
       - name: "Josh Tatum"
         role: Commissioner
         seat: "Post 2 (East)"
+        seat_id: post-2-east
         party:
         email: ""
         phone: ""
@@ -3725,7 +4005,8 @@ jurisdictions:
       - name: "JaNice Van Ness"
         role: Chair
         title: County Commission Chairman
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "JaNice.VanNess@RockdaleCountyGA.gov"
         phone: ""
@@ -3737,6 +4018,7 @@ jurisdictions:
       - name: "Tuwanya Smith"
         role: Commissioner
         seat: "Post 1"
+        seat_id: post-1
         party: 
         email: "Tuwanya.Smith@RockdaleCountyGA.gov"
         phone: ""
@@ -3748,6 +4030,7 @@ jurisdictions:
       - name: "Doreen Williams"
         role: Commissioner
         seat: "Post 2"
+        seat_id: post-2
         party: 
         email: "Doreen.Williams@RockdaleCountyGA.gov"
         phone: ""
@@ -3772,6 +4055,7 @@ jurisdictions:
         role: Mayor
         title: Mayor
         seat: "At-Large"
+        seat_id: mayor
         party: Nonpartisan
         email: "connie.alsobrook@conyersga.gov"
         phone: ""
@@ -3784,6 +4068,7 @@ jurisdictions:
       - name: "Anthony Pacheco"
         role: Council Member
         seat: "District 1"
+        seat_id: district-1
         party: Nonpartisan
         email: ""
         phone: ""
@@ -3795,6 +4080,7 @@ jurisdictions:
       - name: "Charlie Bryant"
         role: Council Member
         seat: "District 2, Post 1"
+        seat_id: district-2-post-1
         party: Nonpartisan
         email: ""
         phone: ""
@@ -3806,6 +4092,7 @@ jurisdictions:
       - name: "Sherri L. Washington"
         role: Council Member
         seat: "District 2, Post 2"
+        seat_id: district-2-post-2
         party: Nonpartisan
         email: "sherri.washington@conyersga.gov"
         phone: ""
@@ -3817,6 +4104,7 @@ jurisdictions:
       - name: "Gerald A. Hinesley, Sr."
         role: Council Member
         seat: "District 3"
+        seat_id: district-3
         party: Nonpartisan
         email: ""
         phone: ""
@@ -3828,6 +4116,7 @@ jurisdictions:
       - name: "Valyncia Smith"
         role: Council Member
         seat: "District 4"
+        seat_id: district-4
         party: Nonpartisan
         email: ""
         phone: ""
@@ -3852,6 +4141,7 @@ jurisdictions:
       - name: "Gwen Flowers-Taylor"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "gflowers-taylor@spaldingcounty.com"
         phone: "770-467-4280"
@@ -3863,6 +4153,7 @@ jurisdictions:
       - name: "James R. Dutton"
         role: Vice Chair
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "jrdutton@spaldingcounty.com"
         phone: "770-467-4280"
@@ -3874,6 +4165,7 @@ jurisdictions:
       - name: "Reginald Watts"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "rwatts@spaldingcounty.com"
         phone: "770-467-4280"
@@ -3885,6 +4177,7 @@ jurisdictions:
       - name: "Ryan Bowlden"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: "rbowlden@spaldingcounty.com"
         phone: "770-467-4280"
@@ -3896,6 +4189,7 @@ jurisdictions:
       - name: "Clay Davis III"
         role: Chair
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "cwdavis@spaldingcounty.com"
         phone: "770-467-4280"
@@ -3920,7 +4214,8 @@ jurisdictions:
       - name: "David Thompson"
         role: Chair
         title: County Commission Chairman
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party:
         email: "davidg.thompson@co.walton.ga.us"
         phone: ""
@@ -3932,6 +4227,7 @@ jurisdictions:
       - name: "Amarie Warren"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "amarie.warren@co.walton.ga.us"
         phone: ""
@@ -3943,6 +4239,7 @@ jurisdictions:
       - name: "Pete Myers"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party:
         email: "pete.myers@co.walton.ga.us"
         phone: ""
@@ -3954,6 +4251,7 @@ jurisdictions:
       - name: "Timmy Shelnutt"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party:
         email: "timmy@andersongrading.com"
         phone: ""
@@ -3965,6 +4263,7 @@ jurisdictions:
       - name: "Lee Bradford"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "bradford4walton@gmail.com"
         phone: ""
@@ -3976,6 +4275,7 @@ jurisdictions:
       - name: "Jeremy Adams"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "dradams@co.walton.ga.us"
         phone: ""
@@ -3988,6 +4288,7 @@ jurisdictions:
         full_name: "Kirklyn L. Dixon"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 6"
+        seat_id: district-6
         party:
         email: "kirklyn.dixon@co.walton.ga.us"
         phone: ""
@@ -4011,7 +4312,8 @@ jurisdictions:
       - name: "David Keener"
         role: Mayor
         title: Mayor
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: mayor
         party: Nonpartisan
         email: "dkeener@socialcirclega.gov"
         phone: ""
@@ -4024,6 +4326,7 @@ jurisdictions:
       - name: "Traysa Price"
         role: Council Member
         seat: "District 1"
+        seat_id: district-1
         party: Nonpartisan
         email: "tprice@socialcirclega.gov"
         phone: ""
@@ -4035,6 +4338,7 @@ jurisdictions:
       - name: "Tyson Jackson"
         role: Council Member
         seat: "District 2"
+        seat_id: district-2
         party: Nonpartisan
         email: "tjackson@socialcirclega.gov"
         phone: ""
@@ -4046,6 +4350,7 @@ jurisdictions:
       - name: "Adam Conavay"
         role: Council Member
         seat: "District 3"
+        seat_id: district-3
         party: Nonpartisan
         email: "aconavay@socialcirclega.gov"
         phone: ""
@@ -4057,6 +4362,7 @@ jurisdictions:
       - name: "Steve Shelton"
         role: Council Member
         seat: "District 4"
+        seat_id: district-4
         party: Nonpartisan
         email: "jsshelton@socialcirclega.gov"
         phone: ""
@@ -4081,6 +4387,7 @@ jurisdictions:
        - name: "Rev. Jeremy Rich"
          role: Commissioner               # Chair | Vice Chair | Commissioner
          seat: "District 1"                  # "District 4"
+         seat_id: district-1
          party:         # Republican | Democratic | Independent
          email: ""
          phone: ""
@@ -4092,6 +4399,7 @@ jurisdictions:
        - name: "Moses Gross"
          role: Commissioner               # Chair | Vice Chair | Commissioner
          seat: "District 2"                  # "District 4"
+         seat_id: district-2
          party:         # Republican | Democratic | Independent
          email: ""
          phone: ""
@@ -4103,6 +4411,7 @@ jurisdictions:
        - name: "Kenneth Hickey"
          role: Commissioner               # Chair | Vice Chair | Commissioner
          seat: "District 3"                  # "District 4"
+         seat_id: district-3
          party:         # Republican | Democratic | Independent
          email: ""
          phone: ""
@@ -4114,6 +4423,7 @@ jurisdictions:
        - name: "Mark NeSmith"
          role: Chair               # Chair | Vice Chair | Commissioner
          seat: "District 4"                  # "District 4"
+         seat_id: district-4
          party:         # Republican | Democratic | Independent
          email: ""
          phone: ""
@@ -4125,6 +4435,7 @@ jurisdictions:
        - name: "Donnie Bagget"
          role: Vice Chair               # Chair | Vice Chair | Commissioner
          seat: "District 5"                  # "District 4"
+         seat_id: district-5
          party:         # Republican | Democratic | Independent
          email: ""
          phone: ""
@@ -4136,6 +4447,7 @@ jurisdictions:
        - name: "Vacant"
          role: Commissioner              # Chair | Vice Chair | Commissioner
          seat: "District 6"                  # "District 4"
+         seat_id: district-6
          party:         # Republican | Democratic | Independent
          email: ""
          phone: ""
@@ -4147,6 +4459,7 @@ jurisdictions:
        - name: "Phillip Brown"
          role: Commissioner              # Chair | Vice Chair | Commissioner
          seat: "District 7"                  # "District 4"
+         seat_id: district-7
          party:         # Republican | Democratic | Independent
          email: ""
          phone: ""
@@ -4158,6 +4471,7 @@ jurisdictions:
        - name: "Zippy Vonier"
          role: Commissioner               # Chair | Vice Chair | Commissioner
          seat: "District 8"                  # "District 4"
+         seat_id: district-8
          party:         # Republican | Democratic | Independent
          email: ""
          phone: ""
@@ -4182,6 +4496,7 @@ jurisdictions:
       - name: "Scott Chastain"
         role: Mayor               # Mayor | Mayor Pro Tem | Council Member
         seat: "District 2, Post 2"
+        seat_id: mayor
         party: Nonpartisan
         email: "scott.chastain@thomasville.org"
         phone: ""
@@ -4193,6 +4508,7 @@ jurisdictions:
       - name: "Lucinda Brown"
         role: Mayor Pro Tem               # Mayor | Mayor Pro Tem | Council Member
         seat: "District 1, Post 1"
+        seat_id: district-1-post-1
         party: Nonpartisan
         email: "lucinda.brown@thomasville.org"
         phone: ""
@@ -4203,7 +4519,8 @@ jurisdictions:
         source: "https://thomasville.org/about-the-thomasville-city-council"                # REQUIRED - primary-source URL
       - name: "Todd Mobley"
         role: Council Member               # Mayor | Mayor Pro Tem | Council Member
-        seat: "At Large"
+        seat: "At-Large"
+        seat_id: at-large
         party: Nonpartisan
         email: "todd.mobley@thomasville.org"
         phone: ""
@@ -4215,6 +4532,7 @@ jurisdictions:
       - name: "Terry Scott"
         role: Council Member               # Mayor | Mayor Pro Tem | Council Member
         seat: "District 1, Post 2"
+        seat_id: district-1-post-2
         party: Nonpartisan
         email: "terry.scott@thomasville.org"
         phone: ""
@@ -4226,6 +4544,7 @@ jurisdictions:
       - name: "Royal O. Baker III"
         role: Council Member               # Mayor | Mayor Pro Tem | Council Member
         seat: "District 2, Post 1"
+        seat_id: district-2-post-1
         party: Nonpartisan
         email: "royal.baker@thomasville.org"
         phone: ""
@@ -4250,6 +4569,7 @@ jurisdictions:
       - name: "Robbie Cheek"
         role: Chair
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "https://www.camdencountyga.gov/FormCenter/Contact-Us-4/Contact-the-District-1-Commissioner-79"
         phone: "912-674-3119"
@@ -4262,6 +4582,7 @@ jurisdictions:
       - name: "Martin Turner"
         role: Vice Chair
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "https://www.camdencountyga.gov/FormCenter/Contact-Us-4/Contact-the-District-2-Commissioner-80"
         phone: "912-552-4291"
@@ -4274,6 +4595,7 @@ jurisdictions:
       - name: "Cody Smith"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "https://www.camdencountyga.gov/FormCenter/Contact-Us-4/Contact-the-District-3-Commissioner-81"
         phone: "912-676-7168"
@@ -4286,6 +4608,7 @@ jurisdictions:
       - name: "Jim Goodman"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "https://www.camdencountyga.gov/FormCenter/Contact-Us-4/Contact-the-District-4-Commissioner-82"
         phone: "912-674-1285"
@@ -4299,6 +4622,7 @@ jurisdictions:
         full_name: "Ben L. Casey"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "https://www.camdencountyga.gov/FormCenter/Contact-Us-4/Contact-the-District-5-Commissioner-83"
         phone: "912-552-4703"
@@ -4322,8 +4646,9 @@ jurisdictions:
       - name: "Damon Rahn"
         full_name: "Damon M. Rahn"   # authoritative full name (matching); site shows `name`
         role: Chair
-        title: Chairman At Large
-        seat: "At-large"
+        title: Chairman At-Large
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "drahn@effinghamcounty.org"
         phone: "912-667-1619"
@@ -4337,6 +4662,7 @@ jurisdictions:
         full_name: "Frank Forrest Floyd"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "ffloyd@effinghamcounty.org"
         phone: "912-429-3753"
@@ -4349,6 +4675,7 @@ jurisdictions:
       - name: "Roger Burdette"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "RBurdette@effinghamcounty.org"
         phone: "912-663-1692"
@@ -4361,6 +4688,7 @@ jurisdictions:
       - name: "Jamie DeLoach"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "jamiedeloachdistrict3@gmail.com"
         phone: "912-655-9423"
@@ -4373,6 +4701,7 @@ jurisdictions:
       - name: "Beth Helmly"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "bhelmly@effinghamcounty.org"
         phone: "912-429-8570"
@@ -4385,6 +4714,7 @@ jurisdictions:
       - name: "Phil Kieffer"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "philkiefferdistrict5@gmail.com"
         phone: "912-667-7977"
@@ -4409,6 +4739,7 @@ jurisdictions:
         full_name: "M. L. “Bud” Owens"   # authoritative full name (matching); site shows `name`
         role: Chair
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "bud.owens@gordoncountyga.gov"
         phone: "706-629-3795"
@@ -4421,6 +4752,7 @@ jurisdictions:
       - name: "Chad Steward"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "chad.steward@gordoncountyga.gov"
         phone: "706-629-3795"
@@ -4433,6 +4765,7 @@ jurisdictions:
       - name: "Randy Abernathy"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party:
         email: "randy.abernathy@gordoncountyga.gov"
         phone: "706-629-3795"
@@ -4445,6 +4778,7 @@ jurisdictions:
       - name: "Kurt Sutherland"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: "kurt.sutherland@gordoncountyga.gov"
         phone: "706-629-3795"
@@ -4458,6 +4792,7 @@ jurisdictions:
         full_name: "Kevin L. Cunningham"   # authoritative full name (matching); site shows `name`
         role: Vice Chair
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "kevin.cunningham@gordoncountyga.gov"
         phone: "706-629-3795"
@@ -4481,6 +4816,7 @@ jurisdictions:
       - name: "Dan Perdue"
         role: Chair
         seat: "Post 1"
+        seat_id: post-1
         party: 
         email: "Chairman@houstoncountyga.gov"
         phone: ""
@@ -4494,6 +4830,7 @@ jurisdictions:
       - name: "Shane Gottwals"
         role: Commissioner
         seat: "Post 2"
+        seat_id: post-2
         party: 
         email: "post2@houstoncountyga.gov"
         phone: ""
@@ -4506,6 +4843,7 @@ jurisdictions:
       - name: "Gail Robinson"
         role: Commissioner
         seat: "Post 3"
+        seat_id: post-3
         party: 
         email: "post3@houstoncountyga.gov"
         phone: ""
@@ -4518,6 +4856,7 @@ jurisdictions:
       - name: "Tal Talton"
         role: Commissioner
         seat: "Post 4"
+        seat_id: post-4
         party: 
         email: "post4@houstoncountyga.gov"
         phone: ""
@@ -4530,6 +4869,7 @@ jurisdictions:
       - name: "Mark Byrd"
         role: Commissioner
         seat: "Post 5"
+        seat_id: post-5
         party: 
         email: "post5@houstoncountyga.gov"
         phone: ""
@@ -4553,7 +4893,8 @@ jurisdictions:
       - name: "Donald Lovette"
         full_name: "Donald L. Lovette"   # authoritative full name (matching); site shows `name`
         role: Chair
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "donald.lovette@libertycountyga.com"
         phone: ""
@@ -4566,6 +4907,7 @@ jurisdictions:
       - name: "Marion Stevens, Sr."
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "marion.stevens@libertycountyga.com"
         phone: ""
@@ -4578,6 +4920,7 @@ jurisdictions:
       - name: "Justin L. Frasier"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "justin.frasier@libertycountyga.com"
         phone: ""
@@ -4590,6 +4933,7 @@ jurisdictions:
       - name: "Connie Thrift"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "connie.thrift@libertycountyga.com"
         phone: ""
@@ -4602,6 +4946,7 @@ jurisdictions:
       - name: "Timothy Blount"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "timmy.blount@libertycountyga.com"
         phone: ""
@@ -4614,6 +4959,7 @@ jurisdictions:
       - name: "Gary Gilliard"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "gary.gilliard@libertycountyga.com"
         phone: ""
@@ -4627,6 +4973,7 @@ jurisdictions:
         full_name: "Eddie J. Walden"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 6"
+        seat_id: district-6
         party: 
         email: "eddie.walden@libertycountyga.com"
         phone: ""
@@ -4650,7 +4997,8 @@ jurisdictions:
       - name: "Bill Slaughter"
         role: Chair
         title: Chairman
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "commissioner@lowndescounty.com"
         phone: "229-671-2442"
@@ -4664,6 +5012,7 @@ jurisdictions:
         full_name: "Joyce E. Evans"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "commissioner@lowndescounty.com"
         phone: "229-671-2442"
@@ -4677,6 +5026,7 @@ jurisdictions:
         full_name: "Scott \"Scottie\" Orenstein"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "commissioner@lowndescounty.com"
         phone: "229-671-2442"
@@ -4690,6 +5040,7 @@ jurisdictions:
         full_name: "Tally M. \"Mark\" Wisenbaker"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "commissioner@lowndescounty.com"
         phone: "229-671-2442"
@@ -4702,6 +5053,7 @@ jurisdictions:
       - name: "Demarcus Marshall"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "commissioner@lowndescounty.com"
         phone: "229-671-2442"
@@ -4714,6 +5066,7 @@ jurisdictions:
       - name: "Michael Smith"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "commissioner@lowndescounty.com"
         phone: "229-671-2442"
@@ -4738,7 +5091,8 @@ jurisdictions:
         full_name: "John E. Daniell"   # authoritative full name (matching); site shows `name`
         role: Chair
         title: County Commission Chairman
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "jdaniell@oconee.ga.us"
         phone: ""
@@ -4752,6 +5106,7 @@ jurisdictions:
         full_name: "Mark H. Thomas"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "Post 1"
+        seat_id: post-1
         party: 
         email: "mthomas@oconee.ga.us"
         phone: ""
@@ -4764,6 +5119,7 @@ jurisdictions:
       - name: "Chuck Horton"
         role: Commissioner
         seat: "Post 2"
+        seat_id: post-2
         party: 
         email: "chorton@oconee.ga.us"
         phone: ""
@@ -4776,6 +5132,7 @@ jurisdictions:
       - name: "Amrey Harden"
         role: Commissioner
         seat: "Post 3"
+        seat_id: post-3
         party: 
         email: "aharden@oconee.ga.us"
         phone: ""
@@ -4789,6 +5146,7 @@ jurisdictions:
         full_name: "Mark T. Saxon"   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "Post 4"
+        seat_id: post-4
         party: 
         email: "msaxon@oconee.ga.us"
         phone: ""
@@ -4812,6 +5170,7 @@ jurisdictions:
       - name: "Donnie Hester"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "donnie.hester@tiftcounty.org"
         phone: "229-402-3795"
@@ -4824,6 +5183,7 @@ jurisdictions:
       - name: "Melissa Hughes"
         role: Vice Chair
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "melissa.hughes@tiftcounty.org"
         phone: "229-326-0241"
@@ -4836,6 +5196,7 @@ jurisdictions:
       - name: "Paul Webb"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "paul.webb@tiftcounty.org"
         phone: "229-322-2160"
@@ -4848,6 +5209,7 @@ jurisdictions:
       - name: "Stan Stalnaker"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "stan.stalnaker@tiftcounty.org"
         phone: "229-472-3564"
@@ -4860,6 +5222,7 @@ jurisdictions:
       - name: "Tyler Riddle"
         role: Commissioner
         seat: "District 5"
+        seat_id: district-5
         party: 
         email: "tyler.riddle@tiftcounty.org"
         phone: "229-402-8096"
@@ -4872,6 +5235,7 @@ jurisdictions:
       - name: "Greg Wood"
         role: Commissioner
         seat: "District 6"
+        seat_id: district-6
         party: 
         email: "greg.wood@tiftcounty.org"
         phone: "229-472-3094"
@@ -4896,7 +5260,8 @@ jurisdictions:
         full_name: "Jevin S. Jensen"   # authoritative full name (matching); site shows `name`
         role: Chair
         title: County Commission Chairman
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: "jjensen@whitfieldcountyga.com"
         phone: "706-275-7500"
@@ -4909,6 +5274,7 @@ jurisdictions:
       - name: "Barry Robbins"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party: 
         email: "brobbins@whitfieldcountyga.com"
         phone: "706-275-7500"
@@ -4921,6 +5287,7 @@ jurisdictions:
       - name: "Robby Staten"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party: 
         email: "rstaten@whitfieldcountyga.com"
         phone: "706-275-7500"
@@ -4933,6 +5300,7 @@ jurisdictions:
       - name: "John Thomas"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party: 
         email: "jthomas@whitfieldcountyga.com"
         phone: "706-275-7500"
@@ -4945,6 +5313,7 @@ jurisdictions:
       - name: "Greg Jones"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party: 
         email: "gjones@whitfieldcountyga.com"
         phone: "706-275-7500"
@@ -4969,7 +5338,8 @@ jurisdictions:
       - name: "Steven Henry"
         role: Chair
         title: Chairman
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party:
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
@@ -4982,6 +5352,7 @@ jurisdictions:
       - name: "Jeff Long"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party:
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
@@ -4994,6 +5365,7 @@ jurisdictions:
       - name: "Chuck Harris"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party:
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
@@ -5006,6 +5378,7 @@ jurisdictions:
       - name: "Richard Tharpe"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party:
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
@@ -5018,6 +5391,7 @@ jurisdictions:
       - name: "Charlie Stephens"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
@@ -5042,7 +5416,8 @@ jurisdictions:
       - name: "Angie Teems"
         role: Chair
         title: Chairwoman
-        seat: "At-large"
+        seat: "At-Large"
+        seat_id: at-large
         party:
         email: "countychair@walkerga.us"
         phone: "706-638-1437"
@@ -5055,6 +5430,7 @@ jurisdictions:
       - name: "Robert Blakemore"
         role: Commissioner
         seat: "District 1"
+        seat_id: district-1
         party:
         email: "district1@walkerga.us"
         phone: "423-208-5080"
@@ -5067,6 +5443,7 @@ jurisdictions:
       - name: "Mark Askew"
         role: Commissioner
         seat: "District 2"
+        seat_id: district-2
         party:
         email: "district2@walkerga.us"
         phone: "423-208-5156"
@@ -5079,6 +5456,7 @@ jurisdictions:
       - name: "Brian Hart"
         role: Commissioner
         seat: "District 3"
+        seat_id: district-3
         party:
         email: "district3@walkerga.us"
         phone: "706-996-5070"
@@ -5091,6 +5469,7 @@ jurisdictions:
       - name: "Gene Wilson"
         role: Commissioner
         seat: "District 4"
+        seat_id: district-4
         party:
         email: "district4@walkerga.us"
         phone: "423-208-5192"

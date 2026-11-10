@@ -34,6 +34,8 @@ from datetime import date, datetime
 
 import yaml
 
+from lib import local_terms
+
 DATA_PATH = "_data/local_officials.yml"
 EO_GLOB = "assets/data/ga-executive-orders-*.json"
 
@@ -138,10 +140,11 @@ def build_report(data, max_age_days, eo_orders=None, eo_since=None):
     for j in jurisdictions:
         if not isinstance(j, dict):
             continue
+        # Only the current board: a former row's next_election is history, not a
+        # to-do, and an incoming row has not taken office yet.
         past = [
-            m for m in (j.get("members") or [])
-            if isinstance(m, dict)
-            and isinstance(m.get("next_election"), int)
+            m for m in local_terms.active_members(j, today)
+            if isinstance(m.get("next_election"), int)
             and m["next_election"] < today.year
         ]
         if past:

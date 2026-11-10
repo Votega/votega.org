@@ -101,6 +101,14 @@ check('the flip counts are not zero (the roster join still works)',
       house['flipsToDemocratic'] > 0 and house['flipsToRepublican'] > 0,
       f"R->D {house['flipsToDemocratic']}, D->R {house['flipsToRepublican']}")
 
+print('Close-race points round down, never up to the threshold')
+check('1,661 of 83,187 (1.997 points) shows as 1.99, not 2.0',
+      bpm.display_points(1661, 83187) == 1.99, repr(bpm.display_points(1661, 83187)))
+check('509 of 25,461 (1.999 points) shows as 1.99',
+      bpm.display_points(509, 25461) == 1.99, repr(bpm.display_points(509, 25461)))
+check('an exact value is unchanged (123 of 10,000 -> 1.23, no float drift)',
+      bpm.display_points(123, 10000) == 1.23, repr(bpm.display_points(123, 10000)))
+
 print('The close-race list')
 check('it is sorted closest first',
       doc['narrow'] == sorted(doc['narrow'], key=lambda n: n['points']))
