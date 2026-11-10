@@ -293,12 +293,17 @@
           {%- if m.leaves_office %}
             {%- assign t1 = m.leaves_office | date: "%Y-%m-%d" -%}
             {%- assign succ = nil -%}
+            {%- comment %} A shared seat (seat_capacity, e.g. Palmetto at-large) has no
+                one-to-one successor, so the card only says when this member leaves. {% endcomment -%}
+            {%- assign cap = juris.seat_capacity[m.seat_id] | default: 1 -%}
+            {%- if cap == 1 -%}
             {%- for s in juris.members -%}
               {%- if s.seat_id and s.seat_id == m.seat_id and s.takes_office -%}
                 {%- assign s0 = s.takes_office | date: "%Y-%m-%d" -%}
                 {%- if s0 >= t1 %}{% assign succ = s %}{% break %}{% endif -%}
               {%- endif -%}
             {%- endfor %}
+            {%- endif %}
           <p class="po-handover">{% if succ %}Successor elected: {{ succ.name }}, takes office {{ succ.takes_office | date: "%b %-d, %Y" }}{% else %}Leaves office {{ m.leaves_office | date: "%b %-d, %Y" }}{% endif %}</p>
           {%- endif %}
           {% if m.tie_break_only %}<p class="po-tiebreak">Votes only to break ties</p>{% endif %}

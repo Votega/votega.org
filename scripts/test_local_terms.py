@@ -55,6 +55,20 @@ check(T.seat_conflicts([row(status="Suspended"), row(name="Interim")]) == [],
       "a Suspended holder does not conflict with the interim serving the seat")
 check(T.seat_conflicts([row(), row(seat_id="district-2")]) == [], "different seats never conflict")
 
+print("shared seats (seat_capacity)")
+CAP = {"at-large": 6}
+pal = [row(name=f"M{i}", seat="At-Large", seat_id="at-large") for i in range(6)]
+check(T.seat_conflicts(pal, CAP) == [], "six citywide members in a capacity-6 seat are fine")
+check(len(T.seat_conflicts(pal + [row(name="M7", seat_id="at-large")], CAP)) == 1,
+      "a seventh concurrent holder conflicts")
+check(len(T.seat_conflicts(pal, None)) == 1, "the same six with no capacity declared conflict")
+rot = pal[:3] + [dict(m, leaves_office=JAN1) for m in pal[3:]] +       [row(name=f"N{i}", seat_id="at-large", takes_office=JAN1) for i in range(3)]
+check(T.seat_conflicts(rot, CAP) == [], "three leave and three arrive on the same date: no overlap")
+check(len(T.seat_conflicts(rot + [row(name="X", seat_id="at-large", takes_office=date(2026, 12, 1))],
+                           CAP)) == 1, "an early arrival before the outgoing three leave conflicts")
+check(T.successor(rot, rot[3], CAP) is None, "a shared seat has no one-to-one successor")
+check(T.capacity_of("district-1", CAP) == 1, "an undeclared seat holds one")
+
 print("successor")
 check(T.successor([out, inc], out) is inc, "finds the staged row for the same seat")
 check(T.successor([out, row(name="X", seat_id="district-2", takes_office=JAN1)], out) is None,
@@ -98,6 +112,16 @@ check(e == [] and any("no current or incoming holder" in s for s in w),
 e, w = run_validator(V.validate_seats, "j", [row(leaves_office=date(2999, 1, 1)),
                                              row(name="C D", takes_office=date(2999, 1, 1))])
 check(e == [] and w == [], "a staged handover is clean")
+
+print("validator: seat_capacity")
+e, w = run_validator(V.validate_capacity, "p", {"at-large": 1}, [])
+check(any("at least 2" in x for x in e), "a capacity of 1 is an error (an ordinary seat needs no entry)")
+e, w = run_validator(V.validate_capacity, "p", {"At Large": 6}, [])
+check(any("seat_id slug" in x for x in e), "a non-slug key is an error")
+e, w = run_validator(V.validate_capacity, "p", {"at-large": 6}, [row(seat_id="district-1")])
+check(e == [] and any("no member row uses it" in x for x in w), "an unused declaration is reported")
+e, w = run_validator(V.validate_seats, "p", pal[:4], CAP)
+check(e == [] and any("4 of 6" in x for x in w), "a shared seat short of capacity is reported, not gated")
 
 print("validator: At-Large spelling")
 for bad in ("At-large", "At Large", "at large", "Post 1 At Large"):

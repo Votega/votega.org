@@ -110,6 +110,12 @@
 #   leaves_office : optional ISO date the hold ENDS — the first day they no longer hold
 #                   it, normally the successor's takes_office (both 1 January).
 #   leave_reason  : term-ended | resigned | removed | deceased (with leaves_office).
+#   seat_capacity : (JURISDICTION field) {seat_id: n} for a SHARED seat a body fills
+#                   n of with no post numbers, e.g. Palmetto `{at-large: 6}`: six
+#                   council members elected citywide, top vote-getters win. Every
+#                   holder carries the same seat_id; never number them at-large-1..6,
+#                   which would invent seats the city does not have. Up to n may hold
+#                   it at once, and an outgoing member has no one-to-one successor.
 #
 #   The site shows only rows active on the build date:
 #     (takes_office blank or <= today) and (leaves_office blank or > today).
@@ -199,6 +205,8 @@ jurisdictions:
     related_pages:                  # cross-links to existing VoteGA content
       - { }
     notes: "4-year terms"
+    seat_capacity:                  # six council seats, all elected citywide, no posts
+      at-large: 6                   # (Charter §7.1; top vote-getters win)
     members:
       - name: "Teresa Thomas-Smith"
         role: Chair
@@ -216,7 +224,8 @@ jurisdictions:
         source: "https://www.citypalmetto.com/administration/page/mayors-office"
       - name: "Robert Deon Arnold"
         role: Council Member
-        seat: ""
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: ""
         phone: "770-463-3377"
@@ -227,7 +236,8 @@ jurisdictions:
         source: "https://www.citypalmetto.com/citycouncil/directory-listing/robert-deon-arnold"
       - name: "Mary Henry"
         role: Council Member
-        seat: ""
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: ""
         phone: "770-463-3377"
@@ -238,7 +248,8 @@ jurisdictions:
         source: "https://www.citypalmetto.com/citycouncil/directory-listing/mary-henry"
       - name: "Perez Slaughter"
         role: Council Member
-        seat: ""
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: ""
         phone: "770-463-3377"
@@ -249,7 +260,8 @@ jurisdictions:
         source: "https://www.citypalmetto.com/citycouncil/directory-listing/perez-slaughter"
       - name: "Jessica Wilbanks"
         role: Council Member
-        seat: ""
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: ""
         phone: "770-463-3377"
@@ -260,7 +272,8 @@ jurisdictions:
         source: "https://www.citypalmetto.com/citycouncil/directory-listing/jessica-wilbanks"
       - name: "Connie L. Wright"
         role: Council Member
-        seat: ""
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: ""
         phone: "770-463-3377"
@@ -271,7 +284,8 @@ jurisdictions:
         source: "https://www.citypalmetto.com/citycouncil/directory-listing/connie-l-wright"
       - name: "Carolyn Wynn"
         role: Council Member
-        seat: ""
+        seat: "At-Large"
+        seat_id: at-large
         party: 
         email: ""
         phone: "770-463-3377"
