@@ -977,6 +977,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 2"                    # e.g. "District 1"
         seat_id: district-2
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "dmason@co.newton.ga.us"
         phone: "678-544-5212"
@@ -988,6 +990,19 @@ jurisdictions:
         photo: "https://www.newtoncountyga.gov/ImageRepository/Document?documentId=7580"
         source: "https://www.newtoncountyga.gov/386/Demond-Mason"
         notes: "Elected to the Board of Commissioners in 2018."
+      - name: "Tamera Strong"
+        role: Commissioner
+        seat: "District 2"
+        seat_id: district-2
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/newton-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Andre Cooper"
         role: Commissioner
         seat: "District 3"                    # e.g. "District 1"
@@ -1010,9 +1025,9 @@ jurisdictions:
         party: 
         email: "jchenderson@co.newton.ga.us"
         phone: "770-896-3826"
-        last_elected: 2022 
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         tie_break_only: false
         photo: "https://www.newtoncountyga.gov/ImageRepository/Document?documentId=872"
@@ -1068,9 +1083,9 @@ jurisdictions:
         party: 
         email: "keli.gambrill@cobbcounty.gov"
         phone: "770-528-3313"
-        last_elected: 2023
-        term_end: 2027
-        next_election: 2026 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         tie_break_only: false
         photo: "https://assets.cobbcounty.gov/files/2020-12/BOC-Gambrill-Headshot.jpg"
@@ -1095,6 +1110,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"                    # e.g. "District 1"
         seat_id: district-3
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "joann.birrell@cobbcounty.gov"
         phone: "770-528-3317"
@@ -1106,6 +1123,19 @@ jurisdictions:
         photo: "https://assets.cobbcounty.gov/files/2025-09/Birrell-headshot.jpg"
         source: "https://www.cobbcounty.gov/board/district-commissioners/district-3-commissioner"
         notes: "Serving fourth term."
+      - name: "Kevin Redmon"
+        role: Commissioner
+        seat: "District 3"
+        seat_id: district-3
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/cobb-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (50.3%)
       - name: "Monique Sheffield"
         role: Commissioner
         seat: "District 4"                    # e.g. "District 1"
@@ -1175,9 +1205,9 @@ jurisdictions:
         party: 
         email: "district2@dekalbcountyga.gov"
         phone: "404-371-2863"
-        last_elected:
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         tie_break_only: false
         photo: "https://dekalbcountyga.gov/sites/default/files/styles/default/public/2026-01/district_2_michelle_long_spears.jpg.avif?itok=k8n22CG0"
@@ -1188,6 +1218,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"                    # e.g. "District 1"
         seat_id: district-3
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "District3@dekalbcountyga.gov"
         phone: "404-371-2425"
@@ -1199,6 +1231,19 @@ jurisdictions:
         photo: "https://dekalbcountyga.gov/sites/default/files/styles/default/public/2026-01/district_3_nicole_massiah.jpg.avif?itok=ht71lmR3"
         source: "https://dekalbcountyga.gov/index%2ephp/government/board-of-commissioners/districts/nicole-massiah"
         notes: ""
+      - name: "Keyanna Jones Moore"
+        role: Commissioner
+        seat: "District 3"
+        seat_id: district-3
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/dekalb-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (95.4%)
       - name: "Chakira Johnson"
         vote_roll_names: ["Chakira Johnson"]
         role: Commissioner
@@ -1255,9 +1300,9 @@ jurisdictions:
         party: 
         email: "district7@DeKalbCountyGA.gov"
         phone: "404-371-2899"
-        last_elected: 
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         tie_break_only: false
         photo: "https://dekalbcountyga.gov/sites/default/files/styles/default/public/2026-01/district_7_ladena_bolton.jpg.avif?itok=_Jsgy9F_"
@@ -1299,9 +1344,9 @@ jurisdictions:
         party: "Democratic"
         email: "hmitchell@douglascountyga.gov"
         phone: "770-920-7204"
-        last_elected:
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         tie_break_only: false
         photo: "https://www.douglascountyga.gov/ImageRepository/Document?documentId=11135"
@@ -1329,9 +1374,9 @@ jurisdictions:
         party: "Democratic"
         email: "mraxton@douglascountyga.gov"
         phone: "770-616-3996"
-        last_elected: 
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         tie_break_only: false
         photo: "https://www.douglascountyga.gov/ImageRepository/Document?documentId=10897"
@@ -1341,6 +1386,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 4"                    # e.g. "District 1"
         seat_id: district-4
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: "Republican"
         email: "malcarez@douglascountyga.gov"
         phone: "770-920-7266"
@@ -1352,6 +1399,19 @@ jurisdictions:
         photo: "https://www.douglascountyga.gov/ImageRepository/Document?documentID=9205"
         source: "https://www.douglascountyga.gov/331/Mark-Alcarez"
         notes: "https://www.douglascountyga.gov/554/Elected-Officials"
+      - name: "Gil McDougal"
+        role: Commissioner
+        seat: "District 4"
+        seat_id: district-4
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/douglas-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (55.4%)
   # ==========================================================================
   # FULTON COUNTY  (county — partisan)  — SKELETON, fill in members
   # ==========================================================================
@@ -1370,6 +1430,8 @@ jurisdictions:
         title: Commission Chairman   # verbatim office title
         seat: At-Large
         seat_id: at-large
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party:                   # Republican | Democratic
         email: "robb.pitts@fultoncountyga.gov"
         phone: "404-613-2330"
@@ -1381,10 +1443,26 @@ jurisdictions:
         photo: "https://www.fultoncountyga.gov/-/media/Commissioners/Pitts/2023_ROBB-PITTS-200x200.jpg"
         source: "https://www.fultoncountyga.gov/Commissioners/Robb-Pitts"
         notes: "Elected chairman in 2017."
+      - name: "Mo Ivory"
+        role: Chair
+        title: Commission Chairman
+        seat: "At-Large"
+        seat_id: at-large
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/fulton-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (75.1%)
       - name: "Bridget Thorne"
         role: Commissioner
         seat: "District 1"                    # e.g. "District 1"
         seat_id: district-1
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "bridget.thorne@fultoncountyga.gov"
         phone: ""
@@ -1396,6 +1474,19 @@ jurisdictions:
         photo: "https://www.fultoncountyga.gov/-/media/Departments/District-Attorney/DA-headshots-2023/BRIDGET-THORNE_200x200.png"
         source: "https://www.fultoncountyga.gov/Commissioners/Bridget-Thorne"
         notes: ""
+      - name: "Maggie Goldman"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/fulton-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (56.7%)
       - name: "Bob Ellis"
         role: Commissioner
         seat: "District 2"                    # e.g. "District 1"
@@ -1415,6 +1506,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"                    # e.g. "District 1"
         seat_id: district-3
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "dana.barrett@fultoncountyga.gov"
         phone: "404-612-9800"
@@ -1426,6 +1519,19 @@ jurisdictions:
         photo: "https://www.fultoncountyga.gov/-/media/Commissioners/Barrett/Barrett-01.jpg"
         source: "https://www.fultoncountyga.gov/Commissioners/Dana-Barrett"
         notes: ""
+      - name: "Jodi Merriday"
+        role: Commissioner
+        seat: "District 3"
+        seat_id: district-3
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/fulton-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (64.4%)
       - name: "VACANT"
         role: Commissioner
         seat: "District 4"                    # e.g. "District 1"
@@ -1445,6 +1551,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 5"                    # e.g. "District 1"
         seat_id: district-5
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "Marvin.Arrington@fultoncountyga.gov"
         phone: "404-613-0202"
@@ -1456,6 +1564,19 @@ jurisdictions:
         photo: "https://www.fultoncountyga.gov/-/media/Commissioners/Arrington/2023-_MARVIN-ARRINGTON-200X200.jpg"
         source: "https://www.fultoncountyga.gov/Commissioners/Marvin-Arrington"
         notes: ""
+      - name: "Helen Zenobia Willis"
+        role: Commissioner
+        seat: "District 5"
+        seat_id: district-5
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/fulton-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (92.6%)
       - name: "Khadijah Abdur-Rahman"
         role: Commissioner
         seat: "District 6"                    # e.g. "District 1"
@@ -1491,9 +1612,9 @@ jurisdictions:
         party: 
         email: ""
         phone: ""
-        last_elected: 
-        term_end:                 # TODO: per-county term length
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://applingcountyga.org/?page_id=1464"
       - name: "Randy Sellers"
@@ -1503,9 +1624,9 @@ jurisdictions:
         party: 
         email: ""
         phone: ""
-        last_elected: 
-        term_end:                 # TODO: per-county term length
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://applingcountyga.org/?page_id=1464"
       - name: "Jakharis Jones"
@@ -1524,6 +1645,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"
         seat_id: district-3
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: ""
         phone: ""
@@ -1532,6 +1655,19 @@ jurisdictions:
         next_election:
         voting: true
         source: "https://applingcountyga.org/?page_id=1464"
+      - name: "James M. \"Jimmy\" Twiggs"
+        role: Commissioner
+        seat: "District 3"
+        seat_id: district-3
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/appling-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Chad Kent"
         role: Commissioner
         seat: "District 4"
@@ -1576,9 +1712,9 @@ jurisdictions:
         party: 
         email: ""
         phone: "912-422-3391"
-        last_elected:
-        term_end:                 # TODO: per-county term length
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://atkinsoncounty.org/board-of-commissioners/"
       - name: "Buddy Willis"
@@ -1600,9 +1736,9 @@ jurisdictions:
         party: 
         email: ""
         phone: "912-422-3391"
-        last_elected:
-        term_end:                 # TODO: per-county term length
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://atkinsoncounty.org/board-of-commissioners/"
       - name: "Charlton Gillis"
@@ -1624,9 +1760,9 @@ jurisdictions:
         party: 
         email: ""
         phone: "912-422-3391"
-        last_elected:
-        term_end:                 # TODO: per-county term length
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://atkinsoncounty.org/board-of-commissioners/"
       - name: "Tom Morris"
@@ -1686,9 +1822,9 @@ jurisdictions:
         party:
         email: ""
         phone: "912-632-5214"
-        last_elected: 
-        term_end:
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://baconcounty.org/administration.php"
       - name: "Corey Tyre"
@@ -1698,9 +1834,9 @@ jurisdictions:
         party:
         email: ""
         phone: "912-632-5214"
-        last_elected: 
-        term_end:
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://baconcounty.org/administration.php"
       - name: "Rusty Sears"
@@ -1722,9 +1858,9 @@ jurisdictions:
         party:
         email: ""
         phone: "912-632-5214"
-        last_elected: 
-        term_end:
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://baconcounty.org/administration.php"
   
@@ -1844,6 +1980,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"
         seat_id: district-3
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: Republican
         email: "shall@baldwincountyga.com"
         phone: "478-932-5662"
@@ -1852,6 +1990,19 @@ jurisdictions:
         next_election: 2028
         voting: true
         source: "https://www.baldwincountyga.com/1194/Board-of-Commissioners"   # SoS results — CONFIRM before merge
+      - name: "Justin Jones"
+        role: Commissioner
+        seat: "District 3"
+        seat_id: district-3
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/baldwin-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (54.3%)
       - name: "Andrew Strickland"
         role: Commissioner
         seat: "District 4"
@@ -1859,9 +2010,9 @@ jurisdictions:
         party: Republican
         email: "astrickland@baldwincountyga.com"
         phone: "478-454-8447"
-        last_elected: 2024
-        term_end: 2028
-        next_election: 2028
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.baldwincountyga.com/1194/Board-of-Commissioners"   # SoS results — CONFIRM before merge
       - name: "Scott Little"
@@ -1871,9 +2022,9 @@ jurisdictions:
         party: Republican
         email: "slittle@baldwincountyga.com"
         phone: "478-234-7602"
-        last_elected: 2024
-        term_end: 2028
-        next_election: 2028
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.baldwincountyga.com/1194/Board-of-Commissioners"   # SoS results — CONFIRM before merge
   
@@ -2007,9 +2158,9 @@ jurisdictions:
         party: 
         email: "djmaxwell@co.banks.ga.us"
         phone: "706-654-8326"
-        last_elected: 2022
-        term_end: 2027
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.bankscountyga.org/1227/Board-of-Commissioners"
       - name: "Bo Garrison"
@@ -2031,9 +2182,9 @@ jurisdictions:
         party: 
         email: "causburn@co.banks.ga.us"
         phone: "678-858-4603"
-        last_elected: 2022
-        term_end: 2027
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.bankscountyga.org/1227/Board-of-Commissioners"
       - name: "Keith Roberts"
@@ -2117,9 +2268,9 @@ jurisdictions:
         party: 
         email: "ralvarez@barrowga.org"
         phone: "770-307-3005"
-        last_elected: 2022
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://barrowga.org/m/directory/employee?eid=123"
       - name: "Tim Walker"
@@ -2129,9 +2280,9 @@ jurisdictions:
         party: 
         email: "twalker@barrowga.org"
         phone: "770-307-3005"
-        last_elected: 2022
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://barrowga.org/m/directory/employee?eid=124"   
       - name: "Deborah Lynn"
@@ -2141,9 +2292,9 @@ jurisdictions:
         party: 
         email: "dlynn@barrowga.org"
         phone: "770-307-3005"
-        last_elected: 2022
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://barrowga.org/m/directory/employee?eid=125"
   
@@ -2349,9 +2500,9 @@ jurisdictions:
         party: 
         email: "jbrown@buttscounty.org"
         phone: 
-        last_elected: 2022
-        term_end: 2027
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://buttscountyga.com/about/commissioners/district-3-commissioner/"
       - name: "J. Keith Douglas"
@@ -2361,9 +2512,9 @@ jurisdictions:
         party: 
         email: "kdouglas@buttscounty.org"
         phone: 
-        last_elected: 2022
-        term_end: 2027
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://buttscountyga.com/about/commissioners/district-4-commissioner/"
       - name: "Russ Crumbley"
@@ -2423,9 +2574,9 @@ jurisdictions:
         party: 
         email: "cchance@carrollcountyga.gov"
         phone: "404-313-4990"
-        last_elected: 2022
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.carrollcountyga.gov/182/Board-of-Commissioners"
       - name: "Tommy Lee"
@@ -2444,6 +2595,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 4"
         seat_id: district-4
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "sfuller@carrollcountyga.gov"
         phone: "770-301-3221"
@@ -2452,6 +2605,19 @@ jurisdictions:
         next_election: 2026
         voting: true
         source: "https://www.carrollcountyga.gov/182/Board-of-Commissioners"
+      - name: "Jeffrey A. Vance"
+        role: Commissioner
+        seat: "District 4"
+        seat_id: district-4
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/carroll-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Ben Hicks"
         role: Commissioner
         seat: "District 5"
@@ -2471,9 +2637,9 @@ jurisdictions:
         party: 
         email: "dbailey@carrollcountyga.gov"
         phone: "678-378-6291"
-        last_elected: 2022
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.carrollcountyga.gov/182/Board-of-Commissioners"
 
@@ -2620,9 +2786,9 @@ jurisdictions:
         party: 
         email: "hjohnston@cherokeecountyga.gov"
         phone: ""
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.cherokeecountyga.gov/BOC/"
       - name: "Will Cagle"
@@ -2632,9 +2798,9 @@ jurisdictions:
         party: 
         email: "wcagle@cherokeecountyga.gov"
         phone: ""
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.cherokeecountyga.gov/BOC/"
       - name: "Richard Weatherby"
@@ -2668,9 +2834,9 @@ jurisdictions:
         party: 
         email: "caragsdale@cherokeecountyga.gov"
         phone: ""
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.cherokeecountyga.gov/BOC/"
   
@@ -2849,6 +3015,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 1"
         seat_id: district-1
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "alaina.reaves@claytoncountyga.gov"
         phone: "770-477-3213"
@@ -2857,6 +3025,19 @@ jurisdictions:
         next_election: 2026
         voting: true
         source: "https://www.claytoncountyga.gov/government/board-of-commissioners/district-1/" 
+      - name: "Demeitrice Collins"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/clayton-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Gail Hambrick"
         role: Commissioner
         seat: "District 2"
@@ -2888,9 +3069,9 @@ jurisdictions:
         party: 
         email: "demont.davis@claytoncountyga.gov"
         phone: "770-477-3216"
-        last_elected: 2022
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.claytoncountyga.gov/government/board-of-commissioners/district-4/"
   
@@ -2910,6 +3091,8 @@ jurisdictions:
         role: Chair
         seat: "At-Large"
         seat_id: at-large
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "commissioners@columbiacountyga.gov"
         phone: "706-868-3379"
@@ -2918,10 +3101,25 @@ jurisdictions:
         next_election: 2026
         voting: true
         source: "https://www.columbiacountyga.gov/304/Board-of-Commissioners"
+      - name: "Alison Couch"
+        role: Chair
+        seat: "At-Large"
+        seat_id: at-large
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/columbia-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (54.7%)
       - name: "Connie Melear"
         role: Commissioner
         seat: "District 1"
         seat_id: district-1
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "commissioners@columbiacountyga.gov"
         phone: "706-868-3379"
@@ -2930,6 +3128,19 @@ jurisdictions:
         next_election: 2026
         voting: true
         source: "https://www.columbiacountyga.gov/304/Board-of-Commissioners"
+      - name: "Alex Griffin"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/columbia-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (63.3%)
       - name: "Jim Steed"
         role: Commissioner
         seat: "District 2"
@@ -2960,6 +3171,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 4"
         seat_id: district-4
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "commissioners@columbiacountyga.gov"
         phone: "706-868-3379"
@@ -2968,6 +3181,19 @@ jurisdictions:
         next_election: 2026
         voting: true
         source: "https://www.columbiacountyga.gov/304/Board-of-Commissioners"  
+      - name: "Samantha Rockwood"
+        role: Commissioner
+        seat: "District 4"
+        seat_id: district-4
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/columbia-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (51.1%)
   
   - id: muscogee
     name: Columbus-Muscogee County
@@ -3151,9 +3377,9 @@ jurisdictions:
         party: 
         email: "bpmckenzie@coweta.ga.us"
         phone: "770-780-3962"
-        last_elected: 2023
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.coweta.ga.us/169/Board-of-Commissioners"
       - name: "Bob Blackburn"
@@ -3161,6 +3387,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"
         seat_id: district-3
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "bblackburn@coweta.ga.us"
         phone: "404-630-4351"
@@ -3169,6 +3397,19 @@ jurisdictions:
         next_election: 2026
         voting: true
         source: "https://www.coweta.ga.us/169/Board-of-Commissioners"
+      - name: "Dakota Hand Caldwell"
+        role: Commissioner
+        seat: "District 3"
+        seat_id: district-3
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/coweta-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (59.1%)
       - name: "John Reidelbach"
         full_name: "John J. Reidelbach"   # authoritative full name (matching); site shows `name`
         role: Commissioner
@@ -3227,9 +3468,9 @@ jurisdictions:
         party:
         email: "district1@dawsoncountyga.gov"
         phone: 
-        last_elected: 2022
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.dawsoncountyga.gov/426/Board-of-Commissioners"
       - name: "Chris Gaines "
@@ -3251,9 +3492,9 @@ jurisdictions:
         party: 
         email: "district3@dawsoncountyga.gov"
         phone: 
-        last_elected: 2022
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.dawsoncountyga.gov/426/Board-of-Commissioners"
       - name: "Chad Turkett "
@@ -3311,6 +3552,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"
         seat_id: district-3
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "EGibbons@fayettecountyga.gov"
         phone: "678-708-1262"
@@ -3319,6 +3562,19 @@ jurisdictions:
         next_election: 2026
         voting: true
         source: "https://www.fayettecountyga.gov/business_detail_T3_R14.php"
+      - name: "James W. Clifton"
+        role: Commissioner
+        seat: "District 3"
+        seat_id: district-3
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/fayette-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (58.2%)
       - name: "Charles Rousseau"
         full_name: "Charles D. Rousseau"   # authoritative full name (matching); site shows `name`
         role: Commissioner
@@ -3327,9 +3583,9 @@ jurisdictions:
         party: 
         email: "CRousseau@fayettecountyga.gov"
         phone: "470-217-2214"
-        last_elected: 2022
-        term_end: 2026 
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.fayettecountyga.gov/business_detail_T3_R15.php"  
       - name: "Charles Oddo"
@@ -3362,6 +3618,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 1"
         seat_id: district-1
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "kmhill@forsythco.com"
         phone: "678-513-5881"
@@ -3370,6 +3628,19 @@ jurisdictions:
         next_election: 2026
         voting: true
         source: "https://www.forsythco.com/government/departments/board-of-commissioners/district-1/"
+      - name: "Adam Rodes"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/forsyth-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (68.5%)
       - name: "Alfred John"
         role: Commissioner
         seat: "District 2"
@@ -3389,9 +3660,9 @@ jurisdictions:
         party: 
         email: "tlevent@forsythco.com"
         phone: "678-513-5883"
-        last_elected: 2022
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.forsythco.com/government/departments/board-of-commissioners/district-3/"
       - name: "Mendy Moore"
@@ -3463,9 +3734,9 @@ jurisdictions:
         party: 
         email: "ben.ku@gwinnettcounty.com"
         phone: "770-822-7002"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.gwinnettcounty.com/government/departments/board-of-commissioners/about/district-2-commissioner"
       - name: "Jasper Watkins, III"
@@ -3484,6 +3755,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 4"
         seat_id: district-4
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "matthew.holtkamp@gwinnettcounty.com"
         phone: "770-822-7004"
@@ -3492,6 +3765,19 @@ jurisdictions:
         next_election: 
         voting: true
         source: "https://www.gwinnettcounty.com/government/departments/board-of-commissioners"
+      - name: "Benjamin Culberson"
+        role: Commissioner
+        seat: "District 4"
+        seat_id: district-4
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/gwinnett-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (55.2%)
   
   - id: hall
     name: Hall County
@@ -3522,6 +3808,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 1"
         seat_id: district-1
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "kcooper@hallcounty.org"
         phone: "770-535-8288"
@@ -3530,6 +3818,19 @@ jurisdictions:
         next_election: 
         voting: true
         source: "https://www.hallcounty.org/m/directory/employee?eid=125" 
+      - name: "Mark Turner"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/hall-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Billy Powell"
         role: Commissioner
         seat: "District 2"
@@ -3546,6 +3847,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"
         seat_id: district-3
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "gpoole@hallcounty.org"
         phone: "770-535-8288"
@@ -3554,6 +3857,19 @@ jurisdictions:
         next_election: 2026
         voting: true
         source: "https://www.hallcounty.org/m/directory/employee?eid=127" 
+      - name: "Tyler Crawford"
+        role: Commissioner
+        seat: "District 3"
+        seat_id: district-3
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/hall-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Jeff Stowe"
         full_name: "Jeffrey R. Stowe"   # authoritative full name (matching); site shows `name`
         role: Commissioner
@@ -3623,6 +3939,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"
         seat_id: district-3
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party:
         email: "danglyn@henrycountyga.gov"
         phone: ""
@@ -3631,6 +3949,19 @@ jurisdictions:
         next_election: 2028
         voting: true
         source: "https://www.henrycountyga.gov/board-of-commissioners"   # party + incumbency confirmed by GA SoS 2026 Qualified Candidates list
+      - name: "Keisha Buchanan"
+        role: Commissioner
+        seat: "District 3"
+        seat_id: district-3
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/henry-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (59.9%)
       - name: "Michael Price"   # D4 incumbency confirmed by GA SoS 2026 Qualified Candidates list
         full_name: "Michael Todd Price"
         role: Commissioner
@@ -3639,9 +3970,9 @@ jurisdictions:
         party:
         email: "MPrice@henrycountyga.gov"
         phone: ""
-        last_elected: 2024
-        term_end: 2028
-        next_election: 2028
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.henrycountyga.gov/board-of-commissioners"    # incumbency confirmed by GA SoS 2026 Qualified Candidates list
       - name: "Kevin Lewis"   # D5 incumbency confirmed by GA SoS 2026 Qualified Candidates list
@@ -3652,9 +3983,9 @@ jurisdictions:
         party:
         email: "klewis@henrycountyga.gov"
         phone: ""
-        last_elected: 2024
-        term_end: 2028
-        next_election: 2028
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.henrycountyga.gov/board-of-commissioners"   # party + incumbency confirmed by GA SoS 2026 Qualified Candidates list
   
@@ -3714,9 +4045,9 @@ jurisdictions:
         party: 
         email: "nathan.davis@lumpkincounty.gov"
         phone: "706-864-3742"
-        last_elected:
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.lumpkincounty.gov/188/Board-of-Commissioners"
       - name: "Jeff Moran"
@@ -3726,9 +4057,9 @@ jurisdictions:
         party: 
         email: "jeff.moran@lumpkincounty.gov"
         phone: "706-864-3742"
-        last_elected:
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.lumpkincounty.gov/188/Board-of-Commissioners"
   
@@ -3748,6 +4079,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 1"
         seat_id: district-1
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party:
         email: "g.king@meriwethercountyga.gov"
         phone: "706-672-1314"
@@ -3756,6 +4089,19 @@ jurisdictions:
         next_election: 
         voting: true
         source: "https://www.meriwethercountyga.gov/215/Board-of-Commissioners"
+      - name: "Joe Howard"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/meriwether-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Jennifer Snelson"
         role: Vice Chair
         seat: "District 2"
@@ -3775,9 +4121,9 @@ jurisdictions:
         party:
         email: "e.collins@meriwethercountyga.gov"
         phone: "706-672-1314"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.meriwethercountyga.gov/215/Board-of-Commissioners"
       - name: "Bryan Threadgill"
@@ -3799,9 +4145,9 @@ jurisdictions:
         party:
         email: "a.worsley@meriwethercountyga.gov"
         phone: "706-672-1314"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.meriwethercountyga.gov/215/Board-of-Commissioners"
   
@@ -3824,9 +4170,9 @@ jurisdictions:
         party: 
         email: "carl.jones@morgancountyga.gov"
         phone: "706-342-0725"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.morgancountyga.gov/m/directory/department?did=7"
       - name: "Blake McCormack"
@@ -3836,9 +4182,9 @@ jurisdictions:
         party: 
         email: "bmccormack@morgancountyga.gov"
         phone: "706-342-0725"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.morgancountyga.gov/m/directory/department?did=7"
       - name: "Ben Riden"
@@ -3920,6 +4266,8 @@ jurisdictions:
         role: Commissioner
         seat: "Post 2"
         seat_id: post-2
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "commissioners@paulding.gov"
         phone: "770-443-7550, ext. 4007"
@@ -3928,10 +4276,25 @@ jurisdictions:
         next_election: 
         voting: true
         source: "https://www.paulding.gov/357/Sandy-Kaecher---Post-II-Commissioner" 
+      - name: "Jeff Cole"
+        role: Commissioner
+        seat: "Post 2"
+        seat_id: post-2
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/paulding-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Virginia Galloway"
         role: Commissioner
         seat: "Post 3"
         seat_id: post-3
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "commissioners@paulding.gov"
         phone: "770-443-7550, ext. 4008"
@@ -3940,6 +4303,19 @@ jurisdictions:
         next_election: 
         voting: true
         source: "https://www.paulding.gov/358/Virginia-Galloway---Post-III-Commissione"
+      - name: "Taurus Madric-Morris"
+        role: Commissioner
+        seat: "Post 3"
+        seat_id: post-3
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/paulding-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (59.2%)
       - name: "Dean Schneider"
         role: Commissioner
         seat: "Post 4"
@@ -3947,9 +4323,9 @@ jurisdictions:
         party: 
         email: "commissioners@paulding.gov"
         phone: "770-443-7550, ext. 4009"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.paulding.gov/359/Post-IV-Commissioner"
   
@@ -3986,9 +4362,9 @@ jurisdictions:
         party: 
         email: ""
         phone: ""
-        last_elected: 
-        term_end:
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.pickenscountyga.gov/167/Board-of-Commissioners"
       - name: "Josh Tatum"
@@ -4045,6 +4421,8 @@ jurisdictions:
         role: Commissioner
         seat: "Post 2"
         seat_id: post-2
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "Doreen.Williams@RockdaleCountyGA.gov"
         phone: ""
@@ -4053,6 +4431,19 @@ jurisdictions:
         next_election: 
         voting: true
         source: "https://www.rockdalecountyga.gov/rockdale-board-of-commissioners/"
+      - name: "Melisa T. Mims"
+        role: Commissioner
+        seat: "Post 2"
+        seat_id: post-2
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/rockdale-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
   
   - id: conyers
     name: City of Conyers
@@ -4171,9 +4562,9 @@ jurisdictions:
         party: 
         email: "jrdutton@spaldingcounty.com"
         phone: "770-467-4280"
-        last_elected: 2024
-        term_end: 2028
-        next_election: 2028
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.spaldingcounty.com/government/board-of-commissioners"   # SoS results — CONFIRM before merge
       - name: "Reginald Watts"
@@ -4207,9 +4598,9 @@ jurisdictions:
         party: 
         email: "cwdavis@spaldingcounty.com"
         phone: "770-467-4280"
-        last_elected: 2022
-        term_end: 2026
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.spaldingcounty.com/government/board-of-commissioners"
 
@@ -4242,6 +4633,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 1"
         seat_id: district-1
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "amarie.warren@co.walton.ga.us"
         phone: ""
@@ -4250,6 +4643,19 @@ jurisdictions:
         next_election: 
         voting: true
         source: "https://www.waltoncountyga.gov/322/Board-of-Commissioners"
+      - name: "Danny Nelson"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/walton-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Pete Myers"
         role: Commissioner
         seat: "District 2"
@@ -4281,9 +4687,9 @@ jurisdictions:
         party: 
         email: "bradford4walton@gmail.com"
         phone: ""
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.waltoncountyga.gov/322/Board-of-Commissioners"
       - name: "Jeremy Adams"
@@ -4293,9 +4699,9 @@ jurisdictions:
         party: 
         email: "dradams@co.walton.ga.us"
         phone: ""
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         source: "https://www.waltoncountyga.gov/322/Board-of-Commissioners"
       - name: "Kirklyn Dixon"
@@ -4395,105 +4801,105 @@ jurisdictions:
     official_url: https://thomascountyboc.org/about-us/county-commissioners
     board_size: 8                 # the county site lists Districts 1-8 (the Chairman holds District 4)
     related_pages:
-       - { }
+      - { }
     notes: ""
     members:
-       - name: "Rev. Jeremy Rich"
-         role: Commissioner               # Chair | Vice Chair | Commissioner
-         seat: "District 1"                  # "District 4"
-         seat_id: district-1
-         party:         # Republican | Democratic | Independent
-         email: ""
-         phone: ""
-         last_elected: 2022
-         term_end: 2026
-         next_election: 
-         voting: true
-         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
-       - name: "Moses Gross"
-         role: Commissioner               # Chair | Vice Chair | Commissioner
-         seat: "District 2"                  # "District 4"
-         seat_id: district-2
-         party:         # Republican | Democratic | Independent
-         email: ""
-         phone: ""
-         last_elected: 2024
-         term_end: 2028
-         next_election: 
-         voting: true
-         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
-       - name: "Kenneth Hickey"
-         role: Commissioner               # Chair | Vice Chair | Commissioner
-         seat: "District 3"                  # "District 4"
-         seat_id: district-3
-         party:         # Republican | Democratic | Independent
-         email: ""
-         phone: ""
-         last_elected: 2022
-         term_end: 2026
-         next_election: 
-         voting: true
-         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
-       - name: "Mark NeSmith"
-         role: Chair               # Chair | Vice Chair | Commissioner
-         seat: "District 4"                  # "District 4"
-         seat_id: district-4
-         party:         # Republican | Democratic | Independent
-         email: ""
-         phone: ""
-         last_elected: 2024
-         term_end: 2028
-         next_election: 
-         voting: true
-         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
-       - name: "Donnie Bagget"
-         role: Vice Chair               # Chair | Vice Chair | Commissioner
-         seat: "District 5"                  # "District 4"
-         seat_id: district-5
-         party:         # Republican | Democratic | Independent
-         email: ""
-         phone: ""
-         last_elected: 2022
-         term_end: 2026
-         next_election: 
-         voting: true
-         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
-       - name: "Vacant"
-         role: Commissioner              # Chair | Vice Chair | Commissioner
-         seat: "District 6"                  # "District 4"
-         seat_id: district-6
-         party:         # Republican | Democratic | Independent
-         email: ""
-         phone: ""
-         last_elected: 2024
-         term_end: 2028
-         next_election: 
-         voting: true
-         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
-       - name: "Phillip Brown"
-         role: Commissioner              # Chair | Vice Chair | Commissioner
-         seat: "District 7"                  # "District 4"
-         seat_id: district-7
-         party:         # Republican | Democratic | Independent
-         email: ""
-         phone: ""
-         last_elected: 2022
-         term_end: 2026
-         next_election: 
-         voting: true
-         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
-       - name: "Zippy Vonier"
-         role: Commissioner               # Chair | Vice Chair | Commissioner
-         seat: "District 8"                  # "District 4"
-         seat_id: district-8
-         party:         # Republican | Democratic | Independent
-         email: ""
-         phone: ""
-         last_elected: 2024
-         term_end: 2028
-         next_election:
-         voting: true
-         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+      - name: "Rev. Jeremy Rich"
+        role: Commissioner               # Chair | Vice Chair | Commissioner
+        seat: "District 1"                  # "District 4"
+        seat_id: district-1
+        party:         # Republican | Democratic | Independent
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+      - name: "Moses Gross"
+        role: Commissioner               # Chair | Vice Chair | Commissioner
+        seat: "District 2"                  # "District 4"
+        seat_id: district-2
+        party:         # Republican | Democratic | Independent
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 
+        voting: true
+        source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+      - name: "Kenneth Hickey"
+        role: Commissioner               # Chair | Vice Chair | Commissioner
+        seat: "District 3"                  # "District 4"
+        seat_id: district-3
+        party:         # Republican | Democratic | Independent
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+      - name: "Mark NeSmith"
+        role: Chair               # Chair | Vice Chair | Commissioner
+        seat: "District 4"                  # "District 4"
+        seat_id: district-4
+        party:         # Republican | Democratic | Independent
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 
+        voting: true
+        source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+      - name: "Donnie Baggett"
+        role: Vice Chair               # Chair | Vice Chair | Commissioner
+        seat: "District 5"                  # "District 4"
+        seat_id: district-5
+        party:         # Republican | Democratic | Independent
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+      - name: "Vacant"
+        role: Commissioner              # Chair | Vice Chair | Commissioner
+        seat: "District 6"                  # "District 4"
+        seat_id: district-6
+        party:         # Republican | Democratic | Independent
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election: 
+        voting: true
+        source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+      - name: "Phillip Brown"
+        role: Commissioner              # Chair | Vice Chair | Commissioner
+        seat: "District 7"                  # "District 4"
+        seat_id: district-7
+        party:         # Republican | Democratic | Independent
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
+      - name: "Zippy Vonier"
+        role: Commissioner               # Chair | Vice Chair | Commissioner
+        seat: "District 8"                  # "District 4"
+        seat_id: district-8
+        party:         # Republican | Democratic | Independent
+        email: ""
+        phone: ""
+        last_elected: 2024
+        term_end: 2028
+        next_election:
+        voting: true
+        source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
 
 
   - id: thomasville               # must equal the places.yml slug
@@ -4600,9 +5006,9 @@ jurisdictions:
         party: 
         email: "https://www.camdencountyga.gov/FormCenter/Contact-Us-4/Contact-the-District-2-Commissioner-80"
         phone: "912-552-4291"
-        last_elected: 2022
-        term_end: 2026        # last_elected + term_years (default 4) — verify
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.camdencountyga.gov/ImageRepository/Document?documentID=17655"
         source: "https://www.camdencountyga.gov/131/District-2"   # SoS results — CONFIRM before merge
@@ -4626,9 +5032,9 @@ jurisdictions:
         party: 
         email: "https://www.camdencountyga.gov/FormCenter/Contact-Us-4/Contact-the-District-4-Commissioner-82"
         phone: "912-674-1285"
-        last_elected: 2022
-        term_end: 2026         # last_elected + term_years (default 4) — verify
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.camdencountyga.gov/ImageRepository/Document?documentID=17654"
         source: "https://www.camdencountyga.gov/133/District-4"   # SoS results — CONFIRM before merge
@@ -4693,9 +5099,9 @@ jurisdictions:
         party: 
         email: "RBurdette@effinghamcounty.org"
         phone: "912-663-1692"
-        last_elected: 2022
-        term_end: 2026         # last_elected + term_years (default 4) — verify
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.effinghamcounty.org/ImageRepository/Document?documentID=7111"
         source: "https://www.effinghamcounty.org/m/directory/employee?eid=92"   # SoS results — CONFIRM before merge
@@ -4706,9 +5112,9 @@ jurisdictions:
         party: 
         email: "jamiedeloachdistrict3@gmail.com"
         phone: "912-655-9423"
-        last_elected: 2022
-        term_end: 2026         # last_elected + term_years (default 4) — verify
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.effinghamcounty.org/ImageRepository/Document?documentID=8314"
         source: "https://www.effinghamcounty.org/m/directory/employee?eid=93"   # SoS results — CONFIRM before merge
@@ -4732,9 +5138,9 @@ jurisdictions:
         party: 
         email: "philkiefferdistrict5@gmail.com"
         phone: "912-667-7977"
-        last_elected: 2022
-        term_end: 2026         # last_elected + term_years (default 4) — verify
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.effinghamcounty.org/ImageRepository/Document?documentID=7116"
         source: "https://www.effinghamcounty.org/m/directory/employee?eid=95"   # SoS results — CONFIRM before merge
@@ -4770,9 +5176,9 @@ jurisdictions:
         party: 
         email: "chad.steward@gordoncountyga.gov"
         phone: "706-629-3795"
-        last_elected: 
-        term_end: 2026         # last_elected + term_years (default 4) — verify
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.gordoncountyga.gov/ImageRepository/Document?documentID=801"
         source: "https://www.gordoncountyga.gov/185/Board-of-Commissioners"   # SoS results — CONFIRM before merge
@@ -4796,9 +5202,9 @@ jurisdictions:
         party:
         email: "kurt.sutherland@gordoncountyga.gov"
         phone: "706-629-3795"
-        last_elected: 
-        term_end: 2026         # last_elected + term_years (default 4) — verify
-        next_election: 2026
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.gordoncountyga.gov/ImageRepository/Document?documentID=803"
         source: "https://www.gordoncountyga.gov/185/Board-of-Commissioners"   # SoS results — CONFIRM before merge
@@ -4834,9 +5240,9 @@ jurisdictions:
         party: 
         email: "Chairman@houstoncountyga.gov"
         phone: ""
-        last_elected: 
-        term_end:        # last_elected + term_years (default 4) — verify
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: false
         tie_break_only: true
         photo: "https://www.houstoncountyga.gov/skins/userfiles/images/Houston%20County%20Commissioners%20Feb2023-24.jpg"
@@ -4848,9 +5254,9 @@ jurisdictions:
         party: 
         email: "post2@houstoncountyga.gov"
         phone: ""
-        last_elected: 
-        term_end:        # last_elected + term_years (default 4) — verify
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.houstoncountyga.gov/skins/userfiles/images/Houston%20County%20Commissioners%20Feb2023-19.jpg"
         source: "https://www.houstoncountyga.gov/commissioner/contact-information.cms"   
@@ -4922,6 +5328,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 1"
         seat_id: district-1
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "marion.stevens@libertycountyga.com"
         phone: ""
@@ -4931,6 +5339,19 @@ jurisdictions:
         voting: true
         photo: "https://www.libertycountyga.gov/ImageRepository/Document?documentId=516"
         source: "https://www.libertycountyga.gov/327/Marion-Stevens-Sr"
+      - name: "Larry D. Baker"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/liberty-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (66.7%)
       - name: "Justin L. Frasier"
         role: Commissioner
         seat: "District 2"
@@ -4938,9 +5359,9 @@ jurisdictions:
         party: 
         email: "justin.frasier@libertycountyga.com"
         phone: ""
-        last_elected: 
-        term_end:        
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.libertycountyga.gov/ImageRepository/Document?documentId=517"
         source: "https://www.libertycountyga.gov/328/Justin-L-Frasier"
@@ -4951,9 +5372,9 @@ jurisdictions:
         party: 
         email: "connie.thrift@libertycountyga.com"
         phone: ""
-        last_elected: 
-        term_end:        
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.libertycountyga.gov/ImageRepository/Document?documentId=2917"
         source: "https://www.libertycountyga.gov/329/Connie-Thrift"
@@ -5044,9 +5465,9 @@ jurisdictions:
         party: 
         email: "commissioner@lowndescounty.com"
         phone: "229-671-2442"
-        last_elected: 
-        term_end:
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.lowndescounty.com/images/CityDirectory/19/Commissioner%20Orenstein.jpg"
         source: "https://www.lowndescounty.com/330/District-2"
@@ -5058,9 +5479,9 @@ jurisdictions:
         party: 
         email: "commissioner@lowndescounty.com"
         phone: "229-671-2442"
-        last_elected: 
-        term_end:
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.lowndescounty.com/images/CityDirectory/19/Commissioner%20Wisenbaker.jpg"
         source: "https://www.lowndescounty.com/331/District-3"
@@ -5071,9 +5492,9 @@ jurisdictions:
         party: 
         email: "commissioner@lowndescounty.com"
         phone: "229-671-2442"
-        last_elected: 
-        term_end:
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.lowndescounty.com/images/CityDirectory/19/Commissioner%20Marshall.jpg"
         source: "https://www.lowndescounty.com/332/District-4"  
@@ -5137,9 +5558,9 @@ jurisdictions:
         party: 
         email: "chorton@oconee.ga.us"
         phone: ""
-        last_elected: 
-        term_end:        
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.oconeecountyga.gov/ImageRepository/Document?documentID=4379"
         source: "https://www.oconeecountyga.gov/913/Chuck-Horton"
@@ -5150,9 +5571,9 @@ jurisdictions:
         party: 
         email: "aharden@oconee.ga.us"
         phone: ""
-        last_elected: 
-        term_end:        
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.oconeecountyga.gov/ImageRepository/Document?documentID=11255"
         source: "https://www.oconeecountyga.gov/913/Amrey-Harden"
@@ -5185,6 +5606,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 1"
         seat_id: district-1
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "donnie.hester@tiftcounty.org"
         phone: "229-402-3795"
@@ -5194,6 +5617,19 @@ jurisdictions:
         voting: true
         photo: "https://www.tiftcounty.org/Hester%20-%20Copy%20(3).jpg"
         source: "https://www.tiftcounty.org/county_commissioners/commissioner_donnie_hester.php"  
+      - name: "Angela A. Haggins"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/tift-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Melissa Hughes"
         role: Vice Chair
         seat: "District 2"
@@ -5214,9 +5650,9 @@ jurisdictions:
         party: 
         email: "paul.webb@tiftcounty.org"
         phone: "229-322-2160"
-        last_elected: 
-        term_end:        
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.tiftcounty.org/Webb%20-%20Copy%20(4).jpg"
         source: "https://www.tiftcounty.org/county_commissioners/commissioner_paul_webb.php"
@@ -5227,9 +5663,9 @@ jurisdictions:
         party: 
         email: "stan.stalnaker@tiftcounty.org"
         phone: "229-472-3564"
-        last_elected: 
-        term_end:        
-        next_election: 
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.tiftcounty.org/Stalnaker%20-%20Copy%20(3).jpg"
         source: "https://www.tiftcounty.org/county_commissioners/commissioner_stan_stalnaker.php"
@@ -5253,9 +5689,9 @@ jurisdictions:
         party: 
         email: "greg.wood@tiftcounty.org"
         phone: "229-472-3094"
-        last_elected: 
-        term_end:        
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.tiftcounty.org/Wood%20-%20Copy%20(3).jpg"
         source: "https://www.tiftcounty.org/county_commissioners/commissioner_greg_wood.php"   
@@ -5289,6 +5725,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 1"
         seat_id: district-1
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party: 
         email: "brobbins@whitfieldcountyga.com"
         phone: "706-275-7500"
@@ -5298,6 +5736,19 @@ jurisdictions:
         voting: true
         photo: "https://www.whitfieldcountyga.com/bus-directory/Government/Elected%20Officials/Board%20Of%20Commissioners/011%20-%20Copy.jpg?t=202405011522110"
         source: "https://www.whitfieldcountyga.com/business_detail_T5_R4.php"
+      - name: "Philip King"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/whitfield-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Robby Staten"
         role: Commissioner
         seat: "District 2"
@@ -5318,9 +5769,9 @@ jurisdictions:
         party: 
         email: "jthomas@whitfieldcountyga.com"
         phone: "706-275-7500"
-        last_elected: 
-        term_end:        
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.whitfieldcountyga.com/bus-directory/Government/Elected%20Officials/Board%20Of%20Commissioners/001%20-%20Copy%20-%20Copy%20-%20Copy.jpg?t=202503281540520"
         source: "https://www.whitfieldcountyga.com/business_detail_T5_R8.php"
@@ -5383,9 +5834,9 @@ jurisdictions:
         party:
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
-        last_elected:
-        term_end:
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.catoosacountyga.gov/home/showpublishedimage/1100/637456085492500000"
         source: "https://www.catoosacountyga.gov/Home/Components/StaffDirectory/StaffDirectory/113/149?backlist=%2fdepartments%2fview-all-departments%2fboard-of-commissioners"
@@ -5409,9 +5860,9 @@ jurisdictions:
         party:
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
-        last_elected:
-        term_end:
-        next_election:
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
         voting: true
         photo: "https://www.catoosacountyga.gov/home/showpublishedimage/1102/637456085497370000"
         source: "https://www.catoosacountyga.gov/Home/Components/StaffDirectory/StaffDirectory/115/149?backlist=%2fdepartments%2fview-all-departments%2fboard-of-commissioners"
@@ -5445,6 +5896,8 @@ jurisdictions:
         role: Commissioner
         seat: "District 1"
         seat_id: district-1
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party:
         email: "district1@walkerga.us"
         phone: "423-208-5080"
@@ -5454,10 +5907,25 @@ jurisdictions:
         voting: true
         photo: "https://www.walkercountyga.gov/Images/Government/Board%20of%20Commissioners/District%201/Robert-Blakemore.jpg?t=202605180227140"
         source: "https://www.walkercountyga.gov/government/board_of_commissioners/district_1.php"
+      - name: "Randy Pittman"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/walker-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Mark Askew"
         role: Commissioner
         seat: "District 2"
         seat_id: district-2
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
         party:
         email: "district2@walkerga.us"
         phone: "423-208-5156"
@@ -5467,6 +5935,19 @@ jurisdictions:
         voting: true
         photo: "https://www.walkercountyga.gov/Images/Government/Board%20of%20Commissioners/District%202/Mark-Askew.jpg?t=202605180230200"
         source: "https://www.walkercountyga.gov/government/board_of_commissioners/district_2.php"
+      - name: "Marcus Veazey"
+        role: Commissioner
+        seat: "District 2"
+        seat_id: district-2
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/walker-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
       - name: "Brian Hart"
         role: Commissioner
         seat: "District 3"
