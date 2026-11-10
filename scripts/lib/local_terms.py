@@ -24,6 +24,13 @@ Active on day D  <=>  (takes_office blank or <= D) and (leaves_office blank or >
 A "Suspended" member still legally holds the seat while an interim serves it
 (Newton, 2026), so a Suspended row does not count toward the one-holder-per-seat
 rule.
+
+A SHARED seat is one a body fills several of with no post numbers to tell them
+apart: Palmetto elects all six council members citywide, top vote-getters win.
+The jurisdiction declares it with `seat_capacity: {at-large: 6}`, and every
+holder carries `seat_id: at-large`. Numbering them at-large-1..6 would invent
+seat identities the city does not have. A shared seat may have up to its
+capacity of holders at once, and has no one-to-one successor.
 """
 
 import re
@@ -83,19 +90,36 @@ def _interval(member):
     return parse_date(member.get("takes_office")), parse_date(member.get("leaves_office"))
 
 
-def _overlaps(a, b):
-    (a0, a1), (b0, b1) = a, b
-    # Half-open [start, end); None start = -inf, None end = +inf.
-    a_before_b = a1 is not None and b0 is not None and a1 <= b0
-    b_before_a = b1 is not None and a0 is not None and b1 <= a0
-    return not (a_before_b or b_before_a)
+def capacity_of(seat_id, capacity=None):
+    """How many people may hold `seat_id` at once (1 unless declared shared)."""
+    return (capacity or {}).get(seat_id, 1)
 
 
-def seat_conflicts(members):
-    """Pairs of rows that hold the same seat_id over overlapping dates — two
-    people in one seat at once, which the data must never say. Rows with an
-    unparseable date are skipped (the validator reports those separately).
-    Returns [(seat_id, row_a, row_b)]."""
+def _over_capacity(rows, cap):
+    """The rows holding a seat at the busiest moment, if that is more than `cap`.
+    Half-open intervals: a leave and a take on the same date do not overlap."""
+    events = []
+    for m, (start, end) in rows:
+        events.append((start or date.min, 1, m))   # starts sort after ends on a tie
+        events.append((end or date.max, 0, m))
+    events.sort(key=lambda e: (e[0], e[1]))
+    held, worst = [], []
+    for _, kind, m in events:
+        if kind == 1:
+            held.append(m)
+            if len(held) > cap and len(held) > len(worst):
+                worst = list(held)
+        else:
+            held = [h for h in held if h is not m]
+    return worst
+
+
+def seat_conflicts(members, capacity=None):
+    """Seats held by more people at once than they can hold — two people in an
+    ordinary seat, or seven in Palmetto's six at-large seats — which the data
+    must never say. `capacity` is the jurisdiction's `seat_capacity` map. Rows
+    with an unparseable date are skipped (the validator reports those).
+    Returns [(seat_id, [rows holding it at the busiest moment])]."""
     by_seat = {}
     for m in members:
         if not isinstance(m, dict) or not m.get("seat_id"):
@@ -109,17 +133,18 @@ def seat_conflicts(members):
         by_seat.setdefault(m["seat_id"], []).append((m, iv))
     out = []
     for seat_id, rows in by_seat.items():
-        for i in range(len(rows)):
-            for j in range(i + 1, len(rows)):
-                if _overlaps(rows[i][1], rows[j][1]):
-                    out.append((seat_id, rows[i][0], rows[j][0]))
+        worst = _over_capacity(rows, capacity_of(seat_id, capacity))
+        if worst:
+            out.append((seat_id, worst))
     return out
 
 
-def successor(members, outgoing):
-    """The staged row that takes `outgoing`'s seat when it leaves, or None."""
+def successor(members, outgoing, capacity=None):
+    """The staged row that takes `outgoing`'s seat when it leaves, or None.
+    Always None for a shared seat: which incoming member replaces which
+    outgoing one is not a fact the election records."""
     sid, end = outgoing.get("seat_id"), parse_date(outgoing.get("leaves_office"))
-    if not sid or end is None:
+    if not sid or end is None or capacity_of(sid, capacity) > 1:
         return None
     for m in members:
         if m is outgoing or not isinstance(m, dict) or m.get("seat_id") != sid:

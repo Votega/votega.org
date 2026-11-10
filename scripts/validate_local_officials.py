@@ -253,13 +253,40 @@ def validate_term_fields(context, member):
         warn(context, f"{member.get('name')!r} left office {end} with no leave_reason")
 
 
-def validate_seats(juris_id, members):
-    """Across a jurisdiction's rows: no seat held by two people at once (error),
-    and no seat left without a current or staged holder (reported)."""
-    for seat_id, a, b in local_terms.seat_conflicts(members):
-        err(juris_id, f"seat_id {seat_id!r} is held by {a.get('name')!r} and "
-                      f"{b.get('name')!r} over overlapping dates — set leaves_office / "
-                      f"takes_office, or give them distinct seat_ids")
+def validate_capacity(juris_id, capacity, members):
+    """`seat_capacity` (optional): {seat_id: n} for a SHARED seat the body fills
+    n of with no post numbers (Palmetto: {at-large: 6}). Returns the usable map."""
+    if capacity is None:
+        return {}
+    context = f"{juris_id}.seat_capacity"
+    if not isinstance(capacity, dict):
+        err(context, f"must be a mapping of seat_id -> number of seats, got: {capacity!r}")
+        return {}
+    used = {m.get("seat_id") for m in members if isinstance(m, dict)}
+    good = {}
+    for sid, n in capacity.items():
+        if not isinstance(sid, str) or not local_terms.SEAT_ID_RE.match(sid):
+            err(context, f"key must be a seat_id slug, got: {sid!r}")
+        elif not isinstance(n, int) or isinstance(n, bool) or n < 2:
+            err(context, f"{sid}: capacity must be an integer of at least 2 (an ordinary "
+                         f"seat needs no entry), got: {n!r}")
+        else:
+            good[sid] = n
+            if sid not in used:
+                warn(context, f"{sid!r} is declared but no member row uses it")
+    return good
+
+
+def validate_seats(juris_id, members, capacity=None):
+    """Across a jurisdiction's rows: no seat held by more people at once than it
+    can hold (error), and no seat left without a current or staged holder
+    (reported)."""
+    for seat_id, rows in local_terms.seat_conflicts(members, capacity):
+        cap = local_terms.capacity_of(seat_id, capacity)
+        names = ", ".join(repr(m.get("name")) for m in rows)
+        err(juris_id, f"seat_id {seat_id!r} holds {cap} but {len(rows)} people hold it over "
+                      f"overlapping dates ({names}) — set leaves_office / takes_office, give "
+                      f"them distinct seat_ids, or declare a shared seat in seat_capacity")
     seats = {}
     for m in members:
         if isinstance(m, dict) and m.get("seat_id"):
@@ -274,6 +301,14 @@ def validate_seats(juris_id, members):
         if not held:
             warn(juris_id, f"seat {seat_id!r} has no current or incoming holder recorded "
                            f"(vacant, or the successor still needs adding)")
+            continue
+        cap = local_terms.capacity_of(seat_id, capacity)
+        if cap > 1:
+            sitting = sum(1 for m in rows if local_terms.is_active(m, TODAY)
+                          and m.get("status") not in local_terms.NOT_COUNTED_FOR_OCCUPANCY)
+            if sitting < cap:
+                warn(juris_id, f"shared seat {seat_id!r}: {sitting} of {cap} currently held "
+                               f"(a vacancy, or a member still to add)")
 
 
 def validate_reserved_block(juris_id, member_key, block, allowed):
@@ -349,7 +384,7 @@ def validate_jurisdiction(index, juris, seen_ids):
 
     for i, member in enumerate(members):
         validate_member(juris_id, i, member, partisan)
-    validate_seats(juris_id, members)
+    validate_seats(juris_id, members, validate_capacity(juris_id, juris.get("seat_capacity"), members))
 
 
 def load_places():
