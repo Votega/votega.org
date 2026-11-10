@@ -40,7 +40,7 @@
     .member { background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.6rem; margin-bottom: 0.6rem; }
     .member.bad { border-color: #fca5a5; }
     .mgrid { display: grid; grid-template-columns: 2fr 1.2fr 1fr 1.2fr; gap: 0.5rem; }
-    .mgrid2 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem; }
+    .mgrid2 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-top: 0.5rem; }
     .mgrid3 { display: grid; grid-template-columns: 3fr 1fr; gap: 0.5rem; margin-top: 0.5rem; }
     .msrc { margin-top: 0.5rem; display: flex; gap: 0.5rem; align-items: end; }
     .msrc > div:first-child { flex: 1; }
@@ -97,8 +97,8 @@
 const ROLES = ['Chair', 'Vice Chair', 'Board Member', 'Superintendent'];
 const PARTIES = ['Republican', 'Democratic', 'Independent', 'Nonpartisan'];
 const APPOINTED = ['Superintendent'];
-const MEMBER_KEYS = ['name', 'role', 'title', 'seat', 'party', 'last_elected', 'term_end', 'next_election', 'voting', 'source', 'statusNote', 'statusDate', 'notes'];
-const INT_KEYS = ['last_elected', 'term_end', 'next_election'];
+const MEMBER_KEYS = ['name', 'role', 'title', 'seat', 'party', 'last_elected', 'term_start', 'term_end', 'next_election', 'voting', 'source', 'statusNote', 'statusDate', 'notes'];
+const INT_KEYS = ['last_elected', 'term_start', 'term_end', 'next_election'];
 const MANAGED = ['board_size', 'term_years', 'partisan', 'official_url', 'notes', 'members'];
 const TEXT_KEYS = ['notes', 'statusNote'];   // free text: always written as a JSON-quoted string
 
@@ -226,6 +226,17 @@ function validate(d) {
     if (!blank(m.statusDate) && !/^\d{4}-\d{2}-\d{2}$/.test(m.statusDate)) e('statusDate must be YYYY-MM-DD');
     if (!blank(m.statusDate) && blank(m.statusNote)) e('statusDate needs a statusNote (the date belongs to the note)');
     INT_KEYS.forEach(k => { if (!blank(m[k]) && !/^\d{4}$/.test(m[k])) e(k + ' must be a 4-digit year'); });
+    if (!APPOINTED.includes(m.role)) {
+      const n = +f.term_years || null;
+      const le = +m.last_elected || null, ts = +m.term_start || null, te = +m.term_end || null, ne = +m.next_election || null;
+      if (ts && te && te < ts) e('term_end is before term_start');
+      else {
+        if (ts && te && n && te - ts + 1 !== n) warnings.push(w + ': term_start ' + ts + ' to term_end ' + te + ' spans ' + (te - ts + 1) + ' year(s), term_years is ' + n);
+        if (le && ts && ts !== le && ts !== le + 1) warnings.push(w + ': term_start ' + ts + ' is not last_elected ' + le + ' or the year after');
+        if (!ts && le && te && n && te - le !== n) warnings.push(w + ': last_elected ' + le + ' and term_end ' + te + ' are ' + (te - le) + ' years apart (term_years ' + n + ') — last_elected may be the term START; add term_start');
+        if (te && ne && Math.abs(ne - te) > 1) warnings.push(w + ': next_election ' + ne + ' is not near term_end ' + te);
+      }
+    }
     if (APPOINTED.includes(m.role)) {
       INT_KEYS.forEach(k => { if (!blank(m[k])) warnings.push(w + ': a ' + m.role + ' has no election; ' + k + ' will still be written, clear it'); });
     } else { elected++; }
@@ -356,8 +367,9 @@ function renderForm() {
       '<div><label>Role</label><select data-m="role">' + opts(ROLES, m.role, '—') + '</select></div>' +
       mf('Seat', 'seat', m.seat, 'placeholder="District 3 / Post 1 / At-large"') +
       '<div><label>Party</label><select data-m="party">' + opts(PARTIES, m.party, '—') + '</select></div></div>' +
-      '<div class="mgrid2">' + mf('Last elected', 'last_elected', m.last_elected, 'inputmode="numeric"') +
-      mf('Term end', 'term_end', m.term_end, 'inputmode="numeric"') +
+      '<div class="mgrid2">' + mf('Last elected', 'last_elected', m.last_elected, 'inputmode="numeric" title="Year they WON the seat (the election), not the year they were sworn in"') +
+      mf('Term start', 'term_start', m.term_start, 'inputmode="numeric" title="First calendar year of the current term, usually election year + 1"') +
+      mf('Term end', 'term_end', m.term_end, 'inputmode="numeric" title="Last calendar year in office"') +
       mf('Next election', 'next_election', m.next_election, 'inputmode="numeric"') +
       mf('Display title', 'title', m.title, 'placeholder="Board President"') + '</div>' +
       '<div class="mgrid3">' + mf('Public status note', 'statusNote', m.statusNote, 'placeholder="Shown under the member, e.g. Seat changes in January 2027"') +

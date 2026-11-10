@@ -228,6 +228,26 @@ check('without a statusNote' in errs(
           counties=[county(members=[member(statusDate='2026-11-08')])]),
       'a statusDate with no statusNote is an error')
 
+print('\nTerm fields: last_elected is the election, term_start is the seating')
+good = county(term_years=4, members=[member(last_elected=2024, term_start=2025,
+                                            term_end=2028, next_election=2028)])
+e_, w_ = run(counties=[good])
+check(not e_ and not [x for x in w_ if 'term' in x], 'a consistent 4-year term raises nothing')
+mis = county(term_years=4, members=[member(last_elected=2024, term_end=2027)])
+check('may be the term START' in warns(counties=[mis]),
+      'last_elected 2024 + term_end 2027 on 4-year terms warns (term start entered as election)')
+check(not errs(counties=[mis]), 'but it only warns')
+check('spans 3 year' in warns(counties=[county(term_years=4, members=[member(term_start=2025, term_end=2027)])]),
+      'term_start to term_end span must equal term_years')
+check('term_end (2020) is before term_start' in errs(counties=[county(members=[member(term_start=2025, term_end=2020)])]),
+      'term_end before term_start is an error')
+check('4-digit year integer' in errs(counties=[county(members=[member(last_elected='2024ish')])]),
+      'a non-integer year is an error')
+check('not last_elected' in warns(counties=[county(members=[member(last_elected=2020, term_start=2025)])]),
+      'term_start far from last_elected warns')
+check(not [x for x in run(counties=[county(term_years=4, members=[member(role='Superintendent', voting=False, term_end=2030)])])[1] if 'term' in x],
+      'a Superintendent is exempt from the term cross-checks')
+
 print('\nStructural guards')
 e2, _ = V.validate({"countyDistricts": [county()], "cityDistricts": [city()]}, PLACES)
 check(any('expected 159' in x for x in e2) and any('expected 21' in x for x in e2),

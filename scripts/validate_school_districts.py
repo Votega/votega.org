@@ -105,7 +105,50 @@ def _blank(v):
     return v is None or (isinstance(v, str) and not v.strip())
 
 
-def validate_member(where, m, errors, warnings, partisan=None):
+YEAR_MIN, YEAR_MAX = 1990, 2100
+
+
+def _year(where, m, key, errors):
+    v = m.get(key)
+    if _blank(v):
+        return None
+    if isinstance(v, bool) or not isinstance(v, int):
+        errors.append("%s: %s must be a 4-digit year integer, got %r" % (where, key, v))
+        return None
+    if not (YEAR_MIN <= v <= YEAR_MAX):
+        errors.append("%s: %s (%d) is outside %d-%d" % (where, key, v, YEAR_MIN, YEAR_MAX))
+        return None
+    return v
+
+
+def check_terms(where, m, term_years, errors, warnings):
+    """Year fields plus the cross-checks that catch a term START entered as
+    last_elected. The cross-checks WARN: municipal terms can run odd schedules."""
+    le = _year(where, m, "last_elected", errors)
+    ts = _year(where, m, "term_start", errors)
+    te = _year(where, m, "term_end", errors)
+    ne = _year(where, m, "next_election", errors)
+    if ts is not None and te is not None and te < ts:
+        errors.append("%s: term_end (%d) is before term_start (%d)" % (where, te, ts))
+        return
+    n = term_years if isinstance(term_years, int) and term_years > 0 else None
+    if ts is not None and te is not None and n and te - ts + 1 != n:
+        warnings.append("%s: term_start %d to term_end %d spans %d year(s) but "
+                        "term_years is %d" % (where, ts, te, te - ts + 1, n))
+    if le is not None and ts is not None and ts not in (le, le + 1):
+        warnings.append("%s: term_start %d is not last_elected %d or the year "
+                        "after — check which is the election year" % (where, ts, le))
+    if ts is None and le is not None and te is not None and n and te - le != n:
+        warnings.append("%s: last_elected %d and term_end %d are %d year(s) apart "
+                        "but term_years is %d — last_elected may be the term START, "
+                        "not the election year (add term_start)"
+                        % (where, le, te, te - le, n))
+    if te is not None and ne is not None and abs(ne - te) > 1:
+        warnings.append("%s: next_election %d is not near term_end %d"
+                        % (where, ne, te))
+
+
+def validate_member(where, m, errors, warnings, partisan=None, term_years=None):
     if not isinstance(m, dict):
         errors.append("%s: member is not a mapping" % where)
         return False
@@ -134,6 +177,8 @@ def validate_member(where, m, errors, warnings, partisan=None):
     if not _blank(src) and not str(src).startswith(("http://", "https://")):
         errors.append("%s: source must be a URL, got %r" % (where, src))
     check_notes(where, m, errors)
+    if role not in APPOINTED_ROLES:
+        check_terms(where, m, term_years, errors, warnings)
 
     appointed = role in APPOINTED_ROLES
     if appointed:
@@ -242,7 +287,8 @@ def validate_district(kind, d, idx, places, seen_ids, errors, warnings):
         mwhere = "%s member[%d] %s" % (where, i, (m or {}).get("name", "?")
                                        if isinstance(m, dict) else "?")
         appointed = validate_member(mwhere, m, errors, warnings,
-                                    partisan=d.get("partisan"))
+                                    partisan=d.get("partisan"),
+                                    term_years=d.get("term_years"))
         if isinstance(m, dict):
             if not appointed:
                 elected += 1

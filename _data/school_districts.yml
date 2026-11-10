@@ -141,6 +141,19 @@
 #   one would misrepresent who voters actually chose.
 #
 # ----------------------------------------------------------------------------
+#   TERM FIELDS (members) — four DIFFERENT facts, all optional years:
+#     last_elected   the year the member WON the seat (the election itself,
+#                    even if unopposed). Not the year they were sworn in.
+#     term_start     the first calendar year of the current term, usually
+#                    last_elected + 1 (elected Nov/May, seated the next January).
+#     term_end       the last calendar year in office, so a 4-year term is
+#                    term_start .. term_start + 3 (end - start + 1 = term_years).
+#     next_election  the election that fills the seat next, normally = term_end.
+#   Example (4-year term, elected Nov 2024): last_elected 2024, term_start 2025,
+#   term_end 2028, next_election 2028.
+#   validate_school_districts.py WARNS (never fails) when these disagree, which is
+#   how a term start entered as last_elected gets caught.
+#
 #   members             Board members, same shape as local_officials.yml. HUMAN-
 #                       GATED and deliberately ABSENT until each roster is
 #                       confirmed against a primary source — an empty or missing
@@ -203,40 +216,51 @@ cityDistricts:
     officeCountyFips: "13135"
     board_size: 5
     term_years: 4
+    partisan: false
     official_url: "https://www.bufordcityschools.org/apps/pages/index.jsp?uREC_ID=1618111&type=d&pREC_ID=1753263"
-    notes: "https://simbli.eboardsolutions.com/AboutUs/AboutUs.aspx?S=4019&TID=1"
+    notes: "Nonpartisan by charter: parties do not conduct primaries for city offices and candidates are listed without party labels (City of Buford Charter, Sec. 2.13, Nonpartisan elections; the board is elected under the same rules as the commission, Section VII). Also stated at https://www.cityofbuford.com/elections-eleccions (municipal elections, generally odd years). City Charter Section VII (Schools): successors are elected at the city election in the year a term expires, take office January 1 following, and serve four years; a vacancy is filled by special election unless within six months of expiry. Board members must meet the commission's qualifications and are elected under the same rules as city commission members (same section), Charter Sec. 2.11(h): successors are elected at the regular November municipal election immediately before a term expires and take office January 1. The charter does not say odd or even years (Sec. 2.11(f) defers to the Georgia Election Code); the odd-year pattern is stated on the city page and election years here (2023, 2025) are derived from its expiry dates, not from a seen result. Terms and expiry dates from https://www.cityofbuford.com/elections-eleccions (nonpartisan city elections in odd years, terms end Dec. 31). That page lists no seat numbers for board members; the chair is the City Commission chairman, ex officio. Board page also on Simbli: https://simbli.eboardsolutions.com/AboutUs/AboutUs.aspx?S=4019&TID=1"
     members:
       - name: Phillip Beard
         role: Chair
         title: Board Chair
-        seat: Unknown
-        last_elected: 2024
+        seat: "City Commission Post 1 (ex officio)"
+        last_elected: 2023
+        term_start: 2024
         term_end: 2027
+        next_election: 2027
         source: "https://www.bufordcityschools.org/apps/pages/index.jsp?uREC_ID=1618111&type=d&pREC_ID=1753263"
       - name: Cory Burge
         role: Board Member
         seat: Unknown
-        last_elected: 2024
+        last_elected: 2023
+        term_start: 2024
         term_end: 2027
+        next_election: 2027
         source: "https://www.bufordcityschools.org/apps/pages/index.jsp?uREC_ID=1618111&type=d&pREC_ID=1753263"
       - name: Bruce Fricks
         role: Vice Chair
         title: Vice-Chair
         seat: Unknown
         last_elected: 2025
+        term_start: 2026
         term_end: 2029
+        next_election: 2029
         source: "https://www.bufordcityschools.org/apps/pages/index.jsp?uREC_ID=1618111&type=d&pREC_ID=1753263"
       - name: Matt Peevy
         role: Board Member
         seat: Unknown
-        last_elected: 2024
+        last_elected: 2023
+        term_start: 2024
         term_end: 2027
+        next_election: 2027
         source: "https://www.bufordcityschools.org/apps/pages/index.jsp?uREC_ID=1618111&type=d&pREC_ID=1753263"
       - name: Kathleen Welch
         role: Board Member
         seat: Unknown
         last_elected: 2025
+        term_start: 2026
         term_end: 2029
+        next_election: 2029
         source: "https://www.bufordcityschools.org/apps/pages/index.jsp?uREC_ID=1618111&type=d&pREC_ID=1753263"
 
   - id: "765"
