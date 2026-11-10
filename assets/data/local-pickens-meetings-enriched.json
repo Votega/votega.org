@@ -1,20 +1,22 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-09T19:17:01Z",
+  "generatedAt": "2026-11-10T22:20:39Z",
   "source": "Pickens County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Pickens County",
   "count": 25
  },
  "summary": {
   "flags": [
+   "budget",
    "land-use",
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-09",
+  "lastActivity": "2026-11-16",
   "topicTotals": {
-   "rezoning": 17,
-   "appointment": 5,
+   "budget": 1,
+   "rezoning": 18,
+   "appointment": 4,
    "local-taxes": 7,
    "millage-budget": 5,
    "contract": 2,
@@ -23,6 +25,14 @@
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Commissioners Work Session and Regular Meeting Agenda",
+    "date": "2026-11-16",
+    "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_11162026-200",
+    "tags": [
+     "rezoning"
+    ]
+   },
    {
     "title": "Planning Commission Meeting Agenda",
     "date": "2026-11-09",
@@ -182,7 +192,7 @@
     "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 17,
+  "landUseMeetings": 18,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
@@ -246,13 +256,65 @@
    }
   ],
   "localTaxCitations": 7,
-  "budgetItems": [],
-  "budgetCitations": 0,
-  "landUseCitations": 17,
+  "budgetItems": [
+   {
+    "title": "Commissioners Work Session and Regular Meeting Agenda",
+    "date": "2026-11-16",
+    "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_11162026-200",
+    "terms": [
+     "budget amendment",
+     "budget-then-decision"
+    ]
+   }
+  ],
+  "budgetCitations": 1,
+  "landUseCitations": 18,
   "alprCitations": 0,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "200",
+   "date": "2026-11-16",
+   "body": "Board of Commissioners",
+   "title": "Commissioners Work Session and Regular Meeting Agenda",
+   "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_11162026-200",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_11162026-200",
+   "textMethod": "pdftotext",
+   "textChars": 2008,
+   "pdfSha256": "aabfa9b6fa6570693941abb26dbad8e880ba0d1d57013f544b710bd13344870a",
+   "topics": {
+    "budget": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "budget",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "budget amendment",
+    "budget-then-decision",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "budget": {
+     "term": "budget amendment",
+     "excerpt": "… Officer C. Consideration and Approval of Sublease for Hangar A-05 at Pickens County Airport D. Budget Amendments 13. Action Items A. Approve Minutes: • Work Session & Regular Meeting – October 19, 2026 …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Action Items A. Approve Minutes: • Work Session & Regular Meeting – October 19, 2026 B. Rezones: • RZ-191208 – Big South Real Estate Holdings, LLC 734 Harmony School Road …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "199",
    "date": "2026-11-09",
@@ -1118,36 +1180,6 @@
    "flags": [
     "land-use"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "175",
-   "date": "2026-03-02",
-   "body": "Board of Commissioners",
-   "title": "Commissioners Work Session and Called Meeting Agenda",
-   "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_03022026-175",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_03022026-175",
-   "textMethod": "pdftotext",
-   "textChars": 983,
-   "pdfSha256": "65c628c5f7297aef611c66bbd7e6e18e9d9aa169d6b9cba492e3cfa1387945c0",
-   "topics": {
-    "appointment": 1
-   },
-   "tags": [
-    "appointment"
-   ],
-   "matchedTerms": [
-    "appoint"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… Diversion Grant 6. Consideration and Approval of Family Connections Fiscal Agent 7. Consideration and Approval of the Appointment of Attorneys to Serve in the Role of Ethics Officer 8. Consideration and Approval for Hangar H05 - Application …",
-     "context": "unknown"
-    }
-   },
-   "flags": [],
    "dataCenterItems": []
   }
  ]

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-09T19:19:02Z",
+  "generatedAt": "2026-11-10T22:21:19Z",
   "source": "Spalding County (granicus agenda HTML)",
   "place": "Spalding County",
   "count": 25
@@ -11,18 +11,28 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-02",
+  "lastActivity": "2026-11-17",
   "topicTotals": {
+   "variance": 6,
    "local-taxes": 7,
    "millage-budget": 6,
-   "variance": 5,
-   "contract": 14,
+   "contract": 13,
    "appointment": 4,
    "rezoning": 7,
-   "development": 6
+   "development": 5
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission",
+    "date": "2026-11-17",
+    "sourceUrl": "https://spaldingcounty.granicus.com/AgendaViewer.php?view_id=1&event_id=1043",
+    "tags": [
+     "variance"
+    ],
+    "excerpt": "… Lot 20 of the 1st Land District, Parcel No. 279 02015, consisting of 60.96 acres. The applicant is seeking a variance to remove requirements of flood base elevations listed in Article 20, Sec. 2005 – F.4. 2. Application …",
+    "excerptTerm": "variance"
+   },
    {
     "title": "Planning Commission",
     "date": "2026-10-27",
@@ -118,16 +128,6 @@
     "tags": [
      "development"
     ]
-   },
-   {
-    "title": "Board of Commissioners - Extraordinary Session",
-    "date": "2026-07-21",
-    "sourceUrl": "https://spaldingcounty.granicus.com/AgendaViewer.php?view_id=1&event_id=951",
-    "tags": [
-     "development"
-    ],
-    "excerpt": "… tribution Disaster Volunteer Management Mass Fatality Donated Goods Warehouse Debris Management Storm Ready: Hazardous Weather Plan 5. Consider Approval …",
-    "excerptTerm": "warehouse"
    }
   ],
   "landUseMeetings": 10,
@@ -209,6 +209,38 @@
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "1043",
+   "date": "2026-11-17",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://spaldingcounty.granicus.com/AgendaViewer.php?view_id=1&event_id=1043",
+   "textSource": "agenda",
+   "textSourceUrl": "https://spaldingcounty.granicus.com/AgendaViewer.php?view_id=1&event_id=1043",
+   "textMethod": "pdftotext",
+   "textChars": 1875,
+   "contentSha256": "8bd9dc4c7f936ffc0b674dcc22468255fd2c7c66fefd7a73cfdee885dddf8000",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Lot 20 of the 1st Land District, Parcel No. 279 02015, consisting of 60.96 acres. The applicant is seeking a variance to remove requirements of flood base elevations listed in Article 20, Sec. 2005 – F.4. 2. Application …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "930",
    "date": "2026-11-02",
@@ -1146,47 +1178,6 @@
      "term": "warehouse",
      "excerpt": "… of Distribution Disaster Volunteer Management Mass Fatality Donated Goods Warehouse Debris Management Storm Ready: Hazardous Weather Plan 5. Discussion of Board Up …",
      "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "951",
-   "date": "2026-07-21",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners - Extraordinary Session",
-   "sourceUrl": "https://spaldingcounty.granicus.com/AgendaViewer.php?view_id=1&event_id=951",
-   "textSource": "agenda",
-   "textSourceUrl": "https://spaldingcounty.granicus.com/AgendaViewer.php?view_id=1&event_id=951",
-   "textMethod": "pdftotext",
-   "textChars": 2893,
-   "contentSha256": "656ee4ac24931b5c570363dddf03b363871aa153e24df4ea36d3758c6192587c",
-   "topics": {
-    "contract": 1,
-    "development": 1
-   },
-   "tags": [
-    "contract",
-    "development"
-   ],
-   "matchedTerms": [
-    "award of",
-    "contract",
-    "warehouse"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… 1. Consider Approval of Southern Natural Gas Easement Request on Dundee Lake Road 2. Consider Approval of Contract for the Spalding County Collaborative for Spalding County Veteran's Center Housing 3. Consider Ap …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "warehouse",
-     "excerpt": "… tribution Disaster Volunteer Management Mass Fatality Donated Goods Warehouse Debris Management Storm Ready: Hazardous Weather Plan 5. Consider Approval …",
-     "context": "agenda-action"
     }
    },
    "flags": [

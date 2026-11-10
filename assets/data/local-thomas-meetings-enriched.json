@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-09T19:19:00Z",
+  "generatedAt": "2026-11-10T22:21:18Z",
   "source": "Thomas County (nimblecal agenda/minutes PDFs, poppler+OCR)",
   "place": "Thomas County",
   "count": 25
@@ -8,12 +8,14 @@
  "summary": {
   "flags": [
    "alpr",
+   "budget",
    "land-use",
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-10",
+  "lastActivity": "2026-11-12",
   "topicTotals": {
+   "budget": 1,
    "comprehensive-plan": 3,
    "contract": 8,
    "development": 3,
@@ -146,13 +148,52 @@
    }
   ],
   "localTaxCitations": 6,
-  "budgetItems": [],
-  "budgetCitations": 0,
+  "budgetItems": [
+   {
+    "title": "Commission Work Session",
+    "date": "2026-11-12",
+    "sourceUrl": "https://thomascountyboc.org/uploads/files/e1/40/e140da0eeb7dda8568b63de4253f5542.pdf",
+    "terms": [
+     "budget workshop",
+     "budget-then-decision",
+     "capital budget"
+    ]
+   }
+  ],
+  "budgetCitations": 1,
   "landUseCitations": 3,
   "alprCitations": 3,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "2026-11-12-board-of-commissioners",
+   "date": "2026-11-12",
+   "body": "Board of Commissioners",
+   "title": "Commission Work Session",
+   "sourceUrl": "https://thomascountyboc.org/uploads/files/e1/40/e140da0eeb7dda8568b63de4253f5542.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://thomascountyboc.org/uploads/files/e1/40/e140da0eeb7dda8568b63de4253f5542.pdf",
+   "textMethod": "ocr",
+   "textChars": 214,
+   "pdfSha256": "f4a9f0d6a54aa8bece63ba609fc8739db2b934a846f3b2a669da4e35490c4aab",
+   "topics": {
+    "budget": 1
+   },
+   "tags": [
+    "budget"
+   ],
+   "matchedTerms": [
+    "budget workshop",
+    "budget-then-decision",
+    "capital budget"
+   ],
+   "topicExcerpts": {},
+   "flags": [
+    "budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2026-11-10-board-of-commissioners",
    "date": "2026-11-10",
@@ -787,24 +828,6 @@
    "textMethod": "ocr",
    "textChars": 1052,
    "pdfSha256": "8a40a5a01378b6d94eef53c753a3e54d91d89126ad8e15b806ff797bbbb981fd",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-07-21-emergency-services",
-   "date": "2026-07-21",
-   "body": "Emergency Services",
-   "title": "Emergency Services Committee",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/ff/5f/ff5f15d3fafcf37c7c540160646d0293.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/ff/5f/ff5f15d3fafcf37c7c540160646d0293.pdf",
-   "textMethod": "ocr",
-   "textChars": 334,
-   "pdfSha256": "165d6688440836846ba718a44dfa383639dbee59d8de0da9cdbc549729b4b6d5",
    "topics": {},
    "tags": [],
    "matchedTerms": [],

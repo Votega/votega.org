@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-09T19:15:43Z",
+  "generatedAt": "2026-11-10T22:20:36Z",
   "source": "Henry County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Henry County",
   "count": 25
@@ -9,37 +9,39 @@
   "flags": [
    "alpr",
    "budget",
-   "data-center",
    "land-use",
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-03",
+  "lastActivity": "2026-11-17",
   "topicTotals": {
+   "annexation": 5,
+   "contract": 15,
+   "development": 10,
+   "local-taxes": 18,
+   "rezoning": 10,
    "appointment": 5,
    "budget": 1,
-   "contract": 15,
-   "development": 9,
-   "local-taxes": 18,
-   "rezoning": 9,
    "comprehensive-plan": 3,
-   "millage-budget": 15,
+   "millage-budget": 14,
    "special-land-use": 1,
    "variance": 3,
-   "annexation": 4,
-   "alpr": 2,
-   "data-center": 1
+   "alpr": 2
   },
-  "dataCenterItems": [
+  "dataCenterItems": [],
+  "landUseItems": [
    {
     "title": "Board of Commissioners Meeting",
-    "date": "2026-03-31",
-    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2475,plainText=false)",
-    "excerpt": "… Cooper Carry Inc. for on-call consulting services to support Henry County with technical guidance on data center development, including best practices, infrastructure considerations, and development agreement frame …",
-    "excerptTerm": "data center"
-   }
-  ],
-  "landUseItems": [
+    "date": "2026-11-17",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2695,plainText=false)",
+    "tags": [
+     "annexation",
+     "development",
+     "rezoning"
+    ],
+    "excerpt": "… hon Penn, Director, Henry County Parks and Recreation) VI. CONSENT AGENDA Annexation A. AX-26-04 The City of Hampton has received a request for annexation of property at …",
+    "excerptTerm": "annexation"
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-11-03",
@@ -219,6 +221,16 @@
   "localTaxItems": [
    {
     "title": "Board of Commissioners Meeting",
+    "date": "2026-11-17",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2695,plainText=false)",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… unty Funds Account. (Presenter: Rhett Wheeler, Director of Fleet Services)(Exhibit 6) SPLOST A. Resolution approving a change order for Sol Construction, LLC in the amount of $13 …",
+    "excerptTerm": "splost"
+   },
+   {
+    "title": "Board of Commissioners Meeting",
     "date": "2026-11-03",
     "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2689,plainText=false)",
     "terms": [
@@ -391,14 +403,6 @@
     ],
     "excerpt": "… r)(Exhibit 12) Announcement #3: The Following item will be added to tonight’s Regular agenda: T-SPLOST item. 1. Resolution approving a payment to Georgia DOT in the amount of $29,354,340 f …",
     "excerptTerm": "splost"
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-03-31",
-    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2475,plainText=false)",
-    "terms": [
-     "splost"
-    ]
    }
   ],
   "localTaxCitations": 18,
@@ -415,11 +419,76 @@
    }
   ],
   "budgetCitations": 1,
-  "landUseCitations": 14,
+  "landUseCitations": 15,
   "alprCitations": 2,
-  "dataCenterCitations": 1
+  "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "823",
+   "date": "2026-11-17",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2695,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2695,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 11842,
+   "pdfSha256": "bb8798e3e572af0f761613fb0092b69bd17716928aabccd3fac90ca78f73b86f",
+   "topics": {
+    "annexation": 1,
+    "contract": 1,
+    "development": 1,
+    "local-taxes": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "annexation",
+    "contract",
+    "development",
+    "local-taxes",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "annexation",
+    "contract",
+    "rezon",
+    "splost",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annexation",
+     "excerpt": "… hon Penn, Director, Henry County Parks and Recreation) VI. CONSENT AGENDA Annexation A. AX-26-04 The City of Hampton has received a request for annexation of property at …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ution approving a proposal from Garland/DBS, Inc. utilizing the Omnia Partners Cooperative Purchasing Contract MICPA #PW1925 for the roof, gutter & downspout replacement at the Heritage & Hidden Valley Senior Cen …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… . The property consists of 181.791 +/- acres, and the request is for a conservation subdivision. District 3 (Presenter: Alexius Jones, Planner III)(Exhibit 12) …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… unty Funds Account. (Presenter: Rhett Wheeler, Director of Fleet Services)(Exhibit 6) SPLOST A. Resolution approving a change order for Sol Construction, LLC in the amount of $13 …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Zoning A. RZ-26-05 (Public Hearing) InLine Communities, LLC of Atlanta, GA requests a rezoning from R-A (Residential Agricultural) and R-2 (Single Family Residential) to R-3 (Single Family …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "822",
    "date": "2026-11-03",
@@ -1693,73 +1762,6 @@
     "local-taxes"
    ],
    "dataCenterItems": []
-  },
-  {
-   "id": "809",
-   "date": "2026-03-31",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2475,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2475,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 10321,
-   "pdfSha256": "d6ee97d7799e93f994d0010a75891b3dfee721c5f26a9beaf390ab44c98d24b9",
-   "topics": {
-    "contract": 1,
-    "data-center": 1,
-    "local-taxes": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "data-center",
-    "local-taxes",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract",
-    "data center",
-    "splost"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… y Easement, more or less, in Land Lots 190 of the 12th District, Henry County, Georgia, by negotiated contract or condemnation pursuant to provision of O.C.G.A. Section 32-3-4 through Section 32-3-19 …",
-     "context": "agenda-action"
-    },
-    "data-center": {
-     "term": "data center",
-     "excerpt": "… Cooper Carry Inc. for on-call consulting services to support Henry County with technical guidance on data center development, including best practices, infrastructure considerations, and development agreement frame …",
-     "context": "agenda-action"
-    },
-    "local-taxes": {
-     "term": "splost",
-     "excerpt": "… Presenter: Melissa Robinson, Communication Director) VII. Presentations A. SPLOST Projects Program Update (Presenter: Clayton Carte, Senior Public Relations Specialist) …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… OST Transportation Director)(Exhibit 2) Resolution 26-105 C. Resolution approving a Budget Amendment to reallocate available SPLOST II project funds and commit remaining funds to the Fire Stat …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "data-center",
-    "millage-budget",
-    "local-taxes"
-   ],
-   "dataCenterItems": [
-    {
-     "title": "Board of Commissioners Meeting",
-     "date": "2026-03-31",
-     "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2475,plainText=false)",
-     "excerpt": "… Cooper Carry Inc. for on-call consulting services to support Henry County with technical guidance on data center development, including best practices, infrastructure considerations, and development agreement frame …",
-     "excerptTerm": "data center"
-    }
-   ]
   }
  ]
 }

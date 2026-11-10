@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-09T19:19:01Z",
+  "generatedAt": "2026-11-10T22:21:19Z",
   "source": "Cherokee County (granicus agenda HTML)",
   "place": "Cherokee County",
   "count": 25
@@ -14,20 +14,19 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-12",
+  "lastActivity": "2026-11-16",
   "topicTotals": {
    "development": 11,
-   "variance": 11,
    "rezoning": 12,
+   "variance": 11,
    "alpr": 4,
-   "annexation": 6,
-   "appointment": 6,
+   "annexation": 5,
+   "appointment": 5,
    "budget": 1,
    "contract": 7,
-   "local-taxes": 8,
-   "millage-budget": 8,
-   "data-center": 2,
-   "comprehensive-plan": 1
+   "local-taxes": 7,
+   "millage-budget": 7,
+   "data-center": 1
   },
   "dataCenterItems": [
    {
@@ -39,6 +38,18 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Planning Commission Work Session",
+    "date": "2026-11-16",
+    "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&event_id=1206",
+    "tags": [
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… 26.621 +/- acres of property from AG (General Agriculture) to R-40 (Single Family Residential) for a 25-lot residential subdivision. Case #26-11-036S -David Millis for The Anvil Academy (Applicant); Christian Outreach Ministries (Owner) (Dist. 2). The …",
+    "excerptTerm": "subdivision"
+   },
    {
     "title": "Zoning Board of Appeals Public Hearing",
     "date": "2026-11-12",
@@ -312,19 +323,9 @@
     ],
     "excerpt": "… Session, Executive Session, and Regular Meeting Minutes from July 21, 2026. 8. PUBLIC HEARING 8.1 Public Hearing - 2026 Millage Rate. Conduct a public hearing to receive input on the 2026 Millage Rate; followed by adoption of the Millage Rates for …",
     "excerptTerm": "millage"
-   },
-   {
-    "title": "Board of Commissioners Regular Meeting",
-    "date": "2026-07-21",
-    "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&clip_id=1582",
-    "terms": [
-     "millage"
-    ],
-    "excerpt": "… Session, Executive Session, and Regular Meeting Minutes from July 7, 2026. 8. PUBLIC HEARING 8.1 Public Hearing - 2026 Millage Rate. Conduct a public hearing to receive input on the 2026 Millage Rate. 8.2 Public Hearing - Britton & Erika Felber - …",
-    "excerptTerm": "millage"
    }
   ],
-  "localTaxCitations": 8,
+  "localTaxCitations": 7,
   "budgetItems": [
    {
     "title": "Board of Commissioners Regular Meeting",
@@ -339,11 +340,59 @@
    }
   ],
   "budgetCitations": 1,
-  "landUseCitations": 14,
+  "landUseCitations": 15,
   "alprCitations": 4,
   "dataCenterCitations": 1
  },
  "meetings": [
+  {
+   "id": "1206",
+   "date": "2026-11-16",
+   "body": "Planning Commission",
+   "title": "Planning Commission Work Session",
+   "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&event_id=1206",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&event_id=1206",
+   "textMethod": "html",
+   "textChars": 3094,
+   "contentSha256": "d4347c65fe3a1240ae78d512e633aede46003beb742f15bd650e607c2776f976",
+   "topics": {
+    "development": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "development",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "rezon",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… 26.621 +/- acres of property from AG (General Agriculture) to R-40 (Single Family Residential) for a 25-lot residential subdivision. Case #26-11-036S -David Millis for The Anvil Academy (Applicant); Christian Outreach Ministries (Owner) (Dist. 2). The …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… et to 150 feet. Case #26-10-028 Ethan Underwood for Grand Communities, LLC (BOC Dist. 2) The applicant is requesting to rezone 26.621 +/- acres of property from AG (General Agriculture) to R-40 (Single Family Residential) for a 25-lot residentia …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… essory convenience retail on a 2.2 +/- acre General Commercial (GC) site. The applicant is also requesting a concurrent variance to Article 10, Table 10.1: Minimum Buffer Width Between Abutting Districts, to allow the required buffer between Commer …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1182",
    "date": "2026-11-12",
@@ -1462,115 +1511,6 @@
    "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
-  },
-  {
-   "id": "1582",
-   "date": "2026-07-21",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Regular Meeting",
-   "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&clip_id=1582",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&clip_id=1582",
-   "textMethod": "html",
-   "textChars": 6537,
-   "contentSha256": "207fd40074736993fa3dc2905002b4acdaffbc2e4bed098df746b270ed686903",
-   "topics": {
-    "annexation": 1,
-    "appointment": 1,
-    "comprehensive-plan": 1,
-    "data-center": 1,
-    "development": 1,
-    "local-taxes": 1,
-    "millage-budget": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "annexation",
-    "appointment",
-    "comprehensive-plan",
-    "data-center",
-    "development",
-    "local-taxes",
-    "millage-budget",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "annexation",
-    "appoint",
-    "budget",
-    "comprehensive plan",
-    "data center",
-    "millage",
-    "mixed-use",
-    "multi-family",
-    "rezon",
-    "subdivision",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… g wireless tower to be located within a property line a distance less than the height of the tower. 10.2 City of Canton Annexation - 2829 Ball Ground Highway and 3830 Fate Conn Road. Consider annexation request from the City of Canton for 48.192 +/- …",
-     "context": "agenda-action"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… ONS/PROCLAMATIONS 4.1 Proclamation - Canton Center for Nursing and Healing. 5. ANNOUNCEMENTS 6. COMMISSION BUSINESS 6.1 Appointments to Internal Audit Committee. 6.2 Appointment to Board of Tax Assessors. 6.3 Amendment: Moratorium on Data Centers. …",
-     "context": "agenda-action"
-    },
-    "comprehensive-plan": {
-     "term": "comprehensive plan",
-     "excerpt": "… an. Conduct a public hearing to consider resolution for adoption of the Pearidge Small Area Plan as an amendment to the Comprehensive Plan. 8.5 Public Hearing - Board-Initiated Rezoning - 504, 514, 516, 518, 520 & 528 Toonigh Road. Conduct a public hearing t …",
-     "context": "agenda-action"
-    },
-    "data-center": {
-     "term": "data center",
-     "excerpt": "… LOSURE OF EXECUTIVE SESSION 3. AMENDMENTS TO AGENDA 3.1 Amend to add item 6.3 under Commission Business - Moratorium on Data Centers. 3.2 Amend to add item 6.4 under Commission Business - Public Hearing to Extend Moratorium. 4. PRESENTATIONS/PROCLAMAT …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "multi-family",
-     "excerpt": "… mmercial), GC (General Commercial) and OI (Office/Institutional) to GC (General Commercial) (4.46 +/- acres) and RM-16 (Multi-Family Residential) (35 +/- acres) for a Mixed-Use Development. Also requesting variances to Article 16, Section 16.1.5 of the …",
-     "context": "agenda-action"
-    },
-    "local-taxes": {
-     "term": "millage",
-     "excerpt": "… Session, Executive Session, and Regular Meeting Minutes from July 7, 2026. 8. PUBLIC HEARING 8.1 Public Hearing - 2026 Millage Rate. Conduct a public hearing to receive input on the 2026 Millage Rate. 8.2 Public Hearing - Britton & Erika Felber - …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "millage",
-     "excerpt": "… Session, Executive Session, and Regular Meeting Minutes from July 7, 2026. 8. PUBLIC HEARING 8.1 Public Hearing - 2026 Millage Rate. Conduct a public hearing to receive input on the 2026 Millage Rate. 8.2 Public Hearing - Britton & Erika Felber - …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… doption of the Pearidge Small Area Plan as an amendment to the Comprehensive Plan. 8.5 Public Hearing - Board-Initiated Rezoning - 504, 514, 516, 518, 520 & 528 Toonigh Road. Conduct a public hearing to consider zoning changes for six (6) proper …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… cial) (4.46 +/- acres) and RM-16 (Multi-Family Residential) (35 +/- acres) for a Mixed-Use Development. Also requesting variances to Article 16, Section 16.1.5 of the zoning ordinance for relief to the Hwy 92 Overlay Streetscape, Table 10.1 to redu …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "data-center",
-    "millage-budget",
-    "local-taxes"
-   ],
-   "dataCenterItems": [
-    {
-     "title": "Board of Commissioners Regular Meeting",
-     "date": "2026-07-21",
-     "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&clip_id=1582",
-     "excerpt": "… LOSURE OF EXECUTIVE SESSION 3. AMENDMENTS TO AGENDA 3.1 Amend to add item 6.3 under Commission Business - Moratorium on Data Centers. 3.2 Amend to add item 6.4 under Commission Business - Public Hearing to Extend Moratorium. 4. PRESENTATIONS/PROCLAMAT …",
-     "excerptTerm": "data center"
-    }
-   ]
   }
  ]
 }
