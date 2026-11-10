@@ -314,34 +314,51 @@ cityDistricts:
     officeCountyFips: "13089"
     board_size: 5
     term_years: 4
+    partisan: false
     official_url: "https://www.csdecatur.net/board-of-education-b8/board-of-education-overview/meet-the-members"
+    notes: "City of Decatur Charter, Sec. 7.10 (https://library.municode.com/ga/decatur/codes/code_of_ordinances?nodeId=PTICH_ARTVIIED_S7.10PUSCGE): five members, four from two election districts (Post A and Post B in each) and one at large. Nonpartisan (7.10(k): no party primaries, no party designation); plurality wins (7.10(l)). Four-year terms, seated January 1. Post A and the at-large seat are elected in the November general municipal election of 2005 and every four years after (2025, next 2029); Post B in 2007 and every four years after (2023, next 2027), so elections fall in odd years. Chair and vice-chair are chosen by the board each January for one-year terms (7.11(a)). Post letters below are inferred from the term-end year, not listed on the district site. Vacancies are filled under O.C.G.A. 20-2-54.1 (7.10(m))."
     members:
       - name: Carmen Sulton
         role: Chair
         title: Board Chair
-        seat: District 2
+        seat: "District 2, Post A"
+        last_elected: 2025
+        term_start: 2026
         term_end: 2029
+        next_election: 2029
         source: "https://www.csdecatur.net/board-of-education-b8/board-of-education-overview/meet-the-members"
       - name: Hans Utz
         role: Vice Chair
         title: Vice Chair
-        seat: District 1
+        seat: "District 1, Post A"
+        last_elected: 2025
+        term_start: 2026
         term_end: 2029
+        next_election: 2029
         source: "https://www.csdecatur.net/board-of-education-b8/board-of-education-overview/meet-the-members"
       - name: James Herndon
         role: Board Member
-        seat: District 1
+        seat: "District 1, Post B"
+        last_elected: 2023
+        term_start: 2024
         term_end: 2027
+        next_election: 2027
         source: "https://www.csdecatur.net/board-of-education-b8/board-of-education-overview/meet-the-members"
       - name: Tracey Anderson
         role: Board Member
-        seat: District 2
+        seat: "District 2, Post B"
+        last_elected: 2023
+        term_start: 2024
         term_end: 2027
+        next_election: 2027
         source: "https://www.csdecatur.net/board-of-education-b8/board-of-education-overview/meet-the-members"
       - name: Lorraine Irier
         role: Board Member
         seat: At-Large
+        last_elected: 2025
+        term_start: 2026
         term_end: 2029
+        next_election: 2029
         source: "https://www.csdecatur.net/board-of-education-b8/board-of-education-overview/meet-the-members"
 
   - id: "774"
@@ -400,39 +417,75 @@ cityDistricts:
     officeCountyFips: "13067"
     board_size: 7
     term_years: 4
+    partisan: false
     official_url: "https://www.marietta-city.org/board-of-education1/marietta-city-schools-board-of-education"
-    notes: "https://www.marietta-city.org/board-of-education1/marietta-city-schools-board-of-education"
+    notes: "Charter Sec. 2.202 (Municode): seven members, all elected on one day in November 1993 and every four years after, so all seats share one cycle (not staggered), which implies 2025 and 2029. Nonpartisan with majority and runoff rule. Term dates are inferred from that schedule; confirm 2025 against the city election results."
     members:
       - name: Jeff DeJarnett
         role: Board Member
         seat: Ward 1
         source: "https://www.marietta-city.org/board-of-education1/board-members"
+        party: Nonpartisan
+        last_elected: 2025
+        term_start: 2026
+        term_end: 2029
+        next_election: 2029
       - name: Laura Holder
         role: Board Member
         seat: Ward 2
         source: "https://www.marietta-city.org/board-of-education1/board-members"
+        party: Nonpartisan
+        last_elected: 2025
+        term_start: 2026
+        term_end: 2029
+        next_election: 2029
       - name: Jeff Collins
         role: Board Member
         seat: Ward 3
         source: "https://www.marietta-city.org/board-of-education1/board-members"
+        party: Nonpartisan
+        last_elected: 2025
+        term_start: 2026
+        term_end: 2029
+        next_election: 2029
       - name: Jaillene Hunter
         role: Chair
         title: Board Chair
         seat: Ward 4
         source: "https://www.marietta-city.org/board-of-education1/board-members"
+        party: Nonpartisan
+        last_elected: 2025
+        term_start: 2026
+        term_end: 2029
+        next_election: 2029
       - name: Angela Orange
         role: Vice Chair
         title: Vice-Chair
         seat: Ward 5
         source: "https://www.marietta-city.org/board-of-education1/board-members"
+        party: Nonpartisan
+        last_elected: 2025
+        term_start: 2026
+        term_end: 2029
+        next_election: 2029
       - name: Christina Rogers
         role: Board Member
         seat: Ward 6
         source: "https://www.marietta-city.org/board-of-education1/board-members"
+        party: Nonpartisan
+        last_elected: 2025
+        term_start: 2026
+        term_end: 2029
+        next_election: 2029
       - name: Irene Berens
         role: Board Member
         seat: Ward 7
         source: "https://www.marietta-city.org/board-of-education1/board-members"
+        party: Nonpartisan
+        last_elected: 2025
+        term_start: 2026
+        term_end: 2029
+        next_election: 2029
 
   - id: "784"
     name: Pelham City
@@ -478,6 +531,9 @@ cityDistricts:
     counties: [lowndes]
     districtCensusId: "05310"
     officeCountyFips: "13185"
+    board_size: 9
+    term_years: 6
+    notes: "Charter Sec. 2 (Municode): nine numbered posts with SIX-year terms, elected on the mayor and council election days; first elected 1995 and 1997, then every two years (odd years). Partisan status not yet confirmed. Roster not yet entered."
 
   - id: "793"
     name: Vidalia City
