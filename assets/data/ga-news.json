@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-10T13:58:14.484522+00:00",
+    "generatedAt": "2026-11-10T21:07:00.785327+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,33 +24,43 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 126,
+    "count": 128,
     "windowDays": 45,
-    "entityTagged": 88,
+    "entityTagged": 87,
     "topicCounts": {
-      "elections": 58,
+      "education": 11,
+      "elections": 55,
       "healthcare": 14,
       "budget": 7,
       "courts": 7,
-      "education": 10,
       "surveillance": 1,
       "ethics": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000335": {
-      "name": "Keisha Lance Bottoms",
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
       "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
-      ]
+      "bioguideId": "O000174"
+    },
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
     },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
       "url": null,
       "candidateIds": [
         "challenger-rick-jackson-gov-2026"
+      ]
+    },
+    "vg-ga-p-000335": {
+      "name": "Keisha Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
       ]
     },
     "vg-ga-p-000189": {
@@ -61,16 +71,6 @@
       "candidateIds": [
         "ga-house-164-2026-r-1"
       ]
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
-      "url": null,
-      "bioguideId": "W000790"
     },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
@@ -169,28 +169,84 @@
   },
   "items": [
     {
+      "id": "8350de64e7ec",
+      "title": "New report names 31 'best nursing homes' in Georgia",
+      "url": "https://www.gpb.org/news/2026/11/10/new-report-names-31-best-nursing-homes-in-georgia",
+      "source": "GPB News",
+      "publishedAt": "2026-11-10T19:04:00+00:00",
+      "snippet": "Thirty-one nursing homes in Georgia made the state’s “best of” list according to a new report released Tuesday.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "eff67ed52cd1",
+      "title": "SEC Championship football game to be eliminated in 2027 as College Football Playoff expands",
+      "url": "https://www.gpb.org/news/2026/11/10/sec-championship-football-game-be-eliminated-in-2027-college-football-playoff",
+      "source": "GPB News",
+      "publishedAt": "2026-11-10T18:01:00+00:00",
+      "snippet": "The 35-year-old SEC Championship game, played in Atlanta annually since 1994, will be played for its final time in December.",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "34d92b9f0f0e",
+      "title": "A long road to motherhood: Inside Georgia’s maternity care deserts",
+      "url": "https://www.gpb.org/news/2026/11/10/long-road-motherhood-inside-georgias-maternity-care-deserts",
+      "source": "GPB News",
+      "publishedAt": "2026-11-10T17:07:00+00:00",
+      "snippet": "Until recently, the thought of a long drive never bothered Storm Savage. When the 23-year-old and her boyfriend left metro Atlanta and moved to Peach County, she made peace with their decision to sett",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "47128a5ca222",
+      "title": "Georgia voted overwhelmingly for upgrades to 911. The next step is funding it",
+      "url": "https://www.gpb.org/news/2026/11/10/georgia-voted-overwhelmingly-for-upgrades-911-the-next-step-funding-it",
+      "source": "GPB News",
+      "publishedAt": "2026-11-10T16:59:00+00:00",
+      "snippet": "Georgians overwhelmingly passed a constitutional amendment during last week’s midterm election that mandates the funding of upgrades to the state’s 911 system.",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "2208db059f80",
+      "title": "Sen. Ossoff Cosponsoring Bipartisan Legislation to Protect Georgia Veterans from Addiction",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-cosponsoring-bipartisan-legislation-to-protect-georgia-veterans-from-addiction/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-10T16:22:16+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is supporting bipartisan legislation to protect Georgia veterans from opioid addiction. Sen. Ossoff cosponsored the NOPAIN for Veterans Act to expand access ",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "da7138986d9e",
+      "title": "Warnock Leads Broad Coalition of Senators to Push Senate Leadership to Delay Republican Medicaid Cuts Over Concerns About Coverage Loss",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-leads-broad-coalition-of-senators-to-push-senate-leadership-to-delay-republican-medicaid-cuts-over-concerns-about-coverage-loss/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-11-10T14:48:49+00:00",
+      "snippet": "Senators Reverend Raphael Warnock and Luján, along with a broad coalition of Democratic Senators, are calling on Senate leadership to delay new Medicaid cuts enacted in Congressional Republicans’ One ",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
       "id": "efd315407dbc",
       "title": "GPB morning headlines for November 10, 2026",
       "url": "https://www.gpb.org/news/2026/11/10/gpb-morning-headlines-for-november-10-2026",
       "source": "GPB News",
       "publishedAt": "2026-11-10T13:18:16+00:00",
-      "snippet": "After a weekend of clean up, the town of McCaysville in North Georgia still has a long way to go until full recovery from floods that destroyed downtown businesses, city buildings and dozens of homes;",
+      "snippet": "After a weekend of cleanup, the town of McCaysville in North Georgia still has a long way to go until full recovery from floods that destroyed downtown businesses, city buildings and dozens of homes; ",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "cecaf2a52148",
-      "title": "Georgia Today: North Georgia Flooding; Zoo Atlanta death; Data center moratorium",
-      "url": "https://www.gpb.org/news/2026/11/09/georgia-today-north-georgia-flooding-zoo-atlanta-death-data-center-moratorium",
-      "source": "GPB News",
-      "publishedAt": "2026-11-09T23:29:26+00:00",
-      "snippet": "On the Nov. 9 edition: Volunteers and state workers help clean up after flooding in North Georgia; Zoo Atlanta mourns the loss of a young southern white rhinoceros; and Gov.-elect Keisha Lance Bottoms",
-      "entityIds": [
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "960ef387f35e",
@@ -201,20 +257,6 @@
       "snippet": "Democrats have clinched at least a one-seat majority in the state House, with 91 seats in the 180-seat chamber as of Sunday evening, according to the Associated Press.  But unexpected developments, in",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "1ec95a919f71",
-      "title": "GPB evening headlines for November 9, 2026",
-      "url": "https://www.gpb.org/news/2026/11/09/gpb-evening-headlines-for-november-9-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-09T20:54:30+00:00",
-      "snippet": "The north Georgia town of McCaysville has a long way to go to fully recover from floods that destroyed much of the town.\nNow that Keisha Lance Bottoms is governor-elect, how will she address data cent",
-      "entityIds": [
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "c790eaa2e555",
@@ -412,19 +454,6 @@
       "entityIds": [
         "vg-ga-p-000335"
       ],
-      "topics": [
-        "elections",
-        "healthcare"
-      ]
-    },
-    {
-      "id": "25a007ed18ed",
-      "title": "Georgia helped inspire Medicaid work rules. Its own rules could soon end.",
-      "url": "https://thecurrentga.org/2026/11/06/georgia-helped-inspire-medicaid-work-rules-its-own-rules-could-soon-end/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-06T21:10:13+00:00",
-      "snippet": "Georgia's limited Medicaid expansion program, Pathways to Coverage, is set to expire at the end of the year unless renewed by the incoming governor during a pivotal election cycle.\nThe Current is an i",
-      "entityIds": [],
       "topics": [
         "elections",
         "healthcare"
@@ -1137,20 +1166,6 @@
       ],
       "topics": [
         "education"
-      ]
-    },
-    {
-      "id": "8f73e11855b5",
-      "title": "Ahead of Midterms, New Warnock Report Finds Election Officials Across Georgia Confident in Election Security",
-      "url": "https://www.warnock.senate.gov/newsroom/press-releases/ahead-of-midterms-new-warnock-report-finds-election-officials-across-georgia-confident-in-election-security/",
-      "source": "Sen. Raphael Warnock (press)",
-      "publishedAt": "2026-10-21T14:04:44+00:00",
-      "snippet": "Senator Reverend Raphael Warnock released a new report examining Georgia’s election preparedness ahead of the November elections The report features testimony from election administrators across 10 Ge",
-      "entityIds": [
-        "vg-ga-p-000263"
-      ],
-      "topics": [
-        "elections"
       ]
     },
     {
