@@ -190,20 +190,27 @@ for name in PUBLISHERS:
 
 for name, info in INFO.items():
     check(info['repo'], '%s declares a REPO' % name)
-    check(len(info['slugs']) == 1 and info['slugs'][0],
-          '%s emits exactly one dataset manifest, with a literal slug: %r'
+    # A publisher may own more than one dataset (ga-local-government carries
+    # agenda-mentions and officials), each with its own manifest. What must hold
+    # is that every slug is a literal this suite can read, and (below) that no
+    # two manifests in one repo share a slug, and so a path.
+    check(info['slugs'] and all(info['slugs']),
+          '%s emits at least one dataset manifest, each with a literal slug: %r'
           % (name, info['slugs']))
+    check(len(set(info['slugs'])) == len(info['slugs']),
+          '%s never emits two manifests for the same dataset: %r' % (name, info['slugs']))
 
 by_repo = {}
 for name, info in INFO.items():
-    by_repo.setdefault(info['repo'], []).append((name, info['slugs'][0]))
+    for slug in info['slugs']:
+        by_repo.setdefault(info['repo'], []).append((name, slug))
 
 for repo, members in sorted(by_repo.items()):
     if len(members) < 2:
         continue
     slugs = [s for _, s in members]
     check(len(set(slugs)) == len(slugs),
-          '%s is written by %d publishers and they use distinct slugs %r'
+          '%s: its %d manifests (across its publishers) use distinct slugs %r'
           % (repo, len(members), slugs))
     paths = [SP.manifest_path(s) for s in slugs]
     check(len(set(paths)) == len(paths),

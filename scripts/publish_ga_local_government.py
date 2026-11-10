@@ -61,7 +61,11 @@ REPO = "Votega/ga-local-government"
 TOKEN_ENV = "GA_LOCAL_GOVERNMENT_TOKEN"
 SCHEMA_VERSION = "1.0.0"
 DATASET = "agenda-mentions"
-OFFICIALS_DATASET = lo.DATASET
+# A literal, not lo.DATASET: test_dataset_manifests.py reads every publisher's
+# manifest slugs statically (CI has no pip deps to import this module), and it
+# can only resolve a constant written in this file. The assert keeps the two in step.
+OFFICIALS_DATASET = "officials"
+assert OFFICIALS_DATASET == lo.DATASET, (OFFICIALS_DATASET, lo.DATASET)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLACES_YML = os.path.join(ROOT, "_data", "places.yml")
