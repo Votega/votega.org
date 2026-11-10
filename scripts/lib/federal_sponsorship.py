@@ -44,6 +44,7 @@ page reads to decide whether the tab appears, before any slice is fetched.
 """
 from __future__ import annotations
 
+import json
 import os
 import time
 
@@ -251,16 +252,78 @@ def as_recent_sponsored(bill):
     }
 
 
+def load_previous(data_dir, congress):
+    """The last run's published record, read BEFORE the writer clears the slices.
+
+    Returns (fetched_at, slices): ``slices`` maps bioguideId -> the previous slice
+    document, keeping only slices for ``congress`` (a record from another Congress
+    is never carried into this one), and ``fetched_at`` maps bioguideId -> when
+    that record was really fetched: the previous index's ``carriedForward`` date
+    if it was already carried, else the previous index's ``generatedAt``. A
+    missing or unreadable file contributes nothing; carrying forward is a
+    best-effort improvement over hiding the tab, never a reason to fail a run.
+    """
+    slices_dir = os.path.join(data_dir, 'federal-sponsorship')
+    index_path = os.path.join(data_dir, 'federal-sponsorship-index.json')
+    try:
+        with open(index_path, encoding='utf-8') as fh:
+            meta = (json.load(fh).get('metadata') or {})
+    except (OSError, ValueError):
+        return {}, {}
+    if meta.get('congress') != congress:
+        return {}, {}
+    prior_carry = meta.get('carriedForward') or {}
+    slices, fetched_at = {}, {}
+    try:
+        names = os.listdir(slices_dir)
+    except OSError:
+        return {}, {}
+    for name in names:
+        if not name.endswith('.json'):
+            continue
+        try:
+            with open(os.path.join(slices_dir, name), encoding='utf-8') as fh:
+                doc = json.load(fh)
+        except (OSError, ValueError):
+            continue
+        bid = doc.get('bioguideId')
+        if not bid or doc.get('congress') != congress:
+            continue
+        slices[bid] = doc
+        fetched_at[bid] = prior_carry.get(bid) or meta.get('generatedAt')
+    return fetched_at, slices
+
+
+def carriable(prev_summary, prev_slice, congress):
+    """True when a previous record is safe to republish for a failed fetch: both
+    halves are for ``congress`` and the roster's inline counts agree with the
+    slice's rows, so the carried record is internally exactly what the earlier
+    run published. Anything less and the member is left out, as before."""
+    if not prev_summary or not prev_slice:
+        return False
+    if prev_summary.get('congress') != congress or prev_slice.get('congress') != congress:
+        return False
+    return (len(prev_slice.get('primary') or []) == prev_summary.get('sponsored')
+            and len(prev_slice.get('cosponsored') or []) == prev_summary.get('cosponsored'))
+
+
 def write_sponsorship_artifacts(data_dir, congress, records, *,
                                 generated_at, source='Congress.gov API',
-                                log=print):
+                                carried=None, log=print):
     """Write the index + per-member slices. ``records`` is
 
         {bioguideId: {'name': str, 'primary': [bill], 'cosponsored': [bill]}}
 
-    Members whose fetch failed must be left OUT by the caller: a member present
-    here with empty lists is published as "sponsored nothing this Congress", which
-    is a claim about the member, not about our pipeline.
+    Members whose fetch failed must be left OUT of ``records`` by the caller: a
+    member present there with empty lists is published as "sponsored nothing this
+    Congress", which is a claim about the member, not about our pipeline.
+
+    ``carried`` is {bioguideId: {'slice': <previous slice doc>, 'fetchedAt': iso}}
+    for failed members whose last complete record (see load_previous/carriable) is
+    republished unchanged instead of dropped. A day-old complete record is a true
+    statement about that day; an empty tab tells the reader nothing. The index
+    names each one under metadata.carriedForward with the date it was really
+    fetched, so the page can print that date instead of this run's.
 
     Returns a stats dict. Everything goes through lib.atomic_io, so an interrupted
     run leaves the previous artifacts intact rather than a truncated slice.
@@ -268,8 +331,11 @@ def write_sponsorship_artifacts(data_dir, congress, records, *,
     slices_dir = os.path.join(data_dir, 'federal-sponsorship')
     index_path = os.path.join(data_dir, 'federal-sponsorship-index.json')
 
+    carried = {bid: c for bid, c in (carried or {}).items() if bid not in records}
+
     # Clear stale slices first, so a member who leaves the delegation does not keep
-    # a dangling file that would render as a live sponsorship record.
+    # a dangling file that would render as a live sponsorship record. Carried
+    # slices are already in memory (the caller read them before this point).
     os.makedirs(slices_dir, exist_ok=True)
     for name in os.listdir(slices_dir):
         if name.endswith('.json'):
@@ -300,20 +366,38 @@ def write_sponsorship_artifacts(data_dir, congress, records, *,
         total_co += len(out['cosponsored'])
         sizes.append(os.path.getsize(path))
 
+    for bioguide, c in sorted(carried.items()):
+        doc = c['slice']
+        path = os.path.join(slices_dir, f"{bioguide}.json")
+        write_json_atomic(path, doc, separators=(',', ':'))
+        n_primary = len(doc.get('primary') or [])
+        n_co = len(doc.get('cosponsored') or [])
+        counts[bioguide] = [n_primary, n_co]
+        total_primary += n_primary
+        total_co += n_co
+        sizes.append(os.path.getsize(path))
+    counts = dict(sorted(counts.items()))
+
     # The index is deliberately thin: the provenance the panel prints from this
     # dataset's OWN generatedAt (not the roster stamp at the foot of the page — see
     # CLAUDE.md on per-dataset provenance), and the counts that decide tab
     # visibility before any slice is fetched.
+    metadata = {
+        'generatedAt':      generated_at,
+        'source':           source,
+        'congress':         congress,
+        'scope':            'Georgia congressional delegation',
+        'memberCount':      len(counts),
+        'totalSponsored':   total_primary,
+        'totalCosponsored': total_co,
+    }
+    if carried:
+        # Only present on a degraded run, so a clean day's index stays
+        # byte-identical to the shape it has always had.
+        metadata['carriedForward'] = {bid: c.get('fetchedAt')
+                                      for bid, c in sorted(carried.items())}
     write_json_atomic(index_path, {
-        'metadata': {
-            'generatedAt':      generated_at,
-            'source':           source,
-            'congress':         congress,
-            'scope':            'Georgia congressional delegation',
-            'memberCount':      len(counts),
-            'totalSponsored':   total_primary,
-            'totalCosponsored': total_co,
-        },
+        'metadata': metadata,
         'members': counts,
     }, separators=(',', ':'))
 

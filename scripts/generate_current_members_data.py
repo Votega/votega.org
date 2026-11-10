@@ -17,8 +17,8 @@ from lib.http import fetch_bytes, fetch_json
 from lib.atomic_io import write_json_atomic
 from lib.congress_session import current_congress
 from lib.federal_sponsorship import (
-    as_recent_sponsored, fetch_member_legislation, most_recent,
-    write_sponsorship_artifacts,
+    as_recent_sponsored, carriable, fetch_member_legislation, load_previous,
+    most_recent, write_sponsorship_artifacts,
 )
 
 # Configuration
@@ -42,6 +42,11 @@ API_DELAY = float(os.environ.get('CONGRESS_API_DELAY', '0.2'))
 # roster file. {bioguideId: {name, primary[], cosponsored[]}} — a member whose
 # fetch failed is deliberately absent rather than present-and-empty.
 SPONSORSHIP = {}
+# The previous run's published record, read once in main() before anything is
+# overwritten, so a member whose fetch fails today keeps yesterday's complete
+# record instead of losing the tab (see lib/federal_sponsorship.carriable).
+PREVIOUS = {'members': {}, 'slices': {}, 'fetchedAt': {}}
+CARRIED = {}
 
 def fetch_url(url, retries=3, backoff=5):
     """Fetch data from Congress.gov API with error handling.
@@ -129,6 +134,14 @@ def get_sponsorship(bioguideId, name):
                                         CURRENT_CONGRESS, base_url=BASE_URL,
                                         delay=API_DELAY)
         if rows is None:
+            prev = PREVIOUS['members'].get(bioguideId) or {}
+            prev_slice = PREVIOUS['slices'].get(bioguideId)
+            if carriable(prev.get('sponsorship'), prev_slice, CURRENT_CONGRESS):
+                fetched_at = PREVIOUS['fetchedAt'].get(bioguideId)
+                CARRIED[bioguideId] = {'slice': prev_slice, 'fetchedAt': fetched_at}
+                print(f"  Warning: {name} ({bioguideId}) {kind} legislation unavailable "
+                      f"— carrying forward the complete record fetched {fetched_at}")
+                return list(prev.get('recentSponsored') or []), prev['sponsorship']
             print(f"  Warning: {name} ({bioguideId}) {kind} legislation unavailable "
                   f"— no sponsorship slice will be written for this member")
             return [], None
@@ -363,6 +376,16 @@ def main():
         print("Error: CONGRESS_API_KEY environment variable not set")
         sys.exit(1)
     
+    data_dir = os.path.dirname(OUTPUT_FILE) or '.'
+    PREVIOUS['fetchedAt'], PREVIOUS['slices'] = load_previous(data_dir, CURRENT_CONGRESS)
+    try:
+        with open(OUTPUT_FILE, encoding='utf-8') as fh:
+            PREVIOUS['members'] = {m.get('bioguideId'): m
+                                   for m in (json.load(fh).get('members') or [])
+                                   if m.get('bioguideId')}
+    except (OSError, ValueError):
+        PREVIOUS['members'] = {}
+
     print("Fetching current Congress members...")
     members = get_current_members()
     
@@ -483,11 +506,16 @@ def main():
     if dropped:
         print(f"Skipping sponsorship slices for {len(dropped)} member(s) no longer "
               f"in the roster: {dropped}")
+    carried = {bid: c for bid, c in CARRIED.items() if bid in sitting}
+    if carried:
+        print(f"Carrying forward the last complete sponsorship record for "
+              f"{len(carried)} member(s) whose fetch failed: "
+              + ", ".join(f"{bid} (fetched {c['fetchedAt']})" for bid, c in sorted(carried.items())))
     if publishable:
         try:
             write_sponsorship_artifacts(os.path.dirname(OUTPUT_FILE) or '.',
                                         CURRENT_CONGRESS, publishable,
-                                        generated_at=generated_at)
+                                        generated_at=generated_at, carried=carried)
         except Exception as e:
             print(f"Error writing sponsorship artifacts: {e}")
             sys.exit(1)

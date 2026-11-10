@@ -228,6 +228,17 @@ def _tier1_sponsorship(roster, index, slices):
         if not meta.get(field):
             errors.append(f"the sponsorship index carries no {field}")
 
+    # A carried-forward entry must be a member the index actually publishes, with
+    # the date its record was fetched — never a date later than this run.
+    for bid, when in sorted((meta.get("carriedForward") or {}).items()):
+        if bid not in counts:
+            errors.append(f"carriedForward names {bid}, which the index does not publish")
+        if not when:
+            errors.append(f"carriedForward entry for {bid} has no fetch date")
+        elif meta.get("generatedAt") and str(when) > str(meta.get("generatedAt")):
+            errors.append(f"carriedForward date for {bid} ({when}) is after this "
+                          f"run's generatedAt")
+
     if counts and len(counts) != meta.get("memberCount"):
         errors.append(f"index metadata.memberCount ({meta.get('memberCount')}) != "
                       f"{len(counts)} count entries")
@@ -353,8 +364,24 @@ def tier2(roster, index, old_roster=None, old_index=None):
             f"published from the list endpoint alone, so committees, contact info "
             f"and portraits may be stale for them until the next run."]))
 
+    # The milder degraded state: today's fetch failed, but the member's last
+    # complete record was republished unchanged, so the tab stays up with an
+    # older date. Recovers by itself on the next clean run.
+    carried = ((index or {}).get("metadata") or {}).get("carriedForward") or {}
+    if carried:
+        names = {m.get("bioguideId"): m.get("name", "?") for m in ga}
+        sections.append(("Sponsorship carried forward from an earlier run", [
+            *(f"- {names.get(bid, bid)} (`{bid}`): record fetched {when}"
+              for bid, when in sorted(carried.items())),
+            "",
+            "Congress.gov failed partway through these members' lists today, so "
+            "their last complete record was published again rather than dropped. "
+            "Their page shows it with that earlier date; the next clean run "
+            "replaces it."]))
+
     # The designed degraded state: a null summary means one page of that member's
-    # record failed and the writer refused to publish a truncated list.
+    # record failed, there was no earlier complete record to fall back on, and the
+    # writer refused to publish a truncated list.
     nulls = [m.get("name", "?") for m in ga if m.get("sponsorship") is None]
     if nulls:
         sections.append(("Sponsorship record not published this run", [
