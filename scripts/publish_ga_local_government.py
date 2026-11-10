@@ -20,6 +20,12 @@ Artifacts published:
   data/mentions-<topic>.json     per-topic mentions
   data/coverage.json             per-place: topic counts + last activity
   SUMMARY.md                     human overview + the standing caveats
+  data/officials/officials{.json,.csv,.schema.json}
+                                 CURRENT boards only (rows active today), with contact
+  data/officials/officials-history{.json,.csv,.schema.json}
+                                 every member row, one per person per term, no contact;
+                                 history is NOT backfilled (see lib/local_officials_export)
+  data/officials/manifest.json   the officials dataset's own manifest
 
 EXCERPT POLICY (deliberate): a per-mention quoted excerpt is published ONLY when the
 mention's `context` is "agenda-action" — i.e. the topic surfaced as government
@@ -49,14 +55,17 @@ from lib.sibling_publish import (add_dataset_manifest, build_json,  # noqa: E402
                                  manifest_path, min_items,
                                  publish_or_dry_run)
 from lib import meeting_topics as mt  # noqa: E402
+from lib import local_officials_export as lo  # noqa: E402
 
 REPO = "Votega/ga-local-government"
 TOKEN_ENV = "GA_LOCAL_GOVERNMENT_TOKEN"
 SCHEMA_VERSION = "1.0.0"
 DATASET = "agenda-mentions"
+OFFICIALS_DATASET = lo.DATASET
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLACES_YML = os.path.join(ROOT, "_data", "places.yml")
+OFFICIALS_YML = os.path.join(ROOT, "_data", "local_officials.yml")
 DATA_DIR = os.path.join(ROOT, "assets", "data")
 
 TOPICS = ["alpr", "data-center", "land-use", "local-taxes"]
@@ -74,6 +83,11 @@ LINK_FIELDS = ["base_url", "agendas_url", "minutes_url", "video_url"]
 def load_places():
     with open(PLACES_YML, encoding="utf-8") as fh:
         return (yaml.safe_load(fh) or {}).get("places", [])
+
+
+def load_officials():
+    with open(OFFICIALS_YML, encoding="utf-8") as fh:
+        return (yaml.safe_load(fh) or {}).get("jurisdictions", [])
 
 
 VOTES_INDEX = os.path.join(ROOT, "_data", "local_votes.json")
@@ -453,8 +467,47 @@ def main():
              for t in TOPICS],
     )
 
-    publish_or_dry_run(REPO, artifacts, TOKEN_ENV,
-                       validate=min_items("data/places.json", "places"))
+    # Officials: the current board and the full term history, with a manifest of
+    # their own. Their paths (data/officials/*) are written by nobody else. See
+    # lib/local_officials_export.py.
+    off_artifacts, off = lo.build_officials_artifacts(
+        load_officials(), datetime.now(timezone.utc).date(), now)
+    artifacts.update(off_artifacts)
+    paths = off["paths"]
+    add_dataset_manifest(
+        artifacts, REPO, OFFICIALS_DATASET,
+        title="Georgia local officials: current boards and term history",
+        description=("Elected county commissions and city councils: who holds "
+                     "each seat now (officials), and every recorded holder of "
+                     "every seat, one row per person per term "
+                     "(officials-history). History is not backfilled: it starts "
+                     "at historyStartsAt."),
+        generated_at=now,
+        source="county and city government websites, agendas and minutes, and Secretary of State election results, confirmed by a person",
+        update_cadence="Twice weekly (Mondays and Thursdays), from a hand-"
+                       "maintained roster; a person confirms every row against "
+                       "its `source`.",
+        schema_version=lo.SCHEMA_VERSION,
+        row_count=off["current"],
+        extra={"historyRowCount": off["history"],
+               "historyStartsAt": off["historyStartsAt"],
+               "historyStatus": "not-backfilled"},
+        files=[
+            {"path": paths["officials.json"], "description": "Current board, one row per sitting official."},
+            {"path": paths["officials.csv"], "description": "Current board, as a spreadsheet."},
+            {"path": paths["officials.schema.json"], "description": "JSON Schema for a current official."},
+            {"path": paths["officials-history.json"], "description": "Every recorded holder of every seat, one row per person per term."},
+            {"path": paths["officials-history.csv"], "description": "Term history, as a spreadsheet."},
+            {"path": paths["officials-history.schema.json"], "description": "JSON Schema for a history row."},
+        ],
+    )
+
+    def _validate(arts):
+        min_items("data/places.json", "places")(arts)
+        min_items(paths["officials.json"], "officials", minimum=100)(arts)
+        min_items(paths["officials-history.json"], "officials", minimum=100)(arts)
+
+    publish_or_dry_run(REPO, artifacts, TOKEN_ENV, validate=_validate)
 
 
 if __name__ == "__main__":
