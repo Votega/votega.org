@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-11T03:46:11.649845+00:00",
+    "generatedAt": "2026-11-11T13:13:12.138618+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,30 +24,30 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 129,
+    "count": 125,
     "windowDays": 45,
-    "entityTagged": 87,
+    "entityTagged": 86,
     "topicCounts": {
-      "education": 11,
       "elections": 54,
       "healthcare": 15,
       "budget": 7,
       "courts": 7,
+      "education": 10,
       "surveillance": 1,
       "ethics": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
       "url": null,
       "bioguideId": "W000790"
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
     },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
@@ -169,6 +169,30 @@
   },
   "items": [
     {
+      "id": "eec4c06e03a3",
+      "title": "WATCH: Warnock Delivers Veterans Day Message",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/watch-warnock-delivers-veterans-day-message/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-11-11T10:53:08+00:00",
+      "snippet": "Today, Senator Reverend Raphael Warnock delivered a Veterans Day message honoring the service and sacrifice of America’s veterans The son of a World War II veteran, Senator Warnock is committed to ens",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": []
+    },
+    {
+      "id": "3b1dd302efeb",
+      "title": "Georgia’s Latinos shift toward Democratic candidates, for now",
+      "url": "https://georgiarecorder.com/2026/11/11/georgias-latinos-shift-toward-democratic-candidates-for-now/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-11T09:00:12+00:00",
+      "snippet": "DALTON, Ga. – The number of Georgia Latinos who cast a ballot this year dwarfed 2022’s midterm turnout, with the high cost of living and the Trump administration’s aggressive immigration enforcement t",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
       "id": "012b69d40848",
       "title": "GPB evening headlines for November 10, 2026",
       "url": "https://www.gpb.org/news/2026/11/10/gpb-evening-headlines-for-november-10-2026",
@@ -187,50 +211,6 @@
       "snippet": "Thirty-one nursing homes in Georgia made the state’s “best of” list according to a new report released Tuesday.",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "9a2ed8132bdb",
-      "title": "Georgia Today: MLK draft up for auction; Jimmy Carter family farmland; Last SEC championship game",
-      "url": "https://www.gpb.org/news/2026/11/10/georgia-today-mlk-draft-for-auction-jimmy-carter-family-farmland-last-sec",
-      "source": "GPB News",
-      "publishedAt": "2026-11-10T18:04:54+00:00",
-      "snippet": "On the Nov. 10 edition: A handwritten version of Dr. Martin Luther King Jr's most famous speech goes up for auction; former President Jimmy Carter's family farmland is sold; and the next SEC Champions",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "eff67ed52cd1",
-      "title": "SEC Championship football game to be eliminated in 2027 as College Football Playoff expands",
-      "url": "https://www.gpb.org/news/2026/11/10/sec-championship-football-game-be-eliminated-in-2027-college-football-playoff",
-      "source": "GPB News",
-      "publishedAt": "2026-11-10T18:01:00+00:00",
-      "snippet": "The 35-year-old SEC Championship game, played in Atlanta annually since 1994, will be played for its final time in December.",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
-    },
-    {
-      "id": "34d92b9f0f0e",
-      "title": "A long road to motherhood: Inside Georgia’s maternity care deserts",
-      "url": "https://www.gpb.org/news/2026/11/10/long-road-motherhood-inside-georgias-maternity-care-deserts",
-      "source": "GPB News",
-      "publishedAt": "2026-11-10T17:07:00+00:00",
-      "snippet": "Until recently, the thought of a long drive never bothered Storm Savage. When the 23-year-old and her boyfriend left metro Atlanta and moved to Peach County, she made peace with their decision to sett",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "47128a5ca222",
-      "title": "Georgia voted overwhelmingly for upgrades to 911. The next step is funding it",
-      "url": "https://www.gpb.org/news/2026/11/10/georgia-voted-overwhelmingly-for-upgrades-911-the-next-step-funding-it",
-      "source": "GPB News",
-      "publishedAt": "2026-11-10T16:59:00+00:00",
-      "snippet": "Georgians overwhelmingly passed a constitutional amendment during last week’s midterm election that mandates the funding of upgrades to the state’s 911 system.",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "2208db059f80",
@@ -1115,18 +1095,6 @@
       "topics": []
     },
     {
-      "id": "8bb543fc6bb4",
-      "title": "Warnock, Colleagues Launch Bicameral Inquiry Into Trump Administration’s Handling of Tariff Refunds",
-      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-colleagues-launch-bicameral-inquiry-into-trump-administrations-handling-of-tariff-refunds/",
-      "source": "Sen. Raphael Warnock (press)",
-      "publishedAt": "2026-10-22T13:40:37+00:00",
-      "snippet": "Senator Reverend Raphael Warnock led a bicameral coalition in pressing the Government Accountability Office to investigate the Trump administration’s failure to deliver timely and accurate tariff refu",
-      "entityIds": [
-        "vg-ga-p-000263"
-      ],
-      "topics": []
-    },
-    {
       "id": "f1c3c10ded3e",
       "title": "Gov. Kemp Announces Appointment to State Court of Forsyth County",
       "url": "https://gov.georgia.gov/press-releases/2026-10-22/gov-kemp-announces-appointment-state-court-forsyth-county",
@@ -1686,18 +1654,6 @@
       "snippet": "WASHINGTON, D.C. — Congresswoman Nikema Williams (GA-05) joined U.S. Senator John Fetterman (D-PA) and U.S. Senator Cynthia Lummis (R-WY) in a letter to U.S. Department of Housing and Urban Developmen",
       "entityIds": [
         "vg-ga-p-000254"
-      ],
-      "topics": []
-    },
-    {
-      "id": "dbc56630e477",
-      "title": "‘It’s complicated’: A southwest Georgia district presents both opportunity, risk for Republicans",
-      "url": "https://georgiarecorder.com/2026/10/06/its-complicated-a-southwest-georgia-district-presents-both-opportunity-risk-for-republicans/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-06T08:00:54+00:00",
-      "snippet": "At first glance, a largely rural district that stretches across 30 counties in middle and southwest Georgia might not seem like friendly turf for a Democrat. But Congressman Sanford Bishop, a moderate",
-      "entityIds": [
-        "vg-ga-p-000261"
       ],
       "topics": []
     },
