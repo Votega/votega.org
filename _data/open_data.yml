@@ -32,11 +32,13 @@ meta:
     georgia-officials:
       title: Georgia officials
       blurb: >
-        Who represents Georgia, at both levels. State legislators and the federal
-        delegation are separate repositories because they come from different sources
-        (the General Assembly vs. Congress.gov) and are identified differently
-        (OCD person ID / legis.ga.gov ID vs. Bioguide ID), so they do not join to
-        each other. Each repo's README links to the other.
+        Who represents Georgia, at the federal, state and local levels. State
+        legislators and the federal delegation are separate repositories because
+        they come from different sources (the General Assembly vs. Congress.gov) and
+        are identified differently (OCD person ID / legis.ga.gov ID vs. Bioguide ID),
+        so they do not join to each other. Each repo's README links to the other.
+        Local officials are hand-curated and keyed by jurisdiction and seat; they
+        live in the local-government repository and join to neither.
 
 datasets:
   # --------------------------------------------------------------------------
@@ -211,6 +213,33 @@ datasets:
       - { name: "data/coverage.json", desc: "Per-place topic counts and last activity", url: "https://github.com/Votega/ga-local-government/blob/main/data/coverage.json" }
       - { name: "data/keywords.json", desc: "The keyword rules that classify each topic (how a mention is found)", url: "https://github.com/Votega/ga-local-government/blob/main/data/keywords.json" }
     docs: /about-the-data#agenda-topic-badges
+    contribute: https://github.com/Votega/ga-local-government/issues
+
+  - id: ga-local-officials
+    title: Georgia Local Elected Officials
+    hosting: repo
+    summary: >
+      Who sits on Georgia county commissions and city councils: the current board
+      for each jurisdiction, plus a term history with one row per person per term
+      in each seat (seat, takes office, leaves office, and why they left). Every
+      row is entered by a person and checked against a primary source, which is
+      recorded on the row. Election winners are listed ahead of their term with a
+      future start date. History starts when we began recording it (see
+      historyStartsAt in the manifest) and is not backfilled.
+    source: County and city government websites, agendas and minutes, and Secretary of State election results
+    scope: Georgia counties &amp; cities with a curated roster
+    cadence: Twice weekly (the roster itself changes by hand)
+    family: georgia-officials
+    repo_url: https://github.com/Votega/ga-local-government
+    files:
+      - { name: "data/officials/manifest.json", desc: "Start here: files, row counts, and where history starts", url: "https://github.com/Votega/ga-local-government/blob/main/data/officials/manifest.json" }
+      - { name: "data/officials/officials.json", desc: "Current board, one row per sitting official", url: "https://github.com/Votega/ga-local-government/blob/main/data/officials/officials.json" }
+      - { name: "data/officials/officials.csv", desc: "Same, flat for spreadsheets", url: "https://github.com/Votega/ga-local-government/blob/main/data/officials/officials.csv" }
+      - { name: "data/officials/officials-history.json", desc: "Every recorded holder of every seat, one row per person per term", url: "https://github.com/Votega/ga-local-government/blob/main/data/officials/officials-history.json" }
+      - { name: "data/officials/officials-history.csv", desc: "Same, flat for spreadsheets", url: "https://github.com/Votega/ga-local-government/blob/main/data/officials/officials-history.csv" }
+      - { name: "data/officials/officials.schema.json", desc: "JSON Schema for a current official", url: "https://github.com/Votega/ga-local-government/blob/main/data/officials/officials.schema.json" }
+      - { name: "data/officials/officials-history.schema.json", desc: "JSON Schema for a term-history row", url: "https://github.com/Votega/ga-local-government/blob/main/data/officials/officials-history.schema.json" }
+    docs: /about-the-data#local-government-counties--cities
     contribute: https://github.com/Votega/ga-local-government/issues
 
   - id: ga-district-information

@@ -444,7 +444,11 @@ The [Local Government hub](/local/) covers Georgia counties and cities through t
   person and verified against a **primary source** (the government's own site, a meeting agenda,
   or the Secretary of State's qualifying list), with that source URL recorded per official.
   It is maintained in [`_data/local_officials.yml`](https://github.com/Votega/votega.org/blob/main/_data/local_officials.yml)
-  and guarded by an automated validator on every change.
+  and guarded by an automated validator on every change. Each row is one person's hold on one
+  seat, with the dates they took and left office, so departures are kept as history rather
+  than deleted. The current boards and that term history are published as open data in
+  [Votega/ga-local-government](https://github.com/Votega/ga-local-government/tree/main/data/officials).
+  History starts when we began recording it and is not backfilled.
 - **Public meetings** — agendas, minutes, and video, aggregated weekly from each government's
   official site. We store only links to the source documents, never the documents themselves.
 
