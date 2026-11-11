@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-11T13:13:12.138618+00:00",
+    "generatedAt": "2026-11-11T21:45:19.139110+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,12 +24,12 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 125,
+    "count": 128,
     "windowDays": 45,
-    "entityTagged": 86,
+    "entityTagged": 88,
     "topicCounts": {
+      "healthcare": 16,
       "elections": 54,
-      "healthcare": 15,
       "budget": 7,
       "courts": 7,
       "education": 10,
@@ -39,6 +39,19 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000258": {
+      "name": "Earl L. \"Buddy\" Carter",
+      "url": null,
+      "bioguideId": "C001103",
+      "candidateIds": [
+        "challenger-buddy-carter-senate-2026"
+      ]
+    },
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
+    },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
       "url": null,
@@ -118,11 +131,6 @@
       "name": "Peter Hubbard",
       "url": null
     },
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
-      "url": null,
-      "bioguideId": "W000788"
-    },
     "vg-ga-p-000361": {
       "name": "Penny Brown Reynolds",
       "url": null,
@@ -169,6 +177,62 @@
   },
   "items": [
     {
+      "id": "fea757ac2ac7",
+      "title": "Carter Pays Tribute to America's Veterans on Veterans Day",
+      "url": "http://buddycarter.house.gov/news/documentsingle.aspx?DocumentID=16683",
+      "source": "Rep. Buddy Carter (GA-01, press)",
+      "publishedAt": "2026-11-11T21:00:00+00:00",
+      "snippet": "SAVANNAH, GA – Rep. Earl L. “Buddy” Carter (R-GA) today released the following statement on Veterans Day, honoring the brave men and women who have served in our Armed Forces and sacrificed to defend ",
+      "entityIds": [
+        "vg-ga-p-000258"
+      ],
+      "topics": []
+    },
+    {
+      "id": "72bae38dcdc4",
+      "title": "Congresswoman Nikema Williams Demands RFK Jr. Address Significant Gaps in Coverage for Endometriosis and Pelvic Floor Dysfunction",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-demands-rfk-jr-address-significant-gaps-in-coverage-for-endometriosis-and-pelvic-floor-dysfunction",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-11-11T19:40:19+00:00",
+      "snippet": "WASHINGTON, D.C. – Congresswoman Nikema Williams (GA-05) led nine congressional colleagues in a letter to Department of Health and Human Services Secretary Robert F. Kennedy Jr., urging the department",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "64cc0791c3fc",
+      "title": "TSA is here to stay: Atlanta airport study opposes private security screening",
+      "url": "https://www.gpb.org/news/2026/11/11/tsa-here-stay-atlanta-airport-study-opposes-private-security-screening",
+      "source": "GPB News",
+      "publishedAt": "2026-11-11T19:05:00+00:00",
+      "snippet": "The three-month study found that private security was not necessary at Hartsfield-Jackson International Airport.\nTSA is here to stay: Atlanta airport study opposes private security screening",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "e1e2875a62d7",
+      "title": "Money from Georgia's opioid settlement trust is helping mothers find treatment instead of prison",
+      "url": "https://www.gpb.org/news/2026/11/11/money-georgias-opioid-settlement-trust-helping-mothers-find-treatment-instead-of",
+      "source": "GPB News",
+      "publishedAt": "2026-11-11T13:55:59+00:00",
+      "snippet": "A nonprofit that helps pregnant, incarcerated women and their newborns is expanding in Georgia after receiving new funding from the Georgia Opioid Crisis Abatement Trust.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "258d74575987",
+      "title": "Blind Georgia veterans get free AI-powered glasses",
+      "url": "https://www.gpb.org/news/2026/11/11/blind-georgia-veterans-get-free-ai-powered-glasses",
+      "source": "GPB News",
+      "publishedAt": "2026-11-11T13:12:00+00:00",
+      "snippet": "About 50 blind Georgia veterans received free glasses powered by artificial intelligence that can help them move through the world more freely.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
       "id": "eec4c06e03a3",
       "title": "WATCH: Warnock Delivers Veterans Day Message",
       "url": "https://www.warnock.senate.gov/newsroom/press-releases/watch-warnock-delivers-veterans-day-message/",
@@ -191,26 +255,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "012b69d40848",
-      "title": "GPB evening headlines for November 10, 2026",
-      "url": "https://www.gpb.org/news/2026/11/10/gpb-evening-headlines-for-november-10-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-10T21:07:05+00:00",
-      "snippet": "A property manager with thousands of rental homes in Georgia has agreed to settle charges that it misled consumers.\nHartsfield Jackson Atlanta International Airport won't privatize security after a st",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "8350de64e7ec",
-      "title": "New report names 31 'best nursing homes' in Georgia",
-      "url": "https://www.gpb.org/news/2026/11/10/new-report-names-31-best-nursing-homes-in-georgia",
-      "source": "GPB News",
-      "publishedAt": "2026-11-10T19:04:00+00:00",
-      "snippet": "Thirty-one nursing homes in Georgia made the state’s “best of” list according to a new report released Tuesday.",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "2208db059f80",
