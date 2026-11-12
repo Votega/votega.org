@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-12T04:55:12.384932+00:00",
+    "generatedAt": "2026-11-12T14:15:57.719476+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -26,10 +26,10 @@
     ],
     "count": 126,
     "windowDays": 45,
-    "entityTagged": 83,
+    "entityTagged": 84,
     "topicCounts": {
+      "healthcare": 16,
       "elections": 54,
-      "healthcare": 15,
       "budget": 6,
       "courts": 7,
       "education": 10,
@@ -39,6 +39,13 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000335": {
+      "name": "Keisha Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
+      ]
+    },
     "vg-ga-p-000258": {
       "name": "Earl L. \"Buddy\" Carter",
       "url": null,
@@ -75,13 +82,6 @@
       "url": null,
       "candidateIds": [
         "challenger-rick-jackson-gov-2026"
-      ]
-    },
-    "vg-ga-p-000335": {
-      "name": "Keisha Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
       ]
     },
     "vg-ga-p-000189": {
@@ -177,6 +177,30 @@
   },
   "items": [
     {
+      "id": "c15d5ebd444f",
+      "title": "GPB morning headlines for November 12, 2026",
+      "url": "https://www.gpb.org/news/2026/11/12/gpb-morning-headlines-for-november-12-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-12T12:44:45+00:00",
+      "snippet": "A nonprofit that helps pregnant, incarcerated women and their newborns is expanding in Georgia after receiving new funding from the Georgia Opioid Crisis Abatement Trust; New research from the Univers",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "24ca45e5496a",
+      "title": "Democratic wins revive Medicaid expansion push in Georgia, but new hurdles await",
+      "url": "https://georgiarecorder.com/2026/11/12/democratic-wins-revive-medicaid-expansion-push-in-georgia-but-new-hurdles-await/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-12T09:00:19+00:00",
+      "snippet": "Three days after Keisha Lance Bottoms won the governor’s seat, Ryan Loke faced a crowd of Georgia health advocates, some giddy at the possibility of the state finally expanding Medicaid. Loke understo",
+      "entityIds": [
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
       "id": "07da71e0f263",
       "title": "El Niño could mean snow for Georgia this winter, but it’s not a sure thing",
       "url": "https://georgiarecorder.com/2026/11/11/el-nino-could-mean-snow-for-georgia-this-winter-but-its-not-a-sure-thing/",
@@ -243,26 +267,6 @@
       "source": "GPB News",
       "publishedAt": "2026-11-11T19:05:00+00:00",
       "snippet": "The three-month study found that private security was not necessary at Hartsfield-Jackson International Airport.\nTSA is here to stay: Atlanta airport study opposes private security screening",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "e1e2875a62d7",
-      "title": "Money from Georgia's opioid settlement trust is helping mothers find treatment instead of prison",
-      "url": "https://www.gpb.org/news/2026/11/11/money-georgias-opioid-settlement-trust-helping-mothers-find-treatment-instead-of",
-      "source": "GPB News",
-      "publishedAt": "2026-11-11T13:55:59+00:00",
-      "snippet": "A nonprofit that helps pregnant, incarcerated women and their newborns is expanding in Georgia after receiving new funding from the Georgia Opioid Crisis Abatement Trust.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "258d74575987",
-      "title": "Blind Georgia veterans get free AI-powered glasses",
-      "url": "https://www.gpb.org/news/2026/11/11/blind-georgia-veterans-get-free-ai-powered-glasses",
-      "source": "GPB News",
-      "publishedAt": "2026-11-11T13:12:00+00:00",
-      "snippet": "About 50 blind Georgia veterans received free glasses powered by artificial intelligence that can help them move through the world more freely.",
       "entityIds": [],
       "topics": []
     },
