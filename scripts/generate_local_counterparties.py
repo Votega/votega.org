@@ -23,15 +23,15 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-import yaml  # noqa: E402
-
 from lib.atomic_io import write_json_atomic  # noqa: E402
+from lib.counterparty_decisions import apply_decisions  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VOTES_PATH = os.path.join(ROOT, "assets", "data", "local-{slug}-votes.json")
 OUT_PATH = os.path.join(ROOT, "assets", "data", "local-{slug}-counterparties.json")
 REVIEW_PATH = os.path.join(ROOT, "_data", "counterparty_review.yml")
 STOPLIST_PATH = os.path.join(ROOT, "_data", "counterparty_stoplist.yml")
+DECISIONS_PATH = os.path.join(ROOT, "_data", "counterparty_decisions.json")
 
 # Allowlist, mirrored in validate_local_officials.ELECTED_BODIES. Never a denylist:
 # an unreviewed body (e.g. an appointed Planning Commission) is ignored.
@@ -84,6 +84,13 @@ SUFFIX_CAPTURE_RE = re.compile(
     r"((?:[A-Z0-9][\w&'.\-]*(?:\s+|,\s*)){0,7}?(?:" + SUFFIX_WORDS + r"))(?=$|[\s,;:)])")
 
 BARE_TAIL_RE = re.compile(r"\s+(?:c|co)$", re.I)
+
+
+def _yaml():
+    """PyYAML, imported lazily: the offline test job installs no packages, and the pure
+    helpers (normalize, entity_id) are imported by tests without touching YAML."""
+    import yaml
+    return yaml
 
 
 def normalize(name):
@@ -154,7 +161,7 @@ def looks_like_org(s):
 def load_stoplist():
     try:
         with open(STOPLIST_PATH, encoding="utf-8") as f:
-            data = yaml.safe_load(f) or {}
+            data = _yaml().safe_load(f) or {}
     except FileNotFoundError:
         return [], []
     prefixes, patterns = [], []
@@ -203,10 +210,22 @@ def extract(item_name, prefixes, patterns):
 def load_review():
     try:
         with open(REVIEW_PATH, encoding="utf-8") as f:
-            data = yaml.safe_load(f) or {}
+            data = _yaml().safe_load(f) or {}
     except FileNotFoundError:
         data = {}
     return {e["key"]: e for e in (data.get("entities") or []) if e.get("key")}
+
+
+def load_decisions():
+    """The browser tool's append-only log of human decisions ({"decisions": [...]})."""
+    try:
+        with open(DECISIONS_PATH, encoding="utf-8") as f:
+            return (json.load(f) or {}).get("decisions") or []
+    except FileNotFoundError:
+        return []
+    except ValueError as e:
+        print(f"ERROR: {DECISIONS_PATH} is not valid JSON: {e}")
+        sys.exit(1)
 
 
 def write_review(entities):
@@ -216,7 +235,7 @@ def write_review(entities):
         "# never re-queues one, and publishes ONLY `approved` entities. Each pending entry\n"
         "# carries the agenda item it came from so it can be judged without the votes file.\n"
     )
-    body = yaml.safe_dump({"entities": entities}, sort_keys=False, allow_unicode=True,
+    body = _yaml().safe_dump({"entities": entities}, sort_keys=False, allow_unicode=True,
                           width=100)
     new = header + body
     try:
@@ -245,6 +264,11 @@ def main():
 
     prefixes, patterns = load_stoplist()
     review = load_review()
+    applied, skipped = apply_decisions(review, load_decisions(), entity_id, normalize)
+    for line in applied:
+        print(f"decision applied: {line}")
+    for line in skipped:
+        print(f"WARNING decision skipped: {line}")
 
     scanned = with_entity = dropped_individuals = 0
     grouped = {}  # key -> {display, aliases, roles, items}
@@ -299,6 +323,32 @@ def main():
         queued += 1
     entities_sorted = [review[k] for k in sorted(review)]
     review_changed = write_review(entities_sorted)
+
+    # An approved entry the extractor did not itself produce (a name a person split out
+    # or retyped) still has to find its agenda items: match its normalized name in the text.
+    for key, entry in review.items():
+        if entry.get("status") != "approved" or key in grouped:
+            continue
+        norm = normalize(entry.get("displayName") or "")
+        if not norm:
+            continue
+        hits = []
+        for meeting in votes.get("meetings") or []:
+            if meeting.get("body") not in ELECTED_BODIES:
+                continue
+            for item in meeting.get("items") or []:
+                if norm in normalize(item.get("name") or ""):
+                    hits.append({
+                        "meetingId": str(meeting.get("id")),
+                        "date": meeting.get("date"),
+                        "body": meeting.get("body"),
+                        "reference": item.get("reference"),
+                        "itemName": " ".join((item.get("name") or "").split()),
+                        "motionIndex": 0,
+                    })
+        if hits:
+            grouped[key] = {"display": entry["displayName"], "aliases": [entry["displayName"]],
+                            "roles": [entry.get("role") or "other"], "items": hits}
 
     approved = []
     for key, g in sorted(grouped.items()):

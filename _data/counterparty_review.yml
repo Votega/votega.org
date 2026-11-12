@@ -84,8 +84,19 @@ entities:
     award to the lowest, responsive and responsible bidders: Acuity Specialty Products, Inc. (dba Zep
     Sales and Service); Break-Thru Solutions Janitorial Supply; Ferguson Waterworks; Peoples Janitorial
     Supplies, Inc.; and State Industrial Products Corp. Total Amount Not To Exceed: $494,049.15.'
-- key: advance-auto-parts-tidewater-fleet-supply
+- key: advance-auto-parts
   status: pending
+  displayName: Advance Auto Parts
+  role: other
+  date: '2026-07-14'
+  reference: 2026-0919
+  itemName: 'REN - Contract Nos.: 2000451, 2000452, 2000453, 2000454, and 2000455 Filters (Annual Contract
+    with 2 Options to Renew). Exercising 1st renewal option through September 30, 2027. Awarded to O’Reilly
+    Auto Parts, Advance Stores Co., Inc., dba Advance Auto Parts, Tidewater Fleet Supply LLC., dba TNT
+    Parts, Inc., Parts Authority LLC., and Cummins, Inc. Total Amount Not To Exceed: $450,000.00.'
+  reviewNote: split/cleaned from advance-auto-parts-tidewater-fleet-supply
+- key: advance-auto-parts-tidewater-fleet-supply
+  status: rejected
   displayName: Advance Auto Parts, Tidewater Fleet Supply LLC.
   role: other
   date: '2026-07-14'
@@ -94,6 +105,7 @@ entities:
     with 2 Options to Renew). Exercising 1st renewal option through September 30, 2027. Awarded to O’Reilly
     Auto Parts, Advance Stores Co., Inc., dba Advance Auto Parts, Tidewater Fleet Supply LLC., dba TNT
     Parts, Inc., Parts Authority LLC., and Cummins, Inc. Total Amount Not To Exceed: $450,000.00.'
+  reviewNote: two organizations in one capture; split into advance-auto-parts and tidewater-fleet-supply
 - key: aecom-technical-services
   status: pending
   displayName: AECOM Technical Services, Inc.
@@ -886,8 +898,20 @@ entities:
   itemName: 'CA - Cooperative Agreement - General Services Administration Multiple Award Schedule (GSA
     Contract No. GS-35F-0124U). For use by Recreation, Parks, and Cultural Affairs to obtain recreation
     management software. Awarded to CivicPlus LLC: Amount Not To Exceed: $112,890.01.'
-- key: cleveland-electric-contract-term-increase-only
+- key: cleveland-electric-company
   status: pending
+  displayName: Cleveland Electric Company
+  role: vendor
+  date: '2025-12-09'
+  reference: 2025-1447
+  itemName: 'CO - Change Order No. 3 to Contract No. 1242005 Electrical Switchgear Inspections and Repair
+    (Annual Contract with 2 Options to Renew): for use by the Department of Watershed Management (DWM).
+    This contract consists of providing inspection and repair of switchgear equipment at water and wastewater
+    treatment plants. This request seeks to increase the contract term through March 31, 2027. Awarded
+    to Cleveland Electric Company. CONTRACT TERM INCREASE ONLY.'
+  reviewNote: split/cleaned from cleveland-electric-contract-term-increase-only
+- key: cleveland-electric-contract-term-increase-only
+  status: rejected
   displayName: Cleveland Electric Company. CONTRACT TERM INCREASE ONLY.
   role: vendor
   date: '2025-12-09'
@@ -897,6 +921,7 @@ entities:
     This contract consists of providing inspection and repair of switchgear equipment at water and wastewater
     treatment plants. This request seeks to increase the contract term through March 31, 2027. Awarded
     to Cleveland Electric Company. CONTRACT TERM INCREASE ONLY.'
+  reviewNote: trailing agenda fragment; replaced by cleveland-electric-company
 - key: coastal-home-care
   status: pending
   displayName: Coastal Home Care, LLC
@@ -2831,8 +2856,19 @@ entities:
     Pro, LLC to amend the character area from CRC (Commercial Redevelopment Corridor) character area to
     TN (Traditional Neighborhood) character area to construct a new single-family residence in the R-60
     (Residential Small Lot-60) zoning district, at 711 & 705 Hillmont Avenue.'
-- key: napa-auto-parts-and-taylor-enterprises
+- key: napa-auto-parts
   status: pending
+  displayName: Napa Auto Parts
+  role: vendor
+  date: '2026-07-14'
+  reference: 2026-0986
+  itemName: 'REN - Contract Nos. 2000028 and 2000029 Anti-freeze (Annual Contract with 2 Options to Renew).
+    For use by Public Works-Fleet Management to obtain anti-freeze for various types of vehicles and equipment
+    within the County. Exercising 2nd renewal option through September 30, 2027, and seeking consent to
+    assignment. Awarded to Napa Auto Parts and Taylor Enterprises, Inc.: Total Amount Not To Exceed: $108,000.00.'
+  reviewNote: split/cleaned from napa-auto-parts-and-taylor-enterprises
+- key: napa-auto-parts-and-taylor-enterprises
+  status: rejected
   displayName: Napa Auto Parts and Taylor Enterprises, Inc.
   role: vendor
   date: '2026-07-14'
@@ -2841,6 +2877,8 @@ entities:
     For use by Public Works-Fleet Management to obtain anti-freeze for various types of vehicles and equipment
     within the County. Exercising 2nd renewal option through September 30, 2027, and seeking consent to
     assignment. Awarded to Napa Auto Parts and Taylor Enterprises, Inc.: Total Amount Not To Exceed: $108,000.00.'
+  reviewNote: two organizations in one capture; split into napa-auto-parts (taylor-enterprises already
+    queued)
 - key: national-building-contractors
   status: pending
   displayName: National Building Contractors, Inc.
@@ -2963,13 +3001,14 @@ entities:
     a previously provided term increase. Awarded to Occupational Health Centers of Georgia, P.C. dba Concentra
     Medical Centers. Amount Not To Exceed: $890,000.00.'
 - key: office-lease-robert-marslender-real-estate-services
-  status: pending
+  status: rejected
   displayName: Office Lease  Robert Marslender Real Estate Services, LLC.
   role: other
   date: '2026-01-13'
   reference: 2025-1844
   itemName: Termination of Standard Office Lease Agreement with Robert Marslender Real Estate Services,
     LLC. There is no cost to the County.
+  reviewNote: lead-in glued on; duplicate of robert-marslender-real-estate-services
 - key: onsolve
   status: pending
   displayName: OnSolve, LLC.
@@ -3083,7 +3122,7 @@ entities:
     for the Palo Alto Networks software utilized throughout the County. Awarded to Palo Alto Networks,
     Inc., c/o MGT Impact Solutions, LLC. Amount Not To Exceed: $699,316.86.'
 - key: panasonic
-  status: pending
+  status: rejected
   displayName: Panasonic Corporation
   role: other
   date: '2026-03-24'
@@ -3093,9 +3132,10 @@ entities:
     service package bundles, and related accessories. This request seeks to increase contract funds. Awarded
     to Panasonic Connect North America, division of Panasonic Corporation of North America c/o ProLogic
     ITS LLC. Amount Not To Exceed: $107,286.30.'
+  reviewNote: duplicate of panasonic-connect-north-america; the contract names the Connect division
 - key: panasonic-connect-north-america-division-of-panasonic
   status: pending
-  displayName: Panasonic Connect North America, division of Panasonic Corporation
+  displayName: Panasonic Connect North America
   role: vendor
   date: '2026-03-24'
   reference: 2026-0316
@@ -3104,6 +3144,7 @@ entities:
     service package bundles, and related accessories. This request seeks to increase contract funds. Awarded
     to Panasonic Connect North America, division of Panasonic Corporation of North America c/o ProLogic
     ITS LLC. Amount Not To Exceed: $107,286.30.'
+  reviewNote: shortened from "..., division of Panasonic Corporation"
 - key: park-pride
   status: pending
   displayName: Park Pride, Inc.
@@ -4418,6 +4459,17 @@ entities:
     and provisional ballot printing, and absentee by mail ballots services. Recommend award to the lowest
     responsive and responsible bidders: The Tattnall Journal, Inc. dba Tattnall Ballot Solutions and Fort
     Orange Press, Inc. Total Amount Not To Exceed: $121,297.50.'
+- key: tidewater-fleet-supply
+  status: pending
+  displayName: Tidewater Fleet Supply LLC
+  role: other
+  date: '2026-07-14'
+  reference: 2026-0919
+  itemName: 'REN - Contract Nos.: 2000451, 2000452, 2000453, 2000454, and 2000455 Filters (Annual Contract
+    with 2 Options to Renew). Exercising 1st renewal option through September 30, 2027. Awarded to O’Reilly
+    Auto Parts, Advance Stores Co., Inc., dba Advance Auto Parts, Tidewater Fleet Supply LLC., dba TNT
+    Parts, Inc., Parts Authority LLC., and Cummins, Inc. Total Amount Not To Exceed: $450,000.00.'
+  reviewNote: split/cleaned from advance-auto-parts-tidewater-fleet-supply
 - key: tikay-investments
   status: pending
   displayName: Tikay Investments, LLC
@@ -4438,13 +4490,14 @@ entities:
     Auto Parts, Advance Stores Co., Inc., dba Advance Auto Parts, Tidewater Fleet Supply LLC., dba TNT
     Parts, Inc., Parts Authority LLC., and Cummins, Inc. Total Amount Not To Exceed: $450,000.00.'
 - key: to-consider-declaring-12-county-owned-vacant
-  status: pending
+  status: rejected
   displayName: To Consider Declaring 12 County-Owned Vacant Properties
   role: other
   date: '2026-01-13'
   reference: 2026-0121
   itemName: To Consider Declaring 12 County-Owned Vacant Properties as Surplus and Transfer of County
     Interest in the Parcels of Real Property to the City of Tucker.
+  reviewNote: agenda sentence, not an organization
 - key: toole-design
   status: pending
   displayName: Toole Design Group

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Counterparty Review Editor</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; font-size: 14px; background: #f5f5f5; color: #222; }
+    header { background: #1e3a5f; color: #fff; padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    header h1 { font-size: 1rem; font-weight: 600; margin-right: auto; }
+    .status { font-size: 0.78rem; opacity: 0.85; }
+    .runnote { background: #fef3c7; color: #78350f; padding: 0.5rem 1.25rem; font-size: 12.5px; line-height: 1.7; border-bottom: 1px solid #fde68a; }
+    .runnote code { background: #fffbeb; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+    .runnote button { padding: 0.15rem 0.6rem; font-size: 12px; margin: 0 0.4rem; }
+    .layout { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 52px - 62px); }
+    .sidebar { background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; overflow: hidden; }
+    .sidebar-top { padding: 0.6rem; border-bottom: 1px solid #eee; display: flex; flex-direction: column; gap: 0.4rem; }
+    .list { flex: 1; overflow-y: auto; }
+    .item { padding: 0.45rem 0.75rem; cursor: pointer; border-bottom: 1px solid #f0f0f0; }
+    .item:hover { background: #f0f7ff; }
+    .item.sel { background: #dbeafe; }
+    .item .nm { font-weight: 500; font-size: 13px; }
+    .item .ky { font-size: 0.68rem; color: #999; }
+    .badge { display: inline-block; font-size: 0.62rem; padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+    .b-flag { background: #fef3c7; color: #92400e; }
+    .b-ok { background: #dcfce7; color: #166534; }
+    .b-no { background: #fee2e2; color: #b91c1c; }
+    .b-split { background: #e0e7ff; color: #3730a3; }
+    .main { overflow-y: auto; padding: 1.25rem; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem 1.25rem; max-width: 860px; }
+    h2 { font-size: 1.05rem; font-weight: 600; }
+    h3 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; margin: 1rem 0 0.4rem; }
+    label { font-weight: 500; font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 2px; }
+    input, select, textarea { padding: 0.35rem 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; font-family: inherit; width: 100%; }
+    input:focus, select:focus, textarea:focus { outline: 2px solid #3b82f6; border-color: transparent; }
+    textarea { resize: vertical; min-height: 60px; }
+    .row { display: grid; grid-template-columns: 2fr 1fr; gap: 0.6rem; }
+    .src { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.7rem; font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
+    .src mark { background: #fde68a; }
+    .meta { font-size: 12px; color: #64748b; margin-bottom: 0.4rem; }
+    .flags { list-style: none; font-size: 12px; color: #92400e; margin-top: 0.5rem; }
+    .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+    button { padding: 0.4rem 0.9rem; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500; }
+    .ok { background: #16a34a; color: #fff; }
+    .no { background: #fee2e2; color: #b91c1c; }
+    .sec { background: #e5e7eb; color: #333; }
+    .pri { background: #1e3a5f; color: #fff; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .hint { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+    .msg { margin-top: 0.6rem; font-size: 12px; }
+    .msg.err { color: #b91c1c; }
+    .msg.good { color: #166534; }
+    .parts { display: none; margin-top: 0.6rem; }
+    .parts.on { display: block; }
+    .empty { color: #64748b; padding: 2rem; }
+    .toast { position: fixed; bottom: 1.25rem; right: 1.25rem; background: #16a34a; color: #fff; padding: 0.5rem 1rem; border-radius: 6px; font-size: 13px; display: none; z-index: 100; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Counterparty Review Editor</h1>
+  <span class="status" id="status">No files loaded</span>
+  <button class="sec" id="btn-queue">1. Open review queue</button>
+  <button class="sec" id="btn-log" disabled>2. Open / create decisions file</button>
+  <button class="sec" id="btn-dl" disabled>Download decisions</button>
+</header>
+<div class="runnote">
+  <strong>When you're done reviewing:</strong> decisions are only saved to the log. Apply them by running, from the repo root
+  (<code>C:\Users\justi\Documents\GitHub\votega.org</code>):
+  <code id="runcmd">python scripts/generate_local_counterparties.py</code>
+  <button class="sec" id="btn-copy">Copy command</button>
+  Then check <code>git diff</code> and commit <code>_data/counterparty_decisions.json</code>, <code>_data/counterparty_review.yml</code> and <code>assets/data/local-dekalb-counterparties.json</code> together.
+</div>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <input type="text" id="search" placeholder="Search name or agenda text">
+      <select id="filter">
+        <option value="todo">To review</option>
+        <option value="flagged">To review: flagged only</option>
+        <option value="decided">Decided in this tool</option>
+        <option value="all">Everything in the queue</option>
+      </select>
+      <div class="hint" id="count"></div>
+    </div>
+    <div class="list" id="list"></div>
+  </aside>
+  <main class="main" id="main"><div class="empty">Open the review queue (<code>_data/counterparty_review.yml</code>), then the decisions file (<code>_data/counterparty_decisions.json</code>). Decisions are saved as you make them. Run <code>python scripts/generate_local_counterparties.py</code> afterwards to apply them.</div></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+<script>
+const ROLES = ['vendor', 'applicant', 'other'];
+let queue = [];            // entries from the YAML (read-only)
+let decisions = [];        // append-only log
+let logHandle = null;
+let selectedKey = null;
+const $ = id => document.getElementById(id);
+const HAS_FS = typeof window.showOpenFilePicker === 'function';
+
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2200); }
+function el(tag, props, ...kids) {
+  const e = document.createElement(tag);
+  for (const k in (props || {})) { if (k === 'class') e.className = props[k]; else if (k === 'text') e.textContent = props[k]; else e[k] = props[k]; }
+  kids.forEach(k => e.append(k));
+  return e;
+}
+
+function flagsFor(e) {
+  const n = e.displayName || '', out = [];
+  if ((n.match(/,/g) || []).length >= 1 && /,\s*[A-Z]/.test(n) && !/,\s*(Inc|LLC|L\.L\.C|LP|L\.P|P\.C|Ltd|Corp)/i.test(n)) out.push('Comma inside the name: could be two organizations.');
+  if (/\band\b/i.test(n)) out.push('Contains "and": could be two organizations.');
+  if (/\.\s+[A-Z]{3,}/.test(n) || /\.\s+[A-Z][a-z]+\s+[a-z]/.test(n)) out.push('Looks like sentence residue after a period.');
+  if (n.trim().split(/\s+/).length === 1) out.push('One-word name.');
+  if (n.trim().split(/\s+/).length > 6) out.push('Long name: may include a clause.');
+  if (/^(to|for|the|office|consider)\b/i.test(n.trim()) && !/^the national association/i.test(n.trim())) out.push('Starts like a sentence or heading.');
+  if (/division of|dba|d\/b\/a|c\/o/i.test(n)) out.push('Contains dba / division / c/o: consider shortening.');
+  return out;
+}
+
+function decisionFor(key) {
+  for (let i = decisions.length - 1; i >= 0; i--) if (decisions[i].key === key && decisions[i].action !== 'edit') return decisions[i];
+  return null;
+}
+function latestEdit(key) {
+  for (let i = decisions.length - 1; i >= 0; i--) if (decisions[i].key === key && decisions[i].action === 'edit') return decisions[i];
+  return null;
+}
+function isTodo(e) { return e.status === 'pending' && !decisionFor(e.key); }
+
+function visible() {
+  const q = $('search').value.trim().toLowerCase(), f = $('filter').value;
+  return queue.filter(e => {
+    if (f === 'todo' && !isTodo(e)) return false;
+    if (f === 'flagged' && !(isTodo(e) && flagsFor(e).length)) return false;
+    if (f === 'decided' && !decisionFor(e.key)) return false;
+    if (q && !((e.displayName || '') + ' ' + (e.itemName || '') + ' ' + e.key).toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function renderList() {
+  const list = $('list'); list.textContent = '';
+  const rows = visible();
+  const todo = queue.filter(isTodo).length;
+  $('count').textContent = rows.length + ' shown · ' + todo + ' left to review · ' + decisions.length + ' logged decisions';
+  rows.forEach(e => {
+    const d = decisionFor(e.key);
+    const item = el('div', { class: 'item' + (e.key === selectedKey ? ' sel' : '') });
+    const nm = el('div', { class: 'nm', text: (latestEdit(e.key) && latestEdit(e.key).displayName) || e.displayName });
+    if (d) nm.append(el('span', { class: 'badge ' + (d.action === 'approve' ? 'b-ok' : d.action === 'reject' ? 'b-no' : 'b-split'), text: d.action }));
+    else if (e.status !== 'pending') nm.append(el('span', { class: 'badge ' + (e.status === 'approved' ? 'b-ok' : 'b-no'), text: e.status }));
+    else if (flagsFor(e).length) nm.append(el('span', { class: 'badge b-flag', text: 'flag' }));
+    item.append(nm, el('div', { class: 'ky', text: e.role + ' · ' + (e.date || '') }));
+    item.onclick = () => { selectedKey = e.key; renderList(); renderDetail(); };
+    list.append(item);
+  });
+}
+
+function highlight(text, name) {
+  const frag = document.createDocumentFragment();
+  const i = name ? text.toLowerCase().indexOf(name.toLowerCase().replace(/[.,]+$/, '')) : -1;
+  if (i < 0 || !name) { frag.append(text); return frag; }
+  const len = name.replace(/[.,]+$/, '').length;
+  frag.append(text.slice(0, i), el('mark', { text: text.slice(i, i + len) }), text.slice(i + len));
+  return frag;
+}
+
+function renderDetail() {
+  const main = $('main'); main.textContent = '';
+  const e = queue.find(x => x.key === selectedKey);
+  if (!e) { main.append(el('div', { class: 'empty', text: 'Select an organization.' })); return; }
+  const edit = latestEdit(e.key);
+  const prior = decisionFor(e.key);
+  const card = el('div', { class: 'card' });
+  card.append(el('h2', { text: e.displayName }));
+  card.append(el('div', { class: 'meta', text: 'key: ' + e.key + ' · status in queue: ' + e.status + (e.reviewNote ? ' · note: ' + e.reviewNote : '') }));
+  if (prior) card.append(el('div', { class: 'msg good', text: 'Logged: ' + prior.action + (prior.note ? ' (' + prior.note + ')' : '') + '. Re-deciding appends a new line; the generator applies the first one it sees for a still-pending entry.' }));
+
+  card.append(el('h3', { text: 'Agenda item' }));
+  card.append(el('div', { class: 'meta', text: (e.date || '') + ' · ' + (e.reference || '') }));
+  const src = el('div', { class: 'src' }); src.append(highlight(e.itemName || '', e.displayName)); card.append(src);
+
+  const flags = flagsFor(e);
+  if (flags.length) { const ul = el('ul', { class: 'flags' }); flags.forEach(f => ul.append(el('li', { text: '⚠ ' + f }))); card.append(ul); }
+
+  card.append(el('h3', { text: 'Decision' }));
+  const row = el('div', { class: 'row' });
+  const nameIn = el('input', { id: 'f-name', type: 'text', value: (edit && edit.displayName) || e.displayName });
+  const roleSel = el('select', { id: 'f-role' }); ROLES.forEach(r => roleSel.append(el('option', { value: r, text: r })));
+  roleSel.value = (edit && edit.role) || e.role;
+  row.append(el('div', {}, el('label', { text: 'Display name (fix it here)' }), nameIn), el('div', {}, el('label', { text: 'Role' }), roleSel));
+  card.append(row);
+  const noteIn = el('input', { id: 'f-note', type: 'text', placeholder: 'Note (required to reject or split)' });
+  card.append(el('div', { style: 'margin-top:0.6rem' }, el('label', { text: 'Note' }), noteIn));
+
+  const parts = el('div', { class: 'parts', id: 'parts' });
+  parts.append(el('label', { text: 'Split into: one organization per line (two or more)' }));
+  parts.append(el('textarea', { id: 'f-parts', placeholder: 'Advance Auto Parts\nTidewater Fleet Supply LLC' }));
+  parts.append(el('div', { class: 'hint', text: 'Each part is queued as pending with this agenda item. Nothing is approved by splitting.' }));
+  card.append(parts);
+
+  const msg = el('div', { class: 'msg', id: 'msg' });
+  const actions = el('div', { class: 'actions' });
+  const b = (cls, txt, fn) => { const x = el('button', { class: cls, text: txt }); x.onclick = fn; return x; };
+  const lock = e.status !== 'pending';
+  actions.append(
+    b('ok', 'Approve (A)', () => decide('approve')),
+    b('no', 'Reject (R)', () => decide('reject')),
+    b('sec', 'Split…', () => { const p = $('parts'); if (!p.classList.contains('on')) { p.classList.add('on'); $('f-parts').focus(); } else decide('split'); }),
+    b('sec', 'Save name/role only', () => decide('edit')),
+    b('sec', 'Skip (S)', () => advance())
+  );
+  if (lock) { actions.querySelectorAll('button').forEach(x => { if (x.textContent !== 'Skip (S)') x.disabled = true; }); card.append(el('div', { class: 'msg err', text: 'Already ' + e.status + ' in the queue. Decisions are final; edit the YAML by hand to change one.' })); }
+  card.append(actions, msg);
+  main.append(card);
+}
+
+function setMsg(text, bad) { const m = $('msg'); if (m) { m.textContent = text; m.className = 'msg ' + (bad ? 'err' : 'good'); } }
+
+async function decide(action) {
+  if (!logHandle && HAS_FS) { setMsg('Open or create the decisions file first (button 2).', true); return; }
+  const e = queue.find(x => x.key === selectedKey); if (!e) return;
+  const name = $('f-name').value.trim(), role = $('f-role').value, note = $('f-note').value.trim();
+  const d = { key: e.key, action, decidedAt: new Date().toISOString() };
+  if (name && name !== e.displayName) d.displayName = name;
+  if (role !== e.role) d.role = role;
+  if (note) d.note = note;
+  if ((action === 'reject' || action === 'split') && !note) { setMsg('Add a note saying why.', true); return; }
+  if (action === 'edit' && !d.displayName && !d.role) { setMsg('Nothing changed.', true); return; }
+  if (action === 'approve') {
+    const flags = flagsFor({ displayName: name });
+    if (flags.length && !note) { setMsg('This name is flagged. Fix it, or add a note saying why it is fine.', true); return; }
+  }
+  if (action === 'split') {
+    const names = $('f-parts').value.split('\n').map(s => s.trim()).filter(Boolean);
+    if (names.length < 2) { setMsg('List at least two organizations, one per line.', true); return; }
+    d.parts = names.map(n => ({ displayName: n }));
+  }
+  decisions.push(d);
+  try { await save(); } catch (err) { decisions.pop(); setMsg('Could not save: ' + err.message, true); return; }
+  toast(action + ': ' + e.displayName);
+  if (action === 'edit') { renderList(); renderDetail(); } else advance();
+}
+
+function advance() {
+  const rows = visible();
+  const i = rows.findIndex(x => x.key === selectedKey);
+  const next = rows.find((x, idx) => idx > i && isTodo(x)) || rows.find(isTodo) || rows[i + 1] || null;
+  selectedKey = next ? next.key : selectedKey;
+  renderList(); renderDetail();
+}
+
+function serialize() { return JSON.stringify({ decisions }, null, 2) + '\n'; }
+async function save() {
+  if (logHandle) { const w = await logHandle.createWritable(); await w.write(serialize()); await w.close(); }
+  $('btn-dl').disabled = false;
+  updateStatus();
+}
+function updateStatus() {
+  $('status').textContent = queue.length + ' in queue · ' + decisions.length + ' decisions' + (logHandle ? ' · saving to ' + logHandle.name : ' · not saving to a file');
+}
+
+$('btn-queue').onclick = async () => {
+  try {
+    let text;
+    if (HAS_FS) { const [h] = await window.showOpenFilePicker({ types: [{ description: 'YAML', accept: { 'text/yaml': ['.yml', '.yaml'] } }] }); text = await (await h.getFile()).text(); }
+    else { text = await new Promise((res, rej) => { const i = document.createElement('input'); i.type = 'file'; i.onchange = () => i.files[0].text().then(res, rej); i.click(); }); }
+    const doc = jsyaml.load(text);
+    queue = (doc && doc.entities) || [];
+    $('btn-log').disabled = false;
+    selectedKey = (queue.find(isTodo) || queue[0] || {}).key || null;
+    renderList(); renderDetail(); updateStatus();
+  } catch (err) { if (err.name !== 'AbortError') alert('Could not read the queue: ' + err.message); }
+};
+
+$('btn-log').onclick = async () => {
+  try {
+    if (HAS_FS) {
+      let h;
+      try { [h] = await window.showOpenFilePicker({ types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }] }); }
+      catch (err) { if (err.name === 'AbortError') { h = await window.showSaveFilePicker({ suggestedName: 'counterparty_decisions.json', types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }] }); } else throw err; }
+      logHandle = h;
+      const text = await (await h.getFile()).text();
+      decisions = text.trim() ? (JSON.parse(text).decisions || []) : [];
+      if (!text.trim()) await save();
+    } else {
+      alert('This browser cannot write files in place. Use Chrome or Edge, or make decisions and use Download.');
+    }
+    renderList(); renderDetail(); updateStatus(); $('btn-dl').disabled = false;
+  } catch (err) { if (err.name !== 'AbortError') alert('Could not open the decisions file: ' + err.message); }
+};
+
+$('btn-copy').onclick = async () => {
+  try { await navigator.clipboard.writeText($('runcmd').textContent); toast('Command copied'); }
+  catch (err) { toast('Select the command and copy it by hand'); }
+};
+
+$('btn-dl').onclick = () => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([serialize()], { type: 'application/json' }));
+  a.download = 'counterparty_decisions.json'; a.click();
+};
+
+$('search').oninput = () => { renderList(); };
+$('filter').onchange = () => { renderList(); };
+document.addEventListener('keydown', ev => {
+  const t = ev.target.tagName;
+  if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT' || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+  if (ev.key === 'a' || ev.key === 'A') { ev.preventDefault(); const b = [...document.querySelectorAll('.actions button')].find(x => x.textContent.startsWith('Approve')); if (b && !b.disabled) b.click(); }
+  else if (ev.key === 'r' || ev.key === 'R') { ev.preventDefault(); $('f-note') && $('f-note').focus(); }
+  else if (ev.key === 's' || ev.key === 'S') { ev.preventDefault(); advance(); }
+});
+</script>
+</body>
+</html>
