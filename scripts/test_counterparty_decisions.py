@@ -119,6 +119,46 @@ q, a, s = run([{"key": "scs", "action": "edit", "aka": ["SCS Engineers"], "note"
 check(q["scs"]["aka"] == ["SCS Engineers"] and q["scs"]["status"] == "pending",
       "repeating an aka does not duplicate it, and edit leaves the entry pending")
 
+print("revise (the only way to change a decided entry)")
+q, a, s = run([{"key": "done", "action": "revise", "from": "approved", "status": "rejected", "note": "wrong org"}])
+check(q["done"]["status"] == "rejected" and q["done"]["reviewNote"] == "wrong org", "revise moves an approved entry to rejected")
+q, a, s = run([{"key": "no", "action": "revise", "from": "rejected", "status": "pending", "note": "reopen"}])
+check(q["no"]["status"] == "pending", "revise can reopen a rejected entry")
+q, a, s = run([{"key": "done", "action": "revise", "from": "approved", "displayName": "Done", "note": "shorter"}])
+check(q["done"]["status"] == "approved" and q["done"]["displayName"] == "Done",
+      "revise without a status fixes the name and leaves the status")
+q, a, s = run([{"key": "done", "action": "revise", "from": "approved", "status": "rejected"}])
+check(q["done"]["status"] == "approved" and len(s) == 1, "a revise needs a note")
+q, a, s = run([{"key": "done", "action": "revise", "status": "rejected", "note": "n"}])
+check(q["done"]["status"] == "approved" and len(s) == 1, "a revise must say what it expects to find")
+q, a, s = run([{"key": "done", "action": "revise", "from": "rejected", "status": "pending", "note": "n"}])
+check(q["done"]["status"] == "approved" and len(s) == 1, "a revise against the wrong status is reported, not applied")
+q, a, s = run([{"key": "acme", "action": "revise", "from": "pending", "status": "approved", "note": "n"}])
+check(q["acme"]["status"] == "approved", "a revise also works on a pending entry")
+
+print("revise replays converge")
+chain = [{"key": "done", "action": "revise", "from": "approved", "status": "rejected", "note": "a"},
+         {"key": "done", "action": "revise", "from": "rejected", "status": "approved", "note": "b"},
+         {"key": "done", "action": "revise", "from": "approved", "status": "rejected", "note": "c"}]
+q1, a1, s1 = run(chain)
+q2 = copy.deepcopy(q1)
+_, a2, s2 = apply_decisions(q2, chain, G.entity_id, G.normalize) + (None,)
+check(q1 == q2 and q1["done"]["status"] == "rejected", "a chain of revises ends in the last state and replays to it")
+log = [{"key": "acme", "action": "approve"},
+       {"key": "acme", "action": "revise", "from": "approved", "status": "rejected", "note": "changed my mind"}]
+q1, _, _ = run(log)
+q2 = copy.deepcopy(q1)
+apply_decisions(q2, log, G.entity_id, G.normalize)
+check(q1["acme"]["status"] == "rejected" and q1 == q2, "approve then revise replays to rejected")
+
+print("revise and aka")
+q, a, s = run([{"key": "scs", "action": "revise", "from": "approved", "aka": ["Made Up"], "note": "n"}],
+              {"scs": dict(scs()["scs"], status="approved")})
+check(len(s) == 1 and "aka" not in q["scs"], "a revise aka must also be stated in the agenda text")
+q, a, s = run([{"key": "scs", "action": "revise", "from": "approved", "aka": ["SCS Engineers"], "note": "dba in text"}],
+              {"scs": dict(scs()["scs"], status="approved")})
+check(q["scs"]["aka"] == ["SCS Engineers"] and q["scs"]["status"] == "approved", "a revise can add a stated aka to an approved entry")
+
 print()
 if failures:
     print("%d FAILED" % len(failures))

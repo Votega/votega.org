@@ -135,7 +135,18 @@ function latestEdit(key) {
   for (let i = decisions.length - 1; i >= 0; i--) if (decisions[i].key === key && decisions[i].action === 'edit') return decisions[i];
   return null;
 }
-function isTodo(e) { return e.status === 'pending' && !decisionFor(e.key); }
+function effStatus(e) {
+  let cur = e.status;
+  decisions.forEach(d => {
+    if (d.key !== e.key) return;
+    if (d.action === 'revise') { if (cur === d.from && d.status) cur = d.status; return; }
+    if (cur !== 'pending') return;
+    if (d.action === 'approve') cur = 'approved';
+    else if (d.action === 'reject' || d.action === 'split') cur = 'rejected';
+  });
+  return cur;
+}
+function isTodo(e) { return effStatus(e) === 'pending'; }
 
 function visible() {
   const q = $('search').value.trim().toLowerCase(), f = $('filter').value;
@@ -157,8 +168,8 @@ function renderList() {
     const d = decisionFor(e.key);
     const item = el('div', { class: 'item' + (e.key === selectedKey ? ' sel' : '') });
     const nm = el('div', { class: 'nm', text: (latestEdit(e.key) && latestEdit(e.key).displayName) || e.displayName });
-    if (d) nm.append(el('span', { class: 'badge ' + (d.action === 'approve' ? 'b-ok' : d.action === 'reject' ? 'b-no' : 'b-split'), text: d.action }));
-    else if (e.status !== 'pending') nm.append(el('span', { class: 'badge ' + (e.status === 'approved' ? 'b-ok' : 'b-no'), text: e.status }));
+    if (d) nm.append(el('span', { class: 'badge ' + (effStatus(e) === 'approved' ? 'b-ok' : effStatus(e) === 'rejected' ? 'b-no' : 'b-split'), text: d.action === 'revise' ? 'revised: ' + effStatus(e) : d.action }));
+    else if (effStatus(e) !== 'pending') nm.append(el('span', { class: 'badge ' + (effStatus(e) === 'approved' ? 'b-ok' : 'b-no'), text: effStatus(e) }));
     else if (flagsFor(e).length) nm.append(el('span', { class: 'badge b-flag', text: 'flag' }));
     item.append(nm, el('div', { class: 'ky', text: e.role + ' · ' + (e.date || '') }));
     item.onclick = () => { selectedKey = e.key; renderList(); renderDetail(); };
@@ -222,7 +233,20 @@ function renderDetail() {
   const msg = el('div', { class: 'msg', id: 'msg' });
   const actions = el('div', { class: 'actions' });
   const b = (cls, txt, fn) => { const x = el('button', { class: cls, text: txt }); x.onclick = fn; return x; };
-  const lock = e.status !== 'pending';
+  const eff = effStatus(e);
+  if (eff !== 'pending') {
+    card.append(el('div', { class: 'msg good', text: 'Currently ' + eff + '. Changing it is a logged revision and needs a note.' }));
+    const other = eff === 'approved' ? 'rejected' : 'approved';
+    actions.append(
+      b(other === 'approved' ? 'ok' : 'no', 'Change to ' + other, () => decide('revise', other)),
+      b('sec', 'Reopen (back to pending)', () => decide('revise', 'pending')),
+      b('sec', 'Save name/role/aka, keep ' + eff, () => decide('revise', null)),
+      b('sec', 'Skip (S)', () => advance())
+    );
+    card.append(actions, msg);
+    main.append(card);
+    return;
+  }
   actions.append(
     b('ok', 'Approve (A)', () => decide('approve')),
     b('no', 'Reject (R)', () => decide('reject')),
@@ -230,29 +254,33 @@ function renderDetail() {
     b('sec', 'Save name/role only', () => decide('edit')),
     b('sec', 'Skip (S)', () => advance())
   );
-  if (lock) { actions.querySelectorAll('button').forEach(x => { if (x.textContent !== 'Skip (S)') x.disabled = true; }); card.append(el('div', { class: 'msg err', text: 'Already ' + e.status + ' in the queue. Decisions are final; edit the YAML by hand to change one.' })); }
   card.append(actions, msg);
   main.append(card);
 }
 
 function setMsg(text, bad) { const m = $('msg'); if (m) { m.textContent = text; m.className = 'msg ' + (bad ? 'err' : 'good'); } }
 
-async function decide(action) {
+async function decide(action, reviseTo) {
   if (!logHandle && HAS_FS) { setMsg('Open or create the decisions file first (button 2).', true); return; }
   const e = queue.find(x => x.key === selectedKey); if (!e) return;
   const name = $('f-name').value.trim(), role = $('f-role').value, note = $('f-note').value.trim();
   const d = { key: e.key, action, decidedAt: new Date().toISOString() };
+  if (action === 'revise') { d.from = effStatus(e); if (reviseTo) d.status = reviseTo; }
   if (name && name !== e.displayName) d.displayName = name;
   if (role !== e.role) d.role = role;
   if (note) d.note = note;
   const akas = ($('f-aka').value || '').split('\n').map(x => x.trim()).filter(Boolean);
   if (akas.length) {
-    if (action !== 'approve' && action !== 'edit') { setMsg('An aka goes only with Approve or Save name/role.', true); return; }
+    if (action !== 'approve' && action !== 'edit' && action !== 'revise') { setMsg('An aka goes only with Approve or Save name/role.', true); return; }
     if (!note) { setMsg('Adding an aka requires a note saying where the agenda text states it.', true); return; }
     const text = (e.itemName || '').toLowerCase().split(/\s+/).join(' ');
     const missing = akas.filter(a => !text.includes(a.toLowerCase().split(/\s+/).join(' ')));
     if (missing.length) { setMsg('Not in the agenda text, so not recorded: ' + missing.join('; '), true); return; }
     d.aka = akas;
+  }
+  if (action === 'revise') {
+    if (!note) { setMsg('A revision needs a note saying why.', true); return; }
+    if (!d.status && !d.displayName && !d.role && !d.aka) { setMsg('Nothing changed.', true); return; }
   }
   if ((action === 'reject' || action === 'split') && !note) { setMsg('Add a note saying why.', true); return; }
   if (action === 'edit' && !d.displayName && !d.role && !d.aka) { setMsg('Nothing changed.', true); return; }
@@ -268,7 +296,7 @@ async function decide(action) {
   decisions.push(d);
   try { await save(); } catch (err) { decisions.pop(); setMsg('Could not save: ' + err.message, true); return; }
   toast(action + ': ' + e.displayName);
-  if (action === 'edit') { renderList(); renderDetail(); } else advance();
+  if (action === 'edit' || action === 'revise') { renderList(); renderDetail(); } else advance();
 }
 
 function advance() {
