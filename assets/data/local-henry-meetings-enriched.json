@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-10T22:20:36Z",
+  "generatedAt": "2026-11-12T17:11:46Z",
   "source": "Henry County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Henry County",
   "count": 25
@@ -13,23 +13,35 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-17",
+  "lastActivity": "2026-11-19",
   "topicTotals": {
-   "annexation": 5,
-   "contract": 15,
+   "comprehensive-plan": 3,
    "development": 10,
-   "local-taxes": 18,
    "rezoning": 10,
+   "special-land-use": 2,
+   "variance": 4,
+   "annexation": 4,
+   "contract": 14,
+   "local-taxes": 17,
    "appointment": 5,
    "budget": 1,
-   "comprehensive-plan": 3,
-   "millage-budget": 14,
-   "special-land-use": 1,
-   "variance": 3,
+   "millage-budget": 13,
    "alpr": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Zoning Advisory Board  Meeting",
+    "date": "2026-11-19",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2700,plainText=false)",
+    "tags": [
+     "comprehensive-plan",
+     "development",
+     "rezoning",
+     "special-land-use",
+     "variance"
+    ]
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-11-17",
@@ -179,19 +191,6 @@
      "rezoning",
      "variance"
     ]
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-04-14",
-    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2489,plainText=false)",
-    "tags": [
-     "annexation",
-     "comprehensive-plan",
-     "development",
-     "rezoning"
-    ],
-    "excerpt": "… REGULAR AGENDA) AX-26-02 (Not a Public Hearing) The City of McDonough has received a request for annexation of properties at 820 and 964 Racetrack Road, consisting of 79.04 +/- acres in Land Lot 169 of the 7th Distri …",
-    "excerptTerm": "annexation"
    }
   ],
   "landUseMeetings": 15,
@@ -392,20 +391,9 @@
      "flost",
      "local option sales tax"
     ]
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-04-14",
-    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2489,plainText=false)",
-    "terms": [
-     "flost",
-     "splost"
-    ],
-    "excerpt": "… r)(Exhibit 12) Announcement #3: The Following item will be added to tonight’s Regular agenda: T-SPLOST item. 1. Resolution approving a payment to Georgia DOT in the amount of $29,354,340 f …",
-    "excerptTerm": "splost"
    }
   ],
-  "localTaxCitations": 18,
+  "localTaxCitations": 17,
   "budgetItems": [
    {
     "title": "Board of Commissioners Meeting",
@@ -424,6 +412,71 @@
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "832",
+   "date": "2026-11-19",
+   "body": "Zoning Advisory Board",
+   "title": "Zoning Advisory Board  Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2700,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2700,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 4358,
+   "pdfSha256": "70eb07f3248e7b89dee8aa7509ec62d2eef29874ad9bef894b34c29090edfc6c",
+   "topics": {
+    "comprehensive-plan": 1,
+    "development": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "development",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "comprehensive plan",
+    "conditional use",
+    "future land use",
+    "rezon",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… bdivision. District 2 B. COMP-AM-26-02 Pine Grove Acquisitions, LLC, requests an amendment to the Comprehensive Plan for property located at 382 Nail Road in Land Lots 177 and 178 of the 6th District. The property consists of …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… 88 of the 6th District. The property consists of 116.72 +/- acres and the request is for a conservation subdivision. District 2 B. COMP-AM-26-02 Pine Grove Acquisitions, LLC, requests an amendment to the Comprehen …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ns facility. District 1 X. ASSOCIATED CASES A. RZ-26-06 Perry and Jeanette McElroy requests a rezoning from R-A (Residential Agricultural) to R-3 (Single-Family Residential) for property located north of …",
+     "context": "unknown"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… s of 1.04 +/- acres and the request is for relief from development standards. District 2 IX. CONDITIONAL USE A. CU-26-02 TowerCom of Charleston, SC requests a conditional use for property located o …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Meeting Minutes E. September 10, 2026 ZAB Meeting Minutes VII. PLANNING STAFF COMMENTS VIII. VARIANCES A. VR-26-05 Reynaldo Lopez Nunez requests a variance for property located at 70 Cumberl …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "823",
    "date": "2026-11-17",
@@ -1674,91 +1727,6 @@
     }
    },
    "flags": [
-    "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "808",
-   "date": "2026-04-14",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2489,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2489,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 13407,
-   "pdfSha256": "71e9a276c47cf66a6c05cc0a9e12dd7f31d6e8e0b85bc52048780bb3bd809ca1",
-   "topics": {
-    "annexation": 1,
-    "comprehensive-plan": 1,
-    "contract": 1,
-    "development": 1,
-    "local-taxes": 1,
-    "millage-budget": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "annexation",
-    "comprehensive-plan",
-    "contract",
-    "development",
-    "local-taxes",
-    "millage-budget",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "annexation",
-    "budget",
-    "comprehensive plan",
-    "contract",
-    "flost",
-    "future land use",
-    "multifamily",
-    "rezon",
-    "splost",
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… REGULAR AGENDA) AX-26-02 (Not a Public Hearing) The City of McDonough has received a request for annexation of properties at 820 and 964 Racetrack Road, consisting of 79.04 +/- acres in Land Lot 169 of the 7th Distri …",
-     "context": "agenda-action"
-    },
-    "comprehensive-plan": {
-     "term": "comprehensive plan",
-     "excerpt": "… moved)COMP-AM-23-07 (Public Hearing) EPL Enterprises, Inc. of Lithonia, GA requests an amendment to the Comprehensive Plan for property located on Highway 155 North to the west of Valley Road in Land Lot 133 of the 11th District. The …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… iveway Easement more or less, in Land Lot 190 of the 11th District, Henry County, Georgia, by negotiated contract or condemnation pursuant to provision of O.C.G.A. Section 32-3-4 through Section 32-3-19 …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "multifamily",
-     "excerpt": "… d Lot 109 of the 6th District. The property consists of 22.287 +/- acres and the request is for a horizontal multifamily development. District 5 The following Planning & Zoning Item was advertised for the April 14, 2026 …",
-     "context": "unknown"
-    },
-    "local-taxes": {
-     "term": "splost",
-     "excerpt": "… r)(Exhibit 12) Announcement #3: The Following item will be added to tonight’s Regular agenda: T-SPLOST item. 1. Resolution approving a payment to Georgia DOT in the amount of $29,354,340 f …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… A. April 15, 2026 is a Called FLOST Joint Meeting with the Cities at 8:30 a.m. B. April 28, 2026 is a Called Budget Workshop Meeting at 4:00 p.m. C. May 5, 2026 is a Regular BOC Meeting at 9:00 a.m. XVII. Adjournment …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… RZ-25-04 (Public Hearing) (POSTPONED) Minerva USA LLC of Atlanta, GA requests a rezoning from RA (Residential Agricultural) & OI (Office Institutional) to R-5 (Single-Family Residence) …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget",
     "local-taxes"
    ],
    "dataCenterItems": []
