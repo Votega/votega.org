@@ -1,0 +1,66 @@
+name: Update School Board Meetings (manual)
+
+permissions:
+  contents: write
+
+# Manual only, on purpose. School-board meetings (phase 3e) are wired end to end
+# but the output surface is not decided, so nothing here runs on a schedule yet.
+# To go live: add a `schedule:` cron below (twice weekly like update-local-government)
+# AND add the exact `name:` above to notify-workflow-failure.yml's `workflows:` list
+# in the same commit (scripts/validate_workflow_triggers.py fails CI otherwise).
+#
+# Simbli sits behind Imperva/Incapsula and blocks intermittently; the adapter retries,
+# and a district it cannot read keeps its committed file and fails the job at the end
+# so healthy districts still commit.
+on:
+  workflow_dispatch:
+    inputs:
+      district:
+        description: 'Only this GOSA district id (default: every district with a meetings source)'
+        required: false
+        default: ''
+
+concurrency:
+  group: update-school-board-meetings
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - run: pip install pyyaml
+
+      - name: Generate school board meetings
+        id: gen
+        continue-on-error: true
+        run: |
+          if [ -n "${{ inputs.district }}" ]; then
+            python scripts/generate_school_meetings.py --district "${{ inputs.district }}"
+          else
+            python scripts/generate_school_meetings.py
+          fi
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add assets/data/school-*-meetings.json
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update school board meetings"
+            git pull --rebase origin main
+            git push
+          fi
+
+      # A blocked or empty district fails the job AFTER the healthy ones committed.
+      - name: Fail if any district failed
+        if: steps.gen.outcome == 'failure'
+        run: exit 1

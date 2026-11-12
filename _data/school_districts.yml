@@ -95,6 +95,11 @@
 #   officeCountyFips    The upstream single-county assignment (the office's
 #                       county). Recorded for provenance/cross-check; it is NOT
 #                       the service area and must not drive rendering.
+#   meetings            Optional. {platform: simbli, id: "<S= district key>"} — where this
+#                       board posts its agendas. Read by scripts/generate_school_meetings.py,
+#                       which writes assets/data/school-<id>-meetings.json. Add ONLY a key
+#                       seen on the board's own Simbli links (S=<id>); a guessed key would
+#                       publish another district's meetings.
 # ----------------------------------------------------------------------------
 # ROLE VOCABULARY FOR BOARD MEMBERS  (validate_school_districts.py enforces it)
 # ----------------------------------------------------------------------------
@@ -259,6 +264,9 @@ cityDistricts:
     # DOR lists Buford's levy under Gwinnett AND Hall.
     counties: [gwinnett, hall]
     districtCensusId: "00600"
+    meetings:
+      platform: simbli
+      id: "4019"
     officeCountyFips: "13135"
     board_size: 5
     term_years: 4
@@ -419,6 +427,9 @@ cityDistricts:
     type: city
     counties: [hall]
     districtCensusId: "02310"
+    meetings:
+      platform: simbli
+      id: "4072"
     officeCountyFips: "13139"
     board_size: 5
     term_years: 4
@@ -655,6 +666,9 @@ countyDistricts:
     type: county
     countyFips: "13009"
     districtCensusId: "00210"
+    meetings:
+      platform: simbli
+      id: "4007"
     board_size: 5
     term_years: 4
     official_url: "https://simbli.eboardsolutions.com/Index.aspx?S=4007"
@@ -1495,6 +1509,9 @@ countyDistricts:
     type: county
     countyFips: "13217"
     districtCensusId: "03930"
+    meetings:
+      platform: simbli
+      id: "4122"
     board_size: 5
     term_years: 4
     partisan: true

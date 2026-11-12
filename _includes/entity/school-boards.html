@@ -179,6 +179,13 @@
       </div>
       {%- endfor %}
     </div>
+    {%- comment %} Meetings (phase 3e): filled by school-board-meetings.js from
+        assets/data/school-<id>-meetings.json, and hidden until that file exists, so a
+        district with a `meetings` source but no generated data yet shows nothing.
+        {% endcomment -%}
+    {%- if d.meetings %}
+    <div class="sbm" data-sb-meetings="{{ d.id }}" hidden></div>
+    {%- endif %}
   </details>
   {%- endfor %}
 
@@ -236,9 +243,22 @@
   .sb-members { flex-basis: 100%; font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.45; }
   .sb-board > .po-grid, .sb-board > .po-meta { margin: 0 1rem 1rem; }
   .sb-appointed { font-size: 0.82rem; color: var(--color-text-muted); font-style: italic; margin: 0; }
+  .sbm { margin: 0 1rem 1rem; }
+  .sbm[hidden] { display: none; }
+  .sbm-heading { font-size: 0.95rem; font-weight: 700; margin: 0.25rem 0 0.25rem; color: var(--color-text); }
+  .sbm-sub { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; color: var(--color-text-muted); margin: 0.6rem 0 0.2rem; }
+  .sbm-list { list-style: none; margin: 0; padding: 0; }
+  .sbm-row { display: flex; flex-wrap: wrap; gap: 0.15rem 0.75rem; padding: 0.45rem 0; border-top: 1px solid var(--color-border); font-size: 0.88rem; }
+  .sbm-date { flex: 0 0 9.5rem; font-weight: 600; color: var(--color-text); }
+  .sbm-time { font-weight: 400; color: var(--color-text-muted); }
+  .sbm-title { flex: 1 1 12rem; color: var(--color-text-secondary); }
+  .sbm-links { flex: 0 0 auto; }
+  .sbm-none, .sbm-source { color: var(--color-text-muted); }
+  .sbm-source { font-size: 0.82rem; margin: 0.6rem 0 0; }
   .sb-pending { font-size: 0.86rem; color: var(--color-text-secondary); margin: 0.75rem 0 0; line-height: 1.5; }
   @media (prefers-reduced-motion: reduce) {
     .sb-summary::before { transition: none; }
   }
 </style>
+<script src="{{ '/assets/scripts/school-board-meetings.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 {%- endif -%}

@@ -46,6 +46,13 @@ work happened. This block is the resume point.
    detector already extracts the id) and a decision on where board meetings
    render: a section on `/local/<slug>/` beside the board roster, or their own
    page per district.
+   **Pipeline BUILT, surface undecided (2026-11-12):** `meetings: {platform: simbli,
+   id}` on a district in the registry (Newton, Gainesville, Baldwin, Buford set) ->
+   `scripts/generate_school_meetings.py` -> `assets/data/school-<districtId>-meetings.json`
+   (place-meetings schema) -> `school-board-meetings.js`, which fills a hidden panel inside
+   each board on `/local/<slug>/` and stays hidden until the file exists. The workflow
+   `update-school-board-meetings.yml` is manual-only; to go live, add a cron AND the
+   notifier entry in one commit. Not yet run live (Simbli blocks the dev container).
 6. **Budgets as a fifth topic** — `millage-budget` fires on 59 of 59 places and
    has no page; 40% of what it flags is noise ("to be paid from the facilities
    management budget"). Scoped in `docs/BUDGET-TOPIC-SCOPE.md`: retire the tag,

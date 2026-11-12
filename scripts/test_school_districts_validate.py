@@ -260,6 +260,21 @@ check('more than once' in " | ".join(V.validate(
            "cityDistricts": [city()]}, PLACES)[0]),
       'the same county FIPS twice is an error')
 
+print('\nMeetings source (3e)')
+good = {"platform": "simbli", "id": "4122"}
+check(not errs(counties=[county(meetings=good)]), 'a well-formed meetings block passes')
+check('meetings.platform' in errs(counties=[county(meetings={"platform": "boarddocs", "id": "1"})]),
+      'an unsupported platform is an error')
+check('meetings.id' in errs(counties=[county(meetings={"platform": "simbli", "id": 4122})]),
+      'an unquoted numeric id is an error (ids are strings)')
+check('meetings.id' in errs(counties=[county(meetings={"platform": "simbli", "id": "x1"})]),
+      'a non-numeric Simbli key is an error')
+check('unknown key' in errs(counties=[county(meetings={**good, "url": "x"})]),
+      'an unknown meetings key is an error')
+check('claimed by districts' in errs(counties=[county(meetings=good)],
+                                      cities=[city(meetings=good)]),
+      'one Simbli key on two districts is an error')
+
 if failures:
     print('\n%d check(s) FAILED' % len(failures))
     sys.exit(1)

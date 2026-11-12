@@ -65,6 +65,7 @@ VALID_PARTIES = {"Republican", "Democratic", "Independent", "Nonpartisan"}
 # PARTISAN seat with no party, so it is not allowed on a nonpartisan board.
 NONPARTISAN_ONLY = {"Nonpartisan"}
 PRESIDING_ROLES = {"Chair"}
+MEETING_PLATFORMS = {"simbli"}
 
 REQUIRED_MEMBER = ("name", "role", "seat", "source")
 _ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
@@ -196,6 +197,30 @@ def validate_member(where, m, errors, warnings, partisan=None, term_years=None):
     return appointed
 
 
+def check_meetings(where, d, errors):
+    """`meetings: {platform: simbli, id: "<S=>"}` — optional. A wrong key would
+    publish another district's meetings under this board, so the shape is strict
+    and a key may belong to only one district (checked in validate())."""
+    m = d.get("meetings")
+    if m is None:
+        return
+    if not isinstance(m, dict):
+        errors.append("%s: meetings must be a mapping, got %r" % (where, m))
+        return
+    extra = set(m) - {"platform", "id", "body"}
+    if extra:
+        errors.append("%s: meetings has unknown key(s) %s" % (where, sorted(extra)))
+    if m.get("platform") not in MEETING_PLATFORMS:
+        errors.append("%s: meetings.platform must be one of %s, got %r"
+                      % (where, sorted(MEETING_PLATFORMS), m.get("platform")))
+    mid = m.get("id")
+    if not isinstance(mid, str) or not mid.isdigit():
+        errors.append("%s: meetings.id must be a quoted numeric Simbli S= key, "
+                      "got %r" % (where, mid))
+    if "body" in m and _blank(m.get("body")):
+        errors.append("%s: meetings.body, if present, must not be blank" % where)
+
+
 def validate_district(kind, d, idx, places, seen_ids, errors, warnings):
     label = "%s[%d]" % (kind, idx)
     if not isinstance(d, dict):
@@ -271,6 +296,7 @@ def validate_district(kind, d, idx, places, seen_ids, errors, warnings):
         errors.append("%s: official_url must be a URL, got %r" % (where, url))
 
     check_notes(where, d, errors)
+    check_meetings(where, d, errors)
 
     members = d.get("members")
     if members is None:
@@ -346,6 +372,19 @@ def validate(data, places):
     if dupes:
         errors.append("county FIPS appearing more than once in countyDistricts: %s"
                       % sorted(dupes))
+
+    # A Simbli key identifies exactly one district; two districts sharing one
+    # would publish the same meetings under both boards.
+    owners = {}
+    for kind in ("countyDistricts", "cityDistricts"):
+        for d in data.get(kind) or []:
+            m = d.get("meetings") if isinstance(d, dict) else None
+            if isinstance(m, dict) and m.get("id"):
+                owners.setdefault((m.get("platform"), m["id"]), []).append(d.get("id"))
+    for key, ids in sorted(owners.items()):
+        if len(ids) > 1:
+            errors.append("meetings key %s/%s is claimed by districts %s"
+                          % (key[0], key[1], ids))
 
     return errors, warnings
 
