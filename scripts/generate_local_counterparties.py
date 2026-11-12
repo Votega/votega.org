@@ -324,20 +324,26 @@ def main():
     entities_sorted = [review[k] for k in sorted(review)]
     review_changed = write_review(entities_sorted)
 
-    # An approved entry the extractor did not itself produce (a name a person split out
-    # or retyped) still has to find its agenda items: match its normalized name in the text.
+    # An approved entry's agenda items also come from its own name and any `aka` (another
+    # name the agenda text states, e.g. a dba): that is how an entry the extractor did not
+    # itself produce (a split part, a retyped name) finds its items, and how an aka adds
+    # the items that only use the other name.
     for key, entry in review.items():
-        if entry.get("status") != "approved" or key in grouped:
+        if entry.get("status") != "approved":
             continue
-        norm = normalize(entry.get("displayName") or "")
-        if not norm:
+        akas = list(entry.get("aka") or [])
+        if key in grouped and not akas:
+            continue
+        norms = [n for n in (normalize(x) for x in [entry.get("displayName") or ""] + akas) if n]
+        if not norms:
             continue
         hits = []
         for meeting in votes.get("meetings") or []:
             if meeting.get("body") not in ELECTED_BODIES:
                 continue
             for item in meeting.get("items") or []:
-                if norm in normalize(item.get("name") or ""):
+                text = normalize(item.get("name") or "")
+                if any(n in text for n in norms):
                     hits.append({
                         "meetingId": str(meeting.get("id")),
                         "date": meeting.get("date"),
@@ -346,9 +352,19 @@ def main():
                         "itemName": " ".join((item.get("name") or "").split()),
                         "motionIndex": 0,
                     })
-        if hits:
-            grouped[key] = {"display": entry["displayName"], "aliases": [entry["displayName"]],
-                            "roles": [entry.get("role") or "other"], "items": hits}
+        g = grouped.get(key)
+        if g is None:
+            if hits:
+                grouped[key] = {"display": entry["displayName"], "aliases": [entry["displayName"]],
+                                "roles": [entry.get("role") or "other"], "items": hits}
+            g = grouped.get(key)
+        elif hits:
+            seen = {(it["meetingId"], it["reference"]) for it in g["items"]}
+            g["items"].extend(h for h in hits if (h["meetingId"], h["reference"]) not in seen)
+        if g is not None:
+            for a in akas:
+                if a not in g["aliases"]:
+                    g["aliases"].append(a)
 
     approved = []
     for key, g in sorted(grouped.items()):

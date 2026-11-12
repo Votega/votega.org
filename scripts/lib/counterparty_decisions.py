@@ -9,6 +9,9 @@ Rules:
   * Only a `pending` entry is ever changed. An approved or rejected entry is a
     decision already made; a later log line about it is reported, never applied.
   * Applying is idempotent: replaying the same log yields the same queue.
+  * An `aka` (another name for the same organization, e.g. a dba) is recorded only
+    when the agenda item text itself states it, and only with a note saying where.
+    No aka is the default: absent one, the display name is taken to be the name.
   * A split rejects the original and queues each part as `pending` (a split is not
     an approval), carrying the original's agenda context. A part whose key already
     exists is skipped, never overwritten.
@@ -16,6 +19,10 @@ Rules:
 
 ACTIONS = ("approve", "reject", "edit", "split")
 ROLES = ("vendor", "applicant", "other")
+
+
+def _squash(text):
+    return " ".join((text or "").lower().split())
 
 
 def _norm_key(name, entity_id, normalize):
@@ -48,10 +55,29 @@ def apply_decisions(review, decisions, entity_id, normalize):
             skipped.append(f"{label}: invalid role {role!r}")
             continue
 
+        akas = []
+        if d.get("aka") is not None:
+            if action not in ("approve", "edit"):
+                skipped.append(f"{label}: aka only goes with approve or edit")
+                continue
+            akas = [a.strip() for a in d.get("aka") or [] if isinstance(a, str) and a.strip()]
+            if akas and not note:
+                skipped.append(f"{label}: a note is required when adding an aka")
+                continue
+            text = _squash(entry.get("itemName"))
+            missing = [a for a in akas if _squash(a) not in text]
+            if missing:
+                skipped.append(f"{label}: aka not stated in the agenda text: {missing}")
+                continue
+
         if action in ("approve", "edit") and name:
             entry["displayName"] = name
         if action in ("approve", "edit") and role:
             entry["role"] = role
+
+        if akas:
+            have = list(entry.get("aka") or [])
+            entry["aka"] = have + [a for a in akas if a not in have]
 
         if action == "approve":
             entry["status"] = "approved"

@@ -94,6 +94,31 @@ q, a, s = run([{"key": "missing", "action": "approve"}, {"key": "acme", "action"
                {"key": "acme", "action": "approve", "role": "king"}])
 check(len(s) == 3 and q["acme"]["status"] == "pending", "unknown key, action and role are skipped")
 
+print("aka (another name the agenda text states)")
+
+
+def scs():
+    e = entry("scs", "Stearns, Conrad and Schmidt Consulting Inc.")
+    e["itemName"] = "Awarded to Stearns, Conrad and Schmidt Consulting Inc., dba SCS Engineers."
+    return {"scs": e}
+
+
+q, a, s = run([{"key": "scs", "action": "approve", "aka": ["SCS Engineers"], "note": "dba in text"}], scs())
+check(q["scs"]["status"] == "approved" and q["scs"]["aka"] == ["SCS Engineers"], "an aka stated in the text is recorded")
+q, a, s = run([{"key": "scs", "action": "approve", "aka": ["SCS Engineers"]}], scs())
+check(q["scs"]["status"] == "pending" and len(s) == 1, "an aka without a note is refused")
+q, a, s = run([{"key": "scs", "action": "approve", "aka": ["Made Up Name"], "note": "n"}], scs())
+check(q["scs"]["status"] == "pending" and "aka" not in q["scs"], "an aka not in the agenda text is refused")
+q, a, s = run([{"key": "scs", "action": "reject", "aka": ["SCS Engineers"], "note": "n"}], scs())
+check(q["scs"]["status"] == "pending", "an aka only goes with approve or edit")
+q, a, s = run([{"key": "scs", "action": "approve", "aka": []}], scs())
+check(q["scs"]["status"] == "approved" and "aka" not in q["scs"], "no aka is the default and needs no note")
+q = scs()
+q, a, s = run([{"key": "scs", "action": "edit", "aka": ["SCS Engineers"], "note": "one"},
+               {"key": "scs", "action": "edit", "aka": ["SCS Engineers"], "note": "again"}], q)
+check(q["scs"]["aka"] == ["SCS Engineers"] and q["scs"]["status"] == "pending",
+      "repeating an aka does not duplicate it, and edit leaves the entry pending")
+
 print()
 if failures:
     print("%d FAILED" % len(failures))

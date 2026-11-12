@@ -62,7 +62,8 @@
   <h1>Counterparty Review Editor</h1>
   <span class="status" id="status">No files loaded</span>
   <button class="sec" id="btn-queue">1. Open review queue</button>
-  <button class="sec" id="btn-log" disabled>2. Open / create decisions file</button>
+  <button class="sec" id="btn-log" disabled>2. Open decisions file</button>
+  <button class="sec" id="btn-new" disabled>2b. No file yet? Create one</button>
   <button class="sec" id="btn-dl" disabled>Download decisions</button>
 </header>
 <div class="runnote">
@@ -86,7 +87,7 @@
     </div>
     <div class="list" id="list"></div>
   </aside>
-  <main class="main" id="main"><div class="empty">Open the review queue (<code>_data/counterparty_review.yml</code>), then the decisions file (<code>_data/counterparty_decisions.json</code>). Decisions are saved as you make them. Run <code>python scripts/generate_local_counterparties.py</code> afterwards to apply them.</div></main>
+  <main class="main" id="main"><div class="empty">Step 1: open <code>_data/counterparty_review.yml</code>. Step 2: open <code>_data/counterparty_decisions.json</code> (already in the repo; if it is missing, use "Create one" and save it in <code>_data/</code>). Decisions are saved as you make them. Run <code>python scripts/generate_local_counterparties.py</code> afterwards to apply them.</div></main>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -117,6 +118,12 @@ function flagsFor(e) {
   if (n.trim().split(/\s+/).length > 6) out.push('Long name: may include a clause.');
   if (/^(to|for|the|office|consider)\b/i.test(n.trim()) && !/^the national association/i.test(n.trim())) out.push('Starts like a sentence or heading.');
   if (/division of|dba|d\/b\/a|c\/o/i.test(n)) out.push('Contains dba / division / c/o: consider shortening.');
+  return out;
+}
+
+function akaCandidates(text) {
+  const out = [], re = /\b(?:dba|d\/b\/a|a\/k\/a|aka|doing business as|formerly)\s+([A-Z0-9][\w&'.\-]*(?:\s+[A-Z0-9][\w&'.\-]*){0,5}?(?:\s+(?:L\.?L\.?C\.?|Inc\.?|Corp\.?|Co\.?|L\.?P\.?|P\.?C\.?))?)(?=\s*(?:[,;.]|\s(?:and|for|to|c\/o|dba)\b|$))/g;
+  let m; while ((m = re.exec(text))) { const v = m[1].replace(/[.,]+$/, '').trim(); if (v && !out.includes(v)) out.push(v); }
   return out;
 }
 
@@ -193,7 +200,17 @@ function renderDetail() {
   roleSel.value = (edit && edit.role) || e.role;
   row.append(el('div', {}, el('label', { text: 'Display name (fix it here)' }), nameIn), el('div', {}, el('label', { text: 'Role' }), roleSel));
   card.append(row);
-  const noteIn = el('input', { id: 'f-note', type: 'text', placeholder: 'Note (required to reject or split)' });
+  const akaIn = el('textarea', { id: 'f-aka', placeholder: 'Leave empty unless the agenda text states another name (e.g. "dba SCS Engineers")', value: ((edit && edit.aka) || []).join('\n') });
+  akaIn.style.minHeight = '44px';
+  const sug = el('div', { class: 'hint', id: 'aka-sug' });
+  const found = akaCandidates(e.itemName || '');
+  if (found.length) {
+    sug.append('Stated in the agenda text: ');
+    found.forEach(f => { const c = el('button', { class: 'sec', text: '+ ' + f, type: 'button' }); c.style.cssText = 'padding:1px 7px;font-size:11px;margin:0 3px'; c.onclick = () => { const v = akaIn.value.split('\n').map(x => x.trim()).filter(Boolean); if (!v.includes(f)) v.push(f); akaIn.value = v.join('\n'); }; sug.append(c); });
+  }
+  card.append(el('div', { style: 'margin-top:0.6rem' }, el('label', { text: 'Also known as (aka / dba): only names the agenda text states' }), akaIn, sug,
+    el('div', { class: 'hint', text: 'Adding one requires a note. No aka means the display name is the name.' })));
+  const noteIn = el('input', { id: 'f-note', type: 'text', placeholder: 'Note (required to reject, split, or add an aka)' });
   card.append(el('div', { style: 'margin-top:0.6rem' }, el('label', { text: 'Note' }), noteIn));
 
   const parts = el('div', { class: 'parts', id: 'parts' });
@@ -228,8 +245,17 @@ async function decide(action) {
   if (name && name !== e.displayName) d.displayName = name;
   if (role !== e.role) d.role = role;
   if (note) d.note = note;
+  const akas = ($('f-aka').value || '').split('\n').map(x => x.trim()).filter(Boolean);
+  if (akas.length) {
+    if (action !== 'approve' && action !== 'edit') { setMsg('An aka goes only with Approve or Save name/role.', true); return; }
+    if (!note) { setMsg('Adding an aka requires a note saying where the agenda text states it.', true); return; }
+    const text = (e.itemName || '').toLowerCase().split(/\s+/).join(' ');
+    const missing = akas.filter(a => !text.includes(a.toLowerCase().split(/\s+/).join(' ')));
+    if (missing.length) { setMsg('Not in the agenda text, so not recorded: ' + missing.join('; '), true); return; }
+    d.aka = akas;
+  }
   if ((action === 'reject' || action === 'split') && !note) { setMsg('Add a note saying why.', true); return; }
-  if (action === 'edit' && !d.displayName && !d.role) { setMsg('Nothing changed.', true); return; }
+  if (action === 'edit' && !d.displayName && !d.role && !d.aka) { setMsg('Nothing changed.', true); return; }
   if (action === 'approve') {
     const flags = flagsFor({ displayName: name });
     if (flags.length && !note) { setMsg('This name is flagged. Fix it, or add a note saying why it is fine.', true); return; }
@@ -270,27 +296,29 @@ $('btn-queue').onclick = async () => {
     else { text = await new Promise((res, rej) => { const i = document.createElement('input'); i.type = 'file'; i.onchange = () => i.files[0].text().then(res, rej); i.click(); }); }
     const doc = jsyaml.load(text);
     queue = (doc && doc.entities) || [];
-    $('btn-log').disabled = false;
+    $('btn-log').disabled = false; $('btn-new').disabled = false;
     selectedKey = (queue.find(isTodo) || queue[0] || {}).key || null;
     renderList(); renderDetail(); updateStatus();
   } catch (err) { if (err.name !== 'AbortError') alert('Could not read the queue: ' + err.message); }
 };
 
+const JSON_TYPES = [{ description: 'JSON', accept: { 'application/json': ['.json'] } }];
+async function adopt(h, createIfEmpty) {
+  logHandle = h;
+  const text = await (await h.getFile()).text();
+  decisions = text.trim() ? (JSON.parse(text).decisions || []) : [];
+  if (!text.trim() || createIfEmpty) await save();
+  renderList(); renderDetail(); updateStatus(); $('btn-dl').disabled = false;
+}
 $('btn-log').onclick = async () => {
-  try {
-    if (HAS_FS) {
-      let h;
-      try { [h] = await window.showOpenFilePicker({ types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }] }); }
-      catch (err) { if (err.name === 'AbortError') { h = await window.showSaveFilePicker({ suggestedName: 'counterparty_decisions.json', types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }] }); } else throw err; }
-      logHandle = h;
-      const text = await (await h.getFile()).text();
-      decisions = text.trim() ? (JSON.parse(text).decisions || []) : [];
-      if (!text.trim()) await save();
-    } else {
-      alert('This browser cannot write files in place. Use Chrome or Edge, or make decisions and use Download.');
-    }
-    renderList(); renderDetail(); updateStatus(); $('btn-dl').disabled = false;
-  } catch (err) { if (err.name !== 'AbortError') alert('Could not open the decisions file: ' + err.message); }
+  if (!HAS_FS) { alert('This browser cannot write files in place. Use Chrome or Edge, or make decisions and use Download.'); return; }
+  try { const [h] = await window.showOpenFilePicker({ types: JSON_TYPES }); await adopt(h, false); }
+  catch (err) { if (err.name !== 'AbortError') alert('Could not open the decisions file: ' + err.message); }
+};
+$('btn-new').onclick = async () => {
+  if (!HAS_FS) { alert('This browser cannot write files in place. Use Chrome or Edge.'); return; }
+  try { const h = await window.showSaveFilePicker({ suggestedName: 'counterparty_decisions.json', types: JSON_TYPES }); await adopt(h, true); }
+  catch (err) { if (err.name !== 'AbortError') alert('Could not create the decisions file: ' + err.message); }
 };
 
 $('btn-copy').onclick = async () => {
