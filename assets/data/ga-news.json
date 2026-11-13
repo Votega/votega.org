@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-13T13:39:20.438816+00:00",
+    "generatedAt": "2026-11-13T21:06:10.315363+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,20 +24,44 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 125,
+    "count": 129,
     "windowDays": 45,
-    "entityTagged": 82,
+    "entityTagged": 85,
     "topicCounts": {
-      "elections": 55,
-      "healthcare": 16,
+      "elections": 56,
+      "healthcare": 17,
+      "education": 8,
+      "ethics": 1,
       "budget": 6,
-      "courts": 7,
-      "education": 7,
+      "courts": 6,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
+    "vg-ga-p-000024": {
+      "name": "Brian Kemp",
+      "url": null,
+      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
+    },
     "vg-ga-p-000035": {
       "name": "Carolyn Hugley",
       "url": null,
@@ -52,21 +76,6 @@
       "url": null,
       "bioguideId": "W000790"
     },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
-      "url": null,
-      "bioguideId": "W000788"
-    },
-    "vg-ga-p-000024": {
-      "name": "Brian Kemp",
-      "url": null,
-      "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
-    },
     "vg-ga-p-000335": {
       "name": "Keisha Lance Bottoms",
       "url": null,
@@ -80,14 +89,6 @@
       "bioguideId": "C001103",
       "candidateIds": [
         "challenger-buddy-carter-senate-2026"
-      ]
-    },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
       ]
     },
     "vg-ga-p-000368": {
@@ -164,6 +165,58 @@
   },
   "items": [
     {
+      "id": "285a30f07bab",
+      "title": "Congresswoman Nikema Williams: I was arrested for speaking up in Georgia. Today, I’m holding my head high.",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-i-was-arrested-for-speaking-up-in-georgia-today-im-holding-my-head-high",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-11-13T19:10:25+00:00",
+      "snippet": "On November 13, 2018, I was led out of the Georgia Capitol, hands zip tied behind my back for demanding that every vote be counted for my friend and democracy warrior, Stacey Abrams.  I now get to wal",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "3fff1dc4dc54",
+      "title": "Members of Georgia’s election board have been coordinating with Cleta Mitchell’s network",
+      "url": "https://www.gpb.org/news/2026/11/13/members-of-georgias-election-board-have-been-coordinating-cleta-mitchells-network",
+      "source": "GPB News",
+      "publishedAt": "2026-11-13T17:52:00+00:00",
+      "snippet": "For much of the past year, members have worked with the Election Integrity Network on shared priorities, including a controversial, error-prone software tool used to search voter rolls for purportedly",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "fbc383038885",
+      "title": "Sen. Ossoff Celebrates Groundbreaking of New Veterans’ Cemetery in Augusta",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-celebrates-groundbreaking-of-new-veterans-cemetery-in-augusta/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-13T15:00:08+00:00",
+      "snippet": "Augusta, Ga. — U.S. Senator Jon Ossoff released the following statement celebrating the groundbreaking of the new veterans’ cemetery in Augusta. “Today, I join all in Augusta and the CSRA in celebrati",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "f6e8feae99bb",
+      "title": "Sens. Ossoff Continuing Push to Ban Health Insurance Companies from Denying or Delaying Needed Health Care",
+      "url": "https://www.ossoff.senate.gov/press-releases/sens-ossoff-continuing-push-to-ban-health-insurance-companies-from-denying-or-delaying-needed-health-care/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-13T14:57:25+00:00",
+      "snippet": "This year, Sen. Ossoff has offered two Senate amendments to ban insurance companies from denying or delaying needed care Washington, D.C. — U.S. Senator Jon Ossoff is continuing his work to ban health",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
       "id": "6b4e68d98cc0",
       "title": "'It's Not Fair' Fair comes to Atlanta to support people experiencing grief",
       "url": "https://www.gpb.org/news/2026/11/13/its-not-fair-fair-comes-atlanta-support-people-experiencing-grief",
@@ -172,6 +225,44 @@
       "snippet": "An organization that supports families and others who are grieving is inviting people to attend an event called the “It’s Not Fair\" Fair.",
       "entityIds": [],
       "topics": []
+    },
+    {
+      "id": "238ae06f5b65",
+      "title": "Teams to bring their best flips, jumps and cheers to Georgia's cheerleading state championships",
+      "url": "https://www.gpb.org/news/2026/11/13/teams-bring-their-best-flips-jumps-and-cheers-georgias-cheerleading-state",
+      "source": "GPB News",
+      "publishedAt": "2026-11-13T12:44:27+00:00",
+      "snippet": "The Georgia High School Association Cheerleading Championships are Friday and Saturday at the Macon Centreplex.",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "53a32880a7ee",
+      "title": "Gov. Kemp Announces 182 Appointments and Reappointments to Boards, Authorities, and Commissions",
+      "url": "https://gov.georgia.gov/press-releases/2026-11-13/gov-kemp-announces-182-appointments-and-reappointments-boards-authorities",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-11-13T12:00:00+00:00",
+      "snippet": "Atlanta, GA – Governor Brian P. Kemp today announced 182 appointments and reappointments to various state boards, authorities, and commissions.",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "046fb7ffada1",
+      "title": "Carr Brings Additional Charges for Carfentanil Trafficking Operation in Chatham County",
+      "url": "https://law.georgia.gov/press-releases/2026-11-13/carr-brings-additional-charges-carfentanil-trafficking-operation-chatham",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-13T12:00:00+00:00",
+      "snippet": "SAVANNAH, GA – Georgia Attorney General Chris Carr today announced that his Gang Prosecution Unit has secured a superseding indictment charging three more defendants in connection with a multistate dr",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics"
+      ]
     },
     {
       "id": "10591ab378dc",
@@ -282,6 +373,18 @@
       "topics": [
         "elections"
       ]
+    },
+    {
+      "id": "ac792f5853e7",
+      "title": "CONSUMER ALERT: Carr Warns Georgians About Counterfeit Medicines and Unsafe Online Pharmacies",
+      "url": "https://law.georgia.gov/press-releases/2026-11-12/consumer-alert-carr-warns-georgians-about-counterfeit-medicines-and",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-12T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr is warning consumers about illegal online pharmacies selling counterfeit, expired, or potentially dangerous medications. While buying prescription med",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
     },
     {
       "id": "24ca45e5496a",
@@ -1217,20 +1320,6 @@
       "topics": []
     },
     {
-      "id": "f1c3c10ded3e",
-      "title": "Gov. Kemp Announces Appointment to State Court of Forsyth County",
-      "url": "https://gov.georgia.gov/press-releases/2026-10-22/gov-kemp-announces-appointment-state-court-forsyth-county",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-10-22T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced the appointment of Erin H. Fowler to the State Court of Forsyth County, filling the vacancy created by the passage of HB 750 (Act 520) during the 2026 ",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "courts"
-      ]
-    },
-    {
       "id": "7908cc2aa084",
       "title": "Fewer Georgians are planning to vote by mail, with one day left to request an absentee ballot",
       "url": "https://georgiarecorder.com/2026/10/22/fewer-georgians-are-planning-to-vote-by-mail-with-one-day-left-to-request-an-absentee-ballot/",
@@ -1348,19 +1437,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "4f797993acbe",
-      "title": "NEWS: Sens. Ossoff & Rev. Warnock Delivering Over $25 Million in Federal Funding to Upgrade Commercial Vehicle Infrastructure",
-      "url": "https://www.ossoff.senate.gov/press-releases/news-sens-ossoff-rev-warnock-delivering-over-25-million-in-federal-funding-to-upgrade-commercial-vehicle-infrastructure/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-19T13:51:57+00:00",
-      "snippet": "Garden City, Ga. — U.S. Senators Jon Ossoff and Reverend Raphael Warnock today announced new bipartisan infrastructure law funding to upgrade truck and commercial vehicle infrastructure. Today, Sens. ",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
     },
     {
       "id": "85ffe07018a3",
@@ -1644,18 +1720,6 @@
       "topics": []
     },
     {
-      "id": "a2a6183c202c",
-      "title": "Woof! Animal welfare advocates want Georgians to know their state lawmaker’s record on pet issues",
-      "url": "https://georgiarecorder.com/2026/10/08/woof-animal-welfare-advocates-want-georgians-to-know-their-state-lawmakers-record-on-pet-issues/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-08T08:00:26+00:00",
-      "snippet": "The dogs and cats in your life don’t get a vote on Nov. 3, so they’re counting on you to get it right. That’s the message from the Georgia Pet Coalition, a nonpartisan group of Georgia humans who advo",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "8a4d7d062edb",
       "title": "Declaring a State of Emergency for Hurricane Isaias",
       "url": "https://gov.georgia.gov/document/2026-executive-order/10082601/download",
@@ -1668,18 +1732,6 @@
       "sha256": "1176a7f909a9bdd08796d2a604ef69d1befdd3eedf0c1fd531089ed7a28a43fa",
       "entityIds": [
         "vg-ga-p-000024"
-      ],
-      "topics": []
-    },
-    {
-      "id": "c984bd769518",
-      "title": "Sen. Ossoff Statement on 3rd Anniversary of October 7th",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-statement-on-3rd-anniversary-of-october-7th/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-07T12:17:02+00:00",
-      "snippet": "“Three years ago today, Hamas terrorists massacred over 1,000 civilians; kidnapped innocent men, women, and children; and committed brutal atrocities. Today we remember and honor the lives lost, while",
-      "entityIds": [
-        "vg-ga-p-000264"
       ],
       "topics": []
     },
