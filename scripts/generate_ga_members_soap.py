@@ -41,6 +41,7 @@ from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.ga_identity import apply_identity_slots, load_pin_overrides
+from lib import ga_ledger as LEDGER
 from lib.ga_legislator_pages import assign_votega_urls, base_slug
 from lib.ga_leadership import committee_index, normalize_title
 from lib.ga_roster import (EXECUTIVE_CHAMBER, apply_member_overrides, biennium_slug, convening_date,
@@ -450,6 +451,16 @@ def main(argv=None):
     # votegaUrl: the member's VoteGA page, or None. Derived from the FINAL name/chamber/
     # district (after overrides), so a rename moves it in the same run.
     assign_votega_urls(members)
+
+    # The page ledger: every URL ever published, append-only. Refuse before writing the
+    # roster if a URL would change owner.
+    try:
+        ledger = LEDGER.load_ledger()
+        LEDGER.update_ledger(ledger, members, tag)
+        LEDGER.save_ledger(ledger)
+    except LEDGER.LedgerError as e:
+        print(f"Error: page ledger: {e}. Refusing to write.", file=sys.stderr)
+        return 1
 
     # SOAP proposes, a human disposes (spec §8.4): surface a departure, never write a
     # status. Computed AFTER the overrides so these describe the file they ship in — read
