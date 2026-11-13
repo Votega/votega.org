@@ -20,6 +20,7 @@ import re
 from lib.ga_voters import VOTING_CHAMBERS
 
 NO_PAGE_STATUSES = ("Resigned", "Removed", "Deceased")
+DEPARTED_STATUSES = NO_PAGE_STATUSES  # the one tuple; --departed in freeze_ga_biennium.py reads this name
 SITE_URL = "https://www.votega.org"  # same as build_entity_pages.SITE_URL (test pins it)
 PERMALINK = "/ga-legislators/{}/"
 
