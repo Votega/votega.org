@@ -164,6 +164,57 @@ def test_unknown_gid_refused():
     raises("unknown gid", lambda: F.freeze("2025_26", ["999"], d, out), "999")
 
 
+def add_second_member(d, with_votes=True):
+    doc = rj(os.path.join(d, "ga-members.json"))
+    doc["members"].append({"id": "ocd-person/def", "legisGaGovId": 456, "name": "C D",
+                           "chamber": "House of Representatives", "status": "Resigned"})
+    wj(os.path.join(d, "ga-members.json"), doc)
+    if with_votes:
+        wj(os.path.join(d, "ga-votes", "ocd-person-def.json"), {"v": 9})
+    wj(os.path.join(d, "ga-sponsorship", "456.json"), {"s": 9})
+
+
+def tree(root):
+    out = {}
+    for dp, _, fs in os.walk(root):
+        for f in fs:
+            p = os.path.join(dp, f)
+            out[os.path.relpath(p, root)] = rb(p)
+    return out
+
+
+def test_refusal_writes_nothing_fresh_root():
+    d, out = fresh()
+    add_second_member(d, with_votes=False)
+    raises("second gid missing slice", lambda: F.freeze("2025_26", ["123", "456"], d, out), "456")
+    check("fresh root untouched", os.path.exists(out) and tree(out), False)
+
+
+def test_refusal_writes_nothing_fresh_root_changed_slice_path():
+    # fresh root, second gid refused by a missing slice listed first
+    d, out = fresh()
+    add_second_member(d, with_votes=False)
+    raises("refused when refusable gid is first", lambda: F.freeze("2025_26", ["456", "123"], d, out), "456")
+    check("fresh root untouched", os.path.exists(out) and tree(out), False)
+
+
+def test_refusal_writes_nothing_existing_root():
+    d, out = fresh()
+    F.freeze("2025_26", ["123"], d, out)
+    add_second_member(d)
+    before = tree(out)
+    # 123's slice changed (refused) while 456 is new and the index grew: nothing may be written
+    wj(os.path.join(d, "ga-votes", "ocd-person-abc.json"), {"v": 2})
+    wj(os.path.join(d, "ga-votes-index.json"), {"voteIds": ["a", "b", "c"]})
+    raises("changed slice among several", lambda: F.freeze("2025_26", ["456", "123"], d, out), "123")
+    check("existing root byte-identical (changed slice)", tree(out), before)
+    # restore 123; now 456 lacks a vote slice
+    wj(os.path.join(d, "ga-votes", "ocd-person-abc.json"), {"v": 1})
+    os.remove(os.path.join(d, "ga-votes", "ocd-person-def.json"))
+    raises("missing slice among several", lambda: F.freeze("2025_26", ["123", "456"], d, out), "456")
+    check("existing root byte-identical (missing slice)", tree(out), before)
+
+
 for name, fn in sorted(globals().items()):
     if name.startswith("test_") and callable(fn):
         print(name)

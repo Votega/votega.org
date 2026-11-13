@@ -35,10 +35,12 @@ def main(argv=None):
     g.add_argument("--all", action="store_true")
     ap.add_argument("--overwrite", action="store_true")
     ap.add_argument("--no-votes-ok", default="")
+    ap.add_argument("--data-dir", default=os.path.join(ROOT, "assets", "data"))
+    ap.add_argument("--out-root", default=os.path.join(ROOT, FROZEN_ROOT))
+    ap.add_argument("--ledger", default=None, help="ledger path (default: <data-dir>/ga-legislator-ledger.json)")
     a = ap.parse_args(argv)
 
-    data_dir = os.path.join(ROOT, "assets", "data")
-    out_root = os.path.join(ROOT, FROZEN_ROOT)
+    data_dir, out_root = a.data_dir, a.out_root
     with open(os.path.join(data_dir, "ga-members.json"), encoding="utf-8") as f:
         members = json.load(f)["members"]
     if a.members:
@@ -50,7 +52,7 @@ def main(argv=None):
         gids = [str(m["legisGaGovId"]) for m in members
                 if m.get("legisGaGovId") is not None and m.get("chamber") in VOTING_CHAMBERS]
 
-    ledger_path = os.path.join(data_dir, "ga-legislator-ledger.json")
+    ledger_path = a.ledger or os.path.join(data_dir, "ga-legislator-ledger.json")
     try:
         ledger = load_ledger(ledger_path)
         # Fail on a ledger gap before freeze writes anything.
