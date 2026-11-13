@@ -34,7 +34,7 @@ Options: (1) fresh start, archives only in the repos; (2) keep the people, archi
 6. Sponsor links for non-returning sponsors depend on D3.
 Estimate 40-60k tokens. Not verified: that every generator tolerates carrying a new biennium forward; the code comments describe the replacement as an operator rule, but this needs a review.
 
-### D3. Former members keep pages after the rollover — Proposed
+### D3. Former members keep pages after the rollover — **Decided 2026-11-13: see `docs/superpowers/specs/2026-11-13-ga-legislator-page-permanence-design.md`** (one page per person, biennium switch built now, every member's data frozen per biennium, the 11 resigned members get pages now)
 Same clean URL (`/ga-legislators/<slug>/`) for current and former members, so Georgia Commons links survive. Pages are still **built at deploy**, so the repo's "generated at build, never committed" rule holds; what changes is their source once the live roster and votes are replaced.
 **Proposed source: a former-members index written at the final freeze.** At the final `freeze-ga-roster` (see Timing below), and whenever a member departs, write a compact committed index: identity (`legisGaGovId`, roster id), name, party, chamber, district, term dates, departure classification (D6), successor, and page URL. Freeze each former member's per-member vote and sponsorship files alongside it (small ID-keyed files the generators already produce; the 11 resigned members have both today). The page builder reads the index plus those files, and survives the roster replacement.
 Not verified: whether the generators delete those per-member files for members dropped at the rollover, which determines how much needs freezing. Estimate 60-100k tokens.
@@ -59,7 +59,7 @@ Not verified: whether the generators delete those per-member files for members d
 - **One abstraction for both sides.** Build a generic "term" parameter (a Congress or a biennium) once, with the frozen index, frozen per-member files and retired-record rule shared by D3 and D12.
 - Estimate 70-110k tokens including the per-biennium data paths (the earlier 60-100k for separate pages was similar; the selector trades new pages for template changes). Rough, not measured.
 
-### D4. Indexing — Proposed
+### D4. Indexing — **Reversed 2026-11-13: former-member pages are indexed and in the sitemap** (Georgia Commons links them; see the page-permanence spec). Original proposal kept below for the record
 Former-member pages `noindex`, out of the sitemap, until we decide (avoids a thin-content risk; legislator pages already carry a per-member record summary from the thin-content SEO work). Revisit after the rollover.
 
 ### D5. Contact details on former members' pages — Proposed
@@ -209,7 +209,7 @@ The 120th Congress convenes **January 3, 2027**, eight days before the General A
 
 **Still open:** the transition guard on the roster run, who curates the 120th's key votes, and whether the D6 departure labels extend to federal members. Whether departed federal members keep a page is answered by the proposal above, pending agreement.
 
-### D13. Georgia Commons — Proposed 2026-10-30
+### D13. Georgia Commons — Proposed 2026-10-30. **Update 2026-11-12: their sponsor links are already live**, so the ordering below is moot; tell them URLs are preserved once the page-permanence spec's rollout step 1 ships
 Tell them that links to members who leave office will be preserved, or hold the sponsor-link request until D1-D4 are settled. Include the licensing questions from `docs/georgia-civic-data-collaboration.md`.
 
 **Proposed: tell them the URLs will be preserved, with two caveats, and ask the licensing questions in the same message — but do not ask them to launch the sponsor links until D3 is BUILT, not merely agreed.**
