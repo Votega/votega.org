@@ -39,7 +39,9 @@ def main():
         "function getBasePath(){return '/';}\n" + helpers +
         "\nconst cases = " + json.dumps(PICK_CASES) + ";\n"
         "const out = {pick: cases.map(c => pickBiennium(c[0], c[1])),"
-        " live: dataRoot('current'), frozen: dataRoot('2025_26')};\n"
+        " live: dataRoot('current'), frozen: dataRoot('2025_26'),"
+        " contact: [showContact(true,null), showContact(true,{biennium:'current'}), showContact(false,null)],"
+        " role: [pageTitleRole('Senator',null), pageTitleRole('Senator',{biennium:'current'})]};\n"
         "console.log(JSON.stringify(out));\n"
     )
     r = subprocess.run(["node", "-e", script], capture_output=True, text=True, encoding="utf-8")
@@ -50,6 +52,8 @@ def main():
         assert got == want, f"pickBiennium({avail}, {param!r}) = {got!r}, want {want!r}"
     assert out["live"].endswith("assets/data/") and "ga-bienniums" not in out["live"], out["live"]
     assert out["frozen"].endswith("assets/data/ga-bienniums/2025_26/"), out["frozen"]
+    assert out["contact"] == [True, False, False], out["contact"]
+    assert out["role"] == ["Senator", "Former Senator"], out["role"]
     print("ok: biennium helpers")
 
 

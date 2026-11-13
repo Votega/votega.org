@@ -456,10 +456,16 @@
     if (end < start) end += 100;
     return { slug: start + '-' + end, label: start + '–' + end };
   }
+  // Contact details belong to a SITTING member's current General Assembly only.
+  function showContact(isLive, former) { return !!isLive && !former; }
+  // A former member's title reads "Former Senator", so an indexed page never loses it.
+  function pageTitleRole(role, former) { return former ? 'Former ' + role : role; }
   // END biennium-helpers
   const ENTITY_BIENNIUMS = (window.VOTEGA_ENTITY && window.VOTEGA_ENTITY.bienniums) || [];
   const SELECTED_BIENNIUM = pickBiennium(ENTITY_BIENNIUMS, new URLSearchParams(window.location.search).get('biennium'));
   const IS_LIVE = SELECTED_BIENNIUM === 'current';
+  const ENTITY_FORMER = (window.VOTEGA_ENTITY && window.VOTEGA_ENTITY.former) || null;
+  const SHOW_CONTACT = showContact(IS_LIVE, ENTITY_FORMER);
   const DATA_URL  = dataRoot(SELECTED_BIENNIUM) + 'ga-members.json';
   const RACES_URL = getBasePath() + 'assets/data/races.json';
   // County → House/Senate district lookup: COUNTY_HOUSE_DISTRICTS, COUNTY_SENATE_DISTRICTS
@@ -916,7 +922,7 @@
     })();
 
     const name    = member.name || 'Unknown';
-    document.title = `${name} — ${member.title || (member.chamber === 'Senate' ? 'State Senator' : 'State Representative')}`;
+    document.title = `${name} — ${pageTitleRole(member.title || (member.chamber === 'Senate' ? 'State Senator' : 'State Representative'), ENTITY_FORMER)}`;
     const imageHtml = member.imageUrl
       ? `<img src="${escHtml(window.VotegaPortraits ? VotegaPortraits.src(member.imageUrl) : member.imageUrl)}" alt="${escHtml(name)}" loading="lazy" decoding="async" style="max-width:200px;margin-bottom:1rem;border-radius:8px;">`
       : '';
@@ -1043,10 +1049,10 @@
     })();
 
     // Contact details belong to the sitting General Assembly only.
-    const phoneHtml   = IS_LIVE && member.phone   ? `<p><strong>Phone:</strong> ${escHtml(member.phone)}</p>`   : '';
-    const addressHtml = IS_LIVE && member.address ? `<p><strong>Address:</strong> ${escHtml(member.address)}</p>` : '';
-    const emailHtml   = IS_LIVE && member.email   ? `<p><strong>Email:</strong> <a href="mailto:${encodeURIComponent(member.email)}">${escHtml(member.email)}</a></p>` : '';
-    const websiteHtml = IS_LIVE && member.officialWebsiteUrl
+    const phoneHtml   = SHOW_CONTACT && member.phone   ? `<p><strong>Phone:</strong> ${escHtml(member.phone)}</p>`   : '';
+    const addressHtml = SHOW_CONTACT && member.address ? `<p><strong>Address:</strong> ${escHtml(member.address)}</p>` : '';
+    const emailHtml   = SHOW_CONTACT && member.email   ? `<p><strong>Email:</strong> <a href="mailto:${encodeURIComponent(member.email)}">${escHtml(member.email)}</a></p>` : '';
+    const websiteHtml = SHOW_CONTACT && member.officialWebsiteUrl
       ? `<p><strong>Official Website:</strong> <a class="url-text" href="${escHtml(member.officialWebsiteUrl)}" target="_blank">${escHtml(member.officialWebsiteUrl)}</a></p>`
       : '';
 
