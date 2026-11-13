@@ -13,7 +13,8 @@ import os
 from lib.atomic_io import write_json_atomic
 from lib.ga_legislator_pages import SITE_URL
 
-LEDGER_PATH = "assets/data/ga-legislator-ledger.json"
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+LEDGER_PATH = os.path.join(REPO_ROOT, "assets", "data", "ga-legislator-ledger.json")
 
 
 class LedgerError(Exception):

@@ -281,6 +281,11 @@ def refuse_rollover(rollover):
           f"See RECURRING-TASKS.md §3.", file=sys.stderr)
 
 
+def ledger_path_for(output_file):
+    """The page ledger lives beside the roster it describes."""
+    return os.path.join(os.path.dirname(os.path.abspath(output_file)), "ga-legislator-ledger.json")
+
+
 def main(argv=None):
     args = parse_args(sys.argv[1:] if argv is None else argv)
     output_file = args.output or MEMBERS_FILE
@@ -455,9 +460,9 @@ def main(argv=None):
     # The page ledger: every URL ever published, append-only. Refuse before writing the
     # roster if a URL would change owner.
     try:
-        ledger = LEDGER.load_ledger()
-        LEDGER.update_ledger(ledger, members, tag)
-        LEDGER.save_ledger(ledger)
+        ledger_path = ledger_path_for(output_file)
+        ledger = LEDGER.load_ledger(ledger_path)
+        LEDGER.update_ledger(ledger, members, tag)  # in memory only; saved just before the roster write
     except LEDGER.LedgerError as e:
         print(f"Error: page ledger: {e}. Refusing to write.", file=sys.stderr)
         return 1
@@ -553,6 +558,7 @@ def main(argv=None):
                 for m in preserved],
             "overridesOutOfScope": skipped,
         })
+    LEDGER.save_ledger(ledger, ledger_path)
     write_json_atomic(output_file, output, indent=2)
 
     print(f"\nWrote {len(members)} records to {output_file}")
