@@ -70,6 +70,9 @@ def freeze(tag, gids, data_dir, out_root, *, overwrite=False, no_votes_ok=(), in
     frozen_by_gid = {str(m["legisGaGovId"]): m for m in frozen_doc["members"]}
     no_votes = list(frozen_doc["metadata"].get("noVotes", []))
 
+    sp_live = os.path.join(data_dir, SPONSOR_INDEX)
+    sp_members = _load(sp_live).get("members", {}) if os.path.exists(sp_live) else {}
+
     copies = []
     changed, unchanged = set(), set()
     for g in gids:
@@ -92,6 +95,10 @@ def freeze(tag, gids, data_dir, out_root, *, overwrite=False, no_votes_ok=(), in
                     if g not in no_votes:
                         no_votes.append(g)
                         diff = True
+                elif g in sp_members:
+                    raise FreezeError(f"member {g} is in the live sponsorship index but "
+                                      f"{sub}/{fname} is missing at {src}; refusing to freeze a "
+                                      f"record without its slice")
                 continue
             if os.path.exists(dst):
                 if _bytes(src) != _bytes(dst):

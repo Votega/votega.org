@@ -99,6 +99,22 @@ def test_missing_vote_slice_refused():
     check("nothing written", os.path.exists(out), False)
 
 
+def test_missing_sponsorship_slice_refused_when_indexed():
+    d, out = fresh()
+    os.remove(os.path.join(d, "ga-sponsorship", "123.json"))
+    raises("indexed but slice missing", lambda: F.freeze("2025_26", ["123"], d, out),
+           "123", "sponsorship")
+    check("nothing written", os.path.exists(out), False)
+
+
+def test_missing_sponsorship_slice_skipped_when_not_indexed():
+    d, out = fresh(sponsor_members=())
+    os.remove(os.path.join(d, "ga-sponsorship", "123.json"))
+    F.freeze("2025_26", ["123"], d, out)
+    check("frozen without sponsorship slice", os.path.exists(frozen(out, "ga-sponsorship/123.json")), False)
+    check("member frozen", len(rj(frozen(out, "ga-members.json"))["members"]), 1)
+
+
 def test_no_votes_ok_records_note():
     d, out = fresh(with_votes=False)
     F.freeze("2025_26", ["123"], d, out, no_votes_ok=("123",))
