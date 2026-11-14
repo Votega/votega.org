@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-12T17:11:52Z",
+  "generatedAt": "2026-11-14T00:43:14Z",
   "source": "Gordon County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Gordon County",
   "count": 25
@@ -12,16 +12,16 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-09",
+  "lastActivity": "2026-11-17",
   "topicTotals": {
+   "contract": 9,
+   "local-taxes": 12,
+   "rezoning": 15,
+   "special-land-use": 9,
    "comprehensive-plan": 8,
    "development": 8,
-   "rezoning": 14,
-   "special-land-use": 8,
    "variance": 9,
-   "contract": 8,
-   "local-taxes": 12,
-   "millage-budget": 17,
+   "millage-budget": 16,
    "annexation": 1,
    "data-center": 3,
    "appointment": 3
@@ -41,6 +41,17 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-11-17",
+    "sourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_11172026-1133",
+    "tags": [
+     "rezoning",
+     "special-land-use"
+    ],
+    "excerpt": "… eport VIII.​ First Reading IX.​ Public Hearing 1.​ Application RZ-2026-005 requesting rezoning from Suburban Density Residential (R-3) to Commercial Highway (C-H) on Remand pursuant to …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "November the 9th agenda and report for the Planning Commission",
     "date": "2026-11-09",
@@ -198,10 +209,20 @@
     ]
    }
   ],
-  "landUseMeetings": 17,
+  "landUseMeetings": 18,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-11-17",
+    "sourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_11172026-1133",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… request from Administration to approve contract with Denson Engineering, Inc. for design services for the 2018 SPLOST Sugar Valley Station project in the amount of $20,000 budgeted using GL Account 328-542511. XII.​ Ad …",
+    "excerptTerm": "splost"
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-11-03",
@@ -304,25 +325,73 @@
     ],
     "excerpt": "… m Public Works to approve purchase and quote from Gradall Grapple in the amount of $16,962 budgeted using 2024 SPLOST funds. 3.​ Consideration of request from District Attorney to approve State Paid, County Reimbu …",
     "excerptTerm": "splost"
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-04-07",
-    "sourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_04072026-1084",
-    "terms": [
-     "flost",
-     "splost"
-    ]
    }
   ],
   "localTaxCitations": 12,
   "budgetItems": [],
   "budgetCitations": 0,
-  "landUseCitations": 14,
+  "landUseCitations": 15,
   "alprCitations": 0,
   "dataCenterCitations": 2
  },
  "meetings": [
+  {
+   "id": "1133",
+   "date": "2026-11-17",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_11172026-1133",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_11172026-1133",
+   "textMethod": "pdftotext",
+   "textChars": 6501,
+   "pdfSha256": "4b6125c4b4768376f4d4858f4c36baf326a97dfe90a7983c643a9d1ff26a6270",
+   "topics": {
+    "contract": 1,
+    "local-taxes": 1,
+    "rezoning": 1,
+    "special-land-use": 1
+   },
+   "tags": [
+    "contract",
+    "local-taxes",
+    "rezoning",
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "conditional use",
+    "contract",
+    "rezon",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… will be budgeted using GL Account 435-521210. 6.​ Consideration of request from Administration to approve contract with Denson Engineering, Inc. for design services for the 2018 SPLOST Sugar Valley Station project in …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… request from Administration to approve contract with Denson Engineering, Inc. for design services for the 2018 SPLOST Sugar Valley Station project in the amount of $20,000 budgeted using GL Account 328-542511. XII.​ Ad …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… eport VIII.​ First Reading IX.​ Public Hearing 1.​ Application RZ-2026-005 requesting rezoning from Suburban Density Residential (R-3) to Commercial Highway (C-H) on Remand pursuant to …",
+     "context": "agenda-action"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… recommends approval. The Planning Commission voted 5-0 to approve. 2.​ Application CUP-26-5 requesting a conditional use permit for a cell tower located at 217 Middle Road NE, Ranger, GA 30734; Gordon County Tax …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1127",
    "date": "2026-11-09",
@@ -1514,48 +1583,6 @@
    "topicExcerpts": {},
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1084",
-   "date": "2026-04-07",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_04072026-1084",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_04072026-1084",
-   "textMethod": "pdftotext",
-   "textChars": 2576,
-   "pdfSha256": "56afc2e2f8031c984816c39ce6583ff081395aac1b6d93cbcb828961d3fecb35",
-   "topics": {
-    "local-taxes": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "local-taxes",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "flost",
-    "splost"
-   ],
-   "topicExcerpts": {
-    "local-taxes": {
-     "term": "splost",
-     "excerpt": "… itigation, property acquisition, and personnel ​ ​ Reminders and Information 1.​ LOST / SPLOST / FLOST Report REGULAR SESSION I.​ Invocation and Pledge of Allegiance II.​ Call To Order …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… To Order III.​ Approval of the Agenda IV.​ Approval of Minutes 1.​ Adopt minutes of Budget Work and Executive Session, Work and Regular Session of February 17, 2026. V.​ Special Rec …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget",
-    "local-taxes"
    ],
    "dataCenterItems": []
   }

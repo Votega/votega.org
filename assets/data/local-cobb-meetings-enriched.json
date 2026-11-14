@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-12T17:11:46Z",
+  "generatedAt": "2026-11-14T00:42:53Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
@@ -13,19 +13,19 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-12-09",
+  "lastActivity": "2026-12-15",
   "topicTotals": {
    "variance": 8,
-   "special-land-use": 7,
-   "appointment": 6,
-   "budget": 1,
+   "annexation": 5,
+   "appointment": 7,
+   "budget": 2,
    "contract": 10,
+   "development": 6,
    "local-taxes": 6,
-   "development": 4,
    "rezoning": 5,
-   "annexation": 4,
-   "millage-budget": 6,
-   "data-center": 2
+   "special-land-use": 6,
+   "millage-budget": 5,
+   "data-center": 1
   },
   "dataCenterItems": [
    {
@@ -46,14 +46,28 @@
     ]
    },
    {
+    "title": "BOC Regular Meeting",
+    "date": "2026-11-19",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10349,plainText=false)",
+    "tags": [
+     "annexation",
+     "development"
+    ],
+    "excerpt": "… approving the update to the Local Emergency Operations Plan. Community Development 13. To approve a corrected annexation notice of Non-Objection with Stipulations per HB 489 Intergovernmental Agreement and HB 2 regarding a petit …",
+    "excerptTerm": "annexation"
+   },
+   {
     "title": "BOC Zoning Hearing",
     "date": "2026-11-17",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10335,plainText=false)",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10347,plainText=false)",
     "tags": [
-     "special-land-use"
+     "development",
+     "rezoning",
+     "special-land-use",
+     "variance"
     ],
-    "excerpt": "… d 9. Z-52-2026 District 2 - 465 Big Shanty Road 10. LUP-35-2026 District 4 - 448 Hurt Road 11. SLUP-9-2026 District 2 - 114 Townpark Drive 12. SLUP-11-2026 District 2 - 465 Big Shanty Road BOC REGULAR CASES AND …",
-    "excerptTerm": "slup"
+    "excerpt": "… 9 PENLER DEVELOPMENT, LLC (RSS CSMC2021-ADV-DE AUR, LLC, Owner) requesting rezoning from GC to RRC for multi-family residential in land lots 721 and 209 of the 16th and 20th districts, respectively. Property is lo …",
+    "excerptTerm": "multi-family"
    },
    {
     "title": "Board of Zoning Appeals Variance Hearing",
@@ -169,30 +183,24 @@
     ],
     "excerpt": "… trict 1 - 3917 Dallas Acworth Highway (BOC Only) 14. LUP-14-2026 District 4 - 195 Rockin Hill Drive 15. SLUP-3-2026 District 2 - 1284 Kennestone Circle AGENDA …",
     "excerptTerm": "slup"
-   },
-   {
-    "title": "Board of Zoning Appeals Variance Hearing",
-    "date": "2026-08-12",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10099,plainText=false)",
-    "tags": [
-     "variance"
-    ]
-   },
-   {
-    "title": "Planning Commission Zoning Hearing",
-    "date": "2026-08-04",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10096,plainText=false)",
-    "tags": [
-     "special-land-use"
-    ],
-    "excerpt": "… until the September 1, 2026, Planning Commission hearing) District Case Withdrawn case 1 SLUP-6-2026 WOLLISTON ENTERPRISES, LLC (Previously held by the Planning Commission from the May 5, …",
-    "excerptTerm": "slup"
    }
   ],
-  "landUseMeetings": 17,
+  "landUseMeetings": 15,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
+   {
+    "title": "BOC Regular Meeting",
+    "date": "2026-11-19",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10349,plainText=false)",
+    "terms": [
+     "local option sales tax",
+     "special purpose local option",
+     "tax allocation district"
+    ],
+    "excerpt": "… Gold, Silver, and Bronze Award. PUBLIC HEARING 3. To conduct a public hearing regarding proposed Cobb County Tax Allocation District #1: Town Center Area Redevelopment Plan. PUBLIC COMMENT Those persons wishing to address the Board of Com …",
+    "excerptTerm": "tax allocation district"
+   },
    {
     "title": "BOC Regular Meeting",
     "date": "2026-11-10",
@@ -242,20 +250,22 @@
     ],
     "excerpt": "… or the LED sports field lighting fixtures on all four fields at Hubert Soccer Complex under the 2022 PARKS SPLOST program. Support Services Agency Facilities Management 34. To approve a Purchase Agreem …",
     "excerptTerm": "splost"
-   },
-   {
-    "title": "BOC Regular Meeting",
-    "date": "2026-08-11",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10156,plainText=false)",
-    "terms": [
-     "splost"
-    ],
-    "excerpt": "… of a State of Texas Department of Information Resources Contract (Texas DIR). This is a 2022 SPLOST project, Countywide Improvements Program B0010. PUBLIC COMMENT Those persons wishing to address the Board of Commissi …",
-    "excerptTerm": "splost"
    }
   ],
   "localTaxCitations": 6,
   "budgetItems": [
+   {
+    "title": "BOC Regular Meeting",
+    "date": "2026-11-19",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10349,plainText=false)",
+    "terms": [
+     "budget amendment",
+     "budget-then-decision",
+     "decision-then-budget"
+    ],
+    "excerpt": "… d on the north side of Nance Road, south of the US Army Corp of Engineers Property Finance 16. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. 17. To ratify previous Board actions that autho …",
+    "excerptTerm": "decision-then-budget"
+   },
    {
     "title": "BOC Regular Meeting",
     "date": "2026-11-10",
@@ -269,12 +279,30 @@
     "excerptTerm": "decision-then-budget"
    }
   ],
-  "budgetCitations": 1,
-  "landUseCitations": 15,
+  "budgetCitations": 2,
+  "landUseCitations": 14,
   "alprCitations": 0,
   "dataCenterCitations": 1
  },
  "meetings": [
+  {
+   "id": "1278",
+   "date": "2026-12-15",
+   "body": "Board of Commissioners",
+   "title": "BOC Zoning Hearing",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10351,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10351,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 803,
+   "pdfSha256": "99abc443a2d66e44019c012f9637b27059e445efaa014cd8861df88982f50836",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
   {
    "id": "1255",
    "date": "2026-12-09",
@@ -326,35 +354,161 @@
    "dataCenterItems": []
   },
   {
+   "id": "1204",
+   "date": "2026-11-19",
+   "body": "Board of Commissioners",
+   "title": "BOC Regular Meeting",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10349,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10349,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 7831,
+   "pdfSha256": "3ea2100b503751bda6815ec9fbb655c00507ec122f38b3cdc2c80c80954c3862",
+   "topics": {
+    "annexation": 1,
+    "appointment": 1,
+    "budget": 1,
+    "contract": 1,
+    "development": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "annexation",
+    "appointment",
+    "budget",
+    "contract",
+    "development",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "annexation",
+    "appoint",
+    "budget amendment",
+    "budget-then-decision",
+    "contract",
+    "decision-then-budget",
+    "local option sales tax",
+    "multifamily",
+    "procurement",
+    "reappoint",
+    "special purpose local option",
+    "tax allocation district"
+   ],
+   "topicExcerpts": {
+    "annexation": {
+     "term": "annexation",
+     "excerpt": "… approving the update to the Local Emergency Operations Plan. Community Development 13. To approve a corrected annexation notice of Non-Objection with Stipulations per HB 489 Intergovernmental Agreement and HB 2 regarding a petit …",
+     "context": "agenda-action"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… er will be allotted a maximum of three (3) minutes. Speakers should address their comments toward the Chairwoman only. APPOINTMENTS 21. To announce the appointment of Dawn Richards to the Public Library Board. 22. To announce …",
+     "context": "public-comment"
+    },
+    "budget": {
+     "term": "decision-then-budget",
+     "excerpt": "… d on the north side of Nance Road, south of the US Army Corp of Engineers Property Finance 16. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. 17. To ratify previous Board actions that autho …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "procurement",
+     "excerpt": "… AGENDA Page 2 of 4 6. To authorize procurement of capital maintenance equipment to support Cobb County Department of Transportation daily right-of-way mai …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… torney 18. To adopt a resolution approving the issuance by the Housing Authority of Cobb County of Multifamily Housing Revenue Bonds in the amount of $25,000,000.00 to acquire, rehabilitate, and equip an approximately …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "tax allocation district",
+     "excerpt": "… Gold, Silver, and Bronze Award. PUBLIC HEARING 3. To conduct a public hearing regarding proposed Cobb County Tax Allocation District #1: Town Center Area Redevelopment Plan. PUBLIC COMMENT Those persons wishing to address the Board of Com …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
+  {
    "id": "1277",
    "date": "2026-11-17",
    "body": "Board of Commissioners",
    "title": "BOC Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10335,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10347,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10335,plainText=false)",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10347,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 2630,
-   "pdfSha256": "5104f87ba5ab73d57be1d71a2eadb89ca748496ceb2761562a6be8ad8be3bdf2",
+   "textChars": 21360,
+   "pdfSha256": "461f3d5f8205bbddf72f78d0e0b01b77dd55999caede183358aa32ee5ae2784c",
    "topics": {
-    "special-land-use": 1
+    "development": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
    },
    "tags": [
-    "special-land-use"
+    "development",
+    "rezoning",
+    "special-land-use",
+    "variance"
    ],
    "matchedTerms": [
-    "slup"
+    "land use permit",
+    "multi-family",
+    "rezon",
+    "slup",
+    "special land use",
+    "subdivision",
+    "variance",
+    "warehouse"
    ],
    "topicExcerpts": {
+    "development": {
+     "term": "multi-family",
+     "excerpt": "… 9 PENLER DEVELOPMENT, LLC (RSS CSMC2021-ADV-DE AUR, LLC, Owner) requesting rezoning from GC to RRC for multi-family residential in land lots 721 and 209 of the 16th and 20th districts, respectively. Property is lo …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… COUNTY BOARD OF COMMISSIONERS ZONING HEARING CONSENT AGENDA November 17, 2026 Rezoning cases Z‐39 PENLER DEVELOPMENT, LLC (RSS CSMC2021-ADV-DE AUR, LLC, Owner) requesting rezoning from …",
+     "context": "agenda-action"
+    },
     "special-land-use": {
      "term": "slup",
-     "excerpt": "… d 9. Z-52-2026 District 2 - 465 Big Shanty Road 10. LUP-35-2026 District 4 - 448 Hurt Road 11. SLUP-9-2026 District 2 - 114 Townpark Drive 12. SLUP-11-2026 District 2 - 465 Big Shanty Road BOC REGULAR CASES AND …",
-     "context": "agenda-action"
+     "excerpt": "… ctober 6, 2026 and November 3, 2026 PC hearings until the December 1, 2026 PC hearing.) 2 SLUP-9-2026 THE STANDARD AT KENNESAW, LLC (Continued by Staff from the October 6, 2026 and Novem …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… 026 To consider a reduction of required public road frontage from 75 feet to zero feet for Tract 2 and a front setback variance to 30-feet from 45-feet for Zach Munoz. The property is located on the north side of Pickens Road in Land Lots 141 and …",
+     "context": "unknown"
     }
    },
    "flags": [
     "land-use"
    ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1385",
+   "date": "2026-11-13",
+   "body": "Board of Commissioners",
+   "title": "InterFaith Leaders Breakfast",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10346,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10346,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 317,
+   "pdfSha256": "aa6bfb0165ed6429a702a1252b8249451d8515a3477ad4eaa7831d92b23d02ba",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
    "dataCenterItems": []
   },
   {
@@ -1216,146 +1370,6 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1251",
-   "date": "2026-08-12",
-   "body": "Board of Zoning Appeals",
-   "title": "Board of Zoning Appeals Variance Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10099,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10099,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 2052,
-   "pdfSha256": "b6fc770014ee4e63ab4fe049500525f8b03d38bda3d70dd092f6d58150935742",
-   "topics": {
-    "variance": 1
-   },
-   "tags": [
-    "variance"
-   ],
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "COBB COUNTY BOARD OF ZONING APPEALS VARIANCE HEARING AGENDA August 12, 2026 AGENDA AND MINUTES BZA Variance Agenda 8-12-2026 HELD AN …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1189",
-   "date": "2026-08-11",
-   "body": "Board of Commissioners",
-   "title": "BOC Regular Meeting",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10156,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10156,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 10698,
-   "pdfSha256": "bf2dd8550c21ce08f71f15e59889f2d20813ff94d862c5ee7b0ad788a5d96760",
-   "topics": {
-    "contract": 1,
-    "data-center": 1,
-    "local-taxes": 1,
-    "millage-budget": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "contract",
-    "data-center",
-    "local-taxes",
-    "millage-budget",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract",
-    "data center",
-    "rezon",
-    "splost"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… 31029. Water System 5. To approve a work order under FY25-FY26 Stormwater Management Unit Price Contract with Chatfield Contracting Inc. for 1781 Apple Boulevard, Program No. ST2415. …",
-     "context": "agenda-action"
-    },
-    "data-center": {
-     "term": "data center",
-     "excerpt": "… 27. To adopt a resolution extending a temporary moratorium on rezoning applications and permits for new data centers in unincorporated Cobb County. Internal Audit 28. To approve an updated Internal Audit Department Charter in …",
-     "context": "agenda-action"
-    },
-    "local-taxes": {
-     "term": "splost",
-     "excerpt": "… of a State of Texas Department of Information Resources Contract (Texas DIR). This is a 2022 SPLOST project, Countywide Improvements Program B0010. PUBLIC COMMENT Those persons wishing to address the Board of Commissi …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… partment to reimburse the appropriate departments. Finance 30. To adopt a resolution adopting all budget amendments set forth in agenda items on this date. AGENDA …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… business as Color Me Mine Marietta. 27. To adopt a resolution extending a temporary moratorium on rezoning applications and permits for new data centers in unincorporated Cobb County. Internal Audit 28. …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "data-center",
-    "millage-budget",
-    "local-taxes"
-   ],
-   "dataCenterItems": [
-    {
-     "title": "BOC Regular Meeting",
-     "date": "2026-08-11",
-     "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10156,plainText=false)",
-     "excerpt": "… 27. To adopt a resolution extending a temporary moratorium on rezoning applications and permits for new data centers in unincorporated Cobb County. Internal Audit 28. To approve an updated Internal Audit Department Charter in …",
-     "excerptTerm": "data center"
-    }
-   ]
-  },
-  {
-   "id": "1262",
-   "date": "2026-08-04",
-   "body": "Planning Commission",
-   "title": "Planning Commission Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10096,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10096,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 6090,
-   "pdfSha256": "a173b4500de1481aa1128364c64b0840777bf3f0dcd65500028381b5e69bf1a0",
-   "topics": {
-    "special-land-use": 1
-   },
-   "tags": [
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "land use permit",
-    "slup"
-   ],
-   "topicExcerpts": {
-    "special-land-use": {
-     "term": "slup",
-     "excerpt": "… until the September 1, 2026, Planning Commission hearing) District Case Withdrawn case 1 SLUP-6-2026 WOLLISTON ENTERPRISES, LLC (Previously held by the Planning Commission from the May 5, …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
    "dataCenterItems": []
   }
  ]

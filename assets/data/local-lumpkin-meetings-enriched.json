@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-12T17:11:49Z",
+  "generatedAt": "2026-11-14T00:43:07Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
-  "count": 25
+  "count": 24
  },
  "summary": {
   "flags": [
@@ -12,18 +12,26 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-17",
+  "lastActivity": "2026-11-18",
   "topicTotals": {
+   "development": 9,
    "appointment": 5,
    "budget": 3,
    "contract": 8,
    "local-taxes": 8,
-   "development": 9,
    "variance": 3,
-   "millage-budget": 4
+   "millage-budget": 3
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Land Use & Development Regulations Review Committee Meeting",
+    "date": "2026-11-18",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4478,plainText=false)",
+    "tags": [
+     "development"
+    ]
+   },
    {
     "title": "Land Use & Development Regulations Review Committee Meeting",
     "date": "2026-11-10",
@@ -96,14 +104,6 @@
     ],
     "excerpt": "… 083-008 Character Area: Gateway Corridor Overlay Case 186 is a request for a Preliminary Plat of a Class VIII subdivision entitled Wright Industrial Park (7 lots). 3. Location: 40 PATRIOT VIEW DRIVE; DAHLONEGA, GA 30533 Applican …",
     "excerptTerm": "subdivision"
-   },
-   {
-    "title": "Land Use & Development Regulations Review Committee Meeting",
-    "date": "2026-09-08",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4315,plainText=false)",
-    "tags": [
-     "development"
-    ]
    }
   ],
   "landUseMeetings": 9,
@@ -216,6 +216,38 @@
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "1426",
+   "date": "2026-11-18",
+   "body": "Land Use & Development Regulations Review Committee",
+   "title": "Land Use & Development Regulations Review Committee Meeting",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4478,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4478,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 695,
+   "pdfSha256": "7bfec6f68ce84ed7c38bb08f771d7e5bbf4b5586de7e0ff9545684bf005d2409",
+   "topics": {
+    "development": 1
+   },
+   "tags": [
+    "development"
+   ],
+   "matchedTerms": [
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… ulations Committee Minutes 2. Review the Gateway Corridor Overlay District Sec: 27 3.1.10 3. Review Class VI Subdivision in Chapter 26 • ADJOURNMENT",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1122",
    "date": "2026-11-17",
@@ -1055,71 +1087,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1309",
-   "date": "2026-09-08",
-   "body": "Land Use & Development Regulations Review Committee",
-   "title": "Land Use & Development Regulations Review Committee Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4315,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4315,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 678,
-   "pdfSha256": "e0b21e8da2db2a4cb93b692ba4b8dc04d06745cb0b32dbb2586bda875caf0503",
-   "topics": {
-    "development": 1
-   },
-   "tags": [
-    "development"
-   ],
-   "matchedTerms": [
-    "multi-family",
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… • CALL TO ORDER • OTHER ITEMS 1. Approve the August 31, 2026, Meeting Minutes 2. Review Class V and Class VI subdivision classes in Chapter 26 Land Development 3. Review Multi-Family Housing Chapter 26 - Article XXI • PUBLIC COMME …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1306",
-   "date": "2026-09-01",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Public Hearing",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4300,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4300,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 432,
-   "pdfSha256": "91e5c378bca9470b5cae38e509ca1122cb507052f785f2f7fe183ae611261f7d",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… tember 1, 2026 5:30 PM • CALL TO ORDER • PUBLIC COMMENT ON PROPOSED 2027 BUDGET 1. 2027 Budget Handout • ADJOURNMENT",
-     "context": "public-comment"
-    }
-   },
-   "flags": [
-    "millage-budget"
    ],
    "dataCenterItems": []
   }

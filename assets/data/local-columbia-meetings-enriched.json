@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-12T17:11:47Z",
+  "generatedAt": "2026-11-14T00:43:04Z",
   "source": "Columbia County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbia County",
   "count": 25
@@ -12,20 +12,44 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-05",
+  "lastActivity": "2026-11-19",
   "topicTotals": {
+   "development": 3,
    "rezoning": 16,
-   "variance": 17,
+   "special-land-use": 7,
+   "variance": 18,
+   "appointment": 3,
    "contract": 12,
    "alpr": 2,
-   "millage-budget": 4,
-   "appointment": 2,
-   "special-land-use": 8,
-   "local-taxes": 2,
-   "development": 2
+   "millage-budget": 3,
+   "local-taxes": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission",
+    "date": "2026-11-19",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13945,plainText=false)",
+    "tags": [
+     "development",
+     "rezoning",
+     "special-land-use",
+     "variance"
+    ],
+    "excerpt": "… . Commission District 1. Staff Assignment Will Butler. b. Public Hearing 1. (H1b1) VA26-11-04, Variance to Sections 90-98 List of lot & structure requirements, 90- 133 Parking, and 90-139 Buffers & …",
+    "excerptTerm": "variance"
+   },
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-11-17",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13942,plainText=false)",
+    "tags": [
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… Commissioner Melear 1. (I1b1) RZ26-11-01, Rezoning from R-A (Residential Agricultural) to S-1 (Special), 3894 Gordon Hwy, Tax Map 043 …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Planning Commission",
     "date": "2026-11-05",
@@ -208,28 +232,6 @@
     ],
     "excerpt": "… Commission District 2. Staff Assignment Will Butler. b. Public Hearing 1. (H1b1) VA26-07-01, Variance to Section 90-53 List of lot and Structure Requirements, 618 Millstone Drive, Tax Map 077 Parc …",
     "excerptTerm": "variance"
-   },
-   {
-    "title": "Planning Commission",
-    "date": "2026-06-18",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13644,plainText=false)",
-    "tags": [
-     "variance"
-    ],
-    "excerpt": "… . Postponed from June 4, 2026. 2. New Business a. Public Hearing 1. (H2a1) VA26-06-01, Variance to Section 90-135 Signs, 4015 Gateway Blvd, Tax Map 068 Parcel 1667, 1.71 +/- acres, and curre …",
-    "excerptTerm": "variance"
-   },
-   {
-    "title": "Board of Commissioners Meeting",
-    "date": "2026-06-02",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13623,plainText=false)",
-    "tags": [
-     "rezoning",
-     "special-land-use",
-     "variance"
-    ],
-    "excerpt": "… tee Commissioner Carraway a. (H2a) Ancillary Dwelling Variance, 5314 Magnolia Lane, Tax map 060 Parcel 142, 3.0 +/- acres, and currently zoned R-A (Residential Ag …",
-    "excerptTerm": "variance"
    }
   ],
   "landUseMeetings": 21,
@@ -285,6 +287,118 @@
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "2629",
+   "date": "2026-11-19",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13945,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13945,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 7463,
+   "pdfSha256": "4b4d39345fb4b5df302229c725caf2291fae42cb47daaab3ac78a08847d091cc",
+   "topics": {
+    "development": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "development",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "conditional use",
+    "rezon",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… Article I In General, Section 54-9 Temporary use authorization , Chapter 74 Subdivisions, Article II Procedure for Plat Approval, Sections 74-36 Generally, 74-37 Preliminary plat, 74-3 …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Commercial). Commission District 4. Staff Assignment Danielle Montgomery. 2. (H1b2) RZ26-11-02, Rezoning from R-1 (Single Family Residential) to S-1 (Special), 4933 Hereford Farm Road, Tax Map 067 …",
+     "context": "unknown"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… Family Residential). Commission District 2. Staff Assignment Dylan Douglas. 6. (H1b6) RZ26-11-05, Conditional use for Therapeutic Massage, 4143 Columbia Road, Tax Map 079 Parcel 095E, 2.00 +/- acres, and curren …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… . Commission District 1. Staff Assignment Will Butler. b. Public Hearing 1. (H1b1) VA26-11-04, Variance to Sections 90-98 List of lot & structure requirements, 90- 133 Parking, and 90-139 Buffers & …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2590",
+   "date": "2026-11-17",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13942,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13942,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 8874,
+   "pdfSha256": "3c1ecc6167748e4332ed0ecaae1e2f4889b0c02ef16f844ad40b9013818eb231",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ervices Committee Commissioner Couch a. (H1a) Appointment of Tawanna Bruce to fill the remaining term of Col. Gwendolyn Fryer on the Department of Family …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… aintenance Payment for Clariti Permitting and Licensing Solution h. (H1h) Amendment to the Tyler Technologies Contract to Change the Munis Billing/Maintenance Cycle Dates i. (H1i) Professional Services Cont …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Commissioner Melear 1. (I1b1) RZ26-11-01, Rezoning from R-A (Residential Agricultural) to S-1 (Special), 3894 Gordon Hwy, Tax Map 043 …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… H2b) Easement Encroachment Agreement 406 Town Park Blvd, Tax Map 072A Parcel 342 c. (H2c) Ancillary Dwelling Variance for Tax Map 040 Parcel 147 d. (H2d) Ancillary Dwelling Variance for Tax Map 009 Parcel 008 I. DEBATE AGE …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2628",
    "date": "2026-11-05",
@@ -1295,112 +1409,6 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2571",
-   "date": "2026-06-02",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Meeting",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13623,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13623,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 11905,
-   "pdfSha256": "f900bf8221907b961017a7e02091baaaf4811c4980aa17a8e2802e20b6b2a9e9",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1,
-    "rezoning": 1,
-    "special-land-use": 1,
-    "variance": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget",
-    "rezoning",
-    "special-land-use",
-    "variance"
-   ],
-   "matchedTerms": [
-    "budget",
-    "conditional use",
-    "contract",
-    "fiscal year",
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ary of First Mount Moriah Baptist Church b. (H1b) Animal Services Donation c. (H1c) Independent Contractor Agreement with 1 to 4 Pickleball Services d. (H1d) Library Services Agreement with the Columbia County Lib …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "… nd Annual Financial Agreement with UGA Cooperative Extension for Personnel Salary Reimbursement for Fiscal Year 2027 f. (H1f) Contract with Gold Cross EMS for Emergency Medical Services g. (H1g) Blood Servic …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… Commissioner Melear 1. (I1a1) RZ26-05-04, Rezoning from R-A (Residential Agricultural) & PUD (Planned Unit Development) to PRD (Plann …",
-     "context": "unknown"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… Commissioner Melear 1. (I2c1) RZ26-05-06, Conditional Use for Therapeutic Massage, 120 North Belair Road, Tax Map 073C Parcel 053, 1.16 +/- acr …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… tee Commissioner Carraway a. (H2a) Ancillary Dwelling Variance, 5314 Magnolia Lane, Tax map 060 Parcel 142, 3.0 +/- acres, and currently zoned R-A (Residential Ag …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2599",
-   "date": "2026-05-21",
-   "body": "Planning Commission",
-   "title": "Planning Commission",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13574,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13574,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 3068,
-   "pdfSha256": "e65ad0128feef5a81446925d752bd213bcbea6845e041ba81248433af9d8245c",
-   "topics": {
-    "rezoning": 1,
-    "special-land-use": 1
-   },
-   "tags": [
-    "rezoning",
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "conditional use",
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… Commercial). Commission District 2. Staff Assignment Danielle Montgomery. 2. (H1a2) RZ26-05-07, Rezoning from P-1 (Professional) to C-C (Community Commercial), 406 North Belair Rd and 601 Ponder P …",
-     "context": "unknown"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… Chairman Moody 1. New Business a. Public Hearing 1. (H1a1) RZ26-05-06, Conditional Use for Therapeutic Massage, 120 North Belair Road, Tax Map 073C Parcel 053, 1.16 +/- acres, and c …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
    "dataCenterItems": []
   }
  ]

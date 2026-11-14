@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-12T17:11:46Z",
+  "generatedAt": "2026-11-14T00:42:51Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -17,13 +17,13 @@
   "topicTotals": {
    "development": 5,
    "variance": 6,
-   "comprehensive-plan": 2,
-   "rezoning": 4,
+   "appointment": 5,
    "contract": 14,
    "local-taxes": 17,
-   "millage-budget": 17,
+   "comprehensive-plan": 2,
+   "rezoning": 4,
+   "millage-budget": 16,
    "annexation": 5,
-   "appointment": 5,
    "data-center": 2,
    "alpr": 2
   },
@@ -183,6 +183,16 @@
   "alprMeetings": 2,
   "localTaxItems": [
    {
+    "title": "BOC Work Session",
+    "date": "2026-11-16",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7673,plainText=false)",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… ly purchased ambulances for the Douglas County Fire Department, in the amount of $7,294.24 to be funded through SPLOST 2022 funds and authorize the Chairman to sign all related documents pending further legal review. (Julia Janka) 19. …",
+    "excerptTerm": "splost"
+   },
+   {
     "title": "BOC Combined Work Session and Commission Meeting 11-02-26",
     "date": "2026-11-02",
     "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7623,plainText=false)",
@@ -337,14 +347,6 @@
     ],
     "excerpt": "… nt of $33,745.93 (quote in the amount of $30,678.12 + 10% contingency amount of $3,067.81) to be funded by 2022 SPLOST funds and authorize the Chairman to sign all related documents pending final legal review. 20. Approval of a contra …",
     "excerptTerm": "splost"
-   },
-   {
-    "title": "BOC Work Session",
-    "date": "2026-08-03",
-    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7449,plainText=false)",
-    "terms": [
-     "splost"
-    ]
    }
   ],
   "localTaxCitations": 17,
@@ -392,6 +394,55 @@
    },
    "flags": [
     "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1218",
+   "date": "2026-11-16",
+   "body": "Board of Commissioners",
+   "title": "BOC Work Session",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7673,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7673,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 10949,
+   "pdfSha256": "391afd80be4848f1142c58149198fd2ce1272cf066be1d5b525a9833938c1b55",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "purchase order",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… and authorize the Chairman to sign all related documents pending final legal review. (Commissioner Mark Alcarez) 2 Appointment of Felicitas Guzman to the Douglas County Animal Advisory Board, District One 8. Representative and authorize the C …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… and authorize the Chairman to sign all related documents pending final legal review. (Jill Hopson) 9. Approval of a contract renewal until 4/30/2027 with Berry Dunn for Grant Administration Support, with no budget impact and no change to pro …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ly purchased ambulances for the Douglas County Fire Department, in the amount of $7,294.24 to be funded through SPLOST 2022 funds and authorize the Chairman to sign all related documents pending further legal review. (Julia Janka) 19. …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1572,63 +1623,6 @@
     "millage-budget": {
      "term": "budget",
      "excerpt": "… (AW-ACFP-27-018) in the amount of $363,848 with a match of $64,208 to be funded through the department's existing budget for the Drug Court/Veterans Court Program, establish the budget and authorize the Chairman to sign all related docum …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "millage-budget",
-    "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1194",
-   "date": "2026-08-03",
-   "body": "Board of Commissioners",
-   "title": "BOC Work Session",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7449,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7449,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 7666,
-   "pdfSha256": "5757db8e3ccaf917562b17ba1c2ce3059dc16dddf17ae25b83877133cda239fb",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "local-taxes": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "local-taxes",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract",
-    "splost"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… budget and authorize the Chairman to sign all related documents, pending final legal review. (Suleman Rana) 23. Appointment of Herschel Clark and Jarrett Mitchell to the Assessors Board. (Sherri Mathis) COMMISSIONER COMMENTS EXECUTIV …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… the Chairman to sign all related documents pending legal review. (Karen Alexander) BUSINESS ITEMS 10. Approval of a contract between the Superior Accountability Courts and Talitrix for GPS tracking services for the period of August 1, 2026 …",
-     "context": "agenda-action"
-    },
-    "local-taxes": {
-     "term": "splost",
-     "excerpt": "… nt of $33,745.93 (quote in the amount of $30,678.12 + 10% contingency amount of $3,067.81) to be funded by 2022 SPLOST funds and authorize the Chairman to sign all related documents pending final legal review. (Julia Janka) 20. Approv …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… (AW-ACFP-27-018) in the amount of $363,848 with a match of $64,208 to be funded through the department's existing budget for the Drug Court/Veterans Court Program, establish the budget and Work Session 2 …",
      "context": "agenda-action"
     }
    },

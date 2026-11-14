@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-12T17:11:47Z",
+  "generatedAt": "2026-11-14T00:43:03Z",
   "source": "Coweta County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Coweta County",
   "count": 25
@@ -12,16 +12,16 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-05",
+  "lastActivity": "2026-11-19",
   "topicTotals": {
-   "appointment": 14,
-   "contract": 14,
-   "development": 7,
-   "rezoning": 9,
-   "millage-budget": 15,
-   "variance": 13,
-   "data-center": 4,
    "special-land-use": 8,
+   "variance": 14,
+   "appointment": 13,
+   "contract": 13,
+   "development": 6,
+   "rezoning": 9,
+   "millage-budget": 14,
+   "data-center": 4,
    "comprehensive-plan": 3,
    "local-taxes": 5
   },
@@ -42,6 +42,17 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Board of Zoning Appeals - Public Hearing",
+    "date": "2026-11-19",
+    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3750,plainText=false)",
+    "tags": [
+     "special-land-use",
+     "variance"
+    ],
+    "excerpt": "… c Hearing Regarding CONDUSE 26-10 Filed by Keri Bethea on behalf of Lighthouse Special Needs Academy Requesting a Conditional Use Permit for Property Located at 55 Willis Road, Sharpsburg - District 1 Additional Business Adjournment As set …",
+    "excerptTerm": "conditional use"
+   },
    {
     "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
     "date": "2026-11-03",
@@ -224,17 +235,6 @@
     ],
     "excerpt": "… ch 26, 2026 Petitions 2. Public Hearing Regarding Petition # VAR 26-002 Filed by Virginia Singh Requesting a Buffer Variance for Property Located at the Southwest Corner of SR 34 West and Bruce Jackson Road, Newnan - District 2 3. …",
     "excerptTerm": "variance"
-   },
-   {
-    "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
-    "date": "2026-04-21",
-    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3326,plainText=false)",
-    "tags": [
-     "development",
-     "special-land-use"
-    ],
-    "excerpt": "… Associated with Previous Petition # CONDUSE 25-01 Filed by Paige Dockweiler Requesting a Neighborhood Agricultural Conditional Use Permit for Property Located at 9210 Highway 16, Senoia - District 1 11. Request Direction from the Board Regarding …",
-    "excerptTerm": "conditional use"
    }
   ],
   "landUseMeetings": 22,
@@ -298,6 +298,46 @@
   "dataCenterCitations": 2
  },
  "meetings": [
+  {
+   "id": "1153",
+   "date": "2026-11-19",
+   "body": "Board of Zoning Appeals",
+   "title": "Board of Zoning Appeals - Public Hearing",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3750,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3750,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1850,
+   "pdfSha256": "2fc47881edcf9ae004547adfe4e5d3f7a8234dfa15cfdb75406ec5cdc59addef",
+   "topics": {
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "conditional use",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… c Hearing Regarding CONDUSE 26-10 Filed by Keri Bethea on behalf of Lighthouse Special Needs Academy Requesting a Conditional Use Permit for Property Located at 55 Willis Road, Sharpsburg - District 1 Additional Business Adjournment As set …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Petitions 2. Public Hearing Regarding Petition # VAR 26-27 Filed by Dustin Shaw for Robert Maione Requesting a Variance from the Freeboard Elevation Requirement for Property Located at 10 Wildwood Court, Newnan – District 4 3. Pu …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1162",
    "date": "2026-11-05",
@@ -1621,72 +1661,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1104",
-   "date": "2026-04-21",
-   "body": "Board of Commissioners",
-   "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3326,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3326,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 7113,
-   "pdfSha256": "dbc53bca206c6ebc34182343b0146bf55cfaad3374720f9fac06d565f5660fc0",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "development": 1,
-    "millage-budget": 1,
-    "special-land-use": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "development",
-    "millage-budget",
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "conditional use",
-    "contract",
-    "fiscal year",
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… Filed by Hetty Jane, LLC for Property Located at 3218 Roscoe Road, Newnan - District 3 Unfinished Business 12. Request Appointments to Various Boards/Authorities New Business Bids and Contracts 13. Request Approval/Execution of a Memorandum of …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… Newnan - District 3 Unfinished Business 12. Request Appointments to Various Boards/Authorities New Business Bids and Contracts 13. Request Approval/Execution of a Memorandum of Agreement with FEMA Associated with an Integrated Public Alert a …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… Request Acceptance of Roadways, Greenway Dedication, and Deed of Open Space Restriction Associated with Saddleridge Subdivision, Phase 2C - District 1 Public Comments Regarding Items Not on the Agenda – This section is for any public comments reg …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… /Execution of an Agreement with Piedmont Hospital Associated with EMS Clinical Education 16. Request Approval of a Budget Amendment Associated with the Purchase of Replacement Automated External Defibrillator Units 17. Request Approval/ …",
-     "context": "unknown"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… Associated with Previous Petition # CONDUSE 25-01 Filed by Paige Dockweiler Requesting a Neighborhood Agricultural Conditional Use Permit for Property Located at 9210 Highway 16, Senoia - District 1 11. Request Direction from the Board Regarding …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
    ],
    "dataCenterItems": []
   }

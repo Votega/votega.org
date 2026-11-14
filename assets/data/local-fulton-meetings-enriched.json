@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-12T17:11:31Z",
+  "generatedAt": "2026-11-14T00:42:03Z",
   "source": "Fulton County (Legistar structured API)",
   "place": "Fulton County",
   "count": 21
@@ -13,14 +13,15 @@
    "land-use",
    "local-taxes"
   ],
-  "lastActivity": "2026-11-04",
+  "lastActivity": "2026-11-18",
   "topicTotals": {
-   "contract": 197,
-   "local-taxes": 19,
-   "budget": 4,
-   "development": 70,
-   "appointment": 50,
-   "data-center": 4,
+   "appointment": 49,
+   "contract": 205,
+   "development": 76,
+   "annexation": 1,
+   "budget": 6,
+   "local-taxes": 21,
+   "data-center": 3,
    "alpr": 1
   },
   "dataCenterItems": [
@@ -47,6 +48,17 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-11-18",
+    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6400&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+    "tags": [
+     "annexation",
+     "development"
+    ],
+    "excerpt": "… proval of the 2027 annual operating budget for Cooperative Extension services in the amount of $227,832.00, through its annexation as FY2027 Addendum E to the MOU between Fulton County and the Board of Regents of the University System of Georgia on b …",
+    "excerptTerm": "annexation"
+   },
    {
     "title": "Board of Commissioners",
     "date": "2026-11-04",
@@ -173,6 +185,19 @@
   ],
   "alprMeetings": 1,
   "localTaxItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-11-18",
+    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6400&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+    "terms": [
+     "ad valorem",
+     "local option sales tax",
+     "special purpose local option",
+     "splost"
+    ],
+    "excerpt": "… Bonds and the final contract payments to be made by the County in respect thereof; providing for the levy of an annual ad valorem tax and the pledge of the full faith and credit of the County to meet its payment obligations thereunder; and for other …",
+    "excerptTerm": "ad valorem"
+   },
    {
     "title": "Board of Commissioners",
     "date": "2026-11-04",
@@ -302,8 +327,19 @@
     "excerptTerm": "splost"
    }
   ],
-  "localTaxCitations": 12,
+  "localTaxCitations": 13,
   "budgetItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-11-18",
+    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6400&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+    "terms": [
+     "decision-then-budget",
+     "operating budget"
+    ],
+    "excerpt": "Request approval of the 2027 annual operating budget for Cooperative Extension services in the amount of $227,832.00, through its annexation as FY2027 Addendum E to the MOU …",
+    "excerptTerm": "operating budget"
+   },
    {
     "title": "Board of Commissioners",
     "date": "2026-11-04",
@@ -339,12 +375,262 @@
     "excerptTerm": "annual budget"
    }
   ],
-  "budgetCitations": 3,
-  "landUseCitations": 11,
+  "budgetCitations": 4,
+  "landUseCitations": 12,
   "alprCitations": 1,
   "dataCenterCitations": 3
  },
  "meetings": [
+  {
+   "eventId": 6400,
+   "date": "2026-11-18",
+   "body": "Board of Commissioners",
+   "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6400&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+   "itemCount": 92,
+   "topics": {
+    "appointment": 3,
+    "contract": 17,
+    "development": 15,
+    "annexation": 1,
+    "budget": 2,
+    "local-taxes": 2
+   },
+   "matchedTerms": [
+    "ad valorem",
+    "annexation",
+    "appoint",
+    "contract",
+    "decision-then-budget",
+    "local option sales tax",
+    "multifamily",
+    "operating budget",
+    "procurement",
+    "reappoint",
+    "special purpose local option",
+    "splost",
+    "subdivision",
+    "task order",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ission on Disability Affairs shall consist of a total of sixteen (16) members to serve staggered two (2) year terms and appointed as follows: Each member of the Board of Commissioners shall appoint two (2) members; one of them said appointees shal …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "Request approval to renew an existing contract - Department of External Affairs, 24RFP1320756A-BKJ, State Intergovernmental & Interagency Affairs Services in an amoun …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… val of Sanitary Sewer System Ownership, Operation, Maintenance, and Repair Agreement between Fulton County, a political subdivision of the State of Georgia, and DRB Group Georgia, LLC, for the purpose of granting Fulton County legal access to extend a …",
+     "context": "agenda-action"
+    },
+    "annexation": {
+     "term": "annexation",
+     "excerpt": "… proval of the 2027 annual operating budget for Cooperative Extension services in the amount of $227,832.00, through its annexation as FY2027 Addendum E to the MOU between Fulton County and the Board of Regents of the University System of Georgia on b …",
+     "context": "agenda-action"
+    },
+    "budget": {
+     "term": "operating budget",
+     "excerpt": "Request approval of the 2027 annual operating budget for Cooperative Extension services in the amount of $227,832.00, through its annexation as FY2027 Addendum E to the MOU …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "ad valorem",
+     "excerpt": "… Bonds and the final contract payments to be made by the County in respect thereof; providing for the levy of an annual ad valorem tax and the pledge of the full faith and credit of the County to meet its payment obligations thereunder; and for other …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": [],
+   "landUseItems": [
+    {
+     "title": "Request approval of Sanitary Sewer System Ownership, Operation, Maintenance, and Repair Agreement between Fulton County, a political subdivision of the State of Georgia, and DRB Gr",
+     "matterFile": "26-0778",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of an Indemnification, Maintenance, and Land Use Agreement for Private Improvement (Indemnification Agreement) between Fulton County, a political subdivision of th",
+     "matterFile": "26-0781",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of Sanitary Sewer System Ownership, Operation, Maintenance, and Repair Agreement between Fulton County, a political subdivision of the State of Georgia, and TPG AG",
+     "matterFile": "26-0779",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of an Indemnification, Maintenance, and Land Use Agreement for Private Improvement (Indemnification Agreement) between Fulton County, a political subdivision of th",
+     "matterFile": "26-0782",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of a Sewer Easement Dedication of 43,775 square feet to Fulton County, a political subdivision of the State of Georgia, from DRB Group Georgia, LLC, for the purpos",
+     "matterFile": "26-0786",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of a Water Easement Dedication of 22,548 square feet to Fulton County, a political subdivision of the State of Georgia, from DRB Group Georgia, LLC, for the purpos",
+     "matterFile": "26-0788",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of a resolution approving a Lease Agreement between Fulton County, Georgia (as tenant), a political subdivision of the State of Georgia, and REJV Concourse Atlanta",
+     "matterFile": "26-0790",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of an Indemnification, Maintenance, and Land Use Agreement for Private Improvement (Indemnification Agreement) between Fulton County, a political subdivision of th",
+     "matterFile": "26-0785",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of a Water Vault Easement Dedication of 86 square feet to Fulton County, a political subdivision of the State of Georgia, from Mayfield Canton Development Group, L",
+     "matterFile": "26-0789",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of a Sewer Easement Dedication of 248 square feet to Fulton County, a political subdivision of the State of Georgia, from Sidhant Sharma & Parminder Singh Lamba, f",
+     "matterFile": "26-0787",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of Sanitary Sewer System Ownership, Operation, Maintenance, and Repair Agreement between Fulton County, a political subdivision of the State of Georgia, and TPG AG",
+     "matterFile": "26-0780",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of an Indemnification, Maintenance, and Land Use Agreement for Private Improvement (Indemnification Agreement) between Fulton County, a political subdivision of th",
+     "matterFile": "26-0784",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of an Indemnification, Maintenance, and Land Use Agreement for Private Improvement (Indemnification Agreement) between Fulton County, a political subdivision of th",
+     "matterFile": "26-0783",
+     "matterType": "Consent - Open & Responsible Government",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of the 2027 annual operating budget for Cooperative Extension services in the amount of $227,832.00, through its annexation as FY2027 Addendum E to the MOU between",
+     "matterFile": "26-0792",
+     "matterType": "Consent - Arts and Libraries",
+     "tags": [
+      "annexation",
+      "budget"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval to utilize cooperative purchasing - Department of Real Estate and Asset Management, OMNIA Partners Contract #3341 HVAC Products, Installation, Labor Based Solution",
+     "matterFile": "26-0808",
+     "matterType": "CM Action Item - Open & Responsible Government",
+     "tags": [
+      "contract",
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    },
+    {
+     "title": "Request approval of a Resolution to support affordable housing in the Vine City neighborhood by approving a grant from funds previously set aside to aid in the construction of a 20",
+     "matterFile": "26-0819",
+     "matterType": "Commissioners Action Item",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    }
+   ]
+  },
   {
    "eventId": 6399,
    "date": "2026-11-04",
@@ -1903,173 +2189,6 @@
    ],
    "dataCenterItems": [],
    "landUseItems": []
-  },
-  {
-   "eventId": 6380,
-   "date": "2026-03-18",
-   "body": "Board of Commissioners",
-   "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6380&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
-   "itemCount": 85,
-   "topics": {
-    "appointment": 4,
-    "development": 9,
-    "data-center": 1,
-    "contract": 9
-   },
-   "matchedTerms": [
-    "appoint",
-    "contract",
-    "data center",
-    "reappoint",
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… l shall be composed of fifteen (15) residents of the county. Initially, each member of the Board of Commissioners shall appoint two persons to serve on the council, one person to serve for a one-year term and one person to serve a two-year term. N …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… val of Sanitary Sewer System Ownership, Operation, Maintenance, and Repair Agreement between Fulton County, a political subdivision of the State of Georgia, and Arkan Homes, LLC, for the purpose of granting Fulton County legal access to extend and mai …",
-     "context": "agenda-action"
-    },
-    "data-center": {
-     "term": "data center",
-     "excerpt": "… range a speaking date, contact the Clerk’s Office. (CONDUCTED) 14 Speakers: LA Pink (Fulton Corruption); Merlon Pierce (Data Centers/Chem Trails); Joyce Farmer (Fulton County Jail/Sheriff); Dr. Valerie Montgomery Rice (#26-0156); Jeromey Beaman (#26-0 …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "Request approval to extend an existing contract - Information Technology, 22ITBC1006B-PS, Fulton PC Refresh, in an amount not to exceed $2,368,000.00 with CDW Governme …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "data-center"
-   ],
-   "dataCenterItems": [
-    {
-     "title": "Public Comment - Citizens are allowed to voice County related opinions, concerns, requests, etc. during the Public Comment portion of the Commission meeting. Priority for public co",
-     "date": "2026-03-18",
-     "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6380&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
-     "excerpt": "… range a speaking date, contact the Clerk’s Office. (CONDUCTED) 14 Speakers: LA Pink (Fulton Corruption); Merlon Pierce (Data Centers/Chem Trails); Joyce Farmer (Fulton County Jail/Sheriff); Dr. Valerie Montgomery Rice (#26-0156); Jeromey Beaman (#26-0 …",
-     "excerptTerm": "data center"
-    }
-   ],
-   "landUseItems": [
-    {
-     "title": "Request approval of Sanitary Sewer System Ownership, Operation, Maintenance, and Repair Agreement between Fulton County, a political subdivision of the State of Georgia, and Arkan ",
-     "matterFile": "26-0136",
-     "matterType": "Consent - Open & Responsible Government",
-     "tags": [
-      "development"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "Request approval of a Sewer Easement Dedication of 6,570 square feet to Fulton County, a political subdivision of the State of Georgia, from Rivertown ONO Investment, LLC, for the ",
-     "matterFile": "26-0138",
-     "matterType": "Consent - Open & Responsible Government",
-     "tags": [
-      "development"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "Request approval of Sanitary Sewer System Ownership, Operation, Maintenance, and Repair Agreement between Fulton County, a political subdivision of the State of Georgia, and JBGL A",
-     "matterFile": "26-0137",
-     "matterType": "Consent - Open & Responsible Government",
-     "tags": [
-      "development"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "Request approval of an Indemnification, Maintenance, and Land Use Agreement for Private Improvement between Fulton County, a political subdivision of the State of Georgia, and MHR ",
-     "matterFile": "26-0141",
-     "matterType": "Consent - Open & Responsible Government",
-     "tags": [
-      "development"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "Request approval of an Indemnification, Maintenance, and Land Use Agreement for Private Improvement between Fulton County, a political subdivision of the State of Georgia, and CHIP",
-     "matterFile": "26-0142",
-     "matterType": "Consent - Open & Responsible Government",
-     "tags": [
-      "development"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "Request approval of an Indemnification, Maintenance, and Land Use Agreement for Private Improvement between Fulton County, a political subdivision of the State of Georgia, and SWVP",
-     "matterFile": "26-0143",
-     "matterType": "Consent - Open & Responsible Government",
-     "tags": [
-      "development"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "Request approval of an Indemnification, Maintenance, and Land Use Agreement for Private Improvement between Fulton County, a political subdivision of the State of Georgia, and SWVP",
-     "matterFile": "26-0144",
-     "matterType": "Consent - Open & Responsible Government",
-     "tags": [
-      "development"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "Request approval of a Water Easement Dedication of 17,496 square feet to Fulton County, a political subdivision of the State of Georgia, from Mayfield Development, LLC, for the pur",
-     "matterFile": "26-0140",
-     "matterType": "Consent - Open & Responsible Government",
-     "tags": [
-      "development"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "Request approval of a Sewer Easement Dedication of 17,008 square feet to Fulton County, a political subdivision of the State of Georgia, from Mayfield Development, LLC, for the pur",
-     "matterFile": "26-0139",
-     "matterType": "Consent - Open & Responsible Government",
-     "tags": [
-      "development"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    },
-    {
-     "title": "Public Comment - Citizens are allowed to voice County related opinions, concerns, requests, etc. during the Public Comment portion of the Commission meeting. Priority for public co",
-     "matterFile": "26-0154",
-     "matterType": "Public Hearings",
-     "tags": [
-      "data-center"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null
-    }
-   ]
   }
  ]
 }

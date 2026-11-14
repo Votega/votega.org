@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-12T17:11:46Z",
+  "generatedAt": "2026-11-14T00:42:21Z",
   "source": "Baldwin County (teammunicode agenda/minutes PDFs, poppler+OCR)",
   "place": "Baldwin County",
   "count": 25
@@ -12,11 +12,11 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-13",
+  "lastActivity": "2026-11-17",
   "topicTotals": {
-   "budget": 2,
+   "budget": 3,
    "local-taxes": 7,
-   "millage-budget": 5,
+   "millage-budget": 4,
    "appointment": 1,
    "contract": 3,
    "variance": 1,
@@ -137,14 +137,44 @@
      "budget presentation",
      "budget work session"
     ]
+   },
+   {
+    "title": "Regular Meeting and Budget Public Hearing",
+    "date": "2026-11-03",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/baldwincga-pubu/MEET-Agenda-316917c0725e497aae63bdadede47f5a.pdf",
+    "terms": [
+     "budget public hearing",
+     "budget-then-decision",
+     "proposed budget"
+    ],
+    "excerpt": "BALDWIN COUNTY COMMISSIONERS REGULAR MEETING AND BUDGET PUBLIC HEARING November 03, 2026 1601 N Columbia St, Suite 220 6:00 PM …",
+    "excerptTerm": "budget public hearing"
    }
   ],
-  "budgetCitations": 2,
+  "budgetCitations": 3,
   "landUseCitations": 2,
   "alprCitations": 0,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "118",
+   "date": "2026-11-17",
+   "body": "Board of Commissioners",
+   "title": "Regular Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/baldwincga-pubu/MEET-Agenda-2024c70994f442bbaf621e38caf59228.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/baldwincga-pubu/MEET-Agenda-2024c70994f442bbaf621e38caf59228.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 1614,
+   "pdfSha256": "3d773703ccc8461672a2639977251a6bdff9fc11ace7e96a1e56a71f6225a548",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
   {
    "id": "2",
    "date": "2026-11-13",
@@ -253,35 +283,36 @@
    "dataCenterItems": []
   },
   {
-   "id": "called-meeting-budget-public-hearing",
+   "id": "regular-meeting-and-budget-public-hearing",
    "date": "2026-11-03",
    "body": "Board of Commissioners",
-   "title": "Called Meeting Budget Public Hearing",
+   "title": "Regular Meeting and Budget Public Hearing",
    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/baldwincga-pubu/MEET-Agenda-316917c0725e497aae63bdadede47f5a.pdf",
    "textSource": "agenda",
    "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/baldwincga-pubu/MEET-Agenda-316917c0725e497aae63bdadede47f5a.pdf",
    "textMethod": "pdftotext",
-   "textChars": 1848,
-   "pdfSha256": "e8348a9e7eb3b0fcdac413f7c53265f69316bf4780b12a80195558991d110a60",
+   "textChars": 1853,
+   "pdfSha256": "1dddc01e98841142a7067fde0250571a716005123396bb4358e60934395b694b",
    "topics": {
-    "millage-budget": 1
+    "budget": 1
    },
    "tags": [
-    "millage-budget"
+    "budget"
    ],
    "matchedTerms": [
-    "budget",
-    "fiscal year"
+    "budget public hearing",
+    "budget-then-decision",
+    "proposed budget"
    ],
    "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "BALDWIN COUNTY COMMISSIONERS CALLED MEETING BUDGET PUBLIC HEARING November 03, 2026 1601 N Columbia St, Suite 220 …",
+    "budget": {
+     "term": "budget public hearing",
+     "excerpt": "BALDWIN COUNTY COMMISSIONERS REGULAR MEETING AND BUDGET PUBLIC HEARING November 03, 2026 1601 N Columbia St, Suite 220 6:00 PM …",
      "context": "agenda-action"
     }
    },
    "flags": [
-    "millage-budget"
+    "budget"
    ],
    "dataCenterItems": []
   },
@@ -820,24 +851,6 @@
     "land-use",
     "local-taxes"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "53",
-   "date": "2026-06-09",
-   "body": "Board of Commissioners",
-   "title": "Called Meeting",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/baldwincga-pubu/MEET-Agenda-c4b93d55e1c24d409943abc402bbafc1.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/baldwincga-pubu/MEET-Agenda-c4b93d55e1c24d409943abc402bbafc1.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 305,
-   "pdfSha256": "1b13670c29d2d1023d9d85b0f2659bbb35079d502aae0fb9922950ca2f9d16bf",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
    "dataCenterItems": []
   }
  ]

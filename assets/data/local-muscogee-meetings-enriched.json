@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-12T17:11:48Z",
+  "generatedAt": "2026-11-14T00:43:05Z",
   "source": "Columbus-Muscogee County (teammunicode agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbus-Muscogee County",
-  "count": 24
+  "count": 25
  },
  "summary": {
   "flags": [
@@ -14,12 +14,12 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-10",
+  "lastActivity": "2026-11-17",
   "topicTotals": {
-   "appointment": 20,
+   "appointment": 21,
+   "contract": 20,
+   "development": 13,
    "budget": 1,
-   "contract": 19,
-   "development": 12,
    "millage-budget": 20,
    "alpr": 2,
    "data-center": 14,
@@ -36,6 +36,14 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Council Agenda - Regular Meeting",
+    "date": "2026-11-17",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/columga-pubu/MEET-Agenda-1a0582d154e74d338d3f511b2296c4ac.pdf",
+    "tags": [
+     "development"
+    ]
+   },
    {
     "title": "Council Agenda - Regular Meeting",
     "date": "2026-11-10",
@@ -77,7 +85,7 @@
     ]
    }
   ],
-  "landUseMeetings": 19,
+  "landUseMeetings": 20,
   "alprItems": [
    {
     "title": "Council Agenda - Regular Meeting",
@@ -178,11 +186,60 @@
    }
   ],
   "budgetCitations": 1,
-  "landUseCitations": 5,
+  "landUseCitations": 6,
   "alprCitations": 2,
   "dataCenterCitations": 1
  },
  "meetings": [
+  {
+   "id": "2026-11-17",
+   "date": "2026-11-17",
+   "body": "City Council",
+   "title": "Council Agenda - Regular Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/columga-pubu/MEET-Agenda-1a0582d154e74d338d3f511b2296c4ac.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/columga-pubu/MEET-Agenda-1a0582d154e74d338d3f511b2296c4ac.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 25612,
+   "pdfSha256": "0a0f667fe909d11a6b31fbee9d4db0201cc80a76601574f50d22ef033fda3f74",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "multifamily",
+    "reappoint"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… e 6 of 15 2. Resolution: A Resolution changing the meeting schedule for January 2027. 3. Resolution: A Resolution appointing Vicki Hardage to the Board of Tax Assessors. 4. Resolution: A Resolution excusing Councilor Glenn Davis from the …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ution Amending Travel Policy and Procedures. (Councilor Barnes) PUBLIC AGENDA 1. Mr. Howard Turner, Re: CCG No Bid Contract Problem. 2. Mr. Jaylon O’Neal, Re: Civic Literacy Initiative & Book of Local Government. 3. Ms. Theresa El-Amin, …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… ated at 2900 12th Avenue (parcel # 029-017-006) from Neighborhood Commercial - (NC) Zoning District to Residential Multifamily – 1 (RMF1) Zoning District with conditions. (Planning Department and PAC recommend approval.) (Councilor Cogle) 4 …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2026-11-10",
    "date": "2026-11-10",

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-12T17:11:52Z",
+  "generatedAt": "2026-11-14T00:43:16Z",
   "source": "Houston County (htmltable agenda/minutes PDFs, poppler+OCR)",
   "place": "Houston County",
   "count": 25
@@ -11,19 +11,29 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-03",
+  "lastActivity": "2026-11-17",
   "topicTotals": {
    "contract": 23,
-   "development": 8,
+   "development": 9,
    "local-taxes": 25,
    "millage-budget": 20,
    "appointment": 11,
-   "annexation": 10,
+   "annexation": 9,
    "rezoning": 6,
    "comprehensive-plan": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "November 17, 2026 Meeting",
+    "date": "2026-11-17",
+    "sourceUrl": "https://www.houstoncountyga.gov/minutes/2026-11-17%20Agenda.pdf",
+    "tags": [
+     "development"
+    ],
+    "excerpt": "… sioner Talton This request is for the release of a bond associated with a section of roadway in The Pines at Mossy Lake Subdivision. Motion by _____________, second by _______________ and carried _______________ to approve disapprove …",
+    "excerptTerm": "subdivision"
+   },
    {
     "title": "November 3, 2026 Meeting",
     "date": "2026-11-03",
@@ -178,20 +188,22 @@
     ],
     "excerpt": "… pecial Exception Applications – Commissioner Talton 2. Public Hearing (Rezoning Application) – Commissioner Talton 3. Annexation Request (City of Warner Robins) – Commissioner Talton 4. Selection of Architect – Commissioner Talton 5. Memorandum o …",
     "excerptTerm": "annexation"
-   },
-   {
-    "title": "November 18, 2025 Meeting",
-    "date": "2025-11-18",
-    "sourceUrl": "https://www.houstoncountyga.gov/minutes/2025-11-18%20Department%20Head%20Copy.pdf",
-    "tags": [
-     "annexation"
-    ]
    }
   ],
   "landUseMeetings": 17,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
+   {
+    "title": "November 17, 2026 Meeting",
+    "date": "2026-11-17",
+    "sourceUrl": "https://www.houstoncountyga.gov/minutes/2026-11-17%20Agenda.pdf",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… e Extension project, with Georgia Power, in an amount not to exceed $2,612,827. This project will be funded by the 2024 SPLOST and the Georgia Department of Transportation. 4. Resolution (Ocmulgee National Park and Preserve Initiative) – Comm …",
+    "excerptTerm": "splost"
+   },
    {
     "title": "November 3, 2026 Meeting",
     "date": "2026-11-03",
@@ -350,16 +362,6 @@
     "terms": [
      "splost"
     ]
-   },
-   {
-    "title": "February 3, 2026 Meeting",
-    "date": "2026-02-03",
-    "sourceUrl": "https://www.houstoncountyga.gov/minutes/2026-02-03%20Department%20Head%20Copy%20(002).pdf",
-    "terms": [
-     "local option sales tax",
-     "special purpose local option",
-     "splost"
-    ]
    }
   ],
   "localTaxCitations": 25,
@@ -370,6 +372,55 @@
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "2026-11-17-meeting",
+   "date": "2026-11-17",
+   "body": "Board of Commissioners",
+   "title": "November 17, 2026 Meeting",
+   "sourceUrl": "https://www.houstoncountyga.gov/minutes/2026-11-17%20Agenda.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.houstoncountyga.gov/minutes/2026-11-17%20Agenda.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 11323,
+   "pdfSha256": "48bb3ed071ea8c57efe4aa4b43a82a40dc8a0053aca160860c72c93eee751db4",
+   "topics": {
+    "contract": 1,
+    "development": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "contract",
+    "development",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "contract",
+    "splost",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… disapprove table authorize the final change order in the amount of $8,180.63, bringing the total contract amount with Landmark Structures, of Southlake, Texas, for the Bonaire Elevated Water Tank Project to $6,649,280.63. Fun …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… sioner Talton This request is for the release of a bond associated with a section of roadway in The Pines at Mossy Lake Subdivision. Motion by _____________, second by _______________ and carried _______________ to approve disapprove …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… e Extension project, with Georgia Power, in an amount not to exceed $2,612,827. This project will be funded by the 2024 SPLOST and the Georgia Department of Transportation. 4. Resolution (Ocmulgee National Park and Preserve Initiative) – Comm …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2026-11-03-meeting",
    "date": "2026-11-03",
@@ -1809,55 +1860,6 @@
      "term": "rezon",
      "excerpt": "… ovember 18, 2025 meeting New Business 1. Special Exception Applications – Commissioner Talton 2. Public Hearing (Rezoning Application) – Commissioner Talton 3. Annexation Request (City of Warner Robins) – Commissioner Talton 4. Selectio …",
      "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2025-11-18-meeting",
-   "date": "2025-11-18",
-   "body": "Board of Commissioners",
-   "title": "November 18, 2025 Meeting",
-   "sourceUrl": "https://www.houstoncountyga.gov/minutes/2025-11-18%20Department%20Head%20Copy.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.houstoncountyga.gov/minutes/2025-11-18%20Department%20Head%20Copy.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 13998,
-   "pdfSha256": "e8bee15354b54ee48256a864f95f26b7ad8defd718bce632ee6b506d0635c615",
-   "topics": {
-    "annexation": 1,
-    "contract": 1,
-    "local-taxes": 1
-   },
-   "tags": [
-    "annexation",
-    "contract",
-    "local-taxes"
-   ],
-   "matchedTerms": [
-    "annexation",
-    "contract",
-    "splost"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… Report – Chief Financial Officer Danyelle George Approval of Minutes from November 4, 2025 Old Business 1. Annexation (City of Warner Robins) – Commissioner Gottwals 2. Annexation (City of Warner Robins) – Commissioner Talton New …",
-     "context": "unknown"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… venile Court) – Commissioner Byrd This request from Juvenile Court is for approval of an addendum to the Independent Contractor Agreement with Kameyan Sims to increase the pay due to additional work responsibilities. Motion by _____________, se …",
-     "context": "agenda-action"
-    },
-    "local-taxes": {
-     "term": "splost",
-     "excerpt": "… in-stock 2025 Ford Police Interceptors 3.0L EcoBoost vehicles. This purchase will be funded as $186,000 charged to 2018 SPLOST and $46,500 charged to General Fund to be reimbursed by the Board of Education for the SRO unit. …",
-     "context": "unknown"
     }
    },
    "flags": [

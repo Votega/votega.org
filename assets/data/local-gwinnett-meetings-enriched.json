@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-12T17:11:46Z",
+  "generatedAt": "2026-11-14T00:42:22Z",
   "source": "Gwinnett County (gwinnett agenda/minutes PDFs, poppler+OCR)",
   "place": "Gwinnett County",
-  "count": 23
+  "count": 24
  },
  "summary": {
   "flags": [
@@ -13,19 +13,30 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-03",
+  "lastActivity": "2026-11-17",
   "topicTotals": {
+   "development": 1,
+   "local-taxes": 14,
+   "rezoning": 4,
+   "variance": 4,
    "appointment": 11,
    "contract": 15,
-   "local-taxes": 13,
    "millage-budget": 7,
    "budget": 1,
-   "rezoning": 3,
-   "variance": 3,
    "alpr": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Public Hearing",
+    "date": "2026-11-17",
+    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261117/a_62106_2026.11.17___Public_Hearing_Agenda.pdf",
+    "tags": [
+     "development",
+     "rezoning",
+     "variance"
+    ]
+   },
    {
     "title": "Public Hearing",
     "date": "2026-10-27",
@@ -54,7 +65,7 @@
     ]
    }
   ],
-  "landUseMeetings": 3,
+  "landUseMeetings": 4,
   "alprItems": [
    {
     "title": "Business Session",
@@ -75,6 +86,14 @@
   ],
   "alprMeetings": 2,
   "localTaxItems": [
+   {
+    "title": "Public Hearing",
+    "date": "2026-11-17",
+    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261117/a_62106_2026.11.17___Public_Hearing_Agenda.pdf",
+    "terms": [
+     "splost"
+    ]
+   },
    {
     "title": "Work Session",
     "date": "2026-11-03",
@@ -182,7 +201,7 @@
     ]
    }
   ],
-  "localTaxCitations": 13,
+  "localTaxCitations": 14,
   "budgetItems": [
    {
     "title": "Business Session",
@@ -195,11 +214,69 @@
    }
   ],
   "budgetCitations": 1,
-  "landUseCitations": 3,
+  "landUseCitations": 4,
   "alprCitations": 2,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "62106",
+   "date": "2026-11-17",
+   "body": "Board of Commissioners",
+   "title": "Public Hearing",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261117/a_62106_2026.11.17___Public_Hearing_Agenda.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261117/a_62106_2026.11.17___Public_Hearing_Agenda.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 5942,
+   "pdfSha256": "df0d6648e2b8e66e038c835abedde43e96db81734773253f63c76d54fac70306",
+   "topics": {
+    "development": 1,
+    "local-taxes": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "development",
+    "local-taxes",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "multifamily",
+    "rezon",
+    "splost",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… Road, 927 Billy McGee Road, and 955 Winder Highway; R-75 to R-IF for a Townhouse and Single-Family Detached Subdivision; 13.40 acres; District 3/Watkins [Planning Department Recommendation: Approve with Conditions][Pl …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… e Chairwoman, or designee, to sign any and all related documents. The local match will be funded by the 2023 SPLOST Program. VIII. New Business 1. Law Department/Jenny Carter 2026-1419 Approval/authorization of an …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… 26-1372 REZ2026-00028, Applicant: Hasnain Lakhani c/o Mahaffey Pickens Tucker, LLP; Owner: Hasnain Lakhani; Rezoning with Concurrent Variances of Tax Parcel Nos. R7074 013, 087, and 098; 1587, 1694, and 1702 Herrington Ro …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… plicant: Hasnain Lakhani c/o Mahaffey Pickens Tucker, LLP; Owner: Hasnain Lakhani; Rezoning with Concurrent Variances of Tax Parcel Nos. R7074 013, 087, and 098; 1587, 1694, and 1702 Herrington Road; R- 100 to R- …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "97677",
    "date": "2026-11-03",
