@@ -4,7 +4,8 @@
 A published /ga-legislators/<slug>/ URL must never 404. This refuses any commit that
 would break that promise. Tier 1 (exit 1): removed person/path/biennium vs the base ref,
 a path owned by two people, a roster votegaUrl that is not the ledger's current path (or
-is not on SITE_URL), a ledger biennium with no frozen record, a person with two different
+is not on SITE_URL), a ledger biennium with no frozen record, a ledger person in neither the live roster nor a
+frozen biennium (no page can be built), a person with two different
 (chamber, district) records inside one frozen biennium. Tier 2 (printed, never gates):
 people added, URLs added (renames), bienniums added.
 
@@ -106,10 +107,13 @@ def check(ledger, base, members, frozen):
 
     for gid, person in sorted(ledger["people"].items()):
         for tag in person.get("bienniums", []):
-            if tag == "current":
-                continue
             if gid not in frozen.get(tag, {}):
                 errors.append(f"person {gid}: biennium {tag} has no frozen {MEMBERS} record")
+    live_gids = {str(mem["legisGaGovId"]) for mem in members if mem.get("legisGaGovId") is not None}
+    for gid in sorted(ledger["people"]):
+        if gid not in live_gids and not any(gid in by for by in frozen.values()):
+            errors.append(f"person {gid}: in neither the live roster nor any frozen {MEMBERS}, "
+                          f"so the deploy cannot build their page (run the biennium freeze first)")
     for tag, by in sorted(frozen.items()):
         for gid, recs in sorted(by.items()):
             if len(recs) > 1:

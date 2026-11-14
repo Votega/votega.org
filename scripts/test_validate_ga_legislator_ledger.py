@@ -3,7 +3,9 @@
 
 Usage: python scripts/test_validate_ga_legislator_ledger.py   (exit 0 ok, 1 on failure)
 """
+import contextlib
 import copy
+import io
 import json
 import os
 import subprocess
@@ -67,6 +69,7 @@ def run(tmp, *extra):
 
 def scenario(label, want, **kw):
     mutate = kw.pop("mutate", None)
+    msg = kw.pop("msg", None)
     with tempfile.TemporaryDirectory() as tmp:
         led = copy.deepcopy(LEDGER)
         if mutate:
@@ -75,7 +78,12 @@ def scenario(label, want, **kw):
         # The base read must really have worked, or every "pass" below is vacuous.
         base = V.read_base_ledger(os.path.join(tmp, "assets", "data", "ga-legislator-ledger.json"), "HEAD")
         check(label + ": base read succeeded", len(base["people"]), 2)
-        check(label, run(tmp), want)
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = run(tmp)
+        check(label, rc, want)
+        if msg:
+            check(label + ": message", msg in buf.getvalue(), True)
 
 
 def test_clean_passes():
@@ -91,11 +99,27 @@ def test_rename_is_a_note_not_a_failure():
 
 
 def test_removed_url_fails():
-    scenario("removed url", 1, mutate=lambda led: led["people"]["2"].update(urls=[]))
+    scenario("removed url", 1, mutate=lambda led: led["people"]["2"].update(urls=[]),
+             msg="person 2: path /ga-legislators/b-senate-2/ removed")
 
 
 def test_removed_person_fails():
-    scenario("removed person", 1, mutate=lambda led: led["people"].pop("2"))
+    scenario("removed person", 1, mutate=lambda led: led["people"].pop("2"), msg="person 2 removed")
+
+
+def test_person_in_neither_roster_nor_frozen_fails():
+    def m(led):
+        led["people"]["3"] = {"rosterId": "ocd-person/3", "bienniums": [],
+                              "urls": [{"path": "/ga-legislators/c-house-3/", "biennium": "2025_26"}]}
+    with tempfile.TemporaryDirectory() as tmp:
+        led = copy.deepcopy(LEDGER)
+        m(led)
+        setup(tmp, ledger=led)
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            rc = run(tmp)
+        check("unbuildable person fails", rc, 1)
+        check("names person 3", "person 3: in neither the live roster nor any frozen" in buf.getvalue(), True)
 
 
 def test_shared_url_fails():
