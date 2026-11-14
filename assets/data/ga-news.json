@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-14T12:43:41.623945+00:00",
+    "generatedAt": "2026-11-14T19:36:37.995924+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,13 +24,13 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 126,
+    "count": 123,
     "windowDays": 45,
-    "entityTagged": 82,
+    "entityTagged": 81,
     "topicCounts": {
-      "budget": 7,
-      "healthcare": 19,
-      "elections": 52,
+      "budget": 6,
+      "elections": 50,
+      "healthcare": 17,
       "ethics": 1,
       "courts": 6,
       "education": 7,
@@ -39,6 +39,15 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000035": {
+      "name": "Carolyn Hugley",
+      "url": null,
+      "ocdPersonId": "ocd-person/0f5a9273-2fc6-458f-af59-b75070a1dc76",
+      "rosterId": "ocd-person/0f5a9273-2fc6-458f-af59-b75070a1dc76",
+      "candidateIds": [
+        "ga-house-141-2026-d-1"
+      ]
+    },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
       "url": null,
@@ -62,15 +71,6 @@
         "challenger-chris-carr-gov-2026"
       ]
     },
-    "vg-ga-p-000035": {
-      "name": "Carolyn Hugley",
-      "url": null,
-      "ocdPersonId": "ocd-person/0f5a9273-2fc6-458f-af59-b75070a1dc76",
-      "rosterId": "ocd-person/0f5a9273-2fc6-458f-af59-b75070a1dc76",
-      "candidateIds": [
-        "ga-house-141-2026-d-1"
-      ]
-    },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
       "url": null,
@@ -89,22 +89,6 @@
       "bioguideId": "C001103",
       "candidateIds": [
         "challenger-buddy-carter-senate-2026"
-      ]
-    },
-    "vg-ga-p-000368": {
-      "name": "Rick Jackson",
-      "url": null,
-      "candidateIds": [
-        "challenger-rick-jackson-gov-2026"
-      ]
-    },
-    "vg-ga-p-000189": {
-      "name": "Ron Stephens",
-      "url": null,
-      "ocdPersonId": "ocd-person/aeaeb854-ff9c-47cb-8069-395b60ba05b2",
-      "rosterId": "ocd-person/aeaeb854-ff9c-47cb-8069-395b60ba05b2",
-      "candidateIds": [
-        "ga-house-164-2026-r-1"
       ]
     },
     "vg-ga-p-000256": {
@@ -129,6 +113,13 @@
       "url": null,
       "candidateIds": [
         "challenger-penny-brown-reynolds-sos-2026"
+      ]
+    },
+    "vg-ga-p-000368": {
+      "name": "Rick Jackson",
+      "url": null,
+      "candidateIds": [
+        "challenger-rick-jackson-gov-2026"
       ]
     },
     "vg-ga-p-000262": {
@@ -165,6 +156,18 @@
   },
   "items": [
     {
+      "id": "5fcc73fe634c",
+      "title": "Carolyn Hugley poised to become Georgia’s first Black female House speaker",
+      "url": "https://thecurrentga.org/2026/11/14/carolyn-hugley-poised-to-become-georgias-first-black-female-house-speaker/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-14T16:51:41+00:00",
+      "snippet": "Georgia House Democrats picked leadership, including Representative Carolyn Hugley as nominee for House speaker, following the party's first majority win in the chamber in two decades.\nThe Current is ",
+      "entityIds": [
+        "vg-ga-p-000035"
+      ],
+      "topics": []
+    },
+    {
       "id": "06af346c89be",
       "title": "FAA grounds flights after communications breakdown for controllers",
       "url": "https://capitol-beat.org/2026/11/faa-grounds-flights-after-communications-breakdown-for-controllers/?utm_source=rss&utm_medium=rss&utm_campaign=faa-grounds-flights-after-communications-breakdown-for-controllers",
@@ -184,30 +187,6 @@
       "entityIds": [],
       "topics": [
         "budget"
-      ]
-    },
-    {
-      "id": "15bb8067cb04",
-      "title": "GPB evening headlines for November 13, 2026",
-      "url": "https://www.gpb.org/news/2026/11/13/gpb-evening-headlines-for-november-13-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-13T21:14:10+00:00",
-      "snippet": "A state of emergency is extended for four North Georgia counties. A federal grant to rural hospitals could change how providers deliver healthcare. A new company promises more than 300 jobs in Locust ",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "416d98798877",
-      "title": "Georgia Today: McCaysville update; Recycling grants; Tybee Island dogs",
-      "url": "https://www.gpb.org/news/2026/11/13/georgia-today-mccaysville-update-recycling-grants-tybee-island-dogs",
-      "source": "GPB News",
-      "publishedAt": "2026-11-13T20:23:50+00:00",
-      "snippet": "On today's Nov. 13 edition: Gov. Kemp extends the state of emergency for North Georgia; recycling initiatives throughout the state get a boost; and federal funding is changing how rural healthcare pro",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
       ]
     },
     {
@@ -584,36 +563,6 @@
       "entityIds": [],
       "topics": [
         "healthcare"
-      ]
-    },
-    {
-      "id": "aa84239f0175",
-      "title": "Blue tide sweeps away $200 million-plus in Georgia GOP spending",
-      "url": "https://thecurrentga.org/2026/11/09/blue-tide-sweeps-away-200-million-plus-in-georgia-gop-spending/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-09T20:37:39+00:00",
-      "snippet": "Despite spending over $213 million, Republican Rick Jackson lost the Georgia gubernatorial election to Keisha Lance Bottoms, who secured a 54% majority while spending significantly less.\nThe Current i",
-      "entityIds": [
-        "vg-ga-p-000368",
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections",
-        "budget"
-      ]
-    },
-    {
-      "id": "4c9390ac5eb3",
-      "title": "Chatham delegation set to choose successor for veteran leader Ron Stephens",
-      "url": "https://thecurrentga.org/2026/11/09/chatham-delegation-set-to-choose-successor-for-veteran-leader-ron-stephens/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-09T20:12:45+00:00",
-      "snippet": "Following recent midterm elections, Democrats have secured a majority in Chatham County's legislative delegation, marking a significant shift in the group's leadership and influence over local governa",
-      "entityIds": [
-        "vg-ga-p-000189"
-      ],
-      "topics": [
-        "elections"
       ]
     },
     {
