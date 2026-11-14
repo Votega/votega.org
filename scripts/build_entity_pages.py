@@ -30,7 +30,8 @@ from lib.atomic_io import write_json_atomic
 from lib.share_card import candidate_line
 from lib.ga_legislator_record import legislator_record
 from lib.ga_ledger import load_ledger, current_path
-from lib.ga_former import load_frozen, former_records, bienniums_for, departure_sentence, job_title
+from lib.ga_former import (load_frozen, former_records, bienniums_for, departure_sentence,
+                           departure_note, job_title)
 from lib.ga_sessions import session_slug
 from lib.candidate_standing import LIVE, OFF_BALLOT, LOST, WON, overall, standing, officeholder_target
 import os
@@ -849,6 +850,11 @@ _GA_ACTIVE_STATUSES = (None, "", "Suspended", "Vacant")
 # so the directory never drifts from the pages it lists. build_directory_pages()
 # consumes it after all builders run.
 _DIRECTORY = []
+# Former GA legislators, one row per built former page, collected by build_ga_legislators
+# and written to _data/former_legislators.json for the server-rendered list on
+# /ga-state-reps (the human path to these pages; the directory is the crawl path).
+_FORMER = []
+FORMER_LEGISLATORS_PATH = os.path.join(ROOT, "_data", "former_legislators.json")
 
 
 def _dir_add(section, group, group_order, sort_key, name, url, group_url=None):
@@ -886,6 +892,21 @@ FEATURED_RACES_PATH = os.path.join(ROOT, "_data", "featured_races.json")
 
 def _natural_key(text):
     return [int(p) if p.isdigit() else p.lower() for p in re.split(r"(\d+)", text or "")]
+
+
+def former_legislators(rows):
+    """{"groups": [{"biennium": "2025–2026", "members": [{name, chamber, district, party,
+    left, url}]}]}: newest biennium first, Senate before House, then district."""
+    by_tag = {}
+    for r in rows:
+        by_tag.setdefault(r["tag"], []).append({k: v for k, v in r.items() if k != "tag"})
+    groups = []
+    for tag in sorted(by_tag, reverse=True):
+        members = sorted(by_tag[tag], key=lambda r: (
+            r["chamber"] != "Senate", r["district"] if isinstance(r["district"], int) else 9999,
+            r["name"]))
+        groups.append({"biennium": session_slug(tag).replace("-", "–"), "members": members})
+    return {"groups": groups}
 
 
 def featured_races(directory):
@@ -1012,6 +1033,10 @@ def build_ga_legislators(records, urls, prior, new_state):
             _dir_add("legislators", f"Former Georgia Legislators ({session_slug(real_tag)})", 2,
                      (district if isinstance(district, int) else 9999, name),
                      (f"District {district} — {name}" if district else name), permalink)
+            _FORMER.append({"tag": real_tag, "name": name,
+                            "chamber": "Senate" if is_senate else "House",
+                            "district": district, "party": party or None,
+                            "left": departure_note(m), "url": permalink})
         else:
             _dir_add("legislators",
                      "Georgia State Senate" if is_senate else "Georgia House of Representatives",
@@ -1871,6 +1896,7 @@ def main():
     _CAND_PERMALINKS.update(plan_candidate_permalinks(
         records, load("races.json").get("races", [])))
     _DIRECTORY[:] = []  # reset the cross-builder directory accumulator
+    _FORMER[:] = []
     _CARDS[:] = []
     failed = []
     for label, builder in CATEGORY_BUILDERS:
@@ -1897,6 +1923,8 @@ def main():
     write_json_atomic(ENTITY_URLS_PATH, urls, separators=(",", ":"))
     write_json_atomic(SERVED_ENTITY_URLS_PATH, urls, separators=(",", ":"))
     write_json_atomic(FEATURED_RACES_PATH, featured_races(_DIRECTORY), separators=(",", ":"))
+    write_json_atomic(FORMER_LEGISLATORS_PATH, former_legislators(_FORMER),
+                      separators=(",", ":"))
     if not degraded:
         write_json_atomic(LASTMOD_STATE_PATH, new_state, separators=(",", ":"))
     os.makedirs(os.path.dirname(SHARE_MANIFEST_PATH), exist_ok=True)

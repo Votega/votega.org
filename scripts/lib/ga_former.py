@@ -72,14 +72,22 @@ def _date(iso):
     return f"{d.strftime('%B')} {d.day}, {d.year}"
 
 
+def departure_note(m):
+    """"Resigned March 1, 2026", or None when the record carries no departure and date."""
+    verb = _VERB.get(m.get("status"))
+    if verb and m.get("statusDate"):
+        return f"{verb} {_date(m['statusDate'])}"
+    return None
+
+
 def departure_sentence(m, tag):
     """`tag` is a real biennium tag (for a live record, pass the roster's metadata.session)."""
     house = "Senate" if "senate" in (m.get("chamber") or "").lower() else "House"
     years = session_slug(tag).replace("-", "–")
     s = f"Served in the Georgia {house}, District {m.get('district')}, in the {years} General Assembly."
-    verb = _VERB.get(m.get("status"))
-    if verb and m.get("statusDate"):
-        s += f" {verb} {_date(m['statusDate'])}."
+    note = departure_note(m)
+    if note:
+        s += f" {note}."
     return s
 
 

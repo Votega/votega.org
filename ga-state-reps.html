@@ -10,6 +10,9 @@ share-description: "Directory of Georgia General Assembly members, State Senator
 <p>Georgia's annual legislative session is 40 days at the beginning of the year. During that time, our State Senators and Representatives gather inside the Capitol in Atlanta to discuss bills and vote to create new laws. Together they make up the Georgia General Assembly, which is the legislative branch of our state government.</p>
 
 <p>The General Assembly is made up of two chambers: the Senate and the House of Representatives. There are 56 State Senators and 180 State Representatives, each representing a district of voters across Georgia. Georgia House and Senate members serve two-year terms, with all seats up for election every two years.</p>
+{%- if site.data.former_legislators.groups and site.data.former_legislators.groups.size > 0 %}
+<p class="former-jump">Looking for someone who has left the General Assembly? See <a href="#former">former legislators</a>.</p>
+{%- endif %}
 
 <p>Select a Chamber (GA State Senate or GA House), search your address, ZIP code, or select a county filter to view your state elected officials. </p>
 
@@ -55,6 +58,12 @@ share-description: "Directory of Georgia General Assembly members, State Senator
   .lookup-row input { flex: 1; min-width: 240px; padding: 8px; font-size: 1rem; border: 1px solid var(--color-border); border-radius: 6px; }
   .lookup-row button { padding: 8px 16px; font-size: 0.95rem; font-weight: 600; cursor: pointer; background: var(--color-accent); color: var(--color-on-accent); border: 0; border-radius: 6px; white-space: nowrap; }
   .lookup-row button:disabled { opacity: 0.6; cursor: default; }
+  .former-legislators { margin-top: 2.5rem; border-top: 1px solid var(--color-border); padding-top: 1.25rem; }
+  .former-legislators h3 { font-size: 1.05rem; margin: 1rem 0 0.5rem; }
+  .former-intro { color: var(--color-text-secondary); }
+  .former-list { list-style: none; padding: 0; margin: 0; }
+  .former-list li { padding: 0.35rem 0; border-bottom: 1px solid var(--color-border); }
+  .former-meta { display: block; font-size: 0.85rem; color: var(--color-text-secondary); }
   .lookup-hint { font-size: 0.78rem; color: var(--color-text-secondary); margin: 0.4rem 0 0; }
   .lookup-msg { margin-top: 0.5rem; font-size: 0.9rem; color: var(--color-danger); }
   .lookup-banner { display: none; margin-top: 0.75rem; padding: 0.6rem 0.8rem; font-size: 0.88rem; background: var(--color-surface-tint); border: 1px solid var(--color-border); border-radius: 8px; color: var(--color-link); gap: 0.75rem; align-items: center; flex-wrap: wrap; }
@@ -175,6 +184,29 @@ share-description: "Directory of Georgia General Assembly members, State Senator
 <div id="membersOutput"></div>
 
 <p id="dataStamp" class="data-stamp"></p>
+
+{%- comment -%}
+  Former members: the human path to their pages (the footer directory is the crawl path).
+  _data/former_legislators.json is a build artifact of scripts/build_entity_pages.py, one
+  row per built former-member page; when that script has not run the file is absent and
+  the section is omitted. Server-rendered so the links exist in the raw HTML.
+{%- endcomment -%}
+{%- assign former_groups = site.data.former_legislators.groups -%}
+{%- if former_groups and former_groups.size > 0 %}
+<section class="former-legislators" id="former" aria-labelledby="formerHeading">
+  <h2 id="formerHeading">Former legislators</h2>
+  <p class="former-intro">Members who have left the General Assembly keep their pages, with their voting record and sponsored bills from the years they served.</p>
+  {%- for group in former_groups %}
+  <h3>{{ group.biennium }} General Assembly</h3>
+  <ul class="former-list">
+    {%- for m in group.members %}
+    <li><a href="{{ m.url | relative_url }}">{{ m.name }}</a>
+      <span class="former-meta">{{ m.chamber }} District {{ m.district }}{% if m.party %} · {{ m.party }}{% endif %}{% if m.left %} · {{ m.left }}{% endif %}</span></li>
+    {%- endfor %}
+  </ul>
+  {%- endfor %}
+</section>
+{%- endif %}
 
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

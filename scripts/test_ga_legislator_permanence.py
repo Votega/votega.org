@@ -247,5 +247,20 @@ def main():
     return 1 if failures else 0
 
 
+def test_former_legislators_data_for_state_reps_page():
+    B._FORMER[:] = []
+    run([SITTING, RESIGNED], FROZEN, ledger3())
+    got = B.former_legislators(B._FORMER)
+    check("one biennium group, newest first", [g["biennium"] for g in got["groups"]], ["2025–2026"])
+    rows = got["groups"][0]["members"]
+    check("senate before house, then district", [r["name"] for r in rows], ["Cy Gone", "Bob Resigned"])
+    check("row shape", rows[1], {"name": "Bob Resigned", "chamber": "House", "district": 5,
+                                 "party": "Democratic", "left": "Resigned March 1, 2026",
+                                 "url": "/ga-legislators/bob-resigned-house-5/"})
+    check("no departure status -> left is None", rows[0]["left"], None)
+    check("sitting members excluded", "Ann Sitting" in [r["name"] for r in rows], False)
+    check("empty input -> no groups", B.former_legislators([]), {"groups": []})
+
+
 if __name__ == "__main__":
     sys.exit(main())
