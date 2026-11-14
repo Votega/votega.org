@@ -49,7 +49,7 @@ RESIGNED = member(2, "Bob Resigned", HOUSE, 5, "Resigned", "2026-03-01")
 GONE = member(3, "Cy Gone", SENATE, 9)  # only in the frozen tree
 
 
-def run(live, frozen, ledger_people, live_tag="2025_26", records_for=None):
+def run(live, frozen, ledger_people, live_tag="2025_26", records_for=None, pages=None):
     """Return (pages, urls, cards, dirs); pages is {slug: (front matter, body)}."""
     tmp = tempfile.mkdtemp()
     write = lambda rel, doc: (os.makedirs(os.path.dirname(os.path.join(tmp, rel)), exist_ok=True),
@@ -66,7 +66,8 @@ def run(live, frozen, ledger_people, live_tag="2025_26", records_for=None):
     records = [{"category": "GA Legislator", "title": m["name"], "desc": "Rep",
                 "url": f"ga-member.html?id={m['id']}"} for m in (records_for or everyone)]
 
-    pages, cards = {}, []
+    pages = {} if pages is None else pages
+    cards = []
     saved = (B.SRC_DIR, B.write_page, B.add_card, B.resolve_lastmod, B._DIRECTORY[:])
     B.SRC_DIR = tmp
     B.write_page = lambda sub, slug, fm, body: pages.__setitem__(slug, (fm, body))
@@ -201,15 +202,40 @@ def test_bienniums_dedupe_live_session():
           ["current", "2025_26"])
 
 
-def test_ledger_person_without_page_fails():
+def test_ledger_person_without_page_raises_after_writing_the_rest():
     led_ = ledger3()
     led_.update(led(99, ("/ga-legislators/nobody-house-1/", "2025_26")))
+    led_.update(led(1, ("/ga-legislators/ann-new-house-5/", "2025_26"),
+                    ("/ga-legislators/ann-sitting-house-5/", "2025_26")))
+    pages = {}
     try:
-        run([SITTING, RESIGNED], FROZEN, led_)
-    except SystemExit as e:
-        check("raises naming the person", str(e), "ledger person 99 has no page")
+        run([SITTING, RESIGNED], FROZEN, led_, pages=pages)
+    except SystemExit:
+        check("raises an Exception, not SystemExit", "SystemExit", "RuntimeError")
+    except RuntimeError as e:
+        check("RuntimeError names the gid", "99" in str(e), True)
     else:
-        check("raises SystemExit", "no exception", "SystemExit")
+        check("raises", "no exception", "RuntimeError")
+    check("other pages still written",
+          {"ann-new-house-5", "bob-resigned-house-5", "cy-gone-senate-9"} <= set(pages), True)
+    check("redirect stub still written", "ann-sitting-house-5" in pages, True)
+
+
+def test_ledger_person_absent_from_corpus_still_gets_page():
+    only_ann = [m for m in (SITTING, RESIGNED, GONE) if m is SITTING]
+    pages, urls, _, _ = run([SITTING, RESIGNED], FROZEN, ledger3(), records_for=only_ann)
+    check("live person missing from corpus built", "bob-resigned-house-5" in pages, True)
+    check("frozen-only person missing from corpus built", "cy-gone-senate-9" in pages, True)
+    check("corpus person unchanged", "ann-sitting-house-5" in pages, True)
+
+
+def test_former_description_has_no_contact_claim():
+    pages, _, _, _ = run([SITTING, RESIGNED], FROZEN, ledger3())
+    d = pages["bob-resigned-house-5"][0]["share-description"].strip("\"")
+    check("former lead", d.startswith("Former Georgia State Representative, District 5."), True)
+    check("no contact information", "contact" in d.lower(), False)
+    check("names the biennium", "2025–2026 General Assembly" in d, True)
+    check("sitting description unchanged", "contact information" in pages["ann-sitting-house-5"][0]["share-description"], True)
 
 
 def main():

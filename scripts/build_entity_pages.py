@@ -939,9 +939,20 @@ def build_ga_legislators(records, urls, prior, new_state):
     # current holder of the seat whatever order the records come in.
     seen = set()
     plan = []  # (rec, mid, m, permalink)
-    for rec in records:
-        if rec.get("category") != "GA Legislator":
-            continue
+    # The ledger, not the search corpus, is the page set: search-entities.json is regenerated
+    # on its own schedule and can lag a ledger entry, so a ledger person the corpus lacks is
+    # built from the roster (or newest frozen) record rather than left without a page.
+    ga_records = [r for r in records if r.get("category") == "GA Legislator"]
+    corpus_mids = {qs_id(r["url"]) for r in ga_records}
+    mid_by_gid = {str(m["legisGaGovId"]): mid for mid, m in members.items()
+                  if m.get("legisGaGovId") is not None}
+    for lgid in sorted(ledger["people"]):
+        lmid = mid_by_gid.get(lgid)
+        if lmid and lmid not in corpus_mids:
+            ga_records.append({"category": "GA Legislator", "title": members[lmid].get("name") or "",
+                               "desc": None, "url": f"ga-member.html?id={lmid}"})
+            corpus_mids.add(lmid)
+    for rec in ga_records:
         mid = qs_id(rec["url"])
         if not mid:
             continue
@@ -1014,9 +1025,14 @@ def build_ga_legislators(records, urls, prior, new_state):
         former_pre = "Former " if is_former else ""
         share_title = (f"{name} — {former_pre}GA {'Senate' if is_senate else 'House'} District {district}"
                        if district else f"{name} — {former_pre}Georgia {role}")
-        desc = (f"{rec.get('desc') or (role + dist_txt)}. Voting record, party-line "
-                f"loyalty, committee assignments, campaign finance, and contact "
-                f"information for {name}.")
+        if is_former:
+            desc = (f"Former Georgia {role}{dist_txt}. Voting record, sponsored bills, "
+                    f"committee assignments and campaign finance for {name} in the "
+                    f"{session_slug(real_tag).replace('-', '–')} General Assembly.")
+        else:
+            desc = (f"{rec.get('desc') or (role + dist_txt)}. Voting record, party-line "
+                    f"loyalty, committee assignments, campaign finance, and contact "
+                    f"information for {name}.")
 
         # High-value, stable facts baked into the page for crawlers / no-JS
         # readers (the JS profile still overwrites #memberDetails for humans).
@@ -1090,9 +1106,11 @@ def build_ga_legislators(records, urls, prior, new_state):
 
     # Every URL the ledger has ever recorded must resolve: the current one to a page, the
     # older ones to a redirect. A person with no page is exactly the 404 this prevents.
+    missing = []
     for gid, person in sorted(ledger["people"].items()):
         if gid not in built_gids:
-            raise SystemExit(f"ledger person {gid} has no page")
+            missing.append(gid)
+            continue
         entries = person.get("urls") or []
         for entry in entries[1:]:
             target = SITE_URL + entries[0]["path"]
@@ -1101,6 +1119,11 @@ def build_ga_legislators(records, urls, prior, new_state):
             write_page("ga-legislators", _ga_slug_of(entry["path"]),
                        {"permalink": entry["path"], "redirect_to": target, "sitemap": "false"}, "")
             count += 1
+    if missing:
+        # Raised only after every other page and stub is written, and as a normal
+        # exception so main() reports this category degraded instead of dying.
+        raise RuntimeError("ledger person(s) with no page (in neither the roster nor a "
+                           "frozen biennium): " + ", ".join(missing))
     return count
 
 
