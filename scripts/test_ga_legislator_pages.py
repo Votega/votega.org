@@ -100,9 +100,19 @@ def main():
     # 3. The committed field, once the roster producer has written it, must agree.
     # (The field lands on the next update-ga-members run; absent until then.)
     if any("votegaUrl" in m for m in members):
+        # A committed null where the rule now derives a URL is the transitional state
+        # after a has_page change (departed members gained pages 2026-11): the committed
+        # roster gets the URL on the next update-ga-members run, and the PR data-sync bot
+        # copies main's roster onto every PR meanwhile. Any committed non-null URL must
+        # still match exactly, and a committed URL the rule no longer derives fails.
+        derived_by_id = {m["id"]: m["votegaUrl"] for m in derived}
+        pending = sorted(m["id"] for m in members
+                         if m.get("votegaUrl") is None and derived_by_id.get(m["id"]))
         check("committed votegaUrl matches derived",
-              {m["id"]: m.get("votegaUrl") for m in members},
-              {m["id"]: m["votegaUrl"] for m in derived})
+              {m["id"]: m.get("votegaUrl") for m in members if m["id"] not in pending},
+              {k: v for k, v in derived_by_id.items() if k not in pending})
+        if pending:
+            print(f"  note: {len(pending)} member(s) gain a votegaUrl on the next roster run")
     else:
         print("  skip committed votegaUrl check: field not yet written by the roster producer")
 
