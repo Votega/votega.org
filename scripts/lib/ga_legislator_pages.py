@@ -8,7 +8,8 @@ our slugs. It is DERIVED, never hand-set.
 Two files decide the answer, and this module mirrors both so the roster producer can
 state it without running the page builder:
   * generate_search_corpus.build_ga_legislators -- who gets an entry (the page set is that
-    index): an `ocd-person/` or `legis-` id, a voting chamber, not Resigned/Removed/Deceased.
+    index): an `ocd-person/` or `legis-` id, a voting chamber and a legisGaGovId; status no longer
+    matters (departed members keep a page, which is permanent).
   * build_entity_pages.build_ga_legislators -- the slug (name + chamber + district) and the
     collision rule (append the first 8 chars of the id's last segment).
 scripts/test_ga_legislator_pages.py runs the real builder and fails if the two disagree.
@@ -19,7 +20,9 @@ import re
 
 from lib.ga_voters import VOTING_CHAMBERS
 
-NO_PAGE_STATUSES = ("Resigned", "Removed", "Deceased")
+# The ONE definition of "has left the seat" for pages, search and the biennium freeze.
+# (lib.ga_voters.DEPARTED_STATUSES is a different, wider tuple that also holds "Vacant".)
+DEPARTED_STATUSES = ("Resigned", "Removed", "Deceased")
 SITE_URL = "https://www.votega.org"  # same as build_entity_pages.SITE_URL (test pins it)
 PERMALINK = "/ga-legislators/{}/"
 
@@ -37,7 +40,7 @@ def has_page(m):
     mid = (m.get("id") or "").strip()
     return (mid.startswith(("ocd-person/", "legis-"))
             and m.get("chamber") in VOTING_CHAMBERS
-            and m.get("status") not in NO_PAGE_STATUSES)
+            and m.get("legisGaGovId") is not None)
 
 
 def base_slug(m):

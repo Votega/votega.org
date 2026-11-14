@@ -29,6 +29,9 @@ import json
 from lib.atomic_io import write_json_atomic
 from lib.share_card import candidate_line
 from lib.ga_legislator_record import legislator_record
+from lib.ga_ledger import load_ledger, current_path
+from lib.ga_former import load_frozen, former_records, bienniums_for, departure_sentence, job_title
+from lib.ga_sessions import session_slug
 from lib.candidate_standing import LIVE, OFF_BALLOT, LOST, WON, overall, standing, officeholder_target
 import os
 import re
@@ -910,65 +913,140 @@ def featured_races(directory):
     return {"groups": groups}
 
 
+def _ga_slug_of(path):
+    return path.strip("/").split("/")[-1]
+
+
 def build_ga_legislators(records, urls, prior, new_state):
     data = load("ga-members.json")
-    members = {m["id"]: m for m in data.get("members", [])}
+    live_members = data.get("members", [])
+    members = {m["id"]: m for m in live_members}
+    live_tag = (data.get("metadata") or {}).get("session")
     data_date = _date_only((data.get("metadata") or {}).get("generatedAt"))
+    frozen = load_frozen(os.path.join(SRC_DIR, "ga-bienniums"))
+    ledger = load_ledger(os.path.join(SRC_DIR, "ga-legislator-ledger.json"))
+    # Former members: live records with a departed status, plus anyone who is only in a
+    # frozen biennium. {roster id: (record, tag)}; tag is "current" for a live record.
+    former_by_id = {}
+    for rec_m, tag in former_records(live_members, frozen):
+        former_by_id[rec_m["id"]] = (rec_m, tag)
+        members.setdefault(rec_m["id"], rec_m)
     # Record sentences come from the generated files, never recomputed here.
     unity = {u["id"]: u for u in load("ga-party-unity.json").get("members", [])}
     spon = load("ga-sponsorship-index.json").get("members", {})
+
+    # Pass 1: every page's permalink, so a former member's banner can link to the
+    # current holder of the seat whatever order the records come in.
     seen = set()
-    count = 0
-    for rec in records:
-        if rec.get("category") != "GA Legislator":
-            continue
+    plan = []  # (rec, mid, m, permalink)
+    # The ledger, not the search corpus, is the page set: search-entities.json is regenerated
+    # on its own schedule and can lag a ledger entry, so a ledger person the corpus lacks is
+    # built from the roster (or newest frozen) record rather than left without a page.
+    ga_records = [r for r in records if r.get("category") == "GA Legislator"]
+    corpus_mids = {qs_id(r["url"]) for r in ga_records}
+    mid_by_gid = {str(m["legisGaGovId"]): mid for mid, m in members.items()
+                  if m.get("legisGaGovId") is not None}
+    for lgid in sorted(ledger["people"]):
+        lmid = mid_by_gid.get(lgid)
+        if lmid and lmid not in corpus_mids:
+            ga_records.append({"category": "GA Legislator", "title": members[lmid].get("name") or "",
+                               "desc": None, "url": f"ga-member.html?id={lmid}"})
+            corpus_mids.add(lmid)
+    for rec in ga_records:
         mid = qs_id(rec["url"])
         if not mid:
             continue
         m = members.get(mid, {})
+        gid = m.get("legisGaGovId")
+        name = m.get("name") or rec.get("title") or ""
+        chamber = m.get("chamber") or ""
+        chamber_short = "senate" if "senate" in chamber.lower() else "house"
+        ledger_path = current_path(ledger, gid) if gid is not None else None
+        if ledger_path:
+            slug = _ga_slug_of(ledger_path)
+        else:
+            slug = slugify(name, chamber_short, m.get("district"))
+            if slug in seen:  # extremely unlikely; disambiguate with a short id fragment
+                slug = slugify(slug, mid.split("/")[-1][:8])
+            print(f"  WARNING: {name} (legisGaGovId {gid}) is not in the page ledger yet; "
+                  f"using computed slug {slug}", file=sys.stderr)
+        seen.add(slug)
+        plan.append((rec, mid, m, f"/ga-legislators/{slug}/"))
+
+    # The sitting holder of each seat, for the banner on a former member's page.
+    holders = {}
+    for rec, mid, m, permalink in plan:
+        if mid in former_by_id or m.get("status") == "Vacant" or not m.get("name"):
+            continue
+        key = ("senate" in (m.get("chamber") or "").lower(), m.get("district"))
+        holders.setdefault(key, (m["name"], permalink))
+
+    count = 0
+    built_gids = set()
+    for rec, mid, m, permalink in plan:
         name = m.get("name") or rec.get("title") or ""
         chamber = m.get("chamber") or ""
         district = m.get("district")
         party = m.get("party") or ""
         is_senate = "senate" in chamber.lower()
-        chamber_short = "senate" if is_senate else "house"
         role = "State Senator" if is_senate else "State Representative"
         role_short = "Senator" if is_senate else "Representative"
+        gid = m.get("legisGaGovId")
+        if gid is not None:
+            built_gids.add(str(gid))
 
-        slug = slugify(name, chamber_short, district)
-        if slug in seen:  # extremely unlikely; disambiguate with a short id fragment
-            slug = slugify(slug, mid.split("/")[-1][:8])
-        seen.add(slug)
-        permalink = f"/ga-legislators/{slug}/"
+        former_tag = former_by_id[mid][1] if mid in former_by_id else None
+        is_former = former_tag is not None
+        real_tag = live_tag if former_tag == "current" else former_tag
+        in_live = (not is_former) or former_tag == "current"
+        if gid is None:
+            bienniums = ["current"] if in_live else []
+        else:
+            bienniums = bienniums_for(gid, live_tag if in_live else None, frozen)
+        former = ({"biennium": former_tag, "status": m.get("status"),
+                   "statusDate": m.get("statusDate")} if is_former else None)
+
         urls.setdefault("ga-legislator", {})[mid] = permalink
-        _dir_add("legislators",
-                 "Georgia State Senate" if is_senate else "Georgia House of Representatives",
-                 0 if is_senate else 1, (district if isinstance(district, int) else 9999, name),
-                 (f"District {district} — {name}" if district else name), permalink)
+        if is_former:
+            urls.setdefault("retired", {}).setdefault("ga-legislator", {})[mid] = True
+            _dir_add("legislators", f"Former Georgia Legislators ({session_slug(real_tag)})", 2,
+                     (district if isinstance(district, int) else 9999, name),
+                     (f"District {district} — {name}" if district else name), permalink)
+        else:
+            _dir_add("legislators",
+                     "Georgia State Senate" if is_senate else "Georgia House of Representatives",
+                     0 if is_senate else 1, (district if isinstance(district, int) else 9999, name),
+                     (f"District {district} — {name}" if district else name), permalink)
 
         dist_txt = f", District {district}" if district else ""
         # <title> uses the compact "GA House/Senate District N" form to stay under
         # 70 chars; the full "Georgia State Representative, District N" lives in the
         # description below and the page H1.
-        share_title = (f"{name} — GA {'Senate' if is_senate else 'House'} District {district}"
-                       if district else f"{name} — Georgia {role}")
-        desc = (f"{rec.get('desc') or (role + dist_txt)}. Voting record, party-line "
-                f"loyalty, committee assignments, campaign finance, and contact "
-                f"information for {name}.")
+        former_pre = "Former " if is_former else ""
+        share_title = (f"{name} — {former_pre}GA {'Senate' if is_senate else 'House'} District {district}"
+                       if district else f"{name} — {former_pre}Georgia {role}")
+        if is_former:
+            desc = (f"Former Georgia {role}{dist_txt}. Voting record, sponsored bills, "
+                    f"committee assignments and campaign finance for {name} in the "
+                    f"{session_slug(real_tag).replace('-', '–')} General Assembly.")
+        else:
+            desc = (f"{rec.get('desc') or (role + dist_txt)}. Voting record, party-line "
+                    f"loyalty, committee assignments, campaign finance, and contact "
+                    f"information for {name}.")
 
         # High-value, stable facts baked into the page for crawlers / no-JS
         # readers (the JS profile still overwrites #memberDetails for humans).
         committees = [c for c in (m.get("committees") or []) if c]
-        phone = m.get("phone") or None
-        website = m.get("officialWebsiteUrl") or None
+        phone = None if is_former else (m.get("phone") or None)
+        website = None if is_former else (m.get("officialWebsiteUrl") or None)
         status = m.get("status")
         next_election = (ga_next_general_election()
-                         if status in _GA_ACTIVE_STATUSES else None)
+                         if status in _GA_ACTIVE_STATUSES and not is_former else None)
 
         org = "Georgia State Senate" if is_senate else "Georgia House of Representatives"
         person = {
             "@context": "https://schema.org", "@type": "Person", "name": name,
-            "jobTitle": role, "url": SITE_URL + permalink,
+            "jobTitle": job_title(m, True) if is_former else role, "url": SITE_URL + permalink,
             "memberOf": {"@type": "GovernmentOrganization", "name": org,
                          "url": SITE_URL + "/ga-state-reps"},
             "affiliation": party or None,
@@ -977,6 +1055,16 @@ def build_ga_legislators(records, urls, prior, new_state):
             person["telephone"] = phone
         ld = json_ld(person)
 
+        banner = ""
+        if is_former:
+            sentence = departure_sentence(m, real_tag)
+            holder = holders.get((is_senate, district))
+            if holder:
+                sentence += (f' The seat is now held by <a href="{html.escape(holder[1], quote=True)}">'
+                             f'{html.escape(holder[0])}</a>.')
+            banner = ('<p class="former-member-banner"><i class="fa-solid fa-clock-rotate-left" '
+                      f'aria-hidden="true"></i> {sentence}</p>\n')
+
         entity = {"type": "ga-legislator", "id": mid, "name": name,
                   "title": role_short, "chamber": chamber, "district": district,
                   "party": party, "committees": committees, "phone": phone,
@@ -984,8 +1072,14 @@ def build_ga_legislators(records, urls, prior, new_state):
                   "about": ga_legislator_about(
                       name, role, m, is_senate,
                       legislator_record(m, unity.get(mid), spon.get(str(m.get("legisGaGovId")))))}
-        lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": desc},
-                                  data_date, prior, new_state)
+        if former:
+            entity["former"] = former
+        if len(bienniums) > 1:
+            entity["bienniums"] = bienniums
+        fingerprint = {"e": entity, "t": share_title, "d": desc}
+        if is_former:
+            fingerprint["b"] = banner
+        lastmod = resolve_lastmod(permalink, fingerprint, data_date, prior, new_state)
         fm = {
             "layout": "default",
             "title": yaml_quote(name),
@@ -996,17 +1090,40 @@ def build_ga_legislators(records, urls, prior, new_state):
             "entity": entity,
         }
         bc = breadcrumbs(fm, [("Home", "/"), ("Georgia Legislators", "/ga-state-reps"), (name, None)])
-        body = (f'<script>window.VOTEGA_ENTITY = {{"id": {json.dumps(mid)}}};</script>\n'
-                f"{ld}\n{bc}\n"
+        ve = {"id": mid, "bienniums": bienniums, "former": former}
+        body = (f'<script>window.VOTEGA_ENTITY = {json.dumps(ve)};</script>\n'
+                f"{ld}\n{bc}\n{banner}"
                 f"{{% include entity/ga-legislator.html %}}")
-        write_page("ga-legislators", slug, fm, body)
-        add_card("ga-legislators", slug, name, kind="person",
+        write_page("ga-legislators", _ga_slug_of(permalink), fm, body)
+        add_card("ga-legislators", _ga_slug_of(permalink), name, kind="person",
                  role=(f"Georgia {'Senate' if is_senate else 'House'} · District {district}" if district
                        else f"Georgia {role}"),
-                 party=party or None, badges=["Current Officeholder"],
+                 party=party or None,
+                 badges=["Former Officeholder" if is_former else "Current Officeholder"],
                  fact="Voting record, committees & campaign finance",
                  photo=_portrait(m.get("imageUrl")), stamp=data_date, source="legis.ga.gov")
         count += 1
+
+    # Every URL the ledger has ever recorded must resolve: the current one to a page, the
+    # older ones to a redirect. A person with no page is exactly the 404 this prevents.
+    missing = []
+    for gid, person in sorted(ledger["people"].items()):
+        if gid not in built_gids:
+            missing.append(gid)
+            continue
+        entries = person.get("urls") or []
+        for entry in entries[1:]:
+            target = SITE_URL + entries[0]["path"]
+            if entry.get("biennium") != entries[0].get("biennium"):
+                target += "?biennium=" + session_slug(entry["biennium"])
+            write_page("ga-legislators", _ga_slug_of(entry["path"]),
+                       {"permalink": entry["path"], "redirect_to": target, "sitemap": "false"}, "")
+            count += 1
+    if missing:
+        # Raised only after every other page and stub is written, and as a normal
+        # exception so main() reports this category degraded instead of dying.
+        raise RuntimeError("ledger person(s) with no page (in neither the roster nor a "
+                           "frozen biennium): " + ", ".join(missing))
     return count
 
 

@@ -41,6 +41,7 @@ from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.ga_identity import apply_identity_slots, load_pin_overrides
+from lib import ga_ledger as LEDGER
 from lib.ga_legislator_pages import assign_votega_urls, base_slug
 from lib.ga_leadership import committee_index, normalize_title
 from lib.ga_roster import (EXECUTIVE_CHAMBER, apply_member_overrides, biennium_slug, convening_date,
@@ -280,6 +281,11 @@ def refuse_rollover(rollover):
           f"See RECURRING-TASKS.md §3.", file=sys.stderr)
 
 
+def ledger_path_for(output_file):
+    """The page ledger lives beside the roster it describes."""
+    return os.path.join(os.path.dirname(os.path.abspath(output_file)), "ga-legislator-ledger.json")
+
+
 def main(argv=None):
     args = parse_args(sys.argv[1:] if argv is None else argv)
     output_file = args.output or MEMBERS_FILE
@@ -451,6 +457,16 @@ def main(argv=None):
     # district (after overrides), so a rename moves it in the same run.
     assign_votega_urls(members)
 
+    # The page ledger: every URL ever published, append-only. Refuse before writing the
+    # roster if a URL would change owner.
+    try:
+        ledger_path = ledger_path_for(output_file)
+        ledger = LEDGER.load_ledger(ledger_path)
+        LEDGER.update_ledger(ledger, members, tag)  # in memory only; saved just before the roster write
+    except LEDGER.LedgerError as e:
+        print(f"Error: page ledger: {e}. Refusing to write.", file=sys.stderr)
+        return 1
+
     # SOAP proposes, a human disposes (spec §8.4): surface a departure, never write a
     # status. Computed AFTER the overrides so these describe the file they ship in — read
     # against the PREVIOUS file instead, a departure characterised in this very run still
@@ -542,6 +558,7 @@ def main(argv=None):
                 for m in preserved],
             "overridesOutOfScope": skipped,
         })
+    LEDGER.save_ledger(ledger, ledger_path)
     write_json_atomic(output_file, output, indent=2)
 
     print(f"\nWrote {len(members)} records to {output_file}")

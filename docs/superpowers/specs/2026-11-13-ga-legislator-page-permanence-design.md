@@ -59,12 +59,13 @@ Since 2026-11-12, Georgia Commons links every bill sponsor to our legislator pag
 
 ```
 ga-bienniums/2025_26/
-  members.json            # roster records as frozen (all members frozen so far), plus metadata.biennium
-  votes-index.json        # copy of the vote index the slices resolve against
-  votes/<rosterId>.json   # copy of each member's vote slice
-  sponsorship-index.json
-  sponsorship/<legisGaGovId>.json
-  party-unity.json        # frozen scorecard, if available (D10)
+  ga-members.json            # roster records as frozen, plus metadata.biennium (as built: file names mirror the live files)
+  ga-votes-index.json        # copy of the vote index the slices resolve against
+  ga-votes/<slug>.json       # copy of each member's vote slice
+  ga-sponsorship-index.json
+  ga-sponsorship/<legisGaGovId>.json
+  curated-ga-bill-votes.json # --all only
+  # party-unity.json is NOT frozen (as built): the page computes party unity client-side from the vote slice.
 ```
 
 - The live slice builders never write here. That's the point: they clear their own output directories.
