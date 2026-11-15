@@ -2,8 +2,8 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Additive since version 2: rosterId, executiveId (statewide executives, from ga-executive.json) and ballotpediaId; ocdPersonId is now ONLY an OCD person id or null (it used to carry the roster id, which can be legis-<id>). Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-11-08T15:55:50+00:00",
-  "count": 758,
+  "generatedAt": "2026-11-15T16:17:58+00:00",
+  "count": 759,
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
    "legis.ga.gov (General Assembly web services) — legisGaGovId, the primary key for state legislators",
@@ -25,12 +25,12 @@
    "unresolved": "no lookup has populated this identifier yet; a null here is NOT a claim that none exists"
   },
   "coverage": {
-   "people": 758,
+   "people": 759,
    "officeholders": 276,
-   "candidateOnly": 482,
-   "withVgId": 678,
-   "unkeyed": 80,
-   "withAnyFiling": 651,
+   "candidateOnly": 483,
+   "withVgId": 677,
+   "unkeyed": 82,
+   "withAnyFiling": 650,
    "candidacies": 718,
    "ambiguous": []
   }
@@ -21981,37 +21981,13 @@
     "openSecretsId": null,
     "fecCandidateIds": [],
     "peachfileFilerEntityIds": [
-     "104439",
      "101360"
     ],
     "votegaCandidateIds": [
-     "challenger-clarence-blalock-inscom-2026",
      "challenger-clarence-blalock-laborcom-2026"
     ]
    },
    "candidacies": [
-    {
-     "raceId": "ga-insurance-commissioner-2026",
-     "candidateId": "challenger-clarence-blalock-inscom-2026",
-     "cycle": 2026,
-     "level": "state-executive",
-     "office": "Insurance & Fire Safety Commissioner",
-     "district": null,
-     "party": "Democrat",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "104439",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    },
     {
      "raceId": "ga-labor-commissioner-2026",
      "candidateId": "challenger-clarence-blalock-laborcom-2026",
@@ -34977,63 +34953,6 @@
    }
   },
   {
-   "vgId": "vg-ga-p-000529",
-   "name": {
-    "full": "Teresa Diane Lin",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "rosterId": null,
-    "executiveId": null,
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "ballotpediaId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "104075"
-    ],
-    "votegaCandidateIds": [
-     "ga-house-49-2026-d-2"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-house-49-2026",
-     "candidateId": "ga-house-49-2026-d-2",
-     "cycle": 2026,
-     "level": "state",
-     "office": "Georgia House of Representatives",
-     "district": 49,
-     "party": "Democrat",
-     "phases": [
-      "primary"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "104075",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
    "vgId": "vg-ga-p-000530",
    "name": {
     "full": "Sara Fuchs",
@@ -45183,6 +45102,59 @@
   {
    "vgId": null,
    "name": {
+    "full": "Clarence Blalock",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "challenger-clarence-blalock-inscom-2026"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-insurance-commissioner-2026",
+     "candidateId": "challenger-clarence-blalock-inscom-2026",
+     "cycle": 2026,
+     "level": "state-executive",
+     "office": "Insurance & Fire Safety Commissioner",
+     "district": null,
+     "party": "Democrat",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
     "full": "Cobie Lyrix Brown",
     "first": null,
     "last": null
@@ -48432,6 +48404,59 @@
       "confidence": "confirmed-none",
       "source": "assets/data/ga-campaign-finance-overrides.json",
       "key": "ga-house-17-2026-d-1"
+     }
+    }
+   ],
+   "provenance": {
+    "vgId": {
+     "method": "unkeyed",
+     "note": "no campaign filing to key on, and races.json candidate ids are positional row indices — see this script's header"
+    }
+   }
+  },
+  {
+   "vgId": null,
+   "name": {
+    "full": "Teresa Diane Lin",
+    "first": null,
+    "last": null
+   },
+   "role": null,
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": null,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": [
+     "ga-house-49-2026-d-2"
+    ]
+   },
+   "candidacies": [
+    {
+     "raceId": "ga-house-49-2026",
+     "candidateId": "ga-house-49-2026-d-2",
+     "cycle": 2026,
+     "level": "state",
+     "office": "Georgia House of Representatives",
+     "district": 49,
+     "party": "Democrat",
+     "phases": [
+      "primary"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": null,
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "no-match"
      }
     }
    ],
