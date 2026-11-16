@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-14T00:43:03Z",
+  "generatedAt": "2026-11-16T19:18:33Z",
   "source": "Coweta County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Coweta County",
   "count": 25
@@ -15,9 +15,9 @@
   "lastActivity": "2026-11-19",
   "topicTotals": {
    "special-land-use": 8,
-   "variance": 14,
-   "appointment": 13,
-   "contract": 13,
+   "variance": 13,
+   "appointment": 14,
+   "contract": 14,
    "development": 6,
    "rezoning": 9,
    "millage-budget": 14,
@@ -225,19 +225,9 @@
     "tags": [
      "comprehensive-plan"
     ]
-   },
-   {
-    "title": "Board of Zoning Appeals - Public Hearing",
-    "date": "2026-04-23",
-    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3321,plainText=false)",
-    "tags": [
-     "variance"
-    ],
-    "excerpt": "… ch 26, 2026 Petitions 2. Public Hearing Regarding Petition # VAR 26-002 Filed by Virginia Singh Requesting a Buffer Variance for Property Located at the Southwest Corner of SR 34 West and Bruce Jackson Road, Newnan - District 2 3. …",
-    "excerptTerm": "variance"
    }
   ],
-  "landUseMeetings": 22,
+  "landUseMeetings": 21,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
@@ -293,7 +283,7 @@
   "localTaxCitations": 5,
   "budgetItems": [],
   "budgetCitations": 0,
-  "landUseCitations": 18,
+  "landUseCitations": 17,
   "alprCitations": 0,
   "dataCenterCitations": 2
  },
@@ -336,6 +326,44 @@
    "flags": [
     "land-use"
    ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1099",
+   "date": "2026-11-17",
+   "body": "Board of Commissioners",
+   "title": "Coweta County Board of Commissioners - Regular Meeting Session",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3755,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3755,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 4622,
+   "pdfSha256": "4cf4cb5f660b882969c698a4c9f9eb315c9ab9d8ea7939794a11d6c482db5d9f",
+   "topics": {
+    "appointment": 1,
+    "contract": 1
+   },
+   "tags": [
+    "appointment",
+    "contract"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… of Commissioners Page 1 of 3 Unfinished Business 3. Request Appointments to Various Boards/Authorities Updates from Administration New Business Bids and Contracts 4. Request Approval …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… d Business 3. Request Appointments to Various Boards/Authorities Updates from Administration New Business Bids and Contracts 4. Request Approval/Execution of a Master Service Agreement with Versaterm for Fiscal Year 2027 Fivepoint Judic …",
+     "context": "unknown"
+    }
+   },
+   "flags": [],
    "dataCenterItems": []
   },
   {
@@ -1625,38 +1653,6 @@
      "term": "contract",
      "excerpt": "… s for Final Review Unfinished Business 5. Request Appointments to Various Boards/Authorities New Business Bids and Contracts 6. Request Approval/Execution of an Intergovernmental Agreement Associated with a Property Exchange with the Co …",
      "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1146",
-   "date": "2026-04-23",
-   "body": "Board of Zoning Appeals",
-   "title": "Board of Zoning Appeals - Public Hearing",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3321,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3321,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 2195,
-   "pdfSha256": "c3ac7a2cf24527d73b8362c047d54460b0f8e7fe143089cf47b69c40558798d4",
-   "topics": {
-    "variance": 1
-   },
-   "tags": [
-    "variance"
-   ],
-   "matchedTerms": [
-    "variance"
-   ],
-   "topicExcerpts": {
-    "variance": {
-     "term": "variance",
-     "excerpt": "… ch 26, 2026 Petitions 2. Public Hearing Regarding Petition # VAR 26-002 Filed by Virginia Singh Requesting a Buffer Variance for Property Located at the Southwest Corner of SR 34 West and Bruce Jackson Road, Newnan - District 2 3. …",
-     "context": "agenda-action"
     }
    },
    "flags": [

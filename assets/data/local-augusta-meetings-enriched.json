@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-14T00:42:17Z",
+  "generatedAt": "2026-11-16T19:18:29Z",
   "source": "Augusta-Richmond County (teammunicode agenda/minutes PDFs, poppler+OCR)",
   "place": "Augusta-Richmond County",
-  "count": 17
+  "count": 18
  },
  "summary": {
   "flags": [
@@ -12,13 +12,13 @@
    "land-use",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-10",
+  "lastActivity": "2026-11-17",
   "topicTotals": {
-   "contract": 9,
-   "budget": 1,
+   "appointment": 2,
+   "budget": 2,
+   "contract": 10,
    "data-center": 1,
    "development": 2,
-   "appointment": 1,
    "millage-budget": 1,
    "rezoning": 1
   },
@@ -58,6 +58,17 @@
   "localTaxCitations": 0,
   "budgetItems": [
    {
+    "title": "Commission Meeting",
+    "date": "2026-11-17",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-c5e56db0440c4de896b5fc2547f70a32.pdf",
+    "terms": [
+     "budget transfer",
+     "decision-then-budget"
+    ],
+    "excerpt": "… Order. (26AUA162) (Approved by Engineering Services Committee November 10, 2026) FINANCE 12. Motion to approve the adoption of the FY 2027 Budget. (Approved by Finance Committee November 10, 2026). APPOINTMENT(S) 13. Motion to approve the appointment of Mr. Per …",
+    "excerptTerm": "decision-then-budget"
+   },
+   {
     "title": "Finance Committee Meeting",
     "date": "2026-11-10",
     "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-976b661ff32e4afdb73747fe82ead06f.pdf",
@@ -68,12 +79,63 @@
     "excerptTerm": "decision-then-budget"
    }
   ],
-  "budgetCitations": 1,
+  "budgetCitations": 2,
   "landUseCitations": 2,
   "alprCitations": 0,
   "dataCenterCitations": 1
  },
  "meetings": [
+  {
+   "id": "91",
+   "date": "2026-11-17",
+   "body": "Augusta Commission",
+   "title": "Commission Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-c5e56db0440c4de896b5fc2547f70a32.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/augustaga-pubu/MEET-Agenda-c5e56db0440c4de896b5fc2547f70a32.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 8510,
+   "pdfSha256": "e24b0e63bb5ae79f06a2c3f60241184e66e5ecdcd83c59dfda76015ee388a1e0",
+   "topics": {
+    "appointment": 1,
+    "budget": 1,
+    "contract": 1
+   },
+   "tags": [
+    "appointment",
+    "budget",
+    "contract"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "award of",
+    "budget transfer",
+    "contract",
+    "decision-then-budget",
+    "procurement"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… INANCE 12. Motion to approve the adoption of the FY 2027 Budget. (Approved by Finance Committee November 10, 2026). APPOINTMENT(S) 13. Motion to approve the appointment of Mr. Perry H. Ritch to the Augusta Personnel Board representing Dist …",
+     "context": "agenda-action"
+    },
+    "budget": {
+     "term": "decision-then-budget",
+     "excerpt": "… Order. (26AUA162) (Approved by Engineering Services Committee November 10, 2026) FINANCE 12. Motion to approve the adoption of the FY 2027 Budget. (Approved by Finance Committee November 10, 2026). APPOINTMENT(S) 13. Motion to approve the appointment of Mr. Per …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… nd support across the region. (Requested by Commissioner Don Clark) E. Mr. Moses Todd regarding egregious fees, no bid contracts, wrong budget priorities, wrong revenue priorities, and waste, and abuse of government money. F. Update on the Ad …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "96",
    "date": "2026-11-10",
