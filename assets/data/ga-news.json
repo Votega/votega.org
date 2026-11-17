@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-16T21:26:15.136899+00:00",
+    "generatedAt": "2026-11-17T05:44:23.211154+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,13 +24,13 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 129,
+    "count": 127,
     "windowDays": 45,
     "entityTagged": 82,
     "topicCounts": {
       "elections": 52,
-      "healthcare": 20,
-      "courts": 9,
+      "healthcare": 19,
+      "courts": 8,
       "education": 7,
       "budget": 6,
       "ethics": 1,
@@ -39,6 +39,15 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000227": {
+      "name": "Todd Jones",
+      "url": null,
+      "ocdPersonId": "ocd-person/45567c87-3ba6-49ec-9ea2-5ebb880aa94c",
+      "rosterId": "ocd-person/45567c87-3ba6-49ec-9ea2-5ebb880aa94c",
+      "candidateIds": [
+        "ga-house-25-2026-r-2"
+      ]
+    },
     "vg-ga-p-000088": {
       "name": "Gerald Greene",
       "url": null,
@@ -165,12 +174,38 @@
   },
   "items": [
     {
+      "id": "4024cc1de9ab",
+      "title": "Georgia House GOP to shuffle leadership after election losses",
+      "url": "https://georgiarecorder.com/2026/11/16/georgia-house-gop-to-shuffle-leadership-after-election-losses/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-16T21:42:12+00:00",
+      "snippet": "House Republicans will be led by a new leader when Democrats take control of the chamber in January. The caucus elected Republican state Rep. Todd Jones from South Forsyth as minority leader Monday in",
+      "entityIds": [
+        "vg-ga-p-000227"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "1c7fbf305102",
+      "title": "Georgia Today: Medicaid changes; Abortion law plans; Grammy nominations",
+      "url": "https://www.gpb.org/news/2026/11/16/georgia-today-medicaid-changes-abortion-law-plans-grammy-nominations",
+      "source": "GPB News",
+      "publishedAt": "2026-11-16T21:23:18+00:00",
+      "snippet": "On the Nov. 16 edition: Big changes are coming for Georgia's Medicaid work requirements; state Democrats plan to change the state's restrictive abortion law; and a Duluth nonprofit focused on ending h",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
       "id": "38c1adf00d2e",
       "title": "Original handwritten 'I Have a Dream' speech draft on display in Atlanta",
       "url": "https://www.gpb.org/news/2026/11/16/original-handwritten-i-have-dream-speech-draft-on-display-in-atlanta",
       "source": "GPB News",
       "publishedAt": "2026-11-16T20:59:00+00:00",
-      "snippet": "The original seven pages of yellow legal paper will be on display, along with the first typed drafts, for one week.\nOriginal handwritten 'I Have a Dream' speech draft on display in Atlanta",
+      "snippet": "The original seven pages of yellow legal paper will be on display, along with the first typed drafts, for one week.",
       "entityIds": [],
       "topics": []
     },
@@ -195,7 +230,7 @@
       "url": "https://www.gpb.org/news/2026/11/16/gpb-evening-headlines-for-november-16-2026",
       "source": "GPB News",
       "publishedAt": "2026-11-16T20:20:39+00:00",
-      "snippet": "A new Georgia governor and state house majority could re-shape the political dynamics over Georgia's strict abortion law.\nAuto Club AAA's holiday travel forecast shows Thanksgiving trip volumes leveli",
+      "snippet": "A new Georgia governor and state House majority could reshape the political dynamics over Georgia's strict abortion law.\nAuto Club AAA's holiday travel forecast shows Thanksgiving trip volumes levelin",
       "entityIds": [],
       "topics": [
         "healthcare"
@@ -292,18 +327,6 @@
       "snippet": "The YMCA of Coastal Georgia abruptly closed its Brunswick facility in September 2026, leaving local leaders and community organizations scrambling to replace essential childcare, recreation, and speci",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "98cecb16a2b7",
-      "title": "GPB morning headlines for November 16, 2026",
-      "url": "https://www.gpb.org/news/2026/11/16/gpb-morning-headlines-for-november-16-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-16T14:08:36+00:00",
-      "snippet": "Changes are coming next year for state Medicaid programs; Georgia’s forests are disappearing at a halting rate, according to a new study.",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
     },
     {
       "id": "0b12fa9b69f0",
@@ -605,18 +628,6 @@
       "snippet": "This coverage is made possible through a partnership between WABE and Grist, a nonprofit environmental media organization. The Pacific Ocean is heating up — and while it’s a continent away, the impact",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "cc636fe9b462",
-      "title": "Georgia Latino voter turnout surges 78% amid economic, immigration issues",
-      "url": "https://thecurrentga.org/2026/11/11/georgia-latino-voter-turnout-surges-78-amid-economic-immigration-issues/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-11T21:57:36+00:00",
-      "snippet": "Latino voter turnout in Georgia surged by 78% compared to 2022, driven by concerns over the cost of living and immigration enforcement under the Trump administration.\nThe Current is an inclusive nonpr",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "22c9785527cb",
@@ -1696,18 +1707,6 @@
       ]
     },
     {
-      "id": "286c6b47d3b4",
-      "title": "How Trump’s gutting of the Endangered Species Act could hurt three iconic Georgia species",
-      "url": "https://georgiarecorder.com/2026/10/10/how-trumps-gutting-of-the-endangered-species-act-could-hurt-three-iconic-georgia-species/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-10T08:00:32+00:00",
-      "snippet": "This coverage is made possible through a partnership between WABE and Grist, a nonprofit environmental media organization. The Supreme Court once billed the Endangered Species Act “the most comprehens",
-      "entityIds": [],
-      "topics": [
-        "courts"
-      ]
-    },
-    {
       "id": "6ee499ffe32c",
       "title": "Carr Warns Georgians of Price Gouging and Scams in Anticipation of Hurricane Isaias",
       "url": "https://law.georgia.gov/press-releases/2026-10-09/carr-warns-georgians-price-gouging-and-scams-anticipation-hurricane",
@@ -1718,21 +1717,6 @@
         "vg-ga-p-000039"
       ],
       "topics": []
-    },
-    {
-      "id": "751938fd872e",
-      "title": "Collins, Ossoff trade personal insults during Georgia’s first U.S. Senate debate",
-      "url": "https://georgiarecorder.com/2026/10/08/collins-ossoff-trade-personal-insults-during-georgias-first-u-s-senate-debate/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-09T02:10:56+00:00",
-      "snippet": "Democratic U.S. Sen. Jon Ossoff and Republican Congressman Mike Collins came out swinging on the debate stage Thursday night, discussing topics like the economy, healthcare and data centers in between",
-      "entityIds": [
-        "vg-ga-p-000253",
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
-      ]
     },
     {
       "id": "b0bb88acaa37",
