@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-18T10:53:49.894114+00:00",
+    "generatedAt": "2026-11-18T19:45:32.548856+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,14 +24,14 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 128,
+    "count": 127,
     "windowDays": 45,
-    "entityTagged": 81,
+    "entityTagged": 79,
     "topicCounts": {
-      "elections": 51,
-      "budget": 6,
       "healthcare": 20,
-      "education": 9,
+      "budget": 7,
+      "elections": 48,
+      "education": 11,
       "courts": 7,
       "ethics": 1,
       "surveillance": 1
@@ -39,15 +39,15 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
-      "url": null,
-      "bioguideId": "W000788"
-    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
       "url": null,
       "bioguideId": "O000174"
+    },
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
+      "url": null,
+      "bioguideId": "W000788"
     },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
@@ -165,6 +165,79 @@
   },
   "items": [
     {
+      "id": "1c0f58a8e94b",
+      "title": "How Delicious Vinyl's creators made hip-hop history in a dingy Hollywood apartment",
+      "url": "https://www.gpb.org/news/2026/11/18/how-delicious-vinyls-creators-made-hip-hop-history-in-dingy-hollywood-apartment",
+      "source": "GPB News",
+      "publishedAt": "2026-11-18T17:32:00+00:00",
+      "snippet": "Savannah writer Peter Relic's new book Bust a Move chronicles the rise of a new kind of hip-hop in the 1980s.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "f3ef79e144a6",
+      "title": "Sen. Ossoff Working to Strengthen Maternal Health Care for Georgia Veterans",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-to-strengthen-maternal-health-care-for-georgia-veterans-2/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-18T16:31:27+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working across the aisle to strengthen maternal health care for Georgia’s women veterans. Sen. Ossoff cosponsored the bipartisan DOULA for VA Act of 2026 ",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "dde14dc4689f",
+      "title": "Georgia prepares as new Medicaid work requirements could be delayed six months",
+      "url": "https://www.gpb.org/news/2026/11/18/georgia-prepares-new-medicaid-work-requirements-could-be-delayed-six-months",
+      "source": "GPB News",
+      "publishedAt": "2026-11-18T15:55:00+00:00",
+      "snippet": "Changes are coming next year for state Medicaid programs, as a result of President Donald Trump’s One Big Beautiful spending bill — including to Georgia's Pathways to Coverage.",
+      "entityIds": [],
+      "topics": [
+        "budget",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "646e67a459a0",
+      "title": "Board of Regents names Lieuwen sole finalist to lead Georgia Tech",
+      "url": "https://www.gpb.org/news/2026/11/18/board-of-regents-names-lieuwen-sole-finalist-lead-georgia-tech",
+      "source": "GPB News",
+      "publishedAt": "2026-11-18T15:45:36+00:00",
+      "snippet": "The Board of Regents of the University System of Georgia (USG) voted Nov. 17 to name Dr. Timothy C. Lieuwen as the sole finalist for the presidency of the Georgia Institute of Technology.",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "education"
+      ]
+    },
+    {
+      "id": "e9747e4f1e88",
+      "title": "Georgia Tech’s interim president named sole finalist for permanent role",
+      "url": "https://capitol-beat.org/2026/11/georgia-techs-interim-president-named-sole-finalist-for-permanent-role/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-techs-interim-president-named-sole-finalist-for-permanent-role",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-18T14:41:40+00:00",
+      "snippet": "ATLANTA — The leaders of Georgia’s public college system have settled on the only candidate to lead the Georgia Institute of Technology after the departure last month of former President Ángel Cabrera",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "education"
+      ]
+    },
+    {
+      "id": "27629349757a",
+      "title": "GPB morning headlines for November 18, 2026",
+      "url": "https://www.gpb.org/news/2026/11/18/gpb-morning-headlines-for-november-18-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-18T12:14:06+00:00",
+      "snippet": "For over a decade, lawmakers in Georgia have introduced bills to legalize gambling in some form, but none have made it into law. A new governor could move it closer to the finish line in 2027; The Geo",
+      "entityIds": [],
+      "topics": []
+    },
+    {
       "id": "997545844284",
       "title": "Hand count in southwest Georgia legislative race confirms Republican incumbent’s win",
       "url": "https://georgiarecorder.com/2026/11/17/hand-count-in-southwest-georgia-legislative-race-confirms-republican-incumbents-win/",
@@ -174,6 +247,18 @@
       "entityIds": [],
       "topics": [
         "elections"
+      ]
+    },
+    {
+      "id": "0d447467445e",
+      "title": "USG Enrollment Surges to Record High, Marking Fourth Year of Growth",
+      "url": "https://www.usg.edu/news/release/usg-enrollment-surges-to-record-high-2026/",
+      "source": "University System of Georgia",
+      "publishedAt": "2026-11-18T00:00:00+00:00",
+      "snippet": "University System of Georgia enrollment climbed this fall to a record 392,581 students. The 2.7% increase in enrollment over Fall 2025 marks a fourth consecutive year of growth for the system.",
+      "entityIds": [],
+      "topics": [
+        "education"
       ]
     },
     {
@@ -189,28 +274,6 @@
       ]
     },
     {
-      "id": "c278be03f3e4",
-      "title": "Could a new governor help move the needle on casino gambling legalization?",
-      "url": "https://www.gpb.org/news/2026/11/17/could-new-governor-help-move-the-needle-on-casino-gambling-legalization",
-      "source": "GPB News",
-      "publishedAt": "2026-11-17T21:22:00+00:00",
-      "snippet": "For over a decade, lawmakers in Georgia have introduced bills to legalize gambling in some form, but none have made it into law.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "9b902ae43d33",
-      "title": "GPB evening headlines for November 17, 2026",
-      "url": "https://www.gpb.org/news/2026/11/17/gpb-evening-headlines-for-november-17-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-17T20:06:43+00:00",
-      "snippet": "State officials broke ground yesterday on a 300-bed psychiatric hospital aimed at easing overcrowding in the state's jails.\nTwo Georgia-based companies are teaming up to deliver medical cannabis throu",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
       "id": "3bc4b35d1db4",
       "title": "The Trump Administration praised a Georgia manufacturer. Now the company is suing the EPA.",
       "url": "https://thecurrentga.org/2026/11/17/the-trump-administration-praised-a-georgia-manufacturer-now-the-company-is-suing-the-epa/",
@@ -219,30 +282,6 @@
       "snippet": "Alta Refrigeration and an industry coalition are suing the EPA and Administrator Lee Zeldin, arguing that a recent regulatory rollback failed to provide the permanent exemption from hydrofluorocarbon ",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "fb4a1173b611",
-      "title": "State officials break ground on 300-bed psychiatric hospital",
-      "url": "https://www.gpb.org/news/2026/11/17/state-officials-break-ground-on-300-bed-psychiatric-hospital",
-      "source": "GPB News",
-      "publishedAt": "2026-11-17T19:33:00+00:00",
-      "snippet": "State officials broke ground Monday on a 300-bed psychiatric hospital in Atlanta. It won't open for another two years, but state leaders are hopeful.",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "30992ed85142",
-      "title": "Over half the Georgia counties that flipped in the midterms were rural",
-      "url": "https://www.gpb.org/news/2026/11/17/over-half-the-georgia-counties-flipped-in-the-midterms-were-rural",
-      "source": "GPB News",
-      "publishedAt": "2026-11-17T19:20:00+00:00",
-      "snippet": "Five of the nine flipped counties in the gubernatorial election came from rural Georgia, which shifted more than six points left compared with the 2022 midterms. In this election cycle, Black voters r",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "d5126ccc0ee3",
@@ -301,12 +340,9 @@
       "url": "https://www.usg.edu/news/release/bor-names-lieuwen-sole-finalist-to-lead-tech-2026/",
       "source": "University System of Georgia",
       "publishedAt": "2026-11-17T00:00:00+00:00",
-      "snippet": "The Board of Regents of the University System of Georgia voted to name Dr. Timothy C. Lieuwen as the sole finalist for the presidency of the Georgia Institute of Technology.",
+      "snippet": null,
       "entityIds": [],
-      "topics": [
-        "elections",
-        "education"
-      ]
+      "topics": []
     },
     {
       "id": "4024cc1de9ab",
@@ -1002,20 +1038,6 @@
       ]
     },
     {
-      "id": "74b3d2028552",
-      "title": "Georgia Democrats flip every statewide office, but appear to fall short in the Senate",
-      "url": "https://capitol-beat.org/2026/11/georgia-democrats-flip-every-statewide-office-but-appear-to-fall-short-in-the-senate/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-democrats-flip-every-statewide-office-but-appear-to-fall-short-in-the-senate",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-11-05T01:21:12+00:00",
-      "snippet": "ATLANTA — Georgia voters turned so sharply in a new direction Tuesday that the results surprised even some winners and set several historical firsts. Keisha Lance Bottoms is the first Black woman elec",
-      "entityIds": [
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "3994e9429ca7",
       "title": "Kemp won’t call Georgia lawmakers back to redraw maps or to curb executive powers",
       "url": "https://georgiarecorder.com/2026/11/04/kemp-wont-call-georgia-lawmakers-back-to-redraw-maps-or-to-curb-executive-powers/",
@@ -1426,18 +1448,6 @@
       ]
     },
     {
-      "id": "a2acbf9d41e7",
-      "title": "Sen. Ossoff’s Bipartisan Bill to Strengthen Emergency Alerts Signed into Law",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoffs-bipartisan-bill-to-strengthen-emergency-alerts-signed-into-law/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-22T15:18:13+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff’’ bipartisan bill to strengthen emergency alerts during natural disasters is now law.  Today the President signed into law Sens. Ossoff and John Cornyn (R-TX",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "7908cc2aa084",
       "title": "Fewer Georgians are planning to vote by mail, with one day left to request an absentee ballot",
       "url": "https://georgiarecorder.com/2026/10/22/fewer-georgians-are-planning-to-vote-by-mail-with-one-day-left-to-request-an-absentee-ballot/",
@@ -1661,33 +1671,6 @@
       "source": "Georgia Recorder",
       "publishedAt": "2026-10-14T23:38:15+00:00",
       "snippet": "Election Day is still weeks away, but Georgia voters are already starting to cast their ballots. That’s because state law mandates that counties offer three weeks of early voting before every major el",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "e7bb92201b1b",
-      "title": "Collins, Ossoff clash in a second heated debate as early voting begins in Georgia",
-      "url": "https://georgiarecorder.com/2026/10/13/collins-ossoff-clash-in-a-second-heated-debate-as-early-voting-begins-in-georgia/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-14T02:49:45+00:00",
-      "snippet": "Democratic U.S. Sen Jon Ossoff and Republican Congressman Mike Collins met face to face on the debate stage Tuesday for their second and likely final confrontation before the Nov. 3 midterm elections.",
-      "entityIds": [
-        "vg-ga-p-000253",
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "1eaebed53bcf",
-      "title": "Georgia voters kick off early voting with nearly 189,000 ballots cast",
-      "url": "https://georgiarecorder.com/2026/10/13/georgia-voters-kick-off-early-voting-with-over-185000-ballots-cast/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-14T00:13:11+00:00",
-      "snippet": "The polls are officially open for the midterm elections, and Georgia voters are ready. Nearly 189,000 people cast their ballots during the first day of early voting, surpassing the first day voter tur",
       "entityIds": [],
       "topics": [
         "elections"
