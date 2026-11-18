@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-16T19:18:38Z",
+  "generatedAt": "2026-11-18T17:44:29Z",
   "source": "Catoosa County (granicus agenda HTML)",
   "place": "Catoosa County",
   "count": 25
@@ -11,22 +11,33 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-17",
+  "lastActivity": "2026-11-24",
   "topicTotals": {
-   "contract": 9,
    "rezoning": 12,
+   "variance": 4,
+   "contract": 9,
    "development": 3,
    "millage-budget": 9,
-   "variance": 4,
    "local-taxes": 3,
    "appointment": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
    {
+    "title": "Planning Commission",
+    "date": "2026-11-24",
+    "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&event_id=231",
+    "tags": [
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… er 2. Set Agenda 3. Minutes 4. Reports 5. Old Business 6. New Business 6.1 Zoning Case #1683-26, Rezoning of Tax Map 20D Parcel 238 and Tax Map 21B Parcel 84 (382 Foster Road, 14/34 Foster Road) from R-1 to PUD …",
+    "excerptTerm": "rezon"
+   },
+   {
     "title": "Board of Commissioners",
     "date": "2026-11-17",
-    "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&event_id=286",
+    "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=266",
     "tags": [
      "rezoning"
     ]
@@ -144,17 +155,6 @@
     "tags": [
      "rezoning"
     ]
-   },
-   {
-    "title": "Planning Commission",
-    "date": "2026-05-26",
-    "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=208",
-    "tags": [
-     "rezoning",
-     "variance"
-    ],
-    "excerpt": "… er 2. Set Agenda 3. Minutes 4. Reports 5. Old Business 6. New Business 6.1 Zoning Case #1664-26, Rezoning of Tax Map 45 Parcel 74D (32 Lane Road) from A-1 to C-1 - (Clint Underwood, Director of Planning and Insp …",
-    "excerptTerm": "rezon"
    }
   ],
   "landUseMeetings": 14,
@@ -202,13 +202,53 @@
  },
  "meetings": [
   {
-   "id": "286",
+   "id": "231",
+   "date": "2026-11-24",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&event_id=231",
+   "textSource": "agenda",
+   "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&event_id=231",
+   "textMethod": "pdftotext",
+   "textChars": 3717,
+   "contentSha256": "dc788f781a0e95a98877a14a0b300d72254fe5c2383dbf0c230466932d42db1e",
+   "topics": {
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… er 2. Set Agenda 3. Minutes 4. Reports 5. Old Business 6. New Business 6.1 Zoning Case #1683-26, Rezoning of Tax Map 20D Parcel 238 and Tax Map 21B Parcel 84 (382 Foster Road, 14/34 Foster Road) from R-1 to PUD …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… nt Underwood, Director of Planning and Inspections) 1683-26 Case Files.pdf 6.2 Zoning Case #1684-26, Variance of Tax Map 11G Parcels 71, 72, 84 and 85 (Evergreen Circle) of corner that encroaches setbacks - (Clint Unde …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "266",
    "date": "2026-11-17",
    "body": "Board of Commissioners",
    "title": "Board of Commissioners",
-   "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&event_id=286",
+   "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=266",
    "textSource": "agenda",
-   "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&event_id=286",
+   "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=266",
    "textMethod": "pdftotext",
    "textChars": 3856,
    "contentSha256": "896627563ef953f8424122d78b7d062f5f7867a1f3629643f1825432398942b8",
@@ -1083,46 +1123,6 @@
    },
    "flags": [
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "208",
-   "date": "2026-05-26",
-   "body": "Planning Commission",
-   "title": "Planning Commission",
-   "sourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=208",
-   "textSource": "agenda",
-   "textSourceUrl": "https://catoosaga.granicus.com/AgendaViewer.php?view_id=1&clip_id=208",
-   "textMethod": "pdftotext",
-   "textChars": 2741,
-   "contentSha256": "b0573d40c4aad70f03f6df93d75f8d358cd66d6d85884d7841a9e437e822dcd4",
-   "topics": {
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… er 2. Set Agenda 3. Minutes 4. Reports 5. Old Business 6. New Business 6.1 Zoning Case #1664-26, Rezoning of Tax Map 45 Parcel 74D (32 Lane Road) from A-1 to C-1 - (Clint Underwood, Director of Planning and Insp …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… or of Planning and Inspections) Case 1667-26 Matthew Morris A-1 to R-2.pdf 6.4 Zoning Case #1668-26, Variance for Tax Map 12A Parcel 119003 (73 Mineral Avenue) to place a mobile home - (Clint Underwood, Director of Pla …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

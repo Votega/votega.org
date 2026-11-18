@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-16T19:18:35Z",
+  "generatedAt": "2026-11-18T17:44:24Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
-  "count": 24
+  "count": 25
  },
  "summary": {
   "flags": [
@@ -12,9 +12,9 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-18",
+  "lastActivity": "2026-12-08",
   "topicTotals": {
-   "development": 9,
+   "development": 10,
    "appointment": 5,
    "budget": 3,
    "contract": 8,
@@ -24,6 +24,16 @@
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "BOC Public Hearing",
+    "date": "2026-12-08",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4512,plainText=false)",
+    "tags": [
+     "development"
+    ],
+    "excerpt": "… 4:00 PM • CALL TO ORDER • PUBLIC HEARING - PROPOSED REVISIONS 1. Ch. 26 Land Development, Art. III - Subdivisions, Sec. 26-64 Class V Subdivision 2. Ch. 26 Land Development, Art. III - Subdivisions, Sec. 26-65 Class VI …",
+    "excerptTerm": "subdivision"
+   },
    {
     "title": "Land Use & Development Regulations Review Committee Meeting",
     "date": "2026-11-18",
@@ -106,14 +116,14 @@
     "excerptTerm": "subdivision"
    }
   ],
-  "landUseMeetings": 9,
+  "landUseMeetings": 10,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
    {
     "title": "Lumpkin County Board of Commissioners Regular Meeting",
     "date": "2026-11-17",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4499,plainText=false)",
     "terms": [
      "splost"
     ]
@@ -121,7 +131,7 @@
    {
     "title": "Lumpkin County Board of Commissioners Work Session II",
     "date": "2026-11-17",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4501,plainText=false)",
     "terms": [
      "splost"
     ],
@@ -188,7 +198,7 @@
    {
     "title": "Lumpkin County Board of Commissioners Regular Meeting",
     "date": "2026-11-17",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4499,plainText=false)",
     "terms": [
      "budget calendar"
     ]
@@ -196,7 +206,7 @@
    {
     "title": "Lumpkin County Board of Commissioners Work Session II",
     "date": "2026-11-17",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4501,plainText=false)",
     "terms": [
      "budget calendar"
     ]
@@ -211,11 +221,44 @@
    }
   ],
   "budgetCitations": 3,
-  "landUseCitations": 9,
+  "landUseCitations": 10,
   "alprCitations": 0,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "1428",
+   "date": "2026-12-08",
+   "body": "Board of Commissioners",
+   "title": "BOC Public Hearing",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4512,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4512,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 905,
+   "pdfSha256": "e882021965b4d970df09915fc7c64139c96a8c23da04d98a5806860913314e76",
+   "topics": {
+    "development": 1
+   },
+   "tags": [
+    "development"
+   ],
+   "matchedTerms": [
+    "multifamily",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… 4:00 PM • CALL TO ORDER • PUBLIC HEARING - PROPOSED REVISIONS 1. Ch. 26 Land Development, Art. III - Subdivisions, Sec. 26-64 Class V Subdivision 2. Ch. 26 Land Development, Art. III - Subdivisions, Sec. 26-65 Class VI …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1426",
    "date": "2026-11-18",
@@ -253,12 +296,12 @@
    "date": "2026-11-17",
    "body": "Board of Commissioners",
    "title": "Lumpkin County Board of Commissioners Regular Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4499,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4499,plainText=false)",
    "textMethod": "pdftotext",
    "textChars": 3984,
-   "pdfSha256": "efb0a5ff05ec1aa8b749dd869c49d0b7840f9e85f45fd717c0e4a3f9edf8ac44",
+   "pdfSha256": "fa4be4feacf0edb231aa65869463a15df700d99e4e55c5367bf9a9f2ecd7f398",
    "topics": {
     "appointment": 1,
     "budget": 1,
@@ -311,12 +354,12 @@
    "date": "2026-11-17",
    "body": "Board of Commissioners",
    "title": "Lumpkin County Board of Commissioners Work Session II",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4501,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4501,plainText=false)",
    "textMethod": "pdftotext",
    "textChars": 3808,
-   "pdfSha256": "6549e82133e491013a0356445ba70e3964530124b582707e3478eafbc609e505",
+   "pdfSha256": "8ff2b1d022e9cf57f73f3c8bbb83ecfdba6c547338c247dfa29c683a40c68a39",
    "topics": {
     "appointment": 1,
     "budget": 1,
