@@ -15,6 +15,14 @@ be served by several boards (docs/LOCAL-EXPANSION-SCOPE.md, §3.5.2).
 
 Usage:
     python scripts/generate_school_meetings.py [--district 707] [--dry-run]
+    python scripts/generate_school_meetings.py --from-file 707=listing.html [...]
+
+Simbli sits behind Incapsula, which blocks every non-browser client (GitHub's
+runners and a home connection alike). `--from-file DISTRICT=PATH` parses a listing
+page saved from a real browser instead of fetching, the same pattern as
+generate_place_meetings.py --from-file. Only that district is built; the rest of
+the registry is left alone. A saved page is a snapshot, so the file it writes is
+exactly as fresh as the page you saved.
 
 Failure policy (never overwrite good data with worse):
   * A blocked listing (Incapsula) or a failed fetch leaves the committed file
@@ -90,15 +98,34 @@ def build_payload(district, cfg, fetch=None, now=None, **fetch_kw):
     }
 
 
-def run(data, only=None, dry_run=False, write=write_json_atomic, **kw):
-    """Process the registry. Returns (written, failed) lists of district ids."""
+def saved_fetcher(path):
+    """A fetch() that serves one saved listing page, for --from-file."""
+    def fetch(url, label=None, timeout=30):
+        with open(path, 'rb') as f:
+            return f.read()
+    return fetch
+
+
+def run(data, only=None, dry_run=False, write=write_json_atomic, from_files=None, **kw):
+    """Process the registry. Returns (written, failed) lists of district ids.
+
+    `from_files` maps district id -> saved listing path. When given, ONLY those
+    districts run, each parsed from its file with no network."""
     written, failed = [], []
+    from_files = from_files or {}
     for district, cfg in configured_districts(data):
         if only and district['id'] != only:
             continue
-        print('Fetching meetings for %s (simbli %s)...' % (district['name'], cfg['id']))
+        if from_files and district['id'] not in from_files:
+            continue
+        print('%s meetings for %s (simbli %s)...'
+              % ('Parsing' if from_files else 'Fetching', district['name'], cfg['id']))
         try:
-            payload = build_payload(district, cfg, **kw)
+            call = dict(kw)
+            if district['id'] in from_files:
+                call['fetch'] = saved_fetcher(from_files[district['id']])
+                call['attempts'] = 1
+            payload = build_payload(district, cfg, **call)
         except SimbliBlocked as e:
             print('  BLOCKED: %s' % e)
             payload = None
@@ -118,10 +145,23 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--district', help='only this GOSA district id')
     ap.add_argument('--dry-run', action='store_true', help='fetch and parse, write nothing')
+    ap.add_argument('--from-file', action='append', default=[], metavar='ID=PATH',
+                    help='parse a listing saved from a browser instead of fetching '
+                         '(repeatable; only those districts run)')
     args = ap.parse_args()
+    from_files = {}
+    for spec in args.from_file:
+        did, _, path = spec.partition('=')
+        if not did or not path or not os.path.isfile(path):
+            sys.exit('--from-file needs DISTRICT_ID=PATH to an existing file, got %r' % spec)
+        from_files[did] = path
     with open(REGISTRY, encoding='utf-8') as f:
         data = yaml.safe_load(f)
-    written, failed = run(data, only=args.district, dry_run=args.dry_run)
+    unknown = [d for d in from_files if d not in {x['id'] for x, _ in configured_districts(data)}]
+    if unknown:
+        sys.exit('--from-file names district(s) with no meetings source: %s' % ', '.join(unknown))
+    written, failed = run(data, only=args.district, dry_run=args.dry_run,
+                          from_files=from_files)
     print('\nDone: %d written, %d failed.' % (len(written), len(failed)))
     if failed:
         print('Failed districts (committed files left untouched): %s' % ', '.join(failed))

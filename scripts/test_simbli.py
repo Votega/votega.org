@@ -32,6 +32,7 @@ Run: python scripts/test_simbli.py
 """
 
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
@@ -264,6 +265,13 @@ check(raises(lambda: S.fetch_simbli_meetings('4122', fetch=Fetcher(BLOCK),
       'a wholly blocked district raises rather than reporting zero meetings')
 
 print('')
+print('\nA listing saved from a live browser DOM')
+q = re.sub(r'ViewMeeting\(([^)]*)\)', lambda m: 'ViewMeeting(' + m.group(1).replace(chr(34), '&quot;') + ')', LISTING)
+mq, _ = S.parse_listing(q, district_id='4122')
+base, _ = S.parse_listing(LISTING, district_id='4122')
+check(len(mq) == len(base) and all(m['agendaUrl'] for m in mq if m['agendaUrl'] is not None),
+      're-serialised &quot; onclick arguments still parse to the same meetings (%d vs %d)' % (len(mq), len(base)))
+
 if failures:
     print('FAILED %d check(s):' % len(failures))
     for f_ in failures:
