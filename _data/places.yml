@@ -1933,6 +1933,26 @@ places:
     parentCounty: null
     region: Northwest Georgia
     hidden: true
+    domains:
+      meetings:
+        # CivicClerk portal (BOC only since Feb 2026; the older Granicus archive is
+        # added separately). Two one-off "General" events are scoped out by body_map.
+        platform: civicclerk
+        subdomain: floydcountyga
+        agendas_url: "https://floydcountyga.gov/board_and_committees/board_of_commissioners/boc_agendas_minutes.php"
+        body_map:
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        # Pre-Feb-2026 history: the county's Granicus ViewPublisher (Sept 2022 - Jan
+        # 2026, with video). Primary wins any same-day overlap (lib/archive_merge.py).
+        archive:
+          platform: granicus
+          agendas_url: "https://floydcountyga.granicus.com/ViewPublisher.php?view_id=1"
+          body_map:
+            - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: "2nd and 4th Tuesday of every month, 6:00 p.m."
+            location: "Administration Building, 12 East 4th Avenue, Suite 206 (Commissioners Meeting Room), Rome"
 
   - slug: haralson
     name: Haralson County
@@ -1941,6 +1961,20 @@ places:
     parentCounty: null
     region: West Georgia
     hidden: true
+    domains:
+      meetings:
+        # ColdFusion Agenda Center (lib/cfmagenda.py): one section per meeting type,
+        # older years loaded by POST. Every type (regular, work session, special
+        # called, retreat) is the same Board of Commissioners, so it is folded to one
+        # body; the meeting type stays in each record's title.
+        platform: cfmagenda
+        base_url: https://www.haralsoncountyga.gov
+        agendas_url: "https://www.haralsoncountyga.gov/agenda-center.cfm"
+        body_label: "Board of Commissioners"
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 6:00 p.m. (work session 3rd Tuesday, 6:00 p.m.)"
+            location: "155 Van Wert Street, Buchanan"
 
   - slug: jackson
     name: Jackson County
@@ -1949,6 +1983,22 @@ places:
     parentCounty: null
     region: Northeast Georgia
     hidden: true
+    domains:
+      meetings:
+        # CivicPlus Agenda Center. Keep the legislative + land-use bodies; drop Board of
+        # Elections & Registration, Keep Jackson County Beautiful and the SPLOST
+        # Citizen's Committee (administrative / advisory).
+        platform: civicplus
+        base_url: https://www.jacksoncountygov.com
+        agendas_url: "https://www.jacksoncountygov.com/AgendaCenter"
+        body_map:
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Board of Adjustments", label: "Board of Adjustments" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Monday of every month, 6:00 p.m."
+            location: "Jackson County Courthouse, 5000 Jackson Parkway, Jefferson"
 
   - slug: laurens
     name: Laurens County
@@ -1957,6 +2007,15 @@ places:
     parentCounty: null
     region: Middle Georgia
     hidden: true
+    domains:
+      meetings:
+        # CivicPlus Agenda Center, single "Board of Commissioners" category. No
+        # recurring schedule is stated on laurenscoga.org, so none is recorded here.
+        platform: civicplus
+        base_url: https://www.laurenscoga.org
+        agendas_url: "https://www.laurenscoga.org/AgendaCenter"
+        body_map:
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
 
   - slug: mitchell
     name: Mitchell County
@@ -1973,6 +2032,24 @@ places:
     parentCounty: null
     region: South Georgia
     hidden: true
+    domains:
+      meetings:
+        # WordPress: the current page lists a date HEADING then bare "Agenda | Minutes"
+        # links (heading_dates takes the date from the heading when the file name has
+        # none); the yearly archive pages list minutes only (kind: minutes). The 2026
+        # archive titles are month + year with no day ("01_2026 REGULAR BOARD MEETING
+        # MINUTES"), which pdflinks will not guess, so those months have no row until
+        # the county dates them. No recurring schedule is stated on toombscountyga.gov
+        # (meetings fall on the 3rd Tuesday in practice), so none is recorded.
+        platform: pdflinks
+        base_url: https://toombscountyga.gov
+        agendas_url: "https://toombscountyga.gov/agendas-minutes/"
+        heading_dates: true
+        extra_urls:
+          - { url: "https://toombscountyga.gov/commission-meetings-jan-dec-2026/", kind: minutes }
+          - { url: "https://toombscountyga.gov/commission-meetings-jan-dec-2025/", kind: minutes }
+          - { url: "https://toombscountyga.gov/commission-meetings-jan-dec-2024/", kind: minutes }
+        body_label: "Board of Commissioners"
 
   # Added 2026-11-02 for the same reason as the seven above: the phase-1a millage
   # audit found Vidalia City Schools levying in MONTGOMERY as well as Toombs, so
@@ -1984,3 +2061,20 @@ places:
     parentCounty: null
     region: South Georgia
     hidden: true
+    domains:
+      meetings:
+        # Same Drupal "Upcoming Meetings" view as Palmetto (lib/drupalviews.py), body
+        # path `board-commissioners`; past agendas/minutes are /media/<id> links.
+        # ⚠ montcoga.gov sits behind a Cloudflare challenge (403 to every scripted
+        # request, 2026-11-19), so there is no committed data yet and the scheduled run
+        # reports it as bot-blocked. Feed it from a real browser: save /meetings (and
+        # /meetings/recent) with Ctrl+S, then
+        #   python scripts/generate_place_meetings.py --slug montgomery --from-file "<page>.htm" [--from-file "<recent>.htm"]
+        # No recurring schedule is recorded: the site could not be read to confirm one.
+        platform: drupalviews
+        bot_protected: true
+        body_label: Board of Commissioners
+        body_paths:
+          board-commissioners: Board of Commissioners
+        recent_url: "https://montcoga.gov/meetings/recent"
+        agendas_url: "https://montcoga.gov/meetings"
