@@ -12,7 +12,9 @@ Checks per place file (assets/data/local-<slug>-meetings.json):
   - each meeting: body set, date is YYYY-MM-DD, has an agenda or minutes URL
   - link liveness: a small sample of file URLs return HTTP 200 — skipped for a
     place flagged `bot_protected` in the registry, whose origin 403s every
-    non-browser client (the sample would measure our own blocking, not the links)
+    non-browser client (the sample would measure our own blocking, not the links).
+    If EVERY sampled link is unreachable (timeout / connection error / 5xx) it is
+    a warning, not a failure: the origin is down or blocking the runner.
   - coverage: warn (not fail) on a registry body absent from the file
 
 Usage:
@@ -49,7 +51,7 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
-def link_alive(url, timeout=25, retries=2):
+def link_status(url, timeout=25, retries=2):
     """Redirect-AWARE liveness check: judge a link by its first response (and,
     for a 3xx, its Location) rather than following the redirect.
 
@@ -63,6 +65,10 @@ def link_alive(url, timeout=25, retries=2):
     Alive = a 2xx, or a 3xx whose Location is not an error page. Direct-file
     platforms (Legistar/CivicClerk PDFs) are unaffected: they return 200.
     Retries on 5xx / network error per the repo's HTTP policy; 4xx is dead.
+
+    Returns 'alive', 'dead' (the server answered and the link is gone: 4xx or
+    an error-page redirect), or 'unreachable' (every attempt timed out, failed
+    to connect, or got a 5xx — i.e. we never got a verdict on the link itself).
     """
     opener = urllib.request.build_opener(_NoRedirect)
     req = urllib.request.Request(url, headers={'User-Agent': 'votega.org/1.0'})
@@ -76,14 +82,18 @@ def link_alive(url, timeout=25, retries=2):
             code, loc = None, None
         if code is not None:
             if 200 <= code < 300:
-                return True
+                return 'alive'
             if 300 <= code < 400:
-                return not (loc and '/core/error/' in loc.lower())
+                return 'dead' if (loc and '/core/error/' in loc.lower()) else 'alive'
             if code < 500:
-                return False  # 4xx: non-retryable, dead
+                return 'dead'  # 4xx: non-retryable, dead
         if attempt < retries:  # None (network) or 5xx: retry
             time.sleep(3)
-    return False
+    return 'unreachable'
+
+
+def link_alive(url, timeout=25, retries=2):
+    return link_status(url, timeout, retries) == 'alive'
 # Kept in sync with generate_place_meetings.py. Platforms with a scraper adapter…
 ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
                      'primegov', 'granicus', 'gwinnett', 'iqm2', 'municode', 'agendapub',
@@ -226,12 +236,26 @@ def check_place(place, min_meetings, sample, network):
             if len(urls) >= sample:
                 break
         checked = urls[:sample]
-        dead = []
+        dead, unreachable = [], []
         for url in checked:
-            if link_alive(url):
+            status = link_status(url)
+            if status == 'alive':
                 print('  ok: %s' % url)
+            elif status == 'unreachable':
+                unreachable.append(url)
             else:
                 dead.append(url)
+        # Every sampled link UNREACHABLE (timeouts / connection errors / 5xx, no
+        # verdict on any link) means the origin is down or blocking the runner —
+        # not that the scrape broke. Warn instead of failing: a flaky or
+        # runner-blocking county site must not turn the whole run red. A reskin
+        # still hard-fails below, because its stale links get a real 404.
+        if unreachable and len(unreachable) == len(checked):
+            warnings.append('%s: all %d sampled links unreachable (timeout/connection '
+                            'error) — origin down or blocking the runner; liveness '
+                            'not verified' % (slug, len(unreachable)))
+            unreachable = []
+        dead += unreachable
         # This check exists to catch a place reskinning its site so the whole
         # scrape breaks — which shows up as EVERY sampled link dead. Treat that as
         # an error. Isolated dead links are transient upstream 404s (a minutes PDF
