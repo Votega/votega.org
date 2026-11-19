@@ -2032,6 +2032,24 @@ places:
     parentCounty: null
     region: South Georgia
     hidden: true
+    domains:
+      meetings:
+        # WordPress: the current page lists a date HEADING then bare "Agenda | Minutes"
+        # links (heading_dates takes the date from the heading when the file name has
+        # none); the yearly archive pages list minutes only (kind: minutes). The 2026
+        # archive titles are month + year with no day ("01_2026 REGULAR BOARD MEETING
+        # MINUTES"), which pdflinks will not guess, so those months have no row until
+        # the county dates them. No recurring schedule is stated on toombscountyga.gov
+        # (meetings fall on the 3rd Tuesday in practice), so none is recorded.
+        platform: pdflinks
+        base_url: https://toombscountyga.gov
+        agendas_url: "https://toombscountyga.gov/agendas-minutes/"
+        heading_dates: true
+        extra_urls:
+          - { url: "https://toombscountyga.gov/commission-meetings-jan-dec-2026/", kind: minutes }
+          - { url: "https://toombscountyga.gov/commission-meetings-jan-dec-2025/", kind: minutes }
+          - { url: "https://toombscountyga.gov/commission-meetings-jan-dec-2024/", kind: minutes }
+        body_label: "Board of Commissioners"
 
   # Added 2026-11-02 for the same reason as the seven above: the phase-1a millage
   # audit found Vidalia City Schools levying in MONTGOMERY as well as Toombs, so

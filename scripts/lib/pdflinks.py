@@ -43,6 +43,22 @@ the first link of each kind wins.
 ⚠ Kind comes from the link TEXT first ("Agenda"/"Minutes"), then the file name.
 Bacon's `012125 meeting.pdf` has no keyword in its name at all, only in its text.
 
+Two opt-in refinements, for WordPress pages laid out as a DATE HEADING followed by
+bare "Agenda | Minutes" links (Toombs):
+
+  * `heading_dates` - when a link's own file name / text carries no date (a scanner's
+    `20260911193836.pdf`), the date comes from the nearest PRECEDING heading whose
+    text is a full date ("November 17, 2026" in a <strong>/<b>/<h1-6>), if it is
+    within 1500 characters of markup. When the link's own name ALSO carries a full
+    date and the two disagree, the link is skipped (counted `skipped_conflict`):
+    one of them is wrong and we cannot tell which.
+  * a per-URL default kind - an `extra_urls` entry may be `{url: ..., kind: minutes}`;
+    links on that page with no agenda/minutes keyword of their own take that kind
+    (Toombs' yearly archive pages list minutes only, titled "Regular Board Meeting
+    January 23, 2025"). A keyword in the link still wins.
+
+Neither relaxes the no-guessing rule: a month + year with no day is still skipped.
+
 Import from a generator in scripts/:
     from lib.pdflinks import fetch_pdflinks_meetings
 """
@@ -58,6 +74,8 @@ _ANCHOR_RE = re.compile(
 _TAG_RE = re.compile(r'<[^>]+>')
 _PDF_RE = re.compile(r'\.pdf(?:$|[?#])', re.I)
 _UPLOAD_RE = re.compile(r'/uploads/(\d{4})/(\d{2})/')
+_HEADING_RE = re.compile(r'<(strong|b|h[1-6])\b[^>]*>(.*?)</\1>', re.S | re.I)
+_HEADING_REACH = 1500   # max markup distance from a date heading to the link it dates
 
 _MONTHS = {
     'jan': 1, 'january': 1, 'feb': 2, 'february': 2, 'mar': 3, 'march': 3,
@@ -244,24 +262,38 @@ def _title(text, body, iso):
     return '%s %s' % (body, iso)
 
 
+def _heading_dates(html):
+    """[(end_offset, date)] for each heading whose whole text is one full date."""
+    out = []
+    for m in _HEADING_RE.finditer(html):
+        r = parse_date(_clean(m.group(2)))
+        if r and r[0] == 'full':
+            out.append((m.end(), r[1]))
+    return out
+
+
 def parse_page(html, page_url, body='Board of Commissioners', year_from_order=False,
-               today=None, stats=None):
+               today=None, stats=None, heading_dates=False, default_kind=None):
     """Parse one page's PDF links into {date: record} entries, in document order.
 
     Returns a list of (date_iso, kind, url, is_action, text). `stats` (a dict) is
     filled with counters for the run log."""
     today = today or datetime.date.today()
     stats = stats if stats is not None else {}
-    for k in ('links', 'kept', 'skipped_nodate', 'skipped_nokind'):
+    for k in ('links', 'kept', 'skipped_nodate', 'skipped_nokind', 'skipped_conflict'):
         stats.setdefault(k, 0)
     out = []
     anchor = None                      # last FULL date seen, for newest-first lists
-    for href, inner in _ANCHOR_RE.findall(html):
+    headings = _heading_dates(html) if heading_dates else []
+    for am in _ANCHOR_RE.finditer(html):
+        href, inner = am.group(1), am.group(2)
         if not _PDF_RE.search(href):
             continue
         stats['links'] += 1
         text = _clean(inner)
         kind, is_action = _classify(href, text)
+        if not kind and default_kind:
+            kind, is_action = default_kind, False
         if not kind:
             stats['skipped_nokind'] += 1
             continue
@@ -278,6 +310,16 @@ def parse_page(html, page_url, body='Board of Commissioners', year_from_order=Fa
                 break
             if md is None:
                 md = r[1]
+
+        if headings:
+            near = [d for end, d in headings
+                    if end <= am.start() and am.start() - end <= _HEADING_REACH]
+            hd = near[-1] if near else None
+            if hd is not None:
+                if full is not None and full != hd:
+                    stats['skipped_conflict'] += 1
+                    continue
+                full = hd
 
         date = full
         if date is None and md is not None:
@@ -337,7 +379,7 @@ def build_meetings(links, body='Board of Commissioners'):
 
 
 def fetch_pdflinks_meetings(agendas_url, extra_urls=None, body='Board of Commissioners',
-                            year_from_order=False, timeout=40):
+                            year_from_order=False, timeout=40, heading_dates=False):
     """Fetch and normalize a loose-PDF agendas page (and any `extra_urls`, e.g. a
     separate minutes page).
 
@@ -345,14 +387,20 @@ def fetch_pdflinks_meetings(agendas_url, extra_urls=None, body='Board of Commiss
     a half-read set never overwrites a complete one."""
     all_links = []
     stats = {}
-    for url in [agendas_url] + list(extra_urls or []):
+    sources = [(agendas_url, None)]
+    for x in extra_urls or []:
+        sources.append((x['url'], x.get('kind')) if isinstance(x, dict) else (x, None))
+    for url, default_kind in sources:
         raw = fetch_bytes(url, label='pdflinks %s' % url, timeout=timeout)
         if raw is None:
             return None, None
         html = raw.decode('utf-8', errors='replace')
         all_links.extend(parse_page(html, url, body=body,
-                                    year_from_order=year_from_order, stats=stats))
+                                    year_from_order=year_from_order, stats=stats,
+                                    heading_dates=heading_dates,
+                                    default_kind=default_kind))
     meetings = build_meetings(all_links, body=body)
     print('  pdflinks: %(links)d PDF link(s), %(kept)d dated, %(skipped_nodate)d skipped '
-          '(no usable date), %(skipped_nokind)d skipped (not agenda/minutes)' % stats)
+          '(no usable date), %(skipped_nokind)d skipped (not agenda/minutes), '
+          '%(skipped_conflict)d skipped (heading/file-name date conflict)' % stats)
     return meetings, sorted({m['body'] for m in meetings})

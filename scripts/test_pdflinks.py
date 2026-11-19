@@ -216,6 +216,54 @@ try:
 finally:
     pdflinks.fetch_bytes = real
 
+# ---- Toombs: date headings + per-URL default kind ----------------------------
+TOOMBS = (
+    '<p><span><strong>November 17, 2026<br /> </strong></span></p>'
+    '<p><a href="https://toombscountyga.gov/wp-content/uploads/2026/11/AGENDA-NOVEMBER-17-2026.pdf">Agenda</a> | Minutes</p>'
+    '<p><span><strong>September 15, 2026<br /> </strong></span></p>'
+    '<p><a href="https://toombscountyga.gov/wp-content/uploads/2026/09/20260911193836.pdf">Agenda</a> | Minutes</p>'
+    '<p><span><strong>October 20, 2026</strong></span></p>'
+    '<p><a href="https://toombscountyga.gov/wp-content/uploads/2026/10/Agenda-October_19_2026.pdf">Agenda</a></p>'
+)
+TB = 'https://toombscountyga.gov/agendas-minutes/'
+st = {}
+got = parse_page(TOOMBS, TB, heading_dates=True, today=D(2026, 11, 19), stats=st)
+check('heading date dates a scanner-named file; agreeing file name is kept',
+      [(g[0], g[1]) for g in got], [('2026-11-17', 'agenda'), ('2026-09-15', 'agenda')])
+check('file-name date that contradicts its heading is skipped, counted',
+      st['skipped_conflict'], 1)
+got = parse_page(TOOMBS, TB, today=D(2026, 11, 19))
+check('without heading_dates the scanner-named file is still skipped, not guessed',
+      [g[0] for g in got], ['2026-11-17', '2026-10-19'])
+far = '<p><strong>May 5, 2026</strong></p>' + ('<p>x</p>' * 400) +       '<p><a href="https://t.gov/wp-content/uploads/2026/05/scan.pdf">Agenda</a></p>'
+check('a heading too far above a link does not date it',
+      parse_page(far, TB, heading_dates=True, today=D(2026, 11, 19)), [])
+
+ARCH = ('<p><a href="https://t.gov/wp-content/uploads/2025/03/01_2025-Regular-Board-Meeting-January-23-2025.pdf">'
+        '01_2025 Regular Board Meeting January 23, 2025</a></p>'
+        '<p><a href="https://t.gov/wp-content/uploads/2026/01/01_2026-REGULAR-BOARD-MEETING-MINUTES.pdf">'
+        '01_2026 REGULAR BOARD MEETING MINUTES</a></p>'
+        '<p><a href="https://t.gov/wp-content/uploads/2025/04/Budget-June-3-2025.pdf">Budget Notes</a></p>')
+check('keyword-less archive links are dropped without a default kind',
+      parse_page(ARCH, 'https://t.gov/a/', today=D(2026, 11, 19)), [])
+got = parse_page(ARCH, 'https://t.gov/a/', default_kind='minutes', today=D(2026, 11, 19))
+check('default kind makes them minutes; month+year-only title is still not guessed',
+      [(g[0], g[1]) for g in got],
+      [('2025-01-23', 'minutes'), ('2025-06-03', 'minutes')])
+
+real = pdflinks.fetch_bytes
+pdflinks.fetch_bytes = lambda url, **kw: (ARCH if 'archive' in url else TOOMBS).encode()
+try:
+    ms, _ = fetch_pdflinks_meetings(TB, heading_dates=True, body='BOC',
+                                    extra_urls=[{'url': 'https://t.gov/archive/', 'kind': 'minutes'},
+                                                'https://t.gov/archive-plain/'])
+    by = {m['date']: m for m in ms}
+    check('dict extra_urls carry kind; plain strings still work',
+          (by['2025-01-23']['minutesUrl'] is not None, by['2026-11-17']['agendaUrl'] is not None),
+          (True, True))
+finally:
+    pdflinks.fetch_bytes = real
+
 print()
 if failures:
     print('%d FAILED: %s' % (len(failures), ', '.join(failures)))

@@ -156,7 +156,8 @@ def fetch_meetings(cfg, previous=None):
         return fetch_pdflinks_meetings(cfg['agendas_url'],
                                        extra_urls=cfg.get('extra_urls'),
                                        body=cfg.get('body_label', 'Board of Commissioners'),
-                                       year_from_order=bool(cfg.get('year_from_order')))
+                                       year_from_order=bool(cfg.get('year_from_order')),
+                                       heading_dates=bool(cfg.get('heading_dates')))
     if platform == 'wixtable':
         return fetch_wixtable_meetings(cfg['agendas_url'],
                                        body=cfg.get('body_label', 'Board of Commissioners'))
