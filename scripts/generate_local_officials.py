@@ -144,6 +144,9 @@ def classify(office):
     'Commissioner' for a district/at-large member. title carries the verbatim
     label only when it is distinctive (CEO, Sole Commissioner, 'Commission Chair')."""
     o = office.strip()
+    # SoS labels carry typos, and a misspelled label silently drops the seat:
+    # Toombs 2024 published "County Commisson - District 2" and "- District 3".
+    o = re.sub(r"(?i)commisson", "Commission", o)
     ol = o.lower()
     if _SKIP_OFFICE.search(ol):
         return None

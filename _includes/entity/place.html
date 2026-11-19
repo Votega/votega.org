@@ -225,8 +225,13 @@
 <section class="po-section" id="officials">
   <h2 class="po-heading">Elected officials</h2>
   <p class="po-intro">
+    {%- if juris.government_form == "sole-commissioner" %}
+    {{ e.name }} has a sole commissioner form of government: one elected commissioner holds the powers a board of commissioners would hold elsewhere.
+    Find out about their term and next election. The card links to the primary source it was verified against.
+    {%- else %}
     Who represents {{ e.name }} on the {{ juris.body }}{% if juris.partisan == false %} (a nonpartisan body){% endif %}.
     Find out about their seats, terms, and next elections. Each card links to the primary source it was verified against.
+    {%- endif %}
   </p>
   {% if juris.official_url != "" or juris.related_pages %}
   <p class="po-meta">
@@ -337,7 +342,11 @@
 <section class="po-section" id="constitutional-officers">
   <h2 class="po-heading">Constitutional officers</h2>
   <p class="po-intro">
+    {%- if juris.government_form == "sole-commissioner" %}
+    Officials elected countywide, separately from the {{ e.name }} sole commissioner.
+    {%- else %}
     Officials elected countywide who do not sit on the {{ e.name }} commission.
+    {%- endif %}
   </p>
   <div class="po-grid">
     {% for m in co.officers %}
