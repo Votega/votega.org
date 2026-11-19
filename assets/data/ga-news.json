@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-19T10:56:11.899484+00:00",
+    "generatedAt": "2026-11-19T19:45:36.205845+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,29 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 130,
+    "count": 127,
     "windowDays": 45,
-    "entityTagged": 80,
+    "entityTagged": 79,
     "topicCounts": {
       "ethics": 2,
-      "budget": 8,
-      "healthcare": 20,
+      "budget": 7,
+      "healthcare": 19,
       "elections": 47,
-      "education": 10,
+      "education": 9,
       "courts": 7,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
+    },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
       "url": null,
@@ -58,14 +66,6 @@
       "name": "Brian Kemp",
       "url": null,
       "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
-    },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
     },
     "vg-ga-p-000227": {
       "name": "Todd Jones",
@@ -165,6 +165,38 @@
   },
   "items": [
     {
+      "id": "f5658787b918",
+      "title": "Georgia Water Coalition releases its 14th \"Dirty Dozen\" report for 2026",
+      "url": "https://www.gpb.org/news/2026/11/19/georgia-water-coalition-releases-its-14th-dirty-dozen-report-for-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-19T16:21:00+00:00",
+      "snippet": "The Georgia Water Coalition says a general theme running through its picks are a lack of \"transparency and accountability\" this year.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "67a3cad4a72b",
+      "title": "GPB morning headlines for November 19, 2026",
+      "url": "https://www.gpb.org/news/2026/11/19/gpb-morning-headlines-for-november-19-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-19T12:11:19+00:00",
+      "snippet": "The Georgia Water Coalition has unveiled its 2026 Dirty Dozen Report, naming their picks for the worst offenders and most pressing threats to the state’s waterways; Commissioners in southeast Georgia'",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "c845dbfa724a",
+      "title": "Carr Secures Major Win for Georgia Law Enforcement with FCC Contraband Cell Phone Jamming Rule",
+      "url": "https://law.georgia.gov/press-releases/2026-11-19/carr-secures-major-win-georgia-law-enforcement-fcc-contraband-cell-phone",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-19T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr has secured a major win in the fight to combat contraband cell phones in correctional facilities. For years, Carr has led a multistate effort to allow",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
       "id": "29519b4b8606",
       "title": "Commentary: Bookman: Welcome to Bleorgia",
       "url": "https://georgiarecorder.com/2026/11/19/bookman-welcome-to-bleorgia/",
@@ -211,36 +243,6 @@
       ]
     },
     {
-      "id": "2a94db710a66",
-      "title": "Georgia Today: New data center; Addiction licensing; Bear encounters",
-      "url": "https://www.gpb.org/news/2026/11/18/georgia-today-new-data-center-addiction-licensing-bear-encounters",
-      "source": "GPB News",
-      "publishedAt": "2026-11-18T21:06:31+00:00",
-      "snippet": "On the Nov. 18 edition: Delta's CEO warns last Friday's grounding of planes will cost his company millions; a new data center could be coming to Southeast Georgia; and campers in North Georgia are hav",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "a57b41ab2ec0",
-      "title": "GPB evening headlines for November 18, 2026",
-      "url": "https://www.gpb.org/news/2026/11/18/gpb-evening-headlines-for-november-18-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-18T20:24:49+00:00",
-      "snippet": "Commissioners in southeast Georgia's Effingham County have approved plans for Georgia's largest data center project.\nThe Georgia Water Coalition has unveiled its 2026 Dirty Dozen Report -- highlightin",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "1c0f58a8e94b",
-      "title": "How Delicious Vinyl's creators made hip-hop history in a dingy Hollywood apartment",
-      "url": "https://www.gpb.org/news/2026/11/18/how-delicious-vinyls-creators-made-hip-hop-history-in-dingy-hollywood-apartment",
-      "source": "GPB News",
-      "publishedAt": "2026-11-18T17:32:00+00:00",
-      "snippet": "Savannah writer Peter Relic's new book Bust a Move chronicles the rise of a new kind of hip-hop in the 1980s.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "f3ef79e144a6",
       "title": "Sen. Ossoff Working to Strengthen Maternal Health Care for Georgia Veterans",
       "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-to-strengthen-maternal-health-care-for-georgia-veterans-2/",
@@ -251,19 +253,6 @@
         "vg-ga-p-000264"
       ],
       "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "dde14dc4689f",
-      "title": "Georgia prepares as new Medicaid work requirements could be delayed six months",
-      "url": "https://www.gpb.org/news/2026/11/18/georgia-prepares-new-medicaid-work-requirements-could-be-delayed-six-months",
-      "source": "GPB News",
-      "publishedAt": "2026-11-18T15:55:00+00:00",
-      "snippet": "Changes are coming next year for state Medicaid programs, as a result of President Donald Trump’s One Big Beautiful spending bill — including to Georgia's Pathways to Coverage.",
-      "entityIds": [],
-      "topics": [
-        "budget",
         "healthcare"
       ]
     },
@@ -1732,18 +1721,6 @@
       "topics": []
     },
     {
-      "id": "b0bb88acaa37",
-      "title": "Carr: Clayton County Man Convicted of Trafficking, Rape of 15-Year-Old Female",
-      "url": "https://law.georgia.gov/press-releases/2026-10-08/carr-clayton-county-man-convicted-trafficking-rape-15-year-old-female",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-10-08T12:00:00+00:00",
-      "snippet": "CLAYTON COUNTY, GA – Georgia Attorney General Chris Carr today announced that Christopher Clark, 28, of Riverdale, Georgia, has been convicted of trafficking, rape and false imprisonment involving a 1",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
-    },
-    {
       "id": "8a4d7d062edb",
       "title": "Declaring a State of Emergency for Hurricane Isaias",
       "url": "https://gov.georgia.gov/document/2026-executive-order/10082601/download",
@@ -1814,20 +1791,6 @@
         "vg-ga-p-000024"
       ],
       "topics": []
-    },
-    {
-      "id": "76add0792bae",
-      "title": "McBath Bill to Stop Human Trafficking Passes Senate, Heads to President’s Desk",
-      "url": "https://mcbath.house.gov/2026/10/05/mcbath-bill-to-stop-human-trafficking-passes-senate-heads-to-presidents-desk/",
-      "source": "Rep. Lucy McBath (GA-06, press)",
-      "publishedAt": "2026-10-05T15:23:00+00:00",
-      "snippet": "Washington, DC – Legislation led Rep. Lucy McBath (D-Ga.) and Chairman of the U.S. House Education and Workforce Committee Tim Walberg (R-Mich.) has passed the Senate unanimously and is headed to the ",
-      "entityIds": [
-        "vg-ga-p-000262"
-      ],
-      "topics": [
-        "education"
-      ]
     }
   ]
 }
