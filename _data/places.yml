@@ -2009,13 +2009,16 @@ places:
     hidden: true
     domains:
       meetings:
-        # CivicPlus Agenda Center, single "Board of Commissioners" category. No
-        # recurring schedule is stated on laurenscoga.org, so none is recorded here.
+        # CivicPlus Agenda Center, single "Board of Commissioners" category. Schedule
+        # supplied by the project owner (not stated on laurenscoga.org); no location given.
         platform: civicplus
         base_url: https://www.laurenscoga.org
         agendas_url: "https://www.laurenscoga.org/AgendaCenter"
         body_map:
           - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 5:30 p.m., and 3rd Tuesday, 6:30 p.m."
 
   - slug: mitchell
     name: Mitchell County
