@@ -1933,6 +1933,19 @@ places:
     parentCounty: null
     region: Northwest Georgia
     hidden: true
+    domains:
+      meetings:
+        # CivicClerk portal (BOC only since Feb 2026; the older Granicus archive is
+        # added separately). Two one-off "General" events are scoped out by body_map.
+        platform: civicclerk
+        subdomain: floydcountyga
+        agendas_url: "https://floydcountyga.gov/board_and_committees/board_of_commissioners/boc_agendas_minutes.php"
+        body_map:
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: "2nd and 4th Tuesday of every month, 6:00 p.m."
+            location: "Administration Building, 12 East 4th Avenue, Suite 206 (Commissioners Meeting Room), Rome"
 
   - slug: haralson
     name: Haralson County
@@ -1949,6 +1962,22 @@ places:
     parentCounty: null
     region: Northeast Georgia
     hidden: true
+    domains:
+      meetings:
+        # CivicPlus Agenda Center. Keep the legislative + land-use bodies; drop Board of
+        # Elections & Registration, Keep Jackson County Beautiful and the SPLOST
+        # Citizen's Committee (administrative / advisory).
+        platform: civicplus
+        base_url: https://www.jacksoncountygov.com
+        agendas_url: "https://www.jacksoncountygov.com/AgendaCenter"
+        body_map:
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Board of Adjustments", label: "Board of Adjustments" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Monday of every month, 6:00 p.m."
+            location: "Jackson County Courthouse, 5000 Jackson Parkway, Jefferson"
 
   - slug: laurens
     name: Laurens County
@@ -1957,6 +1986,15 @@ places:
     parentCounty: null
     region: Middle Georgia
     hidden: true
+    domains:
+      meetings:
+        # CivicPlus Agenda Center, single "Board of Commissioners" category. No
+        # recurring schedule is stated on laurenscoga.org, so none is recorded here.
+        platform: civicplus
+        base_url: https://www.laurenscoga.org
+        agendas_url: "https://www.laurenscoga.org/AgendaCenter"
+        body_map:
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
 
   - slug: mitchell
     name: Mitchell County
