@@ -4,6 +4,7 @@ import os
 import sys
 import unittest
 import urllib.parse
+from datetime import date
 
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.cfmagenda import (parse_date, parse_fragment, discover_year_buttons,  # noqa: E402
@@ -108,7 +109,7 @@ class Fetch(unittest.TestCase):
 
     def test_older_years_posted_and_merged_newest_first(self):
         f = self.fetcher()
-        meetings, bodies = fetch_cfmagenda_meetings(BASE, fetch=f)
+        meetings, bodies = fetch_cfmagenda_meetings(BASE, fetch=f, today=date(2026, 11, 19))
         self.assertEqual([m['date'] for m in meetings],
                          ['2026-12-15', '2026-11-17', '2025-12-03'])
         self.assertEqual(len(f.calls), 2)  # page + ONE POST (2025, type 185)
@@ -116,6 +117,17 @@ class Fetch(unittest.TestCase):
         self.assertEqual((q['y'], q['t']), (['2025'], ['185']))
         old = meetings[-1]
         self.assertTrue(old['minutesUrl'].endswith('Minutes.docx'))
+
+    def test_past_meeting_without_agenda_or_minutes_dropped_future_kept(self):
+        page = (button(2026, '185') + '<h2>Regular Meeting</h2><div id="Type185">' +
+                meeting(1, 'Dec 15, 2026', 'Regular Meeting') +
+                meeting(2, 'Oct 6, 2026', 'Regular Meeting',
+                        [('files/q.pdf', 'Fire Dept Equip Needs Quote')]) +
+                meeting(3, 'Nov 3, 2026', 'Regular Meeting', [('files/a.pdf', 'Agenda')]) +
+                '</div>')
+        got, _ = fetch_cfmagenda_meetings(BASE, fetch=lambda *a, **k: page.encode(),
+                                          today=date(2026, 11, 19))
+        self.assertEqual([m['id'] for m in got], ['cfm-1', 'cfm-3'])
 
     def test_failed_year_refuses_partial_history(self):
         self.assertEqual(fetch_cfmagenda_meetings(BASE, fetch=self.fetcher(fail_year=2025)),

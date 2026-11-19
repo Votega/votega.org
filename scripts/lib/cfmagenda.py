@@ -21,6 +21,9 @@ Rules (a bespoke CMS changes without notice, and a wrong link is worse than none
     several different files compete for one slot, a non-"amended" one wins if
     exactly one exists; otherwise the slot is left empty rather than picking.
     Everything else (quotes, resolutions, proclamations) is ignored.
+  * A PAST meeting with no agenda or minutes link is dropped (counted
+    `skippedNoDocs`): the county lists them with only unrelated files or nothing, and
+    a row with nothing to open is not a record. Upcoming meetings are kept.
   * ANY failed year fetch fails the whole run (None), so a partial history can never
     replace a complete one. A page with meetings but no document links anywhere is
     treated as a layout change and also fails.
@@ -33,7 +36,7 @@ import html
 import re
 import sys
 import urllib.parse
-from datetime import datetime
+from datetime import date as _date, datetime
 from urllib.parse import quote, urljoin
 
 from lib.http import fetch_bytes
@@ -153,7 +156,7 @@ def type_sections(page):
     return out
 
 
-def fetch_cfmagenda_meetings(page_url, timeout=40, fetch=fetch_bytes):
+def fetch_cfmagenda_meetings(page_url, timeout=40, fetch=fetch_bytes, today=None):
     """Returns (meetings, bodies_seen), or (None, None) if anything cannot be read.
     `fetch` is injectable for tests."""
     raw = fetch(page_url, timeout=timeout, label='cfmagenda')
@@ -187,8 +190,12 @@ def fetch_cfmagenda_meetings(page_url, timeout=40, fetch=fetch_bytes):
     if meetings and not stats.get('documents'):
         print('  cfmagenda: meetings but no document links - layout change?', file=sys.stderr)
         return None, None
+    today = (today or _date.today()).isoformat()
     seen, uniq = set(), []
     for m in meetings:
+        if m['date'] < today and not (m['agendaUrl'] or m['minutesUrl']):
+            stats['skippedNoDocs'] = stats.get('skippedNoDocs', 0) + 1
+            continue
         k = m['id'] or (m['date'], m['body'], m['title'])
         if k in seen:
             continue

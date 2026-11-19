@@ -2061,3 +2061,20 @@ places:
     parentCounty: null
     region: South Georgia
     hidden: true
+    domains:
+      meetings:
+        # Same Drupal "Upcoming Meetings" view as Palmetto (lib/drupalviews.py), body
+        # path `board-commissioners`; past agendas/minutes are /media/<id> links.
+        # ⚠ montcoga.gov sits behind a Cloudflare challenge (403 to every scripted
+        # request, 2026-11-19), so there is no committed data yet and the scheduled run
+        # reports it as bot-blocked. Feed it from a real browser: save /meetings (and
+        # /meetings/recent) with Ctrl+S, then
+        #   python scripts/generate_place_meetings.py --slug montgomery --from-file "<page>.htm" [--from-file "<recent>.htm"]
+        # No recurring schedule is recorded: the site could not be read to confirm one.
+        platform: drupalviews
+        bot_protected: true
+        body_label: Board of Commissioners
+        body_paths:
+          board-commissioners: Board of Commissioners
+        recent_url: "https://montcoga.gov/meetings/recent"
+        agendas_url: "https://montcoga.gov/meetings"
