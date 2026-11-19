@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-18T19:45:32.548856+00:00",
+    "generatedAt": "2026-11-19T02:08:43.130648+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,26 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 127,
+    "count": 130,
     "windowDays": 45,
-    "entityTagged": 79,
+    "entityTagged": 80,
     "topicCounts": {
+      "ethics": 2,
+      "budget": 8,
       "healthcare": 20,
-      "budget": 7,
-      "elections": 48,
+      "elections": 49,
       "education": 11,
       "courts": 7,
-      "ethics": 1,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
+    },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
       "url": null,
@@ -53,6 +58,14 @@
       "name": "Brian Kemp",
       "url": null,
       "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
+    },
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
     },
     "vg-ga-p-000227": {
       "name": "Todd Jones",
@@ -81,10 +94,10 @@
         "ga-house-159-2026-r-1"
       ]
     },
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
+    "vg-ga-p-000262": {
+      "name": "Lucy McBath",
       "url": null,
-      "bioguideId": "W000790"
+      "bioguideId": "M001208"
     },
     "vg-ga-p-000035": {
       "name": "Carolyn Hugley",
@@ -93,14 +106,6 @@
       "rosterId": "ocd-person/0f5a9273-2fc6-458f-af59-b75070a1dc76",
       "candidateIds": [
         "ga-house-141-2026-d-1"
-      ]
-    },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
       ]
     },
     "vg-ga-p-000335": {
@@ -149,11 +154,6 @@
         "challenger-rick-jackson-gov-2026"
       ]
     },
-    "vg-ga-p-000262": {
-      "name": "Lucy McBath",
-      "url": null,
-      "bioguideId": "M001208"
-    },
     "vg-ga-p-000021": {
       "name": "Brad Raffensperger",
       "url": null,
@@ -164,6 +164,52 @@
     }
   },
   "items": [
+    {
+      "id": "3846ec5917d7",
+      "title": "Warnock Questions Trump CFTC Nominees on Commitment to Fighting President’s Corruption",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-questions-trump-cftc-nominees-on-commitment-to-fighting-presidents-corruption/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-11-18T22:34:41+00:00",
+      "snippet": "On Tuesday, during a Senate Agriculture Committee hearing, Senator Reverend Warnock questioned President Trump’s nominees to the Commodity Futures Trading Commission on their commitment to protecting ",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "ethics"
+      ]
+    },
+    {
+      "id": "9ce7e33f07e9",
+      "title": "Lawmakers push for forensic audit of DFCS amid budget concerns",
+      "url": "https://thecurrentga.org/2026/11/18/lawmakers-push-for-forensic-audit-of-dfcs-amid-budget-concerns/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-18T21:20:34+00:00",
+      "snippet": "A bipartisan group of Georgia lawmakers is calling for a third-party forensic audit of the Division of Family and Children Services following reports of questionable spending and a significant budget ",
+      "entityIds": [],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "2a94db710a66",
+      "title": "Georgia Today: New data center; Addiction licensing; Bear encounters",
+      "url": "https://www.gpb.org/news/2026/11/18/georgia-today-new-data-center-addiction-licensing-bear-encounters",
+      "source": "GPB News",
+      "publishedAt": "2026-11-18T21:06:31+00:00",
+      "snippet": "On the Nov. 18 edition: Delta's CEO warns last Friday's grounding of planes will cost his company millions; a new data center could be coming to Southeast Georgia; and campers in North Georgia are hav",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "a57b41ab2ec0",
+      "title": "GPB evening headlines for November 18, 2026",
+      "url": "https://www.gpb.org/news/2026/11/18/gpb-evening-headlines-for-november-18-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-18T20:24:49+00:00",
+      "snippet": "Commissioners in southeast Georgia's Effingham County have approved plans for Georgia's largest data center project.\nThe Georgia Water Coalition has unveiled its 2026 Dirty Dozen Report -- highlightin",
+      "entityIds": [],
+      "topics": []
+    },
     {
       "id": "1c0f58a8e94b",
       "title": "How Delicious Vinyl's creators made hip-hop history in a dingy Hollywood apartment",
@@ -226,16 +272,6 @@
         "elections",
         "education"
       ]
-    },
-    {
-      "id": "27629349757a",
-      "title": "GPB morning headlines for November 18, 2026",
-      "url": "https://www.gpb.org/news/2026/11/18/gpb-morning-headlines-for-november-18-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-18T12:14:06+00:00",
-      "snippet": "For over a decade, lawmakers in Georgia have introduced bills to legalize gambling in some form, but none have made it into law. A new governor could move it closer to the finish line in 2027; The Geo",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "997545844284",
@@ -319,6 +355,18 @@
       "snippet": "MUNICH – Governor Brian P. Kemp today announced that HDI America plans to invest $47 million in a new manufacturing facility in Candler County, creating 185 new jobs over the next several years.",
       "entityIds": [
         "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "7f4c017244ec",
+      "title": "Carr: $12 Million in Restitution and Lease Forgiveness for Georgians Misled by Acima Rental Agreements",
+      "url": "https://law.georgia.gov/press-releases/2026-11-17/carr-12-million-restitution-and-lease-forgiveness-georgians-misled-acima",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-17T12:00:00+00:00",
+      "snippet": "ATLANTA, GA — Georgia Attorney General Chris Carr has secured more than $12 million in restitution and loan forgiveness for over 17,000 Georgia consumers as part of a multistate settlement agreement w",
+      "entityIds": [
+        "vg-ga-p-000039"
       ],
       "topics": []
     },
@@ -463,18 +511,6 @@
       ]
     },
     {
-      "id": "5fcc73fe634c",
-      "title": "Carolyn Hugley poised to become Georgia’s first Black female House speaker",
-      "url": "https://thecurrentga.org/2026/11/14/carolyn-hugley-poised-to-become-georgias-first-black-female-house-speaker/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-14T16:51:41+00:00",
-      "snippet": "Georgia House Democrats picked leadership, including Representative Carolyn Hugley as nominee for House speaker, following the party's first majority win in the chamber in two decades.\nThe Current is ",
-      "entityIds": [
-        "vg-ga-p-000035"
-      ],
-      "topics": []
-    },
-    {
       "id": "06af346c89be",
       "title": "FAA grounds flights after communications breakdown for controllers",
       "url": "https://capitol-beat.org/2026/11/faa-grounds-flights-after-communications-breakdown-for-controllers/?utm_source=rss&utm_medium=rss&utm_campaign=faa-grounds-flights-after-communications-breakdown-for-controllers",
@@ -574,6 +610,20 @@
       ],
       "topics": [
         "ethics"
+      ]
+    },
+    {
+      "id": "1ac16a8c3e9f",
+      "title": "With a New Congress on the Horizon, McBath and 17 US Lawmakers Arrive at COP31 to Signal America’s Return to Sensible Climate Policy",
+      "url": "https://mcbath.house.gov/2026/11/13/with-a-new-congress-on-the-horizon-mcbath-and-17-us-lawmakers-arrive-at-cop31-to-signal-americas-return-to-sensible-climate-policy/",
+      "source": "Rep. Lucy McBath (GA-06, press)",
+      "publishedAt": "2026-11-13T09:57:00+00:00",
+      "snippet": "On the heels of transformational midterm elections, 18 Members of the U.S. House of Representatives are attending COP31 to strengthen international partnerships and exchange solutions to shared climat",
+      "entityIds": [
+        "vg-ga-p-000262"
+      ],
+      "topics": [
+        "elections"
       ]
     },
     {
@@ -879,18 +929,6 @@
       "topics": [
         "healthcare"
       ]
-    },
-    {
-      "id": "1c3adaa6a6df",
-      "title": "Warnock Introduces Bipartisan Bill to Restore “I Have a Dream” Plaque at Lincoln Memorial",
-      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-introduces-bipartisan-bill-to-restore-i-have-a-dream-plaque-at-lincoln-memorial/",
-      "source": "Sen. Raphael Warnock (press)",
-      "publishedAt": "2026-11-09T16:21:09+00:00",
-      "snippet": "Senator Reverend Warnock introduced legislation to restore the plaque commemorating Dr. Martin Luther King Jr.’s “I Have a Dream” speech at the Lincoln Memorial Despite years of damage, the historic p",
-      "entityIds": [
-        "vg-ga-p-000263"
-      ],
-      "topics": []
     },
     {
       "id": "cd529ed2a330",
