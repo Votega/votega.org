@@ -1961,6 +1961,20 @@ places:
     parentCounty: null
     region: West Georgia
     hidden: true
+    domains:
+      meetings:
+        # ColdFusion Agenda Center (lib/cfmagenda.py): one section per meeting type,
+        # older years loaded by POST. Every type (regular, work session, special
+        # called, retreat) is the same Board of Commissioners, so it is folded to one
+        # body; the meeting type stays in each record's title.
+        platform: cfmagenda
+        base_url: https://www.haralsoncountyga.gov
+        agendas_url: "https://www.haralsoncountyga.gov/agenda-center.cfm"
+        body_label: "Board of Commissioners"
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 6:00 p.m. (work session 3rd Tuesday, 6:00 p.m.)"
+            location: "155 Van Wert Street, Buchanan"
 
   - slug: jackson
     name: Jackson County
