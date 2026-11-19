@@ -60,6 +60,7 @@ from lib.http import fetch_bytes  # noqa: E402
 from lib.wpdatatables import fetch_wpdatatables_meetings  # noqa: E402
 from lib.gdrive import fetch_gdrive_meetings  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
+from lib.archive_merge import merge_archive, carry_forward_history  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -399,6 +400,35 @@ def rss_topup(place, cfg):
     return payload
 
 
+def add_archive(cfg, meetings, slug):
+    """Merge `domains.meetings.archive` (a second platform config) under the primary
+    meetings. Its own body rules scope it; the primary wins any (date, body) overlap
+    (lib/archive_merge.py). An archive that cannot be fetched carries the previous
+    file's older history forward instead of dropping it."""
+    acfg = cfg['archive']
+    try:
+        got, _ = fetch_meetings(acfg, previous=None)
+    except (ValueError, KeyError) as e:
+        print('  ERROR: bad archive config for %s: %s' % (slug, e))
+        got = None
+    if got:
+        got, _ = scope_bodies(acfg, got, slug)
+        # Two systems number meetings independently (both have a "58"); the enrichers
+        # key sidecars by id, so namespace the archive's by its platform.
+        for g_ in got:
+            if g_.get('id'):
+                g_['id'] = '%s:%s' % (acfg.get('platform'), g_['id'])
+    if got:
+        merged = merge_archive(meetings, got)
+        print('  archive (%s): +%d meeting(s)' % (acfg.get('platform'), len(merged) - len(meetings)))
+    else:
+        old = carry_forward_history(meetings, load_previous(slug))
+        print('  WARNING: archive source for %s unavailable; carrying %d earlier '
+              'meeting(s) forward' % (slug, len(old)))
+        merged = merge_archive(meetings, old)
+    return merged, sorted({m['body'] for m in merged})
+
+
 def build_place(place, saved_pages=None):
     """Fetch + normalize one place's meetings. Returns the output dict, or None."""
     slug = place['slug']
@@ -439,6 +469,8 @@ def build_place(place, saved_pages=None):
         return None
 
     meetings, bodies_seen = scope_bodies(cfg, meetings, slug)
+    if meetings and cfg.get('archive'):
+        meetings, bodies_seen = add_archive(cfg, meetings, slug)
     if not meetings:
         print('  ERROR: body filter for %s matched zero meetings — check '
               'include_bodies/exclude_bodies against the source' % slug)

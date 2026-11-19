@@ -1942,6 +1942,13 @@ places:
         agendas_url: "https://floydcountyga.gov/board_and_committees/board_of_commissioners/boc_agendas_minutes.php"
         body_map:
           - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        # Pre-Feb-2026 history: the county's Granicus ViewPublisher (Sept 2022 - Jan
+        # 2026, with video). Primary wins any same-day overlap (lib/archive_merge.py).
+        archive:
+          platform: granicus
+          agendas_url: "https://floydcountyga.granicus.com/ViewPublisher.php?view_id=1"
+          body_map:
+            - { match: "Board of Commissioners", label: "Board of Commissioners" }
         schedule:
           - body: Board of Commissioners
             when: "2nd and 4th Tuesday of every month, 6:00 p.m."
