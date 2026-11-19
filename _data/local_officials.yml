@@ -5805,12 +5805,12 @@ jurisdictions:
         title: Chairman
         seat: "At-Large"
         seat_id: at-large
-        party:
+        party: Republican   # Catoosa County elected-officials list (2025)
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
-        last_elected:
-        term_end:
-        next_election:
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list
         voting: true
         photo: "https://www.catoosacountyga.gov/home/showpublishedimage/1106/637456085509370000"
         source: "https://www.catoosacountyga.gov/Home/Components/StaffDirectory/StaffDirectory/214/149?backlist=%2fdepartments%2fview-all-departments%2fboard-of-commissioners"
@@ -5818,12 +5818,12 @@ jurisdictions:
         role: Commissioner
         seat: "District 1"
         seat_id: district-1
-        party:
+        party: Republican   # Catoosa County elected-officials list (2025)
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
-        last_elected:
-        term_end:
-        next_election:
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list
         voting: true
         photo: "https://www.catoosacountyga.gov/home/showpublishedimage/1104/637456085503130000"
         source: "https://www.catoosacountyga.gov/Home/Components/StaffDirectory/StaffDirectory/112/149?backlist=%2fdepartments%2fview-all-departments%2fboard-of-commissioners"
@@ -5831,7 +5831,7 @@ jurisdictions:
         role: Commissioner
         seat: "District 2"
         seat_id: district-2
-        party:
+        party: Republican   # Catoosa County elected-officials list (2025)
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
         last_elected: 2026
@@ -5844,12 +5844,12 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"
         seat_id: district-3
-        party:
+        party: Republican   # Catoosa County elected-officials list (2025)
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
-        last_elected:
-        term_end:
-        next_election:
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list
         voting: true
         photo: "https://www.catoosacountyga.gov/home/showpublishedimage/1356/638721184618200000"
         source: "https://www.catoosacountyga.gov/Home/Components/StaffDirectory/StaffDirectory/114/149?backlist=%2fdepartments%2fview-all-departments%2fboard-of-commissioners"
@@ -5857,7 +5857,7 @@ jurisdictions:
         role: Commissioner
         seat: "District 4"
         seat_id: district-4
-        party:
+        party: Republican   # Catoosa County elected-officials list (2025)
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
         last_elected: 2026
@@ -6113,3 +6113,101 @@ jurisdictions:
         term_provenance: verified   # charter: elected Tue after 1st Mon of Nov, take office Jan 1, 4-yr terms
         voting: true
         source: "https://www.savannahga.gov/390/Contact-Your-City-Council"   # drafted 2026-11-19 — CONFIRM before merge
+
+  - id: fort-oglethorpe
+    name: City of Fort Oglethorpe
+    type: city
+    county: Catoosa
+    body: City Council
+    partisan: false
+    term_years: 4            # charter: 4-year terms; mayor + Posts 1,4 elected 1999+4n (2023, 2027); Posts 2,3,5 elected 1997+4n (2025, 2029)
+    board_size: 6            # mayor + 5 council as listed on fortogov.com/mayor-council
+    official_url: "https://fortogov.com/mayor-council/"
+    related_pages:
+    notes: ""
+    members:
+      - name: "Earl Gray"
+        role: Mayor
+        seat: "Mayor"
+        seat_id: mayor
+        party: Nonpartisan
+        email: "egray@fortoglethorpega.gov"
+        phone: "706-866-2544"   # City Hall (no direct lines published)
+        last_elected: 2023   # up for re-election 2027 per county list; charter rotation puts the prior election in 2023
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list: up 2027, 4-yr term
+        voting: false   # charter: mayor presides, "shall not vote ... except in case of a tie"
+        tie_break_only: true
+        source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Paula G. Stinnett"
+        role: Mayor Pro Tem
+        title: "Mayor Pro Tem"
+        seat: "Post 5"
+        seat_id: post-5
+        party: Nonpartisan
+        email: "pstinnett@fortoglethorpega.gov"
+        phone: "706-866-2544"   # City Hall (no direct lines published)
+        last_elected: 2025   # Catoosa Notice of Election Cancellation, published 2025-09-17: qualified unopposed, Nov 4 2025 election cancelled
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified   # charter rotation + county cancellation notice
+        voting: true
+        source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Derek Rogers"
+        role: Council Member
+        title: "Councilman"
+        seat: "Post 4"
+        seat_id: post-4
+        party: Nonpartisan
+        email: "drogers@fortoglethorpega.gov"
+        phone: "706-866-2544"   # City Hall (no direct lines published)
+        last_elected: 2023   # county list: Council Ward 4, up 2027
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list: up 2027, 4-yr term
+        voting: true
+        source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Jim Childs"
+        role: Council Member
+        title: "Councilman"
+        seat: "Post 2"
+        seat_id: post-2
+        party: Nonpartisan
+        email: "jchilds@fortoglethorpega.gov"
+        phone: "706-866-2544"   # City Hall (no direct lines published)
+        last_elected: 2025   # Catoosa Notice of Election Cancellation, published 2025-09-17: qualified unopposed, Nov 4 2025 election cancelled
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified   # charter rotation + county cancellation notice
+        voting: true
+        source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Craig Crawford"
+        full_name: "Craig Andrew Crawford"
+        role: Council Member
+        title: "Councilman"
+        seat: "Post 3"
+        seat_id: post-3
+        party: Nonpartisan
+        email: "ccrawford@fortoglethorpega.gov"
+        phone: "706-866-2544"   # City Hall (no direct lines published)
+        last_elected: 2025   # Catoosa Notice of Election Cancellation, published 2025-09-17: qualified unopposed, Nov 4 2025 election cancelled
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified   # charter rotation + county cancellation notice
+        voting: true
+        source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Rhonda James"
+        role: Council Member
+        title: "Council Lady"
+        seat: "Post 1"
+        seat_id: post-1
+        party: Nonpartisan
+        email: "rjames@fortoglethorpega.gov"
+        phone: "706-866-2544"   # City Hall (no direct lines published)
+        last_elected: 2023   # county list: Council Ward 1, up 2027
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list: up 2027, 4-yr term
+        voting: true
+        source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
