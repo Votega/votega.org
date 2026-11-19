@@ -217,6 +217,10 @@
 {% assign juris = site.data.local_officials.jurisdictions | where: "id", e.slug | first %}
 {% assign role_order = "Mayor,Mayor Pro Tem,Chair,Vice Chair,Council Member,Commissioner" | split: "," %}
 {% assign presiding_roles = "Mayor,Chair" | split: "," %}
+{%- comment %} Each domain is CAPTURED, not printed, so the page can decide after
+    rendering which tabs exist: an empty capture means no data for this place,
+    and that tab is left out rather than shown empty. {% endcomment -%}
+{% capture tab_officials %}
 {% if juris %}
 <section class="po-section" id="officials">
   <h2 class="po-heading">Elected officials</h2>
@@ -375,39 +379,40 @@
   </div>
 </section>
 {% endif %}
+{% endcapture %}
 
 {%- comment %} School boards — a separately elected body, so its own section rather
     than rows in the officials grid. Server-rendered from _data/school_districts.yml
     and renders NOTHING until a roster is human-confirmed. {% endcomment -%}
-{% include entity/school-boards.html %}
+{% capture tab_schools %}{% include entity/school-boards.html %}{% endcapture %}
 
 {%- comment %} Stale-data notice for a place whose site blocks our fetcher (registry
     `bot_protected`). Sits right after officials and above the topic summaries, because
     those summaries are exactly what is not being refreshed. {% endcomment -%}
 {% assign bp_place = site.data.places.places | where: "slug", e.slug | first %}
 {% assign bp = bp_place.domains.meetings %}
-{% if bp.bot_protected %}
+{% capture tab_notice %}{% if bp.bot_protected %}
 <div class="cm-notposting cm-notposting-top" role="note">
   <span class="cm-notposting-badge"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> This information may be out of date</span>
   <p>This {{ bp_place.type | default: 'government' }}'s website blocks the automated method we use to pull in agenda and minutes links and to tag topics, so what's shown here is not being refreshed and may be stale. Please check the
   {% assign bp_url = bp.agendas_url | default: bp.base_url %}{% if bp_url and bp_url != "" %}<a href="{{ bp_url }}" target="_blank" rel="noopener">official site</a>{% else %}official site{% endif %}
   for the latest agendas, minutes and meeting information.</p>
 </div>
-{% endif %}
+{% endif %}{% endcapture %}
 
 {%- comment %} Property tax — server-rendered from _data/millage.json, between the
     people and the meetings: it is the most-searched local-government topic and it
     needs to be in the crawled HTML. Renders nothing when the place has no view. {% endcomment -%}
-{% include entity/millage.html %}
+{% capture tab_taxes %}{% include entity/millage.html %}{% endcapture %}
 
 {%- comment %} "On recent agendas" — subject areas + data-center watch, loaded
     client-side from the enrichment sidecar. Hidden unless that file exists
     (Legistar places today). {% endcomment -%}
-<section class="po-section" id="subjects" hidden></section>
+{% capture tab_topics %}<section class="po-section" id="subjects" hidden></section>{% endcapture %}
 
 {%- comment %} Meetings — the automated, self-healing domain, below officials.
     Only rendered when the place actually declares a meetings adapter. {% endcomment -%}
-{% if e.domains contains 'meetings' %}
+{% capture tab_meetings %}{% if e.domains contains 'meetings' %}
 <section id="cmMeetings">
   <h2 class="po-heading" style="margin-top: 2rem;">Public meetings</h2>
   <p class="place-intro">
@@ -491,6 +496,9 @@
   <p id="cmSource"></p>
 </section>
 {% endif %}
+{% endcapture %}
+
+{% include entity/place-tabs.html %}
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>

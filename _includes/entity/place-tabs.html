@@ -1,0 +1,198 @@
+{%- comment %}
+  Tabbed layout for a /local/<slug>/ place page. place.html captures each domain
+  into a variable (tab_meetings, tab_topics, tab_officials, tab_schools,
+  tab_taxes, plus tab_notice for a bot-protected place) and includes this file to
+  lay them out.
+
+  A tab exists only when its capture rendered something, so a city with no school
+  board roster or millage view simply has fewer tabs. With fewer than two
+  server-rendered domains there is nothing to switch between and the sections
+  are printed one after another, as before.
+
+  Every panel is in the HTML; the script below only hides the inactive ones. A
+  crawler, or a visitor without JavaScript, still gets the whole page.
+
+  Topics ("On recent agendas") is filled client-side by local-subjects.js from the
+  enrichment sidecar, so its button starts hidden and appears only once that
+  section is revealed.
+
+  URL hash: a tab key (#meetings, #topics, #officials, #schools, #taxes) opens that
+  tab, and so does the id of anything inside a panel, which keeps the old section
+  anchors working (#officials, #constitutional-officers, #school-boards, #millage,
+  #cmMeetings, #subjects). Any other hash is left alone, because local-meetings.js
+  uses #<body-slug> for its body filter on the Meetings tab.
+{% endcomment -%}
+{%- assign pt_meetings = tab_meetings | strip -%}
+{%- assign pt_officials = tab_officials | strip -%}
+{%- assign pt_schools = tab_schools | strip -%}
+{%- assign pt_taxes = tab_taxes | strip -%}
+{%- assign pt_n = 0 -%}
+{%- if pt_meetings != "" -%}{%- assign pt_n = pt_n | plus: 1 -%}{%- endif -%}
+{%- if pt_officials != "" -%}{%- assign pt_n = pt_n | plus: 1 -%}{%- endif -%}
+{%- if pt_schools != "" -%}{%- assign pt_n = pt_n | plus: 1 -%}{%- endif -%}
+{%- if pt_taxes != "" -%}{%- assign pt_n = pt_n | plus: 1 -%}{%- endif -%}
+
+{%- if pt_n < 2 -%}
+{{ tab_officials }}
+{{ tab_schools }}
+{{ tab_notice }}
+{{ tab_taxes }}
+{{ tab_topics }}
+{{ tab_meetings }}
+{%- else -%}
+<style>
+  .place-tabs { margin-top: 1.25rem; }
+  .place-tabs .tab-bar { display: flex; flex-wrap: wrap; border-bottom: 2px solid var(--color-border); margin-bottom: 1.25rem; }
+  .place-tabs .tab-btn {
+    padding: 0.5rem 1.1rem; border: none; background: none;
+    font-size: 0.95rem; font-weight: 600; color: var(--color-text-secondary);
+    cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px;
+  }
+  .place-tabs .tab-btn:hover { color: var(--color-text); }
+  .place-tabs .tab-btn.tab-active { color: var(--color-link); border-bottom-color: var(--color-accent); }
+  .place-tabs .tab-btn[hidden] { display: none; }
+  .place-tabs .tab-btn i { margin-right: 0.35rem; opacity: 0.8; }
+  /* Each panel opens with its own section heading, which in a stacked page carried
+     a top margin to separate it from the section above. Inside a tab it sits right
+     under the bar, so drop that gap (several set it inline, hence !important). */
+  .place-panel > :first-child,
+  .place-panel > section:first-child > .po-heading:first-child { margin-top: 0 !important; }
+  .place-panel > .po-section:first-child { margin-top: 0; }
+  .place-panel:focus { outline: none; }
+  .place-panel:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+  @media (max-width: 540px) {
+    .place-tabs .tab-btn { padding: 0.45rem 0.7rem; font-size: 0.85rem; }
+  }
+</style>
+
+<div class="place-tabs" id="placeTabs">
+  <div class="tab-bar" data-tabs aria-label="{{ e.name | escape }} sections"
+       data-tab-panel-prefix="tab-" data-tab-active="tab-active">
+    {%- if pt_meetings != "" %}
+    <button class="tab-btn" data-tab="meetings"><i class="fa-regular fa-calendar" aria-hidden="true"></i>Meetings</button>
+    <button class="tab-btn" data-tab="topics" hidden><i class="fa-solid fa-tags" aria-hidden="true"></i>On the agenda</button>
+    {%- endif %}
+    {%- if pt_officials != "" %}
+    <button class="tab-btn" data-tab="officials"><i class="fa-solid fa-user-tie" aria-hidden="true"></i>Officials</button>
+    {%- endif %}
+    {%- if pt_schools != "" %}
+    <button class="tab-btn" data-tab="schools"><i class="fa-solid fa-school" aria-hidden="true"></i>Schools</button>
+    {%- endif %}
+    {%- if pt_taxes != "" %}
+    <button class="tab-btn" data-tab="taxes"><i class="fa-solid fa-receipt" aria-hidden="true"></i>Property tax</button>
+    {%- endif %}
+  </div>
+
+  {%- if pt_meetings != "" %}
+  <div id="tab-meetings" class="place-panel">
+    {{ tab_notice }}
+    {{ tab_meetings }}
+  </div>
+  <div id="tab-topics" class="place-panel">
+    {{ tab_topics }}
+  </div>
+  {%- endif %}
+  {%- if pt_officials != "" %}
+  <div id="tab-officials" class="place-panel">
+    {{ tab_officials }}
+  </div>
+  {%- endif %}
+  {%- if pt_schools != "" %}
+  <div id="tab-schools" class="place-panel">
+    {{ tab_schools }}
+  </div>
+  {%- endif %}
+  {%- if pt_taxes != "" %}
+  <div id="tab-taxes" class="place-panel">
+    {{ tab_taxes }}
+  </div>
+  {%- endif %}
+</div>
+{%- if pt_meetings == "" %}
+{{ tab_notice }}
+{{ tab_topics }}
+{%- endif %}
+
+<script>
+  // Runs inline, straight after the panels, so the inactive ones are hidden
+  // before first paint. a11y-tabs.js (deferred) adds the ARIA roles and arrow keys
+  // afterwards and reads the tab-active class this sets.
+  (function () {
+    var root = document.getElementById('placeTabs');
+    if (!root) return;
+    var bar = root.querySelector('.tab-bar');
+    var btns = Array.prototype.slice.call(bar.querySelectorAll('.tab-btn'));
+    var current = null;
+
+    function btnFor(key) {
+      for (var i = 0; i < btns.length; i++) if (btns[i].dataset.tab === key) return btns[i];
+      return null;
+    }
+    function firstVisible() {
+      for (var i = 0; i < btns.length; i++) if (!btns[i].hidden) return btns[i].dataset.tab;
+      return null;
+    }
+    // Hash -> tab key: a tab name, or the panel holding the element with that id.
+    // null for anything else (e.g. a meetings body-filter slug).
+    function keyForHash(h) {
+      if (!h) return null;
+      var b = btnFor(h);
+      if (b) return h;
+      var el = document.getElementById(h);
+      var panel = el && el.closest ? el.closest('.place-panel') : null;
+      return panel ? panel.id.replace(/^tab-/, '') : null;
+    }
+    function show(key, push) {
+      var b = btnFor(key);
+      if (!b || b.hidden) return false;
+      btns.forEach(function (x) {
+        var on = x === b;
+        x.classList.toggle('tab-active', on);
+        var p = document.getElementById('tab-' + x.dataset.tab);
+        if (p) p.hidden = !on;
+      });
+      current = key;
+      if (push && location.hash.slice(1) !== key && history.pushState) {
+        history.pushState(null, '', '#' + key);
+      }
+      return true;
+    }
+    function fromHash() {
+      var h = location.hash.slice(1);
+      var key = keyForHash(h);
+      if (!show(key, false)) {
+        // Wanted tab may not exist yet (Topics before its data loads): open the
+        // default for now and remember the request.
+        pending = key;
+        show(firstVisible(), false);
+      }
+    }
+
+    var pending = null;
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (b.dataset.tab !== current) show(b.dataset.tab, true);
+      });
+    });
+    window.addEventListener('popstate', fromHash);
+    fromHash();
+
+    // Topics appears once local-subjects.js un-hides #subjects.
+    var subjects = document.getElementById('subjects');
+    var topicsBtn = btnFor('topics');
+    if (subjects && topicsBtn) {
+      var reveal = function () {
+        if (subjects.hidden) return false;
+        topicsBtn.hidden = false;
+        if (pending === 'topics') { pending = null; show('topics', false); }
+        return true;
+      };
+      if (!reveal()) {
+        var obs = new MutationObserver(function () { if (reveal()) obs.disconnect(); });
+        obs.observe(subjects, { attributes: true, attributeFilter: ['hidden'] });
+      }
+    }
+  })();
+</script>
+<script src="{{ '/assets/scripts/a11y-tabs.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
+{%- endif -%}
