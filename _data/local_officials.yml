@@ -5883,7 +5883,7 @@ jurisdictions:
         title: Chairwoman
         seat: "At-Large"
         seat_id: at-large
-        party:
+        party: Republican   # Walker County "Elected Officials 2026" list
         email: "countychair@walkerga.us"
         phone: "706-638-1437"
         last_elected: 2024
@@ -5898,7 +5898,7 @@ jurisdictions:
         seat_id: district-1
         leaves_office: 2027-01-01
         leave_reason: term-ended
-        party:
+        party: Republican   # Walker County "Elected Officials 2026" list
         email: "district1@walkerga.us"
         phone: "423-208-5080"
         last_elected: 2022
@@ -5926,7 +5926,7 @@ jurisdictions:
         seat_id: district-2
         leaves_office: 2027-01-01
         leave_reason: term-ended
-        party:
+        party: Republican   # Walker County "Elected Officials 2026" list
         email: "district2@walkerga.us"
         phone: "423-208-5156"
         last_elected: 2022
@@ -5952,7 +5952,7 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"
         seat_id: district-3
-        party:
+        party: Republican   # Walker County "Elected Officials 2026" list
         email: "district3@walkerga.us"
         phone: "706-996-5070"
         last_elected: 2024
@@ -5965,7 +5965,7 @@ jurisdictions:
         role: Commissioner
         seat: "District 4"
         seat_id: district-4
-        party:
+        party: Republican   # Walker County "Elected Officials 2026" list
         email: "district4@walkerga.us"
         phone: "423-208-5192"
         last_elected: 2024
@@ -6211,3 +6211,103 @@ jurisdictions:
         term_provenance: verified   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list: up 2027, 4-yr term
         voting: true
         source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
+
+  - id: lafayette
+    name: City of LaFayette
+    type: city
+    county: Walker
+    body: City Council
+    partisan: false
+    term_years: 4            # staggered: Mayor + Wards 1-2 elected 2025 (SoS); At-Large + Wards 3-4 on the 2023/2027 cycle.
+                             # The Municode charter (Sec. 2-11, 5-26) still reads 2-year terms with December elections; the 2025 ballot
+                             # carried only 3 of 6 seats, so it appears superseded by an uncodified local act. Confirm.
+    board_size: 6            # mayor + at-large + 4 wards (mycityoflafayettega.org/government/mayor_council.php)
+    official_url: "https://www.mycityoflafayettega.org/government/mayor_council.php"
+    related_pages:
+    notes: ""
+    members:
+      - name: "Andy Arnold"
+        role: Mayor
+        full_name: "Phillip A. Arnold"
+        seat: "Mayor"
+        seat_id: mayor
+        party: Nonpartisan
+        email:
+        phone: "706-639-1500"   # City Hall (no direct lines published)
+        last_elected: 2025   # SoS results, Walker County, Nov 4 2025 municipal general: unopposed (ballot name Phillip A. Arnold)
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
+        voting: false   # charter Sec. 2-42: the Mayor (or presiding Mayor Pro Tem) votes only in the case of a tie
+        tie_break_only: true
+        source: "https://www.mycityoflafayettega.org/business_detail_T7_R64.php"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Wayne Swanson"
+        role: Council Member
+        title: "Councilman"
+        seat: "At-Large"
+        seat_id: at-large
+        party: Nonpartisan
+        email:
+        phone: "706-639-1500"   # City Hall (no direct lines published)
+        last_elected: 2023   # not on the 2025 ballot, so on the 2023/2027 cycle; on council since 1997
+        term_end: 2027
+        next_election: 2027
+        term_provenance: assumed
+        voting: true
+        source: "https://www.mycityoflafayettega.org/business_detail_T7_R14.php"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Tom Langford"
+        role: Council Member
+        title: "Councilman"
+        seat: "Ward 1"
+        seat_id: ward-1
+        party: Nonpartisan
+        email:
+        phone: "706-639-1500"   # City Hall (no direct lines published)
+        last_elected: 2025   # SoS results, Walker County, Nov 4 2025 municipal general: won 356-106 over Glenn Gunnells; serving since March 2025, consistent with a council appointment to the unexpired term (charter: vacancy within 12 months of term end is filled by appointment)
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
+        voting: true
+        source: "https://www.mycityoflafayettega.org/business_detail_T7_R10.php"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Jennifer Ramey Cook"
+        role: Council Member
+        title: "Councilwoman"
+        seat: "Ward 2"
+        seat_id: ward-2
+        party: Nonpartisan
+        email:
+        phone: "706-639-1500"   # City Hall (no direct lines published)
+        last_elected: 2025   # SoS results, Walker County, Nov 4 2025 municipal general: unopposed (ballot name Jennifer Cook)
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
+        voting: true
+        source: "https://www.mycityoflafayettega.org/business_detail_T7_R11.php"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Tim Rayburn"
+        role: Council Member
+        title: "Councilman"
+        seat: "Ward 3"
+        seat_id: ward-3
+        party: Nonpartisan
+        email:
+        phone: "706-639-1500"   # City Hall (no direct lines published)
+        last_elected: 2023   # took office January 2024 per city bio, so elected Nov 2023
+        term_end: 2027
+        next_election: 2027
+        term_provenance: assumed
+        voting: true
+        source: "https://www.mycityoflafayettega.org/business_detail_T7_R12.php"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Chris Davis"
+        role: Council Member
+        title: "Councilman"
+        seat: "Ward 4"
+        seat_id: ward-4
+        party: Nonpartisan
+        email:
+        phone: "706-639-1500"   # City Hall (no direct lines published)
+        last_elected: 2023   # not on the 2025 ballot, so on the 2023/2027 cycle; in his 4th term
+        term_end: 2027
+        next_election: 2027
+        term_provenance: assumed
+        voting: true
+        source: "https://www.mycityoflafayettega.org/business_detail_T7_R13.php"   # drafted 2026-11-19 — CONFIRM before merge
