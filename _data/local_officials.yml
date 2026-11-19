@@ -6218,7 +6218,7 @@ jurisdictions:
     county: Walker
     body: City Council
     partisan: false
-    term_years: 4            # staggered: Mayor + Wards 1-2 elected 2025 (SoS); At-Large + Wards 3-4 on the 2023/2027 cycle.
+    term_years: 4            # staggered: Mayor + Wards 1-2 elected 2025 (SoS); At-Large + Wards 3-4 elected 2023 (Chattanoogan.com 2023-08-25), next 2027.
                              # The Municode charter (Sec. 2-11, 5-26) still reads 2-year terms with December elections; the 2025 ballot
                              # carried only 3 of 6 seats, so it appears superseded by an uncodified local act. Confirm.
     board_size: 6            # mayor + at-large + 4 wards (mycityoflafayettega.org/government/mayor_council.php)
@@ -6249,10 +6249,10 @@ jurisdictions:
         party: Nonpartisan
         email:
         phone: "706-639-1500"   # City Hall (no direct lines published)
-        last_elected: 2023   # not on the 2025 ballot, so on the 2023/2027 cycle; on council since 1997
+        last_elected: 2023   # At-Large was on the 2023 ballot (Swanson vs. Mark Lemons): Chattanoogan.com 2023-08-25, quoting the Walker County election director's 2023 qualifying list
         term_end: 2027
         next_election: 2027
-        term_provenance: assumed
+        term_provenance: verified
         voting: true
         source: "https://www.mycityoflafayettega.org/business_detail_T7_R14.php"   # drafted 2026-11-19 — CONFIRM before merge
       - name: "Tom Langford"
@@ -6291,10 +6291,10 @@ jurisdictions:
         party: Nonpartisan
         email:
         phone: "706-639-1500"   # City Hall (no direct lines published)
-        last_elected: 2023   # took office January 2024 per city bio, so elected Nov 2023
+        last_elected: 2023   # Ward 3 on the 2023 ballot (Chattanoogan.com 2023-08-25, quoting the Walker County election director's 2023 qualifying list); took office January 2024 per city bio
         term_end: 2027
         next_election: 2027
-        term_provenance: assumed
+        term_provenance: verified
         voting: true
         source: "https://www.mycityoflafayettega.org/business_detail_T7_R12.php"   # drafted 2026-11-19 — CONFIRM before merge
       - name: "Chris Davis"
@@ -6305,9 +6305,90 @@ jurisdictions:
         party: Nonpartisan
         email:
         phone: "706-639-1500"   # City Hall (no direct lines published)
-        last_elected: 2023   # not on the 2025 ballot, so on the 2023/2027 cycle; in his 4th term
+        last_elected: 2023   # Ward 4 on the 2023 ballot (four candidates incl. Davis): Chattanoogan.com 2023-08-25, quoting the Walker County election director's 2023 qualifying list
         term_end: 2027
         next_election: 2027
-        term_provenance: assumed
+        term_provenance: verified
         voting: true
         source: "https://www.mycityoflafayettega.org/business_detail_T7_R13.php"   # drafted 2026-11-19 — CONFIRM before merge
+
+  - id: rossville
+    name: City of Rossville
+    type: city
+    county: Walker
+    body: City Council
+    partisan: false
+    term_years: 4            # charter Secs. 2.11, 2.18, 5.10: mayor and councilmen serve 4 years; council staggered, two seats per cycle.
+                             # Charter still says December of even years, but elections now run in November of odd years (2025 on the SoS site).
+    board_size: 5            # charter Sec. 2.10: mayor + four councilmen
+    seat_capacity: {at-large: 4}   # charter Sec. 5.10: elected by the entire city, plurality, no posts (2025: vote for 2)
+    official_url: "https://www.rossvillega.gov/mayor-city-council"
+    related_pages:
+    notes: ""
+    members:
+      - name: "Jonathan Lassetter"
+        role: Mayor
+        seat: "Mayor"
+        seat_id: mayor
+        party: Nonpartisan
+        email:
+        phone: "706-866-1325"   # City Hall (no direct lines published)
+        last_elected: 2025   # SoS results, Walker County, Nov 4 2025: Mayor (Special), unopposed, finishing the term Hal Gray won unopposed in 2023 (Chattanoogan.com 2023-08-25, quoting the Walker County election director's 2023 qualifying list)
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
+        voting: false   # charter: mayor is chief executive (Sec. 2.17); passage needs three COUNCILMEN (Sec. 2.33); no tie-break vote provided
+        source: "https://www.rossvillega.gov/mayor-city-council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Cindy Breeden"
+        role: Mayor Pro Tem
+        title: "Mayor Pro Tem"
+        seat: "At-Large"
+        seat_id: at-large
+        party: Nonpartisan
+        email:
+        phone: "706-866-1325"   # City Hall (no direct lines published)
+        last_elected: 2025   # SoS results, Walker County, Nov 4 2025 municipal general: top vote-getter (171) of a vote-for-2 race; charter 4-year term
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
+        voting: true
+        source: "https://www.rossvillega.gov/mayor-city-council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Jason Rader"
+        role: Council Member
+        seat: "At-Large"
+        seat_id: at-large
+        party: Nonpartisan
+        email:
+        phone: "706-866-1325"   # City Hall (no direct lines published)
+        last_elected: 2025   # SoS results, Walker County, Nov 4 2025 municipal general: second (165) of a vote-for-2 race, unseating incumbent Todd Franklin; charter 4-year term
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
+        voting: true
+        source: "https://www.rossvillega.gov/mayor-city-council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Elaine Alder"
+        role: Council Member
+        seat: "At-Large"
+        seat_id: at-large
+        party: Nonpartisan
+        email:
+        phone: "706-866-1325"   # City Hall (no direct lines published)
+        last_elected:   # holds the 2023-cycle seat Jarret Lassetter won unopposed (Chattanoogan.com 2023-08-25, quoting the Walker County election director's 2023 qualifying list); how she came to it (appointment or special) not yet confirmed
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
+        voting: true
+        source: "https://www.rossvillega.gov/mayor-city-council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Erica Harris"
+        role: Council Member
+        seat: "At-Large"
+        seat_id: at-large
+        party: Nonpartisan
+        email:
+        phone: "706-866-1325"   # City Hall (no direct lines published)
+        last_elected: 2023   # qualified unopposed in 2023, so no election was held: Chattanoogan.com 2023-08-25, quoting the Walker County election director's 2023 qualifying list
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
+        voting: true
+        source: "https://www.rossvillega.gov/mayor-city-council"   # drafted 2026-11-19 — CONFIRM before merge
