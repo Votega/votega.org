@@ -45,7 +45,7 @@ The local model is already the right shape. The proposal below takes the local m
 - **Plan:** a district map (for example the 2023 state House plan). Only districted seats have one.
 - **Hold:** one person's continuous time in one seat. A re-elected incumbent's hold continues; it is not one hold per term.
 - **Provisional hold:** an incoming winner staged before they take office, while results await certification or the person has no record of their own yet.
-- **Gap:** a period when a seat has fewer holders than its capacity (a vacancy). Gaps are computed from holds, not stored (see open decision D2).
+- **Gap:** a period when a seat has fewer holders than its capacity (a vacancy). Gaps are computed from holds, never stored; facts about a vacancy go in `vacancyNotes` (see "Vacancies").
 
 ## The identity rule: redistricting
 
@@ -224,6 +224,29 @@ One seat registry plus one holds file. Both use the same schema across every dom
 - `party` is party during the hold. A party switch mid-hold is a list (`partyHistory`), not a new hold.
 - **Provisional holds** carry `provisional: true`, a reserved id (`execId` for executives), and `name` / `party` because the person has no record of their own yet. A seat has at most one, it is the newest holder, and its `start` equals the current holder's `end`. **The current holder is the first holder that is not provisional.** That rule depends on the data, not today's date, so nothing changes on its own on inauguration day. At the swearing-in, a person promotes the stub: adds the official to `ga-executive.json` under the reserved id and drops `provisional`, `name` and `party`.
 - `metadata.historyFrom` states, per body, where the record starts. A page must never imply a seat had no earlier holders when the record simply doesn't go back that far.
+### Vacancies
+
+**Decided 2026-11-20 (was D2): a vacancy is computed, and what is known about it is a note beside it.** A gap is the time between one hold's `end` and the next hold's `start` on the same seat (or, for a shared seat, any time it has fewer holders than its capacity). Holds therefore only ever contain people: no null-`vgId` holds, and capacity checks stay simple.
+
+The facts a vacancy carries live in `vacancyNotes` in `seat-holds.json`, keyed by the seat and the day the gap began (`from`, which equals the departing hold's `end`):
+
+```json
+"vacancyNotes": [
+  { "seatId": "ga-senate-7@2023", "from": "<departing hold's end>",
+    "kind": "writ", "date": "<date issued>", "ref": "<EO number>",
+    "source": "ga-executive-orders-*.json", "note": null },
+  { "seatId": "ga-senate-7@2023", "from": "<same>",
+    "kind": "special-election", "date": "<election day>", "raceId": "<races.json id>",
+    "source": "races.json", "note": null }
+]
+```
+
+- **`kind`:** `writ` (the governor's writ of election), `special-election`, `special-runoff`, `appointment-pending` (an appointment the law requires but has not been made), or `note` (anything else, which must have `note` text).
+- **Several notes per gap** are normal: a writ, then a special election, then a runoff.
+- **Sources are derived where they exist.** Writs come from the committed executive orders, which already corroborate all 11 departures in 2025–26 to within 1–17 days. Specials come from `races.json`. A person adds anything else. Senate writs say "Georgia STATE Senate", so a matcher that looks for "Georgia Senate" misses them.
+- **A note never closes or opens a gap.** Only holds do. A special-election note does not imply anyone won; the winner's hold does.
+- `vacancyNotes` are append-only like holds: a note on a closed gap is not edited without an override and a `_note`.
+
 - `ga-executive-seats.json` is folded into these two files. Its seats become registry rows and its `holders` become holds, provisional ones included.
 
 ## Where each domain's history comes from
@@ -261,12 +284,15 @@ Tier 1 (gates the commit, because these mean the file contradicts itself):
 - **A closed hold is immutable.** Compared against HEAD, the same way the ledger and `vgId`s are checked. Correcting one needs an explicit override with a `_note`, never a silent edit.
 - A districted seat's hold falls within its plan's effective period; holds running at a plan's end are closed `redistricted`.
 - `successorSeats` links point at seats under a later plan, never the same plan.
+- **Vacancy notes:** every note's `(seatId, from)` matches a computed gap (a hold on that seat ends on `from` and the seat is then under capacity); its `date` is on or after `from`; `kind` is from the list; a `note` kind has text; a `raceId` exists in `races.json`.
 - **Provisional holds:** at most one per seat, newest first, `start` equal to the current holder's `end`, a reserved id not used by any settled holder, and a `name`, `startBasis` and `source`. Already enforced for executive seats; the shared validator takes over these checks.
 
 Tier 2 (reported, commit proceeds):
 
 - A seat with no current or incoming holder (vacancy).
 - A gap longer than 180 days.
+- A gap on a legislative seat with no `writ` note after 30 days (the governor normally issues one within days; the 2025–26 writs came 1–17 days after each departure).
+- A gap whose `special-election` date has passed with no hold starting since.
 - A hold with a null date and `unknown` basis.
 - A provisional hold whose `start` has passed and has not been promoted. This is reported, never gated: a gate tied to the date would turn CI red on inauguration day.
 - A hold the source supports but the overrides haven't approved closing (the "proposed, not disposed" queue).
@@ -306,7 +332,7 @@ Deferred on purpose. When it is taken up:
 ## Open decisions
 
 - **D1: plan granularity.** Is a mid-decade amendment that touches a few districts a new plan for every seat in the chamber, or only for the districts it changed? Not hit inside the 2023 scope, so it can wait until a backfill.
-- **D2: vacancies stored or computed.** Computing gaps keeps holds clean. Storing them as holds with no person lets a vacancy carry a writ or an interim note. The lean is computed gaps plus a separate `vacancyNotes` keyed by seat and date.
+- ~~**D2: vacancies stored or computed.**~~ Decided: computed gaps plus `vacancyNotes` keyed by seat and gap start. See "Vacancies".
 - **D3: suspended members.** They still hold the seat (and stay listed today). Does a suspension stay a status inside the hold, or become its own span? The lean is a status inside the hold.
 - **D4: appointed interim holders** (PSC, judicial, local appointments): is an appointment a hold with `startBasis: official` and `endedBy` set on the next election, or a separate kind?
 - **D5: 2021→2023 lineage links.** Run the 2021 block-equivalency files through the tract builder so each link carries a measured overlap, or publish no lineage until there's a reason to? The scope means pages will hit this boundary immediately.
