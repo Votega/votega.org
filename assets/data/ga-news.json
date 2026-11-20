@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-19T19:45:36.205845+00:00",
+    "generatedAt": "2026-11-20T01:58:01.449943+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,29 +24,21 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 127,
+    "count": 131,
     "windowDays": 45,
-    "entityTagged": 79,
+    "entityTagged": 80,
     "topicCounts": {
+      "elections": 47,
+      "education": 11,
+      "healthcare": 20,
       "ethics": 2,
       "budget": 7,
-      "healthcare": 19,
-      "elections": 47,
-      "education": 9,
       "courts": 7,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
-    },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
       "url": null,
@@ -56,6 +48,21 @@
       "name": "Jon Ossoff",
       "url": null,
       "bioguideId": "O000174"
+    },
+    "vg-ga-p-000361": {
+      "name": "Penny Brown Reynolds",
+      "url": null,
+      "candidateIds": [
+        "challenger-penny-brown-reynolds-sos-2026"
+      ]
+    },
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
     },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
@@ -140,13 +147,6 @@
         "challenger-mike-collins-senate-2026"
       ]
     },
-    "vg-ga-p-000361": {
-      "name": "Penny Brown Reynolds",
-      "url": null,
-      "candidateIds": [
-        "challenger-penny-brown-reynolds-sos-2026"
-      ]
-    },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
       "url": null,
@@ -165,22 +165,122 @@
   },
   "items": [
     {
+      "id": "a7860faa43c6",
+      "title": "Georgia’s next secretary of state announces transition team",
+      "url": "https://capitol-beat.org/2026/11/georgias-next-secretary-of-state-announces-transition-team/?utm_source=rss&utm_medium=rss&utm_campaign=georgias-next-secretary-of-state-announces-transition-team",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-19T22:27:33+00:00",
+      "snippet": "ATLANTA — Democrat Penny Brown Reynolds, who will be Georgia’s first Black secretary of state, said her transition team includes U.S. Sens. Raphael Warnock and Jon Ossoff, former U.N. Ambassador Andre",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264",
+        "vg-ga-p-000361"
+      ],
+      "topics": []
+    },
+    {
+      "id": "807c280b7495",
+      "title": "Sen. Ossoff Applauds House Committee Passage of Ocmulgee Mounds National Park Legislation",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-applauds-house-committee-passage-of-ocmulgee-mounds-national-park-legislation/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-19T21:48:58+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff released the following statement applauding passage of H.R. 9416, the Ocmulgee Mounds National Park Redesignation Act, out of the House Committee on Natural ",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "b52cc293b68d",
+      "title": "Bill to create Georgia's first National Park to move to the full US House",
+      "url": "https://www.gpb.org/news/2026/11/19/bill-create-georgias-first-national-park-move-the-full-us-house",
+      "source": "GPB News",
+      "publishedAt": "2026-11-19T20:54:00+00:00",
+      "snippet": "Boosters are optimistic the Ocmulgee Mounds National Park Redesignation Act can pass before the new Congress takes office in January.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "333c1e1c6f58",
+      "title": "Georgia Secretary of State-elect Penny Brown Reynolds announces policy priorities",
+      "url": "https://www.gpb.org/news/2026/11/19/georgia-secretary-of-state-elect-penny-brown-reynolds-announces-policy-priorities",
+      "source": "GPB News",
+      "publishedAt": "2026-11-19T20:47:26+00:00",
+      "snippet": "Secretary of State-elect Penny Brown Reynolds is laying the groundwork for her policy priorities ahead of her inauguration in January.",
+      "entityIds": [
+        "vg-ga-p-000361"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "edcf6de9b5f4",
+      "title": "GPB evening headlines for November 19, 2026",
+      "url": "https://www.gpb.org/news/2026/11/19/gpb-evening-headlines-for-november-19-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-19T20:46:57+00:00",
+      "snippet": "Georgia's next secretary of state is laying the groundwork for her policy priorities ahead of her inauguration in January.\nA federal bill that would establish Georgia's first national park is headed f",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "e6f448b21a47",
+      "title": "Incoming Secretary of State Penny Brown Reynolds announces bipartisan transition team",
+      "url": "https://georgiarecorder.com/2026/11/19/incoming-secretary-of-state-penny-brown-reynolds-announces-bipartisan-transition-team/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-19T20:21:20+00:00",
+      "snippet": "Secretary of State-elect Penny Brown Reynolds has named the transition team that will help her step into the role of election chief.  Democrats flip statewide offices up and down the ballot in Georgia",
+      "entityIds": [
+        "vg-ga-p-000361"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "274cc7e21a8e",
+      "title": "'American Idol' relocation is a homecoming for Georgia stars Ryan Seacrest and Luke Bryan",
+      "url": "https://www.gpb.org/news/2026/11/19/american-idol-relocation-homecoming-for-georgia-stars-ryan-seacrest-and-luke-bryan",
+      "source": "GPB News",
+      "publishedAt": "2026-11-19T20:17:00+00:00",
+      "snippet": "Season 25 will film at Trilith Live in Fayetteville and premiere on ABC on Feb. 8, 2027. In the meantime, Seacrest is celebrating a new stadium for his alma mater, Dunwoody High School.",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "90c0386d1547",
+      "title": "Policy group asks Georgia lawmakers for licensing to expand addiction counselor workforce",
+      "url": "https://www.gpb.org/news/2026/11/19/policy-group-asks-georgia-lawmakers-for-licensing-expand-addiction-counselor",
+      "source": "GPB News",
+      "publishedAt": "2026-11-19T20:15:50+00:00",
+      "snippet": "Addiction counselors in Georgia are currently certified, but mental health advocates want lawmakers to establish a pathway to professional licensure.",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "7475b64bb78e",
+      "title": "Georgia Today: Thanksgiving travel season; Georgia’s first national park; Dunwoody High stadium",
+      "url": "https://www.gpb.org/news/2026/11/19/georgia-today-thanksgiving-travel-season-georgias-first-national-park-dunwoody-high",
+      "source": "GPB News",
+      "publishedAt": "2026-11-19T16:30:04+00:00",
+      "snippet": "On the Nov. 19th edition: The busy Thanksgiving travel season gets underway; Georgia could soon have its first national park; and Dunwoody High School breaks ground on a new football stadium named aft",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
       "id": "f5658787b918",
       "title": "Georgia Water Coalition releases its 14th \"Dirty Dozen\" report for 2026",
       "url": "https://www.gpb.org/news/2026/11/19/georgia-water-coalition-releases-its-14th-dirty-dozen-report-for-2026",
       "source": "GPB News",
       "publishedAt": "2026-11-19T16:21:00+00:00",
       "snippet": "The Georgia Water Coalition says a general theme running through its picks are a lack of \"transparency and accountability\" this year.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "67a3cad4a72b",
-      "title": "GPB morning headlines for November 19, 2026",
-      "url": "https://www.gpb.org/news/2026/11/19/gpb-morning-headlines-for-november-19-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-19T12:11:19+00:00",
-      "snippet": "The Georgia Water Coalition has unveiled its 2026 Dirty Dozen Report, naming their picks for the worst offenders and most pressing threats to the state’s waterways; Commissioners in southeast Georgia'",
       "entityIds": [],
       "topics": []
     },
@@ -1020,18 +1120,6 @@
       ]
     },
     {
-      "id": "253fbd75e4b2",
-      "title": "Women put their stamp on Georgia election",
-      "url": "https://capitol-beat.org/2026/11/women-put-their-stamp-on-georgia-election/?utm_source=rss&utm_medium=rss&utm_campaign=women-put-their-stamp-on-georgia-election",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-11-06T20:51:50+00:00",
-      "snippet": "ATLANTA — Women won big in Georgia on Election Day. Eight women, all of them Black Democrats, expect to be sworn in to statewide office in January after defeating Republicans on Tuesday. The unofficia",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "07346bc876fa",
       "title": "Gov. Kemp Announces Three Judicial Appointments",
       "url": "https://gov.georgia.gov/press-releases/2026-11-06/gov-kemp-announces-three-judicial-appointments",
@@ -1187,19 +1275,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "e59969b16942",
-      "title": "Warnock, Ossoff Secure Over $12 Million in Federal Funding to Repair Roadways Damaged by Natural Disasters",
-      "url": "https://www.ossoff.senate.gov/press-releases/warnock-ossoff-secure-over-12-million-in-federal-funding-to-repair-roadways-damaged-by-natural-disasters/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-11-03T00:31:39+00:00",
-      "snippet": "Senators Reverend Raphael Warnock and Jon Ossoff successfully secured over $12 million in federal funding from the Department of Transportation to repair and reconstruct roads damaged by natural disas",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
     },
     {
       "id": "d549b4372fdb",
@@ -1648,21 +1723,6 @@
       ]
     },
     {
-      "id": "040d1f46ba98",
-      "title": "Ossoff reports raising another $33 million for homestretch of U.S. Senate reelection bid",
-      "url": "https://georgiarecorder.com/2026/10/15/ossoff-reports-raising-another-33-million-for-homestretch-of-u-s-senate-reelection-bid/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-15T20:11:10+00:00",
-      "snippet": "Democratic U.S. Sen. Jon Ossoff’s campaign reported raising $33 million from July through September, entering the final stretch of his re-election campaign against Republican Congressman Mike Collins ",
-      "entityIds": [
-        "vg-ga-p-000253",
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "66d886d31452",
       "title": "McBath Leads Colleagues in Urging TSA Administrator to Respect the Dignity of Hard-Working Agents",
       "url": "https://mcbath.house.gov/2026/10/15/mcbath-leads-colleagues-in-urging-tsa-administrator-to-respect-the-dignity-of-hard-working-agents/",
@@ -1773,22 +1833,6 @@
       "snippet": "WASHINGTON, D.C. — Congresswoman Nikema Williams (GA-05) joined U.S. Senator John Fetterman (D-PA) and U.S. Senator Cynthia Lummis (R-WY) in a letter to U.S. Department of Housing and Urban Developmen",
       "entityIds": [
         "vg-ga-p-000254"
-      ],
-      "topics": []
-    },
-    {
-      "id": "e14485cea7e7",
-      "title": "Amending the State of Emergency for Petroleum Supply Disruptions",
-      "url": "https://gov.georgia.gov/document/2026-executive-order/10062601/download",
-      "source": "Gov. Brian Kemp (executive orders)",
-      "publishedAt": "2026-10-06T00:00:00+00:00",
-      "snippet": "On September 28, 2026, due to ongoing disruptions to global petroleum supply chains, I issued Executive Order No. 09.28.26.01, declaring a State of Emergency for Petroleum Supply Disruptions and…",
-      "category": "State of Emergency",
-      "orderNumber": "10.06.26.01",
-      "archiveUrl": null,
-      "sha256": "2234e7f5afa773e917283a0cbf1d2031b09fedc97d382ccb5a71531ef74bc7e9",
-      "entityIds": [
-        "vg-ga-p-000024"
       ],
       "topics": []
     }
