@@ -7032,3 +7032,84 @@ jurisdictions:
         term_provenance: verified
         voting: true
         source: "https://www.montcoga.gov/board-commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+
+  - id: dalton                      # MUST equal the places.yml slug (join key)
+    name: City of Dalton
+    type: city
+    county: Whitfield
+    body: Mayor and Council
+    partisan: false
+    official_url: https://www.daltonga.gov/164/City-Council
+    notes: "STUB drafted 2026-11-20. Roster (names, wards, emails) is from the city council page. Structure from Charter Sec. 2.10: a mayor and four councilmembers; four wards that are RESIDENCY wards only (a candidate must live in the ward) while the mayor and all councilmembers are elected at large by the whole city. Terms are four years, staggered for councilmembers (Charter Sec. 2.11); Mayor and Wards 1 and 3 were elected Nov 2023 (county results), Ward 4 in Nov 2025 (SoS); Ward 2: Nicolas \"Nicky\" Lama won a 2023 special and was re-elected in Nov 2025, stepped down in January 2026 to run for Congress, and Julie Locke won the Mar 10 2026 special election (1,808 of 3,431 votes, 52.7%, no runoff) and was sworn in Mar 16 2026 for the term ending Dec 31 2029 (city announcement). Lama has no row here yet because his exact departure date is not sourced. Mayor presides and votes only to break a tie (Charter Sec. 2.31)."
+    term_years: 4                   # Charter Sec. 2.11, staggered
+    board_size: 5                   # mayor + 4 councilmembers (Charter Sec. 2.10)
+    # ---- PHASE 1 - ROSTER --------------------------------------------------
+    members:
+      - name: "Annalee Sams"
+        role: Mayor
+        seat: "At-Large"
+        seat_id: mayor
+        party: Nonpartisan
+        email: "asams@daltonga.gov"
+        phone: "706-278-9500"   # city main line, as listed on the council page
+        last_elected: 2023      # Whitfield County Elections Nov 7 2023 general (official, complete): Mayor - Dalton, 1,906 of 2,790 (68.3%) over Tom Causby and Jason Burgin
+        term_end: 2027          # derived: 2023 + 4-year term (Charter Sec. 2.11)
+        next_election: 2027
+        term_provenance: assumed
+        voting: false           # Charter Sec. 2.31(4): mayor is the deciding vote only on a tie of the councilmembers
+        tie_break_only: true
+        source: "https://www.daltonga.gov/164/City-Council"   # drafted 2026-11-20 - names/wards/emails from the city council page; CONFIRM terms before merge
+      - name: "Dennis Mock"
+        role: Council Member
+        seat: "Ward 1"
+        seat_id: ward-1
+        party: Nonpartisan
+        email: "dmock@daltonga.gov"
+        phone: "706-278-9500"   # city main line, as listed on the council page
+        last_elected: 2023      # Whitfield County Elections Nov 7 2023 general (official, complete): Alderman Ward 1 - Dalton, unopposed, 2,350 votes
+        term_end: 2027          # derived: 2023 + 4-year term (Charter Sec. 2.11)
+        next_election: 2027
+        term_provenance: assumed
+        voting:                 # not confirmed: charter voting/tie-break rule not read
+        source: "https://www.daltonga.gov/164/City-Council"   # drafted 2026-11-20 - names/wards/emails from the city council page; CONFIRM terms before merge
+      - name: "Julie Locke"
+        role: Council Member
+        seat: "Ward 2"
+        seat_id: ward-2
+        party: Nonpartisan
+        email: "jlocke@daltonga.gov"
+        phone: "706-278-9500"   # city main line, as listed on the council page
+        takes_office: 2026-03-16   # sworn in at the Mar 16 2026 Mayor and Council meeting (city announcement)
+        last_elected: 2026      # won the Mar 10 2026 Ward 2 special election outright: 1,808 of 3,431 (52.7%) over Rojelio Alvarran 1,096 and Zeucis Martinez 527 (Whitfield County Elections, official and complete)
+        term_end: 2029          # unexpired term of Nicky Lama, expiring Dec 31 2029 (city announcement)
+        next_election: 2029
+        term_provenance: verified
+        voting:                 # not confirmed: charter voting/tie-break rule not read
+        source: "https://www.daltonga.gov/164/City-Council"   # drafted 2026-11-20 - names/wards/emails from the city council page; CONFIRM terms before merge
+      - name: "Tyree Goodlett"
+        role: Mayor Pro Tem
+        seat: "Ward 3"
+        seat_id: ward-3
+        party: Nonpartisan
+        email: "tgoodlett@daltonga.gov"
+        phone: "706-278-9500"   # city main line, as listed on the council page
+        last_elected: 2023      # Whitfield County Elections Nov 7 2023 general (official, complete): Alderman Ward 3 - Dalton, unopposed, 2,327 votes
+        term_end: 2027          # derived: 2023 + 4-year term (Charter Sec. 2.11)
+        next_election: 2027
+        term_provenance: assumed
+        voting:                 # not confirmed: charter voting/tie-break rule not read
+        source: "https://www.daltonga.gov/164/City-Council"   # drafted 2026-11-20 - names/wards/emails from the city council page; CONFIRM terms before merge
+      - name: "Steve Farrow"
+        role: Council Member
+        seat: "Ward 4"
+        seat_id: ward-4
+        party: Nonpartisan
+        email: "sfarrow@daltonga.gov"
+        phone: "706-278-9500"   # city main line, as listed on the council page
+        last_elected: 2025      # SoS results, Nov 4 2025 municipal general: Alderman - Ward 4 - Dalton, unopposed, 1,777 votes
+        term_end: 2029          # derived: 2025 + 4-year term (Charter Sec. 2.11)
+        next_election: 2029
+        term_provenance: assumed
+        voting:                 # not confirmed: charter voting/tie-break rule not read
+        source: "https://www.daltonga.gov/164/City-Council"   # drafted 2026-11-20 - names/wards/emails from the city council page; CONFIRM terms before merge
+

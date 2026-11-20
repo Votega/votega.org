@@ -1837,6 +1837,41 @@ places:
           - body: Board of Commissioners
             when: "2nd Monday of every month, 6:00 p.m."
             location: "Whitfield County Courthouse, 205 N. Selvidge St., Dalton, GA"
+  
+  - slug: dalton
+    name: City of Dalton
+    type: city
+    fips: null
+    parentCounty: whitfield
+    parentCountyName: Whitfield
+    region: Northwest Georgia
+    domains:
+      meetings:
+        # The city's Agendas and Minutes page (daltonga.gov/545) embeds a Municode
+        # Meetings (teammunicode) table; the CivicPlus Agenda Center on the same site is
+        # empty. Section codes come from the detail links: `citycouncil` is the Mayor
+        # and Council, `bc-pzc` Planning and Zoning, `bc-hpc` Historic Preservation,
+        # `bc-zab` Zoning Appeals. The other ~15 boards (authorities, utilities,
+        # recreation, tree board) are dropped.
+        platform: teammunicode
+        base_url: https://legacydaltonga.teammunicode.com
+        meetings_path: "/meetings"
+        agendas_url: "https://www.daltonga.gov/545/Agendas-and-Minutes"
+        body_map:
+          - { match: "citycouncil", label: "Mayor and Council" }
+          - { match: "bc-pzc", label: "Planning and Zoning Commission" }
+          - { match: "bc-hpc", label: "Historic Preservation Commission" }
+          - { match: "bc-zab", label: "Board of Zoning Appeals" }
+        # The city's pages state no schedule. Read off the posted meetings (checked
+        # 2026-11-20): council on the 1st and 3rd Monday at 6:00 p.m. (10/5, 10/19,
+        # 11/2, 11/16, 12/7; December's second meeting is 12/14); Planning and Zoning
+        # on the 4th Monday at 6:00 p.m. Council location is from the city's Mar 16 2026 announcement.
+        schedule:
+          - body: Mayor and Council
+            when: "1st and 3rd Monday of each month, 6:00 p.m., unless otherwise posted"
+            location: "Raymond A. Elrod Council Chambers, City Hall"
+          - body: Planning and Zoning Commission
+            when: "4th Monday of each month, 6:00 p.m., unless otherwise posted"
 
   - slug: thomasville
     name: City of Thomasville
