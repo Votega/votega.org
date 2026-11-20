@@ -964,6 +964,17 @@ places:
           - { match: "Mayor and Council", label: "City Council" }
           - { match: "Planning Commission", label: "Planning Commission" }
           - { match: "Historic Preservation", label: "Historic Preservation Commission" }
+        # The portal itself lists the Development Authority's 2026-07-09 agenda and
+        # minutes under the 2026-07-02 Mayor and Council work session (checked
+        # 2026-11-20: both PDFs are headed "Social Circle Development Authority",
+        # JULY 9, 2026). See drop_misfiled in generate_place_meetings.py.
+        misfiled:
+          - meeting: "2674"
+            url: "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2136&Inline=True"
+            note: "Development Authority 2026-07-09 agenda, filed under the Council work session"
+          - meeting: "2674"
+            url: "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=2321&Inline=True"
+            note: "Development Authority 2026-07-09 minutes, filed under the Council work session"
         schedule:
           - body: City Council
             when: "1st Thursday of every month, 6:30 p.m."

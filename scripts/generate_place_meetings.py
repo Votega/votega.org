@@ -31,7 +31,6 @@ import os
 import sys
 from datetime import datetime, timezone
 
-import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.civicplus import fetch_agenda_center  # noqa: E402
@@ -95,6 +94,7 @@ NO_SCRAPER_PLATFORMS = {'unknown', 'custom', 'wix', 'wordpress',
 
 
 def load_registry(path):
+    import yaml  # lazy: the offline test job installs no packages
     with open(path, encoding='utf-8') as f:
         data = yaml.safe_load(f)
     return data.get('places', []) if data else []
@@ -329,6 +329,48 @@ def scope_bodies(cfg, meetings, slug):
     return meetings, bodies_seen
 
 
+def drop_misfiled(cfg, meetings, slug):
+    """Remove documents the SOURCE filed under the wrong meeting.
+
+    A clerk can attach one body's agenda or minutes to another body's meeting row
+    (Social Circle's portal lists the Development Authority's 2026-07-09 agenda and
+    minutes under the 2026-07-02 Mayor and Council work session). Nothing in the
+    listing says so, and every downstream reader would otherwise credit that body's
+    actions to the wrong one, so a person records the case under
+    domains.meetings.misfiled:
+
+      misfiled:
+        - meeting: "2674"           # the source's own meeting id
+          url: "https://...ID=2136..."   # the exact document URL to drop
+          note: "what the document really is, and how that was checked"
+
+    Only an exact URL match on that meeting is removed, so the entry goes inert once
+    the source fixes its link (reported, so it can be deleted). A past meeting left
+    with no document is dropped, the same rule the adapters apply to a bare row."""
+    rules = cfg.get('misfiled') or []
+    if not rules:
+        return meetings
+    today = datetime.now(timezone.utc).date().isoformat()
+    by_id = {str(m.get('id')): m for m in meetings}
+    for r in rules:
+        m = by_id.get(str(r.get('meeting')))
+        hit = False
+        for key in ('agendaUrl', 'minutesUrl', 'videoUrl'):
+            if m and m.get(key) and m[key] == r.get('url'):
+                m[key] = None
+                hit = True
+        print('  misfiled %s on meeting %s: %s' % (
+            'document removed' if hit else 'rule no longer matches (delete it?)',
+            r.get('meeting'), r.get('url')))
+    kept = [m for m in meetings
+            if m.get('agendaUrl') or m.get('minutesUrl') or m.get('videoUrl')
+            or (m.get('date') or '') >= today]
+    if len(kept) < len(meetings):
+        print('  %d meeting(s) left with no document after misfiled removal, dropped'
+              % (len(meetings) - len(kept)))
+    return kept
+
+
 def _merge_type_grouped(meetings):
     """Collapse rows for one meeting that a document-type-grouped Agenda Center
     split across "Agendas"/"Minutes" panels into a single record, routing each
@@ -473,6 +515,8 @@ def build_place(place, saved_pages=None):
         return None
 
     meetings, bodies_seen = scope_bodies(cfg, meetings, slug)
+    meetings = drop_misfiled(cfg, meetings, slug)
+    bodies_seen = sorted({m['body'] for m in meetings})
     if meetings and cfg.get('archive'):
         meetings, bodies_seen = add_archive(cfg, meetings, slug)
     if not meetings:

@@ -34,7 +34,11 @@ Excerpts whose context is "public-comment" or "unknown" are WITHHELD: public-com
 hits are frequently sign-up rosters that name residents, and bulk-redistributing
 resident names + their stated positions is a bigger step than an on-site citation.
 Withheld mentions still ship with tags, matched terms, vendors, confidence, context,
-and source URL — everything but the quote. (Context is classified by
+and source URL — everything but the quote.
+
+FOLLOW-THROUGH (schema 1.1.0): followThrough / outcomes / minutesUrl / minutesDraft,
+shaped by lib/mention_outcomes.py from the feed. Vote counts only; names of who
+voted which way stay on the source minutes. (Context is classified by
 meeting_topics.classify_context from the agenda's own section headers.)
 
 Dry run (no GA_LOCAL_GOVERNMENT_TOKEN): writes artifacts to $OUT_DIR (default
@@ -56,10 +60,11 @@ from lib.sibling_publish import (add_dataset_manifest, build_json,  # noqa: E402
                                  publish_or_dry_run)
 from lib import meeting_topics as mt  # noqa: E402
 from lib import local_officials_export as lo  # noqa: E402
+from lib import mention_outcomes as mo  # noqa: E402
 
 REPO = "Votega/ga-local-government"
 TOKEN_ENV = "GA_LOCAL_GOVERNMENT_TOKEN"
-SCHEMA_VERSION = "1.0.0"
+SCHEMA_VERSION = "1.1.0"   # 1.1.0: follow-through fields (lib/mention_outcomes)
 DATASET = "agenda-mentions"
 # A literal, not lo.DATASET: test_dataset_manifests.py reads every publisher's
 # manifest slugs statically (CI has no pip deps to import this module), and it
@@ -181,13 +186,16 @@ def publishable_mention(topic, m):
         "excerpt": m.get("excerpt") if quote else None,
         "excerptTerm": m.get("excerptTerm") if quote else None,
         "sourceUrl": m.get("sourceUrl"),
+        **mo.publish_outcomes(m),
     }
 
 
 def mentions_csv(rows):
     cols = ["topic", "placeId", "placeName", "placeType", "fips", "region",
             "date", "body", "confidence", "context", "sourceType", "vendors",
-            "matchedTerms", "tags", "excerpt", "sourceUrl"]
+            "matchedTerms", "tags", "excerpt", "sourceUrl",
+            # appended (never inserted) so positional readers keep working
+            "followThrough", "outcome", "minutesUrl"]
     buf = io.StringIO()
     w = csv.DictWriter(buf, fieldnames=cols, extrasaction="ignore", lineterminator="\n")
     w.writeheader()
@@ -195,6 +203,7 @@ def mentions_csv(rows):
         row = dict(r)
         for list_col in ("vendors", "matchedTerms", "tags"):
             row[list_col] = "; ".join(row.get(list_col) or [])
+        row["outcome"] = mo.outcome_summary(r.get("outcomes"))
         w.writerow(row)
     return buf.getvalue().encode()
 
@@ -229,6 +238,7 @@ def mention_schema():
                         "description": "quoted context; present only when context is agenda-action (any source)"},
             "excerptTerm": {"type": ["string", "null"]},
             "sourceUrl": {"type": ["string", "null"], "description": "the agenda/minutes document"},
+            **mo.outcome_schema(),
         },
     }
 
@@ -352,6 +362,16 @@ def summary_md(reg, all_mentions, cov_rows, scanned_n, universe, last_scan):
         "means it *came up* — not that the government approved, funded, or plans to "
         "pursue it. It may have been raised in public comment, mentioned in passing, "
         "tabled, or voted down. Follow the `sourceUrl` for context.",
+        "- **What the minutes record (`followThrough`, `outcomes`).** Where we read a "
+        "place's recorded votes (CivicClerk, Legistar and IQM2 portals), a mention "
+        "carries the same meeting's recorded items whose caption names the topic, "
+        "joined on the portal's own meeting id: the body's result wording "
+        "(`resultText`), vote counts, and where the item goes next. `result` is "
+        "`passed`/`failed` only for adopted or failed wording; held, referred and "
+        "committee recommendations are steps, not outcomes. `followThrough` null "
+        "means we hold no recorded-votes record for that meeting, which says "
+        "nothing about what happened. `textDisagrees` marks a vote whose minutes "
+        "contradict themselves; read the minutes.",
         "- **A quoted excerpt is included only when `context` is `agenda-action`** — "
         "the topic surfaced as government business (an item, motion, resolution, or a "
         "formal public hearing). Excerpts for `public-comment` and `unknown` context "
