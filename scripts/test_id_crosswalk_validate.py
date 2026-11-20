@@ -82,9 +82,83 @@ def tier2_cases():
           "No material change" in V.render([]), True)
 
 
+def ledger_merge_cases():
+    """Ledger.merge: two already-assigned vgIds for one person, joined by a forward."""
+    print("ledger merge (retire an assigned vgId, forward it to the survivor)")
+    import json
+    import tempfile
+    import build_id_crosswalk as B
+    with tempfile.TemporaryDirectory() as d:
+        path = os.path.join(d, "ledger.json")
+        led = B.Ledger(path)
+        legislator = led.id_for("ocd-person/rep")       # vg-ga-p-000001
+        candidate = led.id_for("peachfile:2")           # vg-ga-p-000002, minted separately
+        check("alias alone cannot join two assigned ids (the old trap)",
+              led.alias("peachfile:2", legislator), candidate)
+        check("merge retires the candidate id onto the legislator's",
+              led.merge("peachfile:2", legislator), legislator)
+        check("the assignment itself is never rewritten",
+              led.assign["peachfile:2"], candidate)
+        check("every lookup follows the forward",
+              (led.id_for("peachfile:2"), led.id_for_any(["peachfile:2"]),
+               led.alias("peachfile:2", "x")), (legislator,) * 3)
+        check("merging again is a no-op", (led.merge("peachfile:2", legislator), led.merged),
+              (legislator, {candidate: legislator}))
+        check("a merge never mints", led.next_seq, 3)
+        led.save()
+        saved = json.load(open(path, encoding="utf-8"))
+        check("merged is persisted", saved.get("merged"), {candidate: legislator})
+        check("and reloads", B.Ledger(path).canonical(candidate), legislator)
+        third = led.id_for("fec:3")
+        led.merge("ocd-person/rep", third)
+        check("retiring a survivor re-points earlier forwards (one hop, no chains)",
+              led.merged, {candidate: third, legislator: third})
+    with tempfile.TemporaryDirectory() as d:
+        led = B.Ledger(os.path.join(d, "ledger.json"))
+        led.merged = {"a": "b", "b": "a"}
+        try:
+            led.canonical("a")
+            got = "no error"
+        except SystemExit:
+            got = "stopped"
+        check("a forward cycle stops the build", got, "stopped")
+
+
+def merge_validation_cases():
+    print("merge forwards (tier 1)")
+    assign = {"ocd-person/rep": "vg1", "peachfile:2": "vg2", "peachfile:9": "vg9"}
+    ok_ov = {"peachfile:2": {"sameAs": "ocd-person/rep", "_note": "same human: ..."}}
+    good = {"vg2": "vg1"}
+    check("an explicit, noted, one-hop forward passes",
+          V.merge_errors(assign, good, ok_ov, published=good), [])
+    check("no forwards, nothing to check", V.merge_errors(assign, {}, {}), [])
+    check("a forward with no sameAs behind it fails",
+          len(V.merge_errors(assign, good, {})), 1)
+    check("a sameAs with no _note fails",
+          len(V.merge_errors(assign, good, {"peachfile:2": {"sameAs": "ocd-person/rep"}})), 1)
+    check("a forward from an id the ledger never issued fails",
+          len(V.merge_errors(assign, {"vg7": "vg1"}, ok_ov)) >= 1, True)
+    chain = {"vg2": "vg1", "vg1": "vg9"}
+    check("a chain fails", any("chain" in e for e in V.merge_errors(assign, chain, ok_ov)), True)
+    check("a dropped forward fails (append-only)",
+          len(V.merge_errors(assign, {}, ok_ov, old_merged=good)), 1)
+    check("a changed forward fails",
+          any("changed" in e for e in V.merge_errors(
+              assign, {"vg2": "vg9"},
+              {"peachfile:2": {"sameAs": "peachfile:9", "_note": "n"}}, old_merged=good)), True)
+    check("a record still carrying the retired id fails",
+          len(V.merge_errors(assign, good, ok_ov, people=[{"vgId": "vg2", "name": {"full": "X"}}])), 1)
+    check("the published map must match the ledger",
+          len(V.merge_errors(assign, good, ok_ov, published={})), 1)
+    check("resolve follows a forward and leaves others alone",
+          (V.resolve(good, "vg2"), V.resolve(good, "vg9")), ("vg1", "vg9"))
+
+
 def main():
     tier1_cases()
     tier2_cases()
+    ledger_merge_cases()
+    merge_validation_cases()
     if failures:
         print(f"\n{len(failures)} failure(s): {failures}")
         return 1

@@ -164,7 +164,20 @@ One definition across all domains, each with a stated basis:
   - `inferred` or `unknown`.
 
   A null date with no basis is not allowed.
-- `endedBy` must come from **one list, shared by every domain:** `term-ended | lost | did-not-run | resigned | removed | deceased | appointed-elsewhere | redistricted`. Today `scripts/test_executive_identity.py` carries its own copy without `redistricted` (executive seats aren't districted). The shared validator replaces that copy; see D8.
+- `endedBy` answers **one question: why did this hold on this seat end?** It must come from one list, shared by every domain:
+
+  | Value | Meaning |
+  |---|---|
+  | `term-limited` | Barred from another consecutive term (the Governor: two consecutive terms). Takes precedence over `did-not-run`: being ineligible is the reason, even if they then sought another office |
+  | `did-not-run` | Eligible, but did not seek this seat again (retired, or ran for something else) |
+  | `lost` | Lost this seat's election (primary, general or runoff) |
+  | `resigned` | Left mid-term, including to take another office |
+  | `removed` | Removed from office |
+  | `deceased` | Died in office |
+  | `redistricted` | The seat's map was superseded; the same person's next hold is on the new map |
+  | `term-ended` | The term ran out with no election choice involved (for example an appointed interim term expiring, D4) |
+
+  **What happened elsewhere is derived, never stored.** "Won a Senate seat" is the same vgId's next hold starting on or near this hold's end; "ran for governor and lost" is a candidacy in the crosswalk with no hold after it. Storing either here would conflate a win with a loss (a single "sought other office" value can't tell them apart) and copy a fact that can drift from its source. So `appointed-elsewhere`, which named a destination, is dropped: that case is `resigned` plus the next hold. Today `scripts/test_executive_identity.py` carries its own copy of this list; the shared validator replaces it (D8).
 
 Legislature caveat: the SOAP `GetMember` service gives the sessions each member served, with party and district inside each session record, but no start date. A hold therefore starts at the convening of the first session served in scope (`startBasis: convening`), unless an override or a writ gives the real date for someone who joined mid-term. `dateVacated` from the service gives an end where it exists. The departure itself still comes only from the editorial overrides, as today.
 
@@ -207,7 +220,7 @@ One seat registry plus one holds file. Both use the same schema across every dom
 }
 ```
 
-- **The person key is `vgId`**, with domain ids alongside. A hold whose person has no `vgId` can't be written as settled. It may exist only as a provisional hold with `vgId: null` and a note saying why (Tanya Miller is the live example; see "Merging vgIds that already exist").
+- **The person key is `vgId`**, with domain ids alongside. A hold whose person has no `vgId` can't be written as settled. It may exist only as a provisional hold with `vgId: null` and a note saying why. A hold always stores the surviving vgId, never a retired one (see "Merging vgIds that already exist").
 - `party` is party during the hold. A party switch mid-hold is a list (`partyHistory`), not a new hold.
 - **Provisional holds** carry `provisional: true`, a reserved id (`execId` for executives), and `name` / `party` because the person has no record of their own yet. A seat has at most one, it is the newest holder, and its `start` equals the current holder's `end`. **The current holder is the first holder that is not provisional.** That rule depends on the data, not today's date, so nothing changes on its own on inauguration day. At the swearing-in, a person promotes the stub: adds the official to `ga-executive.json` under the reserved id and drops `provisional`, `name` and `party`.
 - `metadata.historyFrom` states, per body, where the record starts. A page must never imply a seat had no earlier holders when the record simply doesn't go back that far.
@@ -230,15 +243,13 @@ The seat-holds builder will meet this whenever someone changes domain (a legisla
 
 ### Merging vgIds that already exist
 
-Tanya Miller has two vgIds: `000222` (her House record, PeachFile filing 102734) and `000376` (her AG candidacy, filing 102716, committee "Tanya For Georgia, Inc."). PeachFile registers one committee per office, which is exactly why `sameAs` exists. **But `sameAs` cannot fix this case.** It only joins keys before a vgId is assigned: `ledger.alias()` never overwrites an existing entry, so `peachfile:102716` would stay on `000376`, and `validate_id_crosswalk.py` would fail with "sameAs … did not merge".
+**Built 2026-11-20 (was D7).** `sameAs` alone could not join two vgIds that were both already assigned: `Ledger.alias()` never overwrites an existing entry. The ledger now carries a forward, `merged: {<retired>: <survivor>}`, written by `Ledger.merge()` only when an explicit `sameAs` key already sits on a different vgId. Assignments are never rewritten; the retired id keeps its keys and every lookup follows the forward (`Ledger.canonical()`). The crosswalk publishes the map as `metadata.mergedVgIds`; no record carries a retired id; the news hub (`ga-news.html?entity=`) and feed bindings follow it. `validate_id_crosswalk.py::merge_errors()` gates each forward: one hop, between issued ids, backed by a `sameAs` with a `_note`, never dropped or changed against HEAD.
 
-Merging two ids that are already published needs a new ledger concept:
+First use: Tanya Miller, `000376` (AG candidacy, filing 102716, committee "Tanya For Georgia, Inc.") -> `000222` (HD 62 legislator, filing 102734). The older id survives because it carries her legislator record. Choosing the direction for future merges (it is permanent) follows the rule in CLAUDE.md: durable key over a campaign filing, then the older id, then the more-referenced one. The filings share no committee, website or address on file, so the evidence in the `_note` is the reporting that the sitting HD 62 representative is the AG nominee and winner (Fox 5 Atlanta, Atlanta News First).
 
-- A `mergedInto` record, for example `000376 → 000222`. The old id stays in the ledger forever (append-only) and forwards to the surviving one.
-- The builder writes nothing under the retired id, the validator checks that every forward points at a live id, and consumers (news `?entity=` links, the published crosswalk) follow it.
-- The override still needs positive evidence in its `_note` (a shared committee, website or filing address). What's on file today is a name and party match, which is not enough under the rule.
+**Four more people already have a stale second vgId** in the ledger: McLaurin (`peachfile:100828` -> `000329`, person `000115`), Derrick Jackson (`peachfile:100008` -> `000299`, person `000062`), Everton Blair (`000303`, person `000685`) and Will Wade (`000672`, person `000236`). Those ids appear on no record, because the builder attaches each filing to the owner it found and ignores the stale assignment; so today they are harmless orphans. They could be given forwards too, so that a consumer holding one is pointed at the right person, but each needs its own `sameAs` and evidence. Not done yet. **Never use `alias()`'s return value to pick a record's vgId:** doing so splits these four people in two.
 
-Seat history makes this more pressing, because a hold keyed on the wrong one of two vgIds splits a person's seat record.
+The seat-holds builder relies on this: a hold keyed on the wrong one of two vgIds splits a person's seat record, so holds must resolve every vgId through the forward.
 
 ## Validation
 
@@ -300,8 +311,8 @@ Deferred on purpose. When it is taken up:
 - **D4: appointed interim holders** (PSC, judicial, local appointments): is an appointment a hold with `startBasis: official` and `endedBy` set on the next election, or a separate kind?
 - **D5: 2021→2023 lineage links.** Run the 2021 block-equivalency files through the tract builder so each link carries a measured overlap, or publish no lineage until there's a reason to? The scope means pages will hit this boundary immediately.
 - **D6: published scope.** One combined `seat-holds` dataset, or per-domain files in the existing sibling repos?
-- **D7: merging vgIds that already exist.** Build the ledger `mergedInto` forwarding mechanism, which Tanya Miller's case needs before her AG hold is settled, and decide which id survives (lean: the older `000222`, which carries her legislator history).
-- **D8: one `endedBy` list.** Adopt the shared list above and retire the copy in `test_executive_identity.py` when the shared validator lands (Phase 3).
+- ~~**D7: merging vgIds that already exist.**~~ Built: the ledger's `merged` forward. Miller's `000376` -> `000222`. See "Merging vgIds that already exist".
+- **D8: one `endedBy` list.** List decided 2026-11-20 (see "Date semantics"): `term-limited` is its own value, the list describes only this seat, and outcomes elsewhere are derived. Still to do: retire the copy in `test_executive_identity.py` when the shared validator lands (Phase 3).
 - ~~**D9: local maps.**~~ Decided: every local seat carries an opaque per-jurisdiction map id (`@m1`) from first publish unless declared jurisdiction-wide. See "Local maps".
 
 ## Out of scope

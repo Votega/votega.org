@@ -1,9 +1,12 @@
 {
  "metadata": {
   "schemaVersion": 2,
-  "schemaStability": "Stable field names and meanings. Additive since version 2: rosterId, executiveId (statewide executives, from ga-executive.json) and ballotpediaId; ocdPersonId is now ONLY an OCD person id or null (it used to carry the roster id, which can be legis-<id>). Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-11-15T16:17:58+00:00",
-  "count": 759,
+  "schemaStability": "Stable field names and meanings. Additive since version 2: rosterId, executiveId (statewide executives, from ga-executive.json), ballotpediaId, and metadata.mergedVgIds (a retired vgId forwards to the surviving one; follow it); ocdPersonId is now ONLY an OCD person id or null (it used to carry the roster id, which can be legis-<id>). Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
+  "generatedAt": "2026-11-20T12:40:37+00:00",
+  "count": 758,
+  "mergedVgIds": {
+   "vg-ga-p-000376": "vg-ga-p-000222"
+  },
   "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
   "sources": [
    "legis.ga.gov (General Assembly web services) — legisGaGovId, the primary key for state legislators",
@@ -25,12 +28,12 @@
    "unresolved": "no lookup has populated this identifier yet; a null here is NOT a claim that none exists"
   },
   "coverage": {
-   "people": 759,
+   "people": 758,
    "officeholders": 276,
-   "candidateOnly": 483,
-   "withVgId": 677,
+   "candidateOnly": 482,
+   "withVgId": 676,
    "unkeyed": 82,
-   "withAnyFiling": 650,
+   "withAnyFiling": 649,
    "candidacies": 718,
    "ambiguous": []
   }
@@ -17808,11 +17811,38 @@
     "openSecretsId": null,
     "fecCandidateIds": [],
     "peachfileFilerEntityIds": [
-     "102734"
+     "102734",
+     "102716"
     ],
-    "votegaCandidateIds": []
+    "votegaCandidateIds": [
+     "challenger-tanya-miller-ag-2026"
+    ]
    },
-   "candidacies": [],
+   "candidacies": [
+    {
+     "raceId": "ga-attorney-general-2026",
+     "candidateId": "challenger-tanya-miller-ag-2026",
+     "cycle": 2026,
+     "level": "state-executive",
+     "office": "Attorney General",
+     "district": null,
+     "party": "Democrat",
+     "phases": [
+      "primary",
+      "general"
+     ],
+     "isIncumbent": false,
+     "withdrawn": false,
+     "disqualified": false,
+     "peachfileFilerEntityId": "102716",
+     "fecCandidateId": null,
+     "filingProvenance": {
+      "method": "seat+surname",
+      "confidence": "high",
+      "source": "scripts/lib/ga_match.py"
+     }
+    }
+   ],
    "provenance": {
     "peachfileFilerEntityIds": {
      "method": "seat+surname",
@@ -26494,64 +26524,6 @@
      "withdrawn": false,
      "disqualified": false,
      "peachfileFilerEntityId": "103450",
-     "fecCandidateId": null,
-     "filingProvenance": {
-      "method": "seat+surname",
-      "confidence": "high",
-      "source": "scripts/lib/ga_match.py"
-     }
-    }
-   ],
-   "provenance": {
-    "peachfileFilerEntityIds": {
-     "method": "seat+surname",
-     "confidence": "high",
-     "source": "scripts/lib/ga_match.py"
-    }
-   }
-  },
-  {
-   "vgId": "vg-ga-p-000376",
-   "name": {
-    "full": "Tanya Miller",
-    "first": null,
-    "last": null
-   },
-   "role": null,
-   "ids": {
-    "rosterId": null,
-    "executiveId": null,
-    "ocdPersonId": null,
-    "legisGaGovId": null,
-    "ballotpediaId": null,
-    "bioguideId": null,
-    "govtrackId": null,
-    "openSecretsId": null,
-    "fecCandidateIds": [],
-    "peachfileFilerEntityIds": [
-     "102716"
-    ],
-    "votegaCandidateIds": [
-     "challenger-tanya-miller-ag-2026"
-    ]
-   },
-   "candidacies": [
-    {
-     "raceId": "ga-attorney-general-2026",
-     "candidateId": "challenger-tanya-miller-ag-2026",
-     "cycle": 2026,
-     "level": "state-executive",
-     "office": "Attorney General",
-     "district": null,
-     "party": "Democrat",
-     "phases": [
-      "primary",
-      "general"
-     ],
-     "isIncumbent": false,
-     "withdrawn": false,
-     "disqualified": false,
-     "peachfileFilerEntityId": "102716",
      "fecCandidateId": null,
      "filingProvenance": {
       "method": "seat+surname",
