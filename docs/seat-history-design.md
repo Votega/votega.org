@@ -53,11 +53,59 @@ This is the decision everything else depends on.
 
 **Rule: a districted seat's id includes its plan, and a seat never carries over to a new plan automatically.** House District 15 under the 2021 plan and House District 15 under the 2023 plan are different seats. The same number does not make them the same constituency, and the site must never present one lineage across two maps as if nothing changed.
 
-- Seat ids: `ga-house-15@2023`, `ga-senate-7@2021`, `us-house-ga-6@2023`. Statewide and other non-districted seats have no plan suffix: `ga-governor`, `ga-psc-4`.
+- Seat ids: `ga-house-15@2023`, `ga-senate-7@2021`, `us-house-ga-6@2023`. Statewide and other non-districted seats have no plan suffix: `ga-governor`, `ga-psc-4`. Full examples and the rules for ids versus URLs are in the next section.
 - Plans in scope: `ga-house-2021`, `ga-senate-2021`, `us-house-ga-2021` (the 2023–24 General Assembly and the 118th Congress) and `ga-house-2023`, `ga-senate-2023`, `us-house-ga-2023` (from January 2025). Each records the first election it governed and the date it took effect.
 - At the boundary, every districted hold that was running closes with `endedBy: redistricted`, and the same person's new hold opens under the new plan, even if the district number did not change.
 - **Lineage between plans is optional and curated.** A `successorSeats` link (old seat → new seat) can be added by a person with a `_note` saying why. It is never inferred from the district number. Without a link, a page says "District 15 was redrawn in 2023; holders before that represented a different map" rather than listing them as predecessors.
 - **Measuring 2021→2023 overlap needs data we don't have committed.** `scripts/data/ga-tract-districts.json` assigns tracts to the **2023** districts only. Giving a link a population-overlap figure would need the 2021 block-equivalency files run through the same builder (see D5).
+
+## Seat ids, hold ids and URLs
+
+Three different things, kept apart on purpose:
+
+| | What it names | Who sees it | Can it change? |
+|---|---|---|---|
+| **seatId** | The office, shared by every holder past and future | Data files, joins, validators | **Never.** Written once, like an execId or a `vgId` |
+| **hold id** (if one is needed) | One person's continuous time in one seat | Data files | Never |
+| **URL slug** | A page about a seat or a person | Visitors and search engines | Yes, through the ledger's redirect pattern |
+
+**A seatId never contains a person's name or a term year.** `ga-governor-bottoms-2027` names a hold, not a seat: the next Governor would need a new id, and the seat's history would stop joining. It also breaks two rules the repo already follows. Ids are never built from names, because a respelling would mint a new identity (the reason execIds are written once and race candidate ids are not keys). And ids are never parsed, which is why the roster `id` is an opaque handle. The person on a hold is identified by its `vgId`, never by the id.
+
+### Examples
+
+| Seat | seatId | Notes |
+|---|---|---|
+| Governor | `ga-governor` | Statewide: no map |
+| Lieutenant Governor | `ga-lt-governor` | Facts about the office (`presidesOver: Senate`) live on the seat |
+| Secretary of State | `ga-secretary-of-state` | Matches the existing `officeId` in `ga-executive.json` |
+| PSC District 5 | `ga-psc-5` | Elected statewide, so the PSC "district" is a residency rule, not a map |
+| GA House District 15, current map | `ga-house-15@2023` | |
+| GA House District 15, 2023–24 | `ga-house-15@2021` | A different seat from the one above, even though the number is the same |
+| GA Senate District 14 | `ga-senate-14@2023` | |
+| US House GA-6 | `us-house-ga-6@2023` | |
+| US Senate, Ossoff's seat | `us-senate-ga-class-2` | Senate seats differ by class, not district: Ossoff holds class 2, Warnock class 3 |
+| Palmetto at-large council | `local:palmetto:at-large` | One shared seat with capacity 6, never `at-large-1…6` |
+| Covington East Post 1 | `local:covington:east-post-1` | |
+| Newton County Commission District 3 | `local:newton:district-3` | Local prefix + the jurisdiction `id` + its `seat_id`, both already in `local_officials.yml` (see D9 on local maps) |
+
+Not seatIds:
+
+| Wrong | Why |
+|---|---|
+| `governor-bottoms-2027` | That's a hold, and it's built from a name |
+| `ga-house-15` | No map, so it silently joins two constituencies |
+| `ga-house-district-15-2023-map` | A URL slug, not an id; slugs may change, ids may not |
+| `district-3` | Only unique inside one jurisdiction |
+
+**Hold ids,** if one is ever needed (to key an override or a correction), are the seat plus the start date: `ga-governor:2027-01-11`. A hold with an unknown start (`before-history`) uses the seat plus `historyFrom`. Never a name.
+
+### URLs and search
+
+The seatId is never shown to search engines, so it needs no SEO design. Findability comes from three places, all generated from the data:
+
+1. **Person pages already exist** (legislators, candidates, Congress, executives) and are what people find when they search a name. Seat history should add a line to them ("Governor since January 2027; succeeded Brian Kemp") rather than compete with them.
+2. **Seat pages, if built,** serve searches by office ("Georgia House District 15 representative", "who is the Georgia insurance commissioner"). Their slugs should read like that query: `/offices/governor/`, `/offices/ga-house-district-15/` for the current map, with an earlier map under its own path (`/offices/ga-house-district-15/2021-map/`). The `@` is a data-file convention and never appears in a URL. Slugs are built by `build_entity_pages.py` and kept alive by the same append-only URL ledger the legislator pages use, so they can be redesigned without breaking links.
+3. **Structured data.** Each person page's JSON-LD can describe every hold as a schema.org `Role` (`roleName`, `startDate`, `endDate`), which tells search engines who held what and when. It costs nothing once the holds file exists.
 
 ## Date semantics
 
@@ -213,6 +261,7 @@ Deferred on purpose. When it is taken up:
 - **D6: published scope.** One combined `seat-holds` dataset, or per-domain files in the existing sibling repos?
 - **D7: merging vgIds that already exist.** Build the ledger `mergedInto` forwarding mechanism, which Tanya Miller's case needs before her AG hold is settled, and decide which id survives (lean: the older `000222`, which carries her legislator history).
 - **D8: one `endedBy` list.** Adopt the shared list above and retire the copy in `test_executive_identity.py` when the shared validator lands (Phase 3).
+- **D9: local maps.** County commission and city council districts are redrawn too, usually after each census, but `local_officials.yml` has no plan field. Either local seats carry a map suffix once a redraw is recorded (`local:newton:district-3@2022`), or local history is published with a note that district boundaries may have changed. Not hit until a local redraw falls inside the history window.
 
 ## Out of scope
 
