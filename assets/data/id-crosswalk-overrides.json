@@ -43,7 +43,7 @@
   "_holds": "Georgia Senate 7",
   "_note": "Won the 2026 Senate 7 Special Election and was sworn in June 26, 2026 (injected member, synthetic id — too new for Open States); not seeking re-election. Qualified with the SoS and filed in PeachFile under her name 'White, Adrienne' (SoS qualifying name Adrienne Annice White) for the Senate 7 Special Election, committee 'Adrienne for Georgia', party DEM. Surname on the filing (White) differs from her officeholder surname (Carden), so seat+surname could not match it."
  },
- "_why_sameAs_exists": "PeachFile registers a committee per office, so one person seeking two offices in a cycle has two filer entity ids and would otherwise become two records. sameAs merges the ledger keys onto one person. Only ever set this from positive evidence that it is the same human — a shared committee name, website, or filing address — never from a name match alone.",
+ "_why_sameAs_exists": "PeachFile registers a committee per office, so one person seeking two offices in a cycle has two filer entity ids and would otherwise become two records. sameAs merges the ledger keys onto one person. Only ever set this from positive evidence that it is the same human — a shared committee name, website, or filing address — never from a name match alone. DIRECTION IS PERMANENT: the key's vgId is retired and the target's survives (if both were already assigned, the ledger records a `merged` forward that can never be changed or reversed). So put sameAs on the side being retired and point it at the person's stable identity: a legis:/roster id or bioguide id over a peachfile:/fec: filing, then the older id, then the more-referenced one. See CLAUDE.md.",
  "peachfile:101360": {
   "sameAs": "peachfile:104439",
   "_name": "Clarence Blalock",
