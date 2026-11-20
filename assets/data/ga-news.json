@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-20T10:44:44.152540+00:00",
+    "generatedAt": "2026-11-20T19:27:09.370569+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,14 +24,14 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 131,
+    "count": 129,
     "windowDays": 45,
-    "entityTagged": 80,
+    "entityTagged": 81,
     "topicCounts": {
-      "elections": 48,
-      "education": 11,
+      "elections": 50,
       "healthcare": 18,
-      "ethics": 2,
+      "ethics": 3,
+      "education": 9,
       "budget": 7,
       "courts": 6,
       "surveillance": 1
@@ -39,22 +39,10 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
+    "vg-ga-p-000254": {
+      "name": "Nikema Williams",
       "url": null,
-      "bioguideId": "W000790"
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
-    },
-    "vg-ga-p-000361": {
-      "name": "Penny Brown Reynolds",
-      "url": null,
-      "candidateIds": [
-        "challenger-penny-brown-reynolds-sos-2026"
-      ]
+      "bioguideId": "W000788"
     },
     "vg-ga-p-000039": {
       "name": "Chris Carr",
@@ -64,10 +52,22 @@
         "challenger-chris-carr-gov-2026"
       ]
     },
-    "vg-ga-p-000254": {
-      "name": "Nikema Williams",
+    "vg-ga-p-000361": {
+      "name": "Penny Brown Reynolds",
       "url": null,
-      "bioguideId": "W000788"
+      "candidateIds": [
+        "challenger-penny-brown-reynolds-sos-2026"
+      ]
+    },
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
     },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
@@ -163,7 +163,109 @@
       ]
     }
   },
+  "mergedEntities": {},
   "items": [
+    {
+      "id": "3d92699f7123",
+      "title": "Georgia Board of Regents elects new leadership, backs DREAMS scholarship",
+      "url": "https://thecurrentga.org/2026/11/20/georgia-board-of-regents-elects-new-leadership-backs-dreams-scholarship/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-20T19:17:20+00:00",
+      "snippet": "The Georgia Board of Regents elected Deep J. Shah as its incoming chair and Mat Swift as vice chair, effective Jan. 1, while naming Timothy C. Lieuwen as the sole finalist for president of Georgia Tec",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "50296881c150",
+      "title": "An obscure utility calculation is putting a thumb on the scale for gas in Georgia",
+      "url": "https://thecurrentga.org/2026/11/20/an-obscure-utility-calculation-is-putting-a-thumb-on-the-scale-for-gas-in-georgia/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-20T18:29:59+00:00",
+      "snippet": "Georgia Power is facing scrutiny from renewable energy advocates over its decision to assign a significantly lower reliability rating to battery storage in its planned 2,000 to 6,000 megawatt grid exp",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "1b740cb4c1a8",
+      "title": "Board of Regents elects new leadership for 2027",
+      "url": "https://capitol-beat.org/2026/11/board-of-regents-elects-new-leadership-for-2027/?utm_source=rss&utm_medium=rss&utm_campaign=board-of-regents-elects-new-leadership-for-2027",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-20T17:35:27+00:00",
+      "snippet": "ATLANTA — Two Bulldogs will take leadership roles at the Georgia Board of Regents next year, after the body elected Dr. Deep J. Shah, a primary care physician, as the incoming chair and retired real e",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "5d384f5f2237",
+      "title": "Stacey Abrams plans to refocus her Fair Fight voting rights group on threats to democracy",
+      "url": "https://www.gpb.org/news/2026/11/20/stacey-abrams-plans-refocus-her-fair-fight-voting-rights-group-on-threats-democracy",
+      "source": "GPB News",
+      "publishedAt": "2026-11-20T16:30:08+00:00",
+      "snippet": "Georgia Democrat Stacey Abrams is retooling the Fair Fight organization that she started to advocate for voter protection and ballot access after she lost the governor's race in 2018. The new version ",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "2ec9afb5de7e",
+      "title": "Congresswoman Nikema Williams Leads Push to Restore CDC’s Drowning Prevention Program",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-leads-push-to-restore-cdcs-drowning-prevention-program",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-11-20T14:23:55+00:00",
+      "snippet": "WASHINGTON, D.C. – Congresswoman Nikema Williams (GA-05) led 14 congressional colleagues in a letter to Department of Health and Human Services Secretary Robert F. Kennedy Jr., demanding the departmen",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "18acb698d1eb",
+      "title": "Carr’s Human Trafficking Prosecution Unit Recovers Missing Child in Fulton County",
+      "url": "https://law.georgia.gov/press-releases/2026-11-20/carrs-human-trafficking-prosecution-unit-recovers-missing-child-fulton",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-20T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr’s Human Trafficking Prosecution Unit has recovered a missing 16-year-old female in Fulton County. The child was located on Thursday, Nov. 19, 2026, an",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
+      "id": "0e8ee613c99a",
+      "title": "Carr: McDonough Woman Indicted for $283k Medicaid Fraud",
+      "url": "https://law.georgia.gov/press-releases/2026-11-20/carr-mcdonough-woman-indicted-283k-medicaid-fraud",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-20T12:00:00+00:00",
+      "snippet": "HENRY COUNTY, GA – Georgia Attorney General Chris Carr today announced that his Medicaid Fraud and Patient Protection Division has secured an indictment in Henry County charging Shalunda Wimes, 51, of",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "9804f5a7d142",
+      "title": "GPB morning headlines for November 20, 2026",
+      "url": "https://www.gpb.org/news/2026/11/20/gpb-morning-headlines-for-november-20-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-20T11:37:15+00:00",
+      "snippet": "Secretary of state-elect Penny Brown Reynolds is laying the groundwork for her policy priorities ahead of her inauguration in January; A federal bill which would establish Georgia’s first National Par",
+      "entityIds": [
+        "vg-ga-p-000361"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
     {
       "id": "96af41b336e0",
       "title": "Runoff in southwest Georgia becomes high-stakes battle after House Democrats claim narrow majority",
@@ -188,6 +290,19 @@
       ],
       "topics": [
         "elections"
+      ]
+    },
+    {
+      "id": "efeb2c3120cf",
+      "title": "Board of Regents Elects New Chair and Vice Chair for 2027",
+      "url": "https://www.usg.edu/news/release/board-of-regents-elects-new-chair-vice-chair-2027/",
+      "source": "University System of Georgia",
+      "publishedAt": "2026-11-20T00:00:00+00:00",
+      "snippet": "The Board of Regents of the University System of Georgia has elected current Vice Chair Deep J. Shah to a one-year term as the Board’s new chair and Regent Mat Swift to a one-year term as the Board’s ",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "education"
       ]
     },
     {
@@ -217,40 +332,6 @@
       "topics": []
     },
     {
-      "id": "b52cc293b68d",
-      "title": "Bill to create Georgia's first National Park to move to the full US House",
-      "url": "https://www.gpb.org/news/2026/11/19/bill-create-georgias-first-national-park-move-the-full-us-house",
-      "source": "GPB News",
-      "publishedAt": "2026-11-19T20:54:00+00:00",
-      "snippet": "Boosters are optimistic the Ocmulgee Mounds National Park Redesignation Act can pass before the new Congress takes office in January.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "333c1e1c6f58",
-      "title": "Georgia Secretary of State-elect Penny Brown Reynolds announces policy priorities",
-      "url": "https://www.gpb.org/news/2026/11/19/georgia-secretary-of-state-elect-penny-brown-reynolds-announces-policy-priorities",
-      "source": "GPB News",
-      "publishedAt": "2026-11-19T20:47:26+00:00",
-      "snippet": "Secretary of State-elect Penny Brown Reynolds is laying the groundwork for her policy priorities ahead of her inauguration in January.",
-      "entityIds": [
-        "vg-ga-p-000361"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "edcf6de9b5f4",
-      "title": "GPB evening headlines for November 19, 2026",
-      "url": "https://www.gpb.org/news/2026/11/19/gpb-evening-headlines-for-november-19-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-19T20:46:57+00:00",
-      "snippet": "Georgia's next secretary of state is laying the groundwork for her policy priorities ahead of her inauguration in January.\nA federal bill that would establish Georgia's first national park is headed f",
-      "entityIds": [],
-      "topics": []
-    },
-    {
       "id": "e6f448b21a47",
       "title": "Incoming Secretary of State Penny Brown Reynolds announces bipartisan transition team",
       "url": "https://georgiarecorder.com/2026/11/19/incoming-secretary-of-state-penny-brown-reynolds-announces-bipartisan-transition-team/",
@@ -263,52 +344,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "274cc7e21a8e",
-      "title": "'American Idol' relocation is a homecoming for Georgia stars Ryan Seacrest and Luke Bryan",
-      "url": "https://www.gpb.org/news/2026/11/19/american-idol-relocation-homecoming-for-georgia-stars-ryan-seacrest-and-luke-bryan",
-      "source": "GPB News",
-      "publishedAt": "2026-11-19T20:17:00+00:00",
-      "snippet": "Season 25 will film at Trilith Live in Fayetteville and premiere on ABC on Feb. 8, 2027. In the meantime, Seacrest is celebrating a new stadium for his alma mater, Dunwoody High School.",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
-    },
-    {
-      "id": "90c0386d1547",
-      "title": "Policy group asks Georgia lawmakers for licensing to expand addiction counselor workforce",
-      "url": "https://www.gpb.org/news/2026/11/19/policy-group-asks-georgia-lawmakers-for-licensing-expand-addiction-counselor",
-      "source": "GPB News",
-      "publishedAt": "2026-11-19T20:15:50+00:00",
-      "snippet": "Addiction counselors in Georgia are currently certified, but mental health advocates want lawmakers to establish a pathway to professional licensure.",
-      "entityIds": [],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "7475b64bb78e",
-      "title": "Georgia Today: Thanksgiving travel season; Georgia’s first national park; Dunwoody High stadium",
-      "url": "https://www.gpb.org/news/2026/11/19/georgia-today-thanksgiving-travel-season-georgias-first-national-park-dunwoody-high",
-      "source": "GPB News",
-      "publishedAt": "2026-11-19T16:30:04+00:00",
-      "snippet": "On the Nov. 19th edition: The busy Thanksgiving travel season gets underway; Georgia could soon have its first national park; and Dunwoody High School breaks ground on a new football stadium named aft",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
-    },
-    {
-      "id": "f5658787b918",
-      "title": "Georgia Water Coalition releases its 14th \"Dirty Dozen\" report for 2026",
-      "url": "https://www.gpb.org/news/2026/11/19/georgia-water-coalition-releases-its-14th-dirty-dozen-report-for-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-19T16:21:00+00:00",
-      "snippet": "The Georgia Water Coalition says a general theme running through its picks are a lack of \"transparency and accountability\" this year.",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "c845dbfa724a",
@@ -340,6 +375,22 @@
       "publishedAt": "2026-11-19T09:00:46+00:00",
       "snippet": "For the first time in two decades, Georgia Democrats will control the state House of Representatives when the General Assembly convenes in January. But Democrats will have a razor-thin majority. Not o",
       "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "761005e13500",
+      "title": "Extending the State of Emergency for Severe Flooding",
+      "url": "https://gov.georgia.gov/document/2026-executive-order/11192601/download",
+      "source": "Gov. Brian Kemp (executive orders)",
+      "publishedAt": "2026-11-19T00:00:00+00:00",
+      "snippet": "On November 5, 2026, due to heavy showers and thunderstorms, I issued Executive Order No. 11.05.26.01, declaring a State of Emergency for Severe Flooding in Fannin, Gilmer, Murray, and Union…",
+      "category": "State of Emergency",
+      "orderNumber": "11.19.26.01",
+      "archiveUrl": null,
+      "sha256": "bbacc755ab648816b8d4787e555ec1c216dbb34e039452e860a533055988be9c",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
       "topics": []
     },
     {
@@ -413,11 +464,9 @@
       "url": "https://www.usg.edu/news/release/usg-enrollment-surges-to-record-high-2026/",
       "source": "University System of Georgia",
       "publishedAt": "2026-11-18T00:00:00+00:00",
-      "snippet": "University System of Georgia enrollment climbed this fall to a record 392,581 students. The 2.7% increase in enrollment over Fall 2025 marks a fourth consecutive year of growth for the system.",
+      "snippet": null,
       "entityIds": [],
-      "topics": [
-        "education"
-      ]
+      "topics": []
     },
     {
       "id": "4ffdae6552b3",
@@ -596,16 +645,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "b08df74b4ecb",
-      "title": "Golden Isles YMCA closure leaves frustration, lost services",
-      "url": "https://thecurrentga.org/2026/11/16/golden-isles-ymca-shuts-doors-leaving-families-without-vital-services/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-16T16:04:47+00:00",
-      "snippet": "The YMCA of Coastal Georgia abruptly closed its Brunswick facility in September 2026, leaving local leaders and community organizations scrambling to replace essential childcare, recreation, and speci",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "0b12fa9b69f0",
@@ -1100,21 +1139,6 @@
       "entityIds": [],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "8d0f28198a46",
-      "title": "Bottoms to focus on healthcare and other affordability issues",
-      "url": "https://capitol-beat.org/2026/11/bottoms-to-focus-on-healthcare-and-other-affordability-issues/?utm_source=rss&utm_medium=rss&utm_campaign=bottoms-to-focus-on-healthcare-and-other-affordability-issues",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-11-06T22:27:20+00:00",
-      "snippet": "ATLANTA — In her first news conference after Election Day, Georgia’s governor-elect, Democrat Keisha Lance Bottoms, said she will be focus on the cost of living, access to healthcare and funding for p",
-      "entityIds": [
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections",
-        "healthcare"
       ]
     },
     {
@@ -1709,18 +1733,6 @@
       ]
     },
     {
-      "id": "d027d0adae4d",
-      "title": "Will Trump’s Georgia rally be a lifeline or an anchor for the GOP candidates he seeks to boost?",
-      "url": "https://georgiarecorder.com/2026/10/16/will-trumps-georgia-rally-be-a-lifeline-or-an-anchor-for-the-gop-candidates-he-seeks-to-boost/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-16T08:00:33+00:00",
-      "snippet": "President Donald Trump is set to visit Dalton in northwest Georgia Friday to stump for Republican candidates as early voting is underway for the Nov. 3 midterm elections. Trump visited Dalton in early",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "66d886d31452",
       "title": "McBath Leads Colleagues in Urging TSA Administrator to Respect the Dignity of Hard-Working Agents",
       "url": "https://mcbath.house.gov/2026/10/15/mcbath-leads-colleagues-in-urging-tsa-administrator-to-respect-the-dignity-of-hard-working-agents/",
@@ -1745,18 +1757,6 @@
       "topics": []
     },
     {
-      "id": "9dfc7d56e318",
-      "title": "Carr Secures Major Victory in Defense of Georgia’s Social Media Law",
-      "url": "https://law.georgia.gov/press-releases/2026-10-15/carr-secures-major-victory-defense-georgias-social-media-law",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-10-15T12:00:00+00:00",
-      "snippet": "ATLANTA, GA — Georgia Attorney General Chris Carr has secured a major victory in defense of SB 351, Georgia’s law that requires parental consent before social media platforms can enter into account ag",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
-    },
-    {
       "id": "42de9ecb8837",
       "title": "Dr. Tim Lieuwen Named Interim President of Georgia Tech",
       "url": "https://www.usg.edu/news/release/lieuwen-named-interim-georgia-tech-president-2026/",
@@ -1764,18 +1764,6 @@
       "publishedAt": "2026-10-13T00:00:00+00:00",
       "snippet": null,
       "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "6ee499ffe32c",
-      "title": "Carr Warns Georgians of Price Gouging and Scams in Anticipation of Hurricane Isaias",
-      "url": "https://law.georgia.gov/press-releases/2026-10-09/carr-warns-georgians-price-gouging-and-scams-anticipation-hurricane",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-10-09T12:00:00+00:00",
-      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr is warning Georgians to be on the lookout for price gouging and scams related to Hurricane Isaias.",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
       "topics": []
     },
     {
