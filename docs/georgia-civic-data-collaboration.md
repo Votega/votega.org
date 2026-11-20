@@ -27,7 +27,7 @@ Ground rules: records only (votes, bills, outcomes as published); nonpartisan; n
 ## What Georgia Commons offers (checked 2026-10-23 on HB 943)
 
 - Bill pages at `https://georgiacommons.org/bills/2025-2026/hb943` with "In plain language", "What the bill does", "Who it affects", "Why it matters", "Key provisions", excerpts from the bill, votes, sponsors, and per-meeting summaries. Markdown (`/bills/2025-2026/hb943.md`), raw text, an API (`/api`) and an MCP server (`mcp.georgiacommons.org/mcp`).
-- Summaries are AI-written (the page names an Anthropic model) and say they are not part of the bill. **No license or reuse terms are stated on the page.**
+- Summaries are AI-written (the page names an Anthropic model) and say they are not part of the bill. **License (updated 2026-11-20):** the project owner reports Georgia Commons content is CC BY 4.0. Georgia Commons is part of Georgia Civic Data, whose catalog license is CC BY 4.0. Its own terms page (`georgiacommons.org/terms`, "Content and licenses") does not yet say so: it says only that its AI-written text may be quoted "with credit to Georgia Commons and a link to the page". Ask them to state the grant there, then cite it in `NOTICE.md`.
 - Sponsors are shown as name, party, chamber and district, with the primary sponsor marked. They are not hyperlinked and show no member ID.
 - Join key: our `legislationId` equals the number in their link to the official record (HB 943 is 72141). Their URL slug is the identifier lowercased with no space (`HB 943` becomes `hb943`) under the session `2025-2026`. Special-session bills such as `HB 10EX` (176 of our 5,656) are not mapped yet.
 
@@ -39,7 +39,7 @@ Ground rules: records only (votes, bills, outcomes as published); nonpartisan; n
 3. **Optional stable redirect** such as `/ga-legislators/legis/<legisGaGovId>/`, as a small stub page per member, because the slug changes if a member's name or district changes. GitHub Pages cannot redirect on the server. **Not needed now:** `votegaUrl` is the primary link, and the legacy `ga-member.html?id=<ocd-person-id>` shell already redirects to the clean page (JavaScript, `noindex`; it takes the OCD ID, not the legis.ga.gov number). Legislator pages also carry a per-member record summary from the thin-content SEO work, so avoid adding new indexable legislator URLs.
 4. **Ask Georgia Commons to link each sponsor** to `votegaUrl` (**done**, live 2026-11-12: Georgia Commons emailed that their bill pages now link sponsors to our legislator pages; checked on `https://georgiacommons.org/bills/2026-special/hr32`, where all six sponsor links return 200 and match `votegaUrl` in the roster). Still open: confirm what member ID they match on (`legisGaGovId` or chamber + district), and the rollover issue below now applies to live links.
 5. **Link our bill and member pages out to Georgia Commons**: `https://georgiacommons.org/bills/<session>/<hbNNN>`, labelled "Plain-language summary (AI-written), Georgia Commons". Map session `2025_26` to `2025-2026`. Show only "In plain language" and "What the bill does", not "Why it matters" (evaluative). Spot-check a sample against the bill text before relying on it.
-6. **Do not copy or store their summary text until they confirm a license and API terms.** Link-out needs no permission; fetch-at-view-time or ingestion does.
+6. **Their summary text may be used with attribution under CC BY 4.0** (reported 2026-11-20; see the license note above). Always label it AI-written and never present it as part of the record. Until their terms page states CC BY, keep to what it permits today: short quotes with credit and a link. Bulk storage waits for the published grant.
 
 ### B. County, district and tract joins (GCD)
 7. **Point GCD at `Votega/ga-district-information`** for county and tract tables; `county_fips` there now joins to theirs directly.
@@ -70,7 +70,7 @@ Added 2026-10-23. A reading of the license text, not legal advice; have counsel 
 | Query-time joins (a page or assistant pulls from both, stores neither) | None. Attribute each source. |
 | Joint published product (e.g. district profiles from GCD Census facts weighted by our tract populations) | Product is BY-SA, both credited. GCD must accept that. |
 | GCD ingests our tables into their star schema | Only if we also license those tables to them under CC BY or CC0 (dual license; our decision, and it gives up share-alike on those tables). |
-| VoteGA ingests Georgia Commons text | Blocked until they state a license. |
+| VoteGA ingests Georgia Commons text | CC BY 4.0 (reported 2026-11-20): allowed with attribution inside our BY-SA output, AI-written label kept. Waiting on their terms page to state it. |
 
 **What GCD's own terms say (checked 2026-10-23 via their MCP server).** The catalog-level `license` object is CC BY 4.0, attribution "Georgia Civic Data (georgiacivicdata.org)", and its scope reads: it covers GCD's "cleaning, standardization, compilation, and documentation. Source data stays under its original publisher's terms; each dataset names its source." Terms page: `https://georgiacivicdata.org/about#license`. The per-dataset ODCS contracts carry no license field, only `source` and `source_url`, so the rule for any dataset is: GCD's CC BY covers GCD's work, and the upstream publisher's terms cover the rest.
 
@@ -82,9 +82,9 @@ Added 2026-10-23. A reading of the license text, not legal advice; have counsel 
 - Facts get thin protection in the US (and the EU database right does not reach us), so BY-SA bites mainly on our original text and our arrangement of data. Treat it as binding regardless.
 - Our own inputs are mixed: legis.ga.gov, FEC and Census are public records; the `openstates/people` crosswalk is CC0; PeachFile terms are unverified. Our BY-SA label covers only what we author.
 - PolyForm Noncommercial applies to site code only and does not touch data sharing.
-- Georgia Commons: no license means all rights reserved. Link-out is fine. If they choose CC BY or CC0 we can use the text; BY-NC or BY-ND would not be compatible with BY-SA reuse. AI-written text has unsettled copyright, so ask what they claim.
+- Georgia Commons: reported CC BY 4.0 (2026-11-20), not yet on their terms page. Under CC BY we can use the text with attribution; BY-NC or BY-ND would not be compatible with BY-SA reuse. AI-written text has unsettled copyright, so ask what they claim.
 
-**Recommended position.** Keep the integration loose (keys, link-outs, chained MCP). If a joint dataset is wanted, release it BY-SA and ask GCD whether they accept that. Optionally offer our purely geographic tables (tract to district, county to district) to GCD under CC BY or CC0. Get a license from Georgia Commons before touching their text.
+**Recommended position.** Keep the integration loose (keys, link-outs, chained MCP). If a joint dataset is wanted, release it BY-SA and ask GCD whether they accept that. Optionally offer our purely geographic tables (tract to district, county to district) to GCD under CC BY or CC0. Use Georgia Commons text under CC BY with attribution once their terms page states it (see `docs/FOLLOW-THROUGH-SCOPE.md`, Q3).
 
 ## Caveats to keep in view
 - **Newton County's delegation turns over in January.** By the 2026 ballot and results data, three of the five Newton legislators are not running for their own seats: Rep. Tim Fleming (House 114) ran for Secretary of State and won the nomination, Sen. Brian Strickland (Senate 42) ran for Attorney General, and Rep. Sharon Henderson (House 113, suspended) ran in the Senate 43 primary and trailed. Rep. Clint Crowe (118) and Sen. Tonya Anderson (43) are on their own general ballots. Any Newton page should say which legislators are leaving; check against certified results first.
