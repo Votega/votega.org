@@ -59,14 +59,17 @@
       confidence: p.get('confidence') || '',
       context: p.get('context') || '',
       since: p.get('since') || '',
-      sort: p.get('sort') || 'recent'
+      sort: p.get('sort') || defaultSort
     };
   }
+
+  // Per-topic default sort, set from init(cfg.defaultSort); 'recent' otherwise.
+  var defaultSort = 'recent';
 
   function qsWrite(state) {
     var p = new URLSearchParams();
     Object.keys(state).forEach(function (k) {
-      if (state[k] && !(k === 'sort' && state[k] === 'recent')) p.set(k, state[k]);
+      if (state[k] && !(k === 'sort' && state[k] === defaultSort)) p.set(k, state[k]);
     });
     var qs = p.toString();
     global.history.replaceState(null, '', qs ? '?' + qs : global.location.pathname);
@@ -81,6 +84,7 @@
   function init(cfg) {
     var listEl = document.getElementById('jurisdiction-list');
     if (!listEl) return;
+    if (cfg.defaultSort) defaultSort = cfg.defaultSort;
     var els = {
       stats: document.getElementById('tiStats'),
       count: document.getElementById('tiCount'),

@@ -111,6 +111,7 @@
   TopicIndex.init({
     topic: {{ page.topic | jsonify }},
     name: {{ t.name | jsonify }},
-    emoji: {{ t.emoji | jsonify }}
+    emoji: {{ t.emoji | jsonify }}{% if t.default_sort %},
+    defaultSort: {{ t.default_sort | jsonify }}{% endif %}
   });
 </script>

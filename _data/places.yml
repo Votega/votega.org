@@ -1891,10 +1891,13 @@ places:
   # ──────────────────────────────────────────────────────────────────────────
   # HIDDEN FOUNDATION — counties registered for their SCHOOL DISTRICT only
   # ──────────────────────────────────────────────────────────────────────────
-  # These seven counties each contain an independent CITY school system (see
-  # _data/school_districts.yml), so the school-board work needs their slugs to
-  # exist. Nothing else about them has been researched yet — no commission
-  # roster, no sheriff, no meetings adapter — so each is `hidden: true`: it
+  # These counties were registered because each contains an independent CITY
+  # school system (see _data/school_districts.yml), so the school-board work
+  # needed their slugs to exist. As of 2026-11-19 all eight have a commission
+  # roster and sheriff, and Laurens, Jackson, Floyd, Haralson and Toombs have
+  # meetings and are LIVE. Still hidden, by choice: Montgomery (meetings need a
+  # saved-page feed, Cloudflare), Mitchell (no agendas online) and Chattooga
+  # (empty Agenda Center). A place marked `hidden: true`: it
   # stays in this registry and satisfies the officials/district cross-checks,
   # but is omitted everywhere public (no hub card, no /local/<slug>/ page, no
   # search entry, and the enrichers and the ga-local-government publisher all
@@ -1938,7 +1941,6 @@ places:
     fips: "13115"
     parentCounty: null
     region: Northwest Georgia
-    hidden: true
     domains:
       meetings:
         # CivicClerk portal (BOC only since Feb 2026; the older Granicus archive is
@@ -1966,7 +1968,6 @@ places:
     fips: "13143"
     parentCounty: null
     region: West Georgia
-    hidden: true
     domains:
       meetings:
         # ColdFusion Agenda Center (lib/cfmagenda.py): one section per meeting type,
@@ -1988,7 +1989,6 @@ places:
     fips: "13157"
     parentCounty: null
     region: Northeast Georgia
-    hidden: true
     domains:
       meetings:
         # CivicPlus Agenda Center. Keep the legislative + land-use bodies; drop Board of
@@ -2012,11 +2012,11 @@ places:
     fips: "13175"
     parentCounty: null
     region: Middle Georgia
-    hidden: true
     domains:
       meetings:
-        # CivicPlus Agenda Center, single "Board of Commissioners" category. Schedule
-        # supplied by the project owner (not stated on laurenscoga.org); no location given.
+        # CivicPlus Agenda Center, single "Board of Commissioners" category. The
+        # schedule is not on laurenscoga.org: times from the project owner, place
+        # from Sec. 2-19 of the County Code (cited on the location line).
         platform: civicplus
         base_url: https://www.laurenscoga.org
         agendas_url: "https://www.laurenscoga.org/AgendaCenter"
@@ -2025,6 +2025,7 @@ places:
         schedule:
           - body: Board of Commissioners
             when: "1st Tuesday of every month, 5:30 p.m., and 3rd Tuesday, 6:30 p.m."
+            location: "Laurens County Courthouse Annex, Dublin, Georgia" #-Sec 2-19 of County Code - https://library.municode.com/ga/laurens_county/codes/code_of_ordinances?nodeId=PTIICOOR_CH2AD_ARTIIBOCO_S2-19ME 
 
   - slug: mitchell
     name: Mitchell County
@@ -2040,7 +2041,6 @@ places:
     fips: "13279"
     parentCounty: null
     region: South Georgia
-    hidden: true
     domains:
       meetings:
         # WordPress: the current page lists a date HEADING then bare "Agenda | Minutes"

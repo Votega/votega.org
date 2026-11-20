@@ -17,9 +17,38 @@
    "placeName": "Tift County",
    "placeType": "county",
    "region": "South Georgia"
+  },
+  {
+   "placeId": "toombs",
+   "placeName": "Toombs County",
+   "placeType": "county",
+   "region": "South Georgia"
   }
  ],
  "mentions": [
+  {
+   "body": "Planning Commission",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-12-14",
+   "docType": "agenda",
+   "excerpt": "… Applicant: Ken Corbin Parcel Number: 095-238 Character Area: Gateway Corridor Case 208 is requesting a variance to Section 27-2.2.3 accessing nursing home from a local road. 3. Location Address: 1625 Mill Creek Road Ap …",
+   "excerptTerm": "variance",
+   "fips": "13187",
+   "placeId": "lumpkin",
+   "placeName": "Lumpkin County",
+   "placeType": "county",
+   "region": "Northeast Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4520,plainText=false)",
+   "tags": [
+    "variance"
+   ],
+   "terms": [
+    "variance"
+   ],
+   "vendors": []
+  },
   {
    "body": "Planning Commission",
    "confidence": "high",
@@ -135,6 +164,31 @@
    ],
    "terms": [
     "annexation"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "City Council",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-24",
+   "docType": "agenda",
+   "excerpt": "… Resolution to Amend the Resolution Adopted October 8, 2026, Authorizing CHSA Development, Inc. to Sell 16 New 2-Bedroom Apartments, Resident Service Center, Parking Area, Four Associated Lots Known as 916 Martin Luther King, Jr. Boulevard, to Substi …",
+   "excerptTerm": "apartment",
+   "fips": null,
+   "placeId": "savannah",
+   "placeName": "City of Savannah",
+   "placeType": "city",
+   "region": "Coastal Georgia",
+   "sourceType": "granicus",
+   "sourceUrl": "https://agenda.savannahga.gov/publishing/november-24-2026-city-council-regular-meeting/agenda.html",
+   "tags": [
+    "development",
+    "rezoning"
+   ],
+   "terms": [
+    "apartment",
+    "rezon"
    ],
    "vendors": []
   },
@@ -349,7 +403,7 @@
    "placeType": "county",
    "region": "Metro Atlanta",
    "sourceType": "ocr",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10349,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10359,plainText=false)",
    "tags": [
     "annexation",
     "development"
@@ -386,35 +440,6 @@
    "vendors": []
   },
   {
-   "body": "Planning Commission",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-11-19",
-   "docType": "agenda",
-   "excerpt": "… C2026-00076 (XX057 008) 980 Collie Doster Rd; Wielme , LLC / Applicant; Estate of Fredera Doster / Owner; Request for a Future Land Use Map amendment to Suburban residential and rezone for ±141.35 acres from AG (Agriculture) to R-2 (Medium Density Residen …",
-   "excerptTerm": "future land use",
-   "fips": "13013",
-   "placeId": "barrow",
-   "placeName": "Barrow County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "granicus",
-   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&event_id=761",
-   "tags": [
-    "comprehensive-plan",
-    "development",
-    "rezoning",
-    "variance"
-   ],
-   "terms": [
-    "future land use",
-    "rezon",
-    "subdivision",
-    "variance"
-   ],
-   "vendors": []
-  },
-  {
    "body": "Land Use & Development Regulations Review Committee",
    "confidence": "high",
    "context": "unknown",
@@ -434,33 +459,6 @@
    ],
    "terms": [
     "subdivision"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-11-18",
-   "docType": "agenda",
-   "excerpt": "… proval of the 2027 annual operating budget for Cooperative Extension services in the amount of $227,832.00, through its annexation as FY2027 Addendum E to the MOU between Fulton County and the Board of Regents of the University System of Georgia on b …",
-   "excerptTerm": "annexation",
-   "fips": "13121",
-   "placeId": "fulton",
-   "placeName": "Fulton County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "legistar",
-   "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6400&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
-   "tags": [
-    "annexation",
-    "development"
-   ],
-   "terms": [
-    "annexation",
-    "multifamily",
-    "subdivision",
-    "warehouse"
    ],
    "vendors": []
   },
@@ -635,7 +633,7 @@
    "placeType": "county",
    "region": "Metro Atlanta",
    "sourceType": "ocr",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261117/a_62106_2026.11.17___Public_Hearing_Agenda.pdf",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261117/a_80124_2026.11.17___AMENDED_Public_Hearing_Agenda.pdf",
    "tags": [
     "development",
     "rezoning",
@@ -1466,6 +1464,29 @@
     "conditional use",
     "rezon",
     "variance"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-10",
+   "docType": "agenda",
+   "excerpt": "… for the property at 0 Calhoun Hwy., Rome, GA 30161, Floyd County Tax Parcel M10Z095, requests to rezone from Heavy Industrial (H-I) to Light Industrial (L-I). Staff recommended approval on the following conditi …",
+   "excerptTerm": "rezon",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5284,plainText=false)",
+   "tags": [
+    "rezoning"
+   ],
+   "terms": [
+    "rezon"
    ],
    "vendors": []
   },
@@ -2689,6 +2710,29 @@
    "terms": [
     "rezon",
     "variance"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-10-27",
+   "docType": "agenda",
+   "excerpt": "… listed on the Parcel Viewer), Rome, GA 30165, Floyd County Tax Parcels J11Y032 and J11Y033, requests to rezone from Suburban Residential (SR) to Community Commercial (C-C). Staff recommended denial. Planning Commissi …",
+   "excerptTerm": "rezon",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5275,plainText=false)",
+   "tags": [
+    "rezoning"
+   ],
+   "terms": [
+    "rezon"
    ],
    "vendors": []
   },
@@ -4155,6 +4199,29 @@
    "terms": [
     "multi-family",
     "subdivision"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-10-13",
+   "docType": "agenda",
+   "excerpt": "… listed on the Parcel Viewer), Rome, GA 30165, Floyd County Tax Parcels J11Y032 and J11Y033, requests to rezone from Suburban Residential (SR) to Community Commercial (C-C). Staff recommended denial. Planning Commission …",
+   "excerptTerm": "rezon",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5262,plainText=false)",
+   "tags": [
+    "rezoning"
+   ],
+   "terms": [
+    "rezon"
    ],
    "vendors": []
   },
@@ -5935,6 +6002,29 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "unknown",
+   "date": "2026-09-22",
+   "docType": "agenda",
+   "excerpt": "… e property at 7050 Cave Spring Road SW, Cave Spring, GA 30124, Floyd County Tax Parcel E18021, requests to rezone from Suburban Residential (S-R) to Agricultural Residential (A-R). Staff recommended approval. …",
+   "excerptTerm": "rezon",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5250,plainText=false)",
+   "tags": [
+    "rezoning"
+   ],
+   "terms": [
+    "rezon"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "agenda-action",
    "date": "2026-09-22",
    "docType": "agenda",
@@ -6103,39 +6193,6 @@
     "future land use",
     "mixed-use",
     "rezon"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "City Council",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-09-21",
-   "docType": "agenda",
-   "excerpt": "… 9/21/26 26-O-1348 (8) - AN ORDINANCE BY COUNCILMEMBER LILIANA BAKHTIARI TO PROVIDE FOR THE ANNEXATION OF PROPERTIES OWNED BY AND CONNECTED TO THE ATLANTA MASJID OF AL-ISLAM LOCATED IN …",
-   "excerptTerm": "annexation",
-   "fips": null,
-   "placeId": "atlanta",
-   "placeName": "City of Atlanta",
-   "placeType": "city",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=3934&Inline=True",
-   "tags": [
-    "annexation",
-    "comprehensive-plan",
-    "development",
-    "rezoning"
-   ],
-   "terms": [
-    "annexation",
-    "land use plan",
-    "mixed use",
-    "multi-family",
-    "multifamily",
-    "rezon",
-    "subdivision",
-    "warehouse"
    ],
    "vendors": []
   },
@@ -6728,31 +6785,6 @@
   {
    "body": "Planning Commission",
    "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-09-14",
-   "docType": "agenda",
-   "excerpt": "… 083-008 Character Area: Gateway Corridor Overlay Case 186 is a request for a Preliminary Plat of a Class VIII subdivision entitled Wright Industrial Park (7 lots). 3. Location: 40 PATRIOT VIEW DRIVE; DAHLONEGA, GA 30533 Applican …",
-   "excerptTerm": "subdivision",
-   "fips": "13187",
-   "placeId": "lumpkin",
-   "placeName": "Lumpkin County",
-   "placeType": "county",
-   "region": "Northeast Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4276,plainText=false)",
-   "tags": [
-    "development",
-    "variance"
-   ],
-   "terms": [
-    "subdivision",
-    "variance"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Planning Commission",
-   "confidence": "high",
    "context": null,
    "date": "2026-09-14",
    "docType": "agenda",
@@ -7132,6 +7164,29 @@
     "rezon",
     "subdivision",
     "variance"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-09-08",
+   "docType": "agenda",
+   "excerpt": "… e property at 7050 Cave Spring Road SW, Cave Spring, GA 30124, Floyd County Tax Parcel E18021, requests to rezone from Suburban Residential (S-R) to Agricultural Residential (A-R). Staff recommended approval. …",
+   "excerptTerm": "rezon",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5232,plainText=false)",
+   "tags": [
+    "rezoning"
+   ],
+   "terms": [
+    "rezon"
    ],
    "vendors": []
   },
@@ -8063,35 +8118,6 @@
    "context": "agenda-action",
    "date": "2026-08-27",
    "docType": "agenda",
-   "excerpt": "… Appendix I: Plan Review and Inspection Fee Schedule. 36 Public hearing to amend the Hall County Forward 2045 Comprehensive Plan. Public Hearing to amend Hall County's Zoning Map as follows: 37 6250 & 6255 Old Dawsonville Road | Special Use | …",
-   "excerptTerm": "comprehensive plan",
-   "fips": "13139",
-   "placeId": "hall",
-   "placeName": "Hall County",
-   "placeType": "county",
-   "region": "Northeast Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-329-vm-20260827200611174072.pdf",
-   "tags": [
-    "comprehensive-plan",
-    "development",
-    "rezoning",
-    "variance"
-   ],
-   "terms": [
-    "comprehensive plan",
-    "rezon",
-    "subdivision",
-    "variance"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-08-27",
-   "docType": "agenda",
    "excerpt": "… single family residence. The house and accessory structures meet or exceed the requirements of the A-R district. The Future Land Use Map designates this area as Low Density Residential, which has a 1-acre minimum parcel size. The request to rezone t …",
    "excerptTerm": "future land use",
    "fips": "13113",
@@ -8295,6 +8321,31 @@
    ],
    "terms": [
     "warehouse"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-08-25",
+   "docType": "agenda",
+   "excerpt": "… J11X090, J11X351 requests to rezone from Community Commercial (C-C) and Suburban Residential (S-R) to Multi-family Residential (M-R). Staff recommended approval on the following conditions: 1. That the maximum al …",
+   "excerptTerm": "multi-family",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5220,plainText=false)",
+   "tags": [
+    "development",
+    "rezoning"
+   ],
+   "terms": [
+    "multi-family",
+    "rezon"
    ],
    "vendors": []
   },
@@ -9380,6 +9431,31 @@
     "rezoning"
    ],
    "terms": [
+    "rezon"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-08-11",
+   "docType": "agenda",
+   "excerpt": "… J11X090, J11X351 requests to rezone from Community Commercial (C-C) and Suburban Residential (S-R) to Multi-family Residential (M-R). Staff recommended approval on the following conditions: 1. That the maximum al …",
+   "excerptTerm": "multi-family",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4206,plainText=false)",
+   "tags": [
+    "development",
+    "rezoning"
+   ],
+   "terms": [
+    "multi-family",
     "rezon"
    ],
    "vendors": []
@@ -13319,6 +13395,29 @@
    "vendors": []
   },
   {
+   "body": "Board of Appeals",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-06-11",
+   "docType": "agenda",
+   "excerpt": "… -00082 (XX105 084) 252 Pleasant Hill Church Rd; Silviu Gavriliuc / Applicant; Silviu Gavriliuc & Emily Bostan / Owners; Variance request to UDC Sec. 89-403 for minimum lot width and road frontage to reduce to 50 feet. b) VAR2026-00084 (XX049B 056) …",
+   "excerptTerm": "variance",
+   "fips": "13013",
+   "placeId": "barrow",
+   "placeName": "Barrow County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "granicus",
+   "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1130",
+   "tags": [
+    "variance"
+   ],
+   "terms": [
+    "variance"
+   ],
+   "vendors": []
+  },
+  {
    "body": "Historic Preservation Commission",
    "confidence": "high",
    "context": "agenda-action",
@@ -14246,6 +14345,29 @@
    "context": "unknown",
    "date": "2026-05-26",
    "docType": "agenda",
+   "excerpt": "… as listed on the Parcel Viewer), Rome, GA 30165, Floyd County Tax Parcel C13064, requests to rezone the portion of the property as shown on the provided plat from Heavy-Industrial (H-I) to Agricultural Res …",
+   "excerptTerm": "rezon",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2139,plainText=false)",
+   "tags": [
+    "rezoning"
+   ],
+   "terms": [
+    "rezon"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-05-26",
+   "docType": "agenda",
    "excerpt": "… AGENDA 1. CALL TO ORDER 2. APPROVAL OF AGENDA 3. PREVIOUS BUSINESS ACTION: a. Planning Commission: Class V Subdivision Discussion 4. CONTRACTS AND AGREEMENTS: a. ACCG Fee Schedule - 457 Deferred Compensation b. Roads & Bri …",
    "excerptTerm": "subdivision",
    "fips": "13011",
@@ -14587,31 +14709,6 @@
    "vendors": []
   },
   {
-   "body": "City Council",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-05-14",
-   "docType": "agenda",
-   "excerpt": "… ment of Grant Award -Transfer from Area 11.pdf 28. Approval of a Water & Sewer Agreement with Rockingham Farms, LLC for Warehouse Drive Phase 2B for Installation of 1,000 Linear Feet of Water Main and 900 Linear Feet of Sewer Main in the President S …",
-   "excerptTerm": "warehouse",
-   "fips": null,
-   "placeId": "savannah",
-   "placeName": "City of Savannah",
-   "placeType": "city",
-   "region": "Coastal Georgia",
-   "sourceType": "granicus",
-   "sourceUrl": "https://agenda.savannahga.gov/publishing/may-14-2026-city-council-regular-meeting/agenda.html",
-   "tags": [
-    "development",
-    "rezoning"
-   ],
-   "terms": [
-    "rezon",
-    "warehouse"
-   ],
-   "vendors": []
-  },
-  {
    "body": "Planning Commission",
    "confidence": "high",
    "context": "unknown",
@@ -14751,6 +14848,29 @@
    ],
    "terms": [
     "subdivision"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-05-12",
+   "docType": "agenda",
+   "excerpt": "… as listed on the Parcel Viewer), Rome, GA 30165, Floyd County Tax Parcel C13064, requests to rezone the portion of the property as shown on the provided plat from Heavy-Industrial (H-I) to Agricultural Res …",
+   "excerptTerm": "rezon",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2132,plainText=false)",
+   "tags": [
+    "rezoning"
+   ],
+   "terms": [
+    "rezon"
    ],
    "vendors": []
   },
@@ -15312,6 +15432,29 @@
    "vendors": []
   },
   {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-04-28",
+   "docType": "agenda",
+   "excerpt": "… els J11X014 and J11X015, being zoned Community Commercial, requests a Special Use Permit for mini-warehouses. Staff recommended approval on the following conditions: (1) that the SUP will become void if th …",
+   "excerptTerm": "warehouse",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2113,plainText=false)",
+   "tags": [
+    "development"
+   ],
+   "terms": [
+    "warehouse"
+   ],
+   "vendors": []
+  },
+  {
    "body": "City Council",
    "confidence": "high",
    "context": null,
@@ -15439,29 +15582,6 @@
    ],
    "terms": [
     "rezon"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Appeals",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-04-21",
-   "docType": "agenda",
-   "excerpt": "… ance 2. APPROVAL OF MINUTES 2.1. Additions/Deletions 3. OLD BUSINESS 4. NEW BUSINESS 4.1. V26-0076-Variance to reduce lot width on 4.79 acres to create 2 buildable lots with Lot 1 being 2.00 acres 200’ of lot wid …",
-   "excerptTerm": "variance",
-   "fips": "13297",
-   "placeId": "walton",
-   "placeName": "Walton County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/waltonco-pubu/MEET-Agenda-a9d7a1b8c277404e9da6a1b15d0d5f5f.pdf",
-   "tags": [
-    "variance"
-   ],
-   "terms": [
-    "variance"
    ],
    "vendors": []
   },
@@ -15883,6 +16003,29 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "unknown",
+   "date": "2026-04-14",
+   "docType": "agenda",
+   "excerpt": "… els J11X014 and J11X015, being zoned Community Commercial, requests a Special Use Permit for mini-warehouses. Staff recommended approval on the following conditions: (1) that the SUP will become void if th …",
+   "excerptTerm": "warehouse",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2098,plainText=false)",
+   "tags": [
+    "development"
+   ],
+   "terms": [
+    "warehouse"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "agenda-action",
    "date": "2026-04-14",
    "docType": "agenda",
@@ -16293,6 +16436,29 @@
    "vendors": []
   },
   {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-03-24",
+   "docType": "agenda",
+   "excerpt": "… 01, for the property at 318 Fred Kelley Rd., Rome, GA 30161, Floyd County Tax Parcel L13Z030A, requests to rezone from Suburban Residential (S-R) to Agricultural Residential (A-R). Staff recommended approval. Planning …",
+   "excerptTerm": "rezon",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2090,plainText=false)",
+   "tags": [
+    "rezoning"
+   ],
+   "terms": [
+    "rezon"
+   ],
+   "vendors": []
+  },
+  {
    "body": "City Council",
    "confidence": "high",
    "context": null,
@@ -16629,20 +16795,20 @@
    "vendors": []
   },
   {
-   "body": "City Council",
+   "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
    "date": "2026-03-10",
    "docType": "agenda",
-   "excerpt": "… Mrs. Darlene Laird, Re: Requesting a Moratorium on Data Centers. 6. Mrs. Leslie Landi, Re: Project Ruby / Overlay Rezoning Proposal 7. Mr. Gregory Foster, Re: Expressing Support for the Project Ruby Data Center 8. Mrs. Kim Hicks, Re: …",
+   "excerpt": "… 01, for the property at 318 Fred Kelley Rd., Rome, GA 30161, Floyd County Tax Parcel L13Z030A, requests to rezone from Suburban Residential (S-R) to Agricultural Residential (A-R). Staff recommended approval. Planning …",
    "excerptTerm": "rezon",
-   "fips": "13215",
-   "placeId": "muscogee",
-   "placeName": "Columbus-Muscogee County",
-   "placeType": "consolidated",
-   "region": "West Georgia",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/columga-pubu/MEET-Agenda-88bb014cddb7417f9ddeb255d11f9f6d.pdf",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2065,plainText=false)",
    "tags": [
     "rezoning"
    ],
@@ -16706,31 +16872,6 @@
     "multi-family",
     "rezon",
     "subdivision"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Planning Commission",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-03-09",
-   "docType": "agenda",
-   "excerpt": "… LLEGIANCE II. READING AND APPROVAL OF PREVIOUS MINUTES III. OLD BUSINESS: IV. NEW BUSINESS: A. Rezones and Conditional Uses: RZ – 191110 - Jordan Deeney on behalf of Sean Catlett …",
-   "excerptTerm": "rezon",
-   "fips": "13227",
-   "placeId": "pickens",
-   "placeName": "Pickens County",
-   "placeType": "county",
-   "region": "Northwest Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.pickenscountyga.gov/AgendaCenter/ViewFile/Agenda/_03092026-176",
-   "tags": [
-    "rezoning",
-    "special-land-use"
-   ],
-   "terms": [
-    "conditional use",
-    "rezon"
    ],
    "vendors": []
   },
@@ -16944,6 +17085,29 @@
    "vendors": []
   },
   {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-02-24",
+   "docType": "agenda",
+   "excerpt": "… 02-01, for the property at 4620 Alabama Hwy., Rome, GA 30165, Floyd County Tax Parcel F13Y151, requests to rezone from Suburban Residential (S-R) to Community Commercial (C-C). Staff recommended approval. Planning Commi …",
+   "excerptTerm": "rezon",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1066,plainText=false)",
+   "tags": [
+    "rezoning"
+   ],
+   "terms": [
+    "rezon"
+   ],
+   "vendors": []
+  },
+  {
    "body": "City Council",
    "confidence": "high",
    "context": null,
@@ -17080,6 +17244,29 @@
     "rezon",
     "subdivision",
     "variance"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-02-10",
+   "docType": "agenda",
+   "excerpt": "… 2-01, for the property at 4620 Alabama Hwy., Rome, GA 30165, Floyd County Tax Parcel F13Y151, requests to rezone from Suburban Residential (S-R) to Community Commercial (C-C). Staff recommended approval. Planning Comm …",
+   "excerptTerm": "rezon",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=50,plainText=false)",
+   "tags": [
+    "rezoning"
+   ],
+   "terms": [
+    "rezon"
    ],
    "vendors": []
   },
@@ -17797,6 +17984,29 @@
    "context": "agenda-action",
    "date": "2025-12-02",
    "docType": "agenda",
+   "excerpt": "… P.M.  CALL TO ORDER  INVOCATION  APPROVE MEETING MINUTES FOR NOVEMBER 18, 2025  DISCUSSION/APPROVAL TO REVISE SUBDIVISION ORDINANCE  DISCUSSION/APPROVAL OF HWY 257 TURN LANE BIDS  DISCUSSION/APPROVAL OF LICENSE RENEWAL FOR EXISTING R …",
+   "excerptTerm": "subdivision",
+   "fips": "13175",
+   "placeId": "laurens",
+   "placeName": "Laurens County",
+   "placeType": "county",
+   "region": "Middle Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.laurenscoga.org/AgendaCenter/ViewFile/Agenda/_12022025-382",
+   "tags": [
+    "development"
+   ],
+   "terms": [
+    "subdivision"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2025-12-02",
+   "docType": "agenda",
    "excerpt": "… pecial Exception Applications – Commissioner Talton 2. Public Hearing (Rezoning Application) – Commissioner Talton 3. Annexation Request (City of Warner Robins) – Commissioner Talton 4. Selection of Architect – Commissioner Talton 5. Memorandum o …",
    "excerptTerm": "annexation",
    "fips": "13153",
@@ -17820,12 +18030,12 @@
  "metadata": {
   "citiesScanned": 9,
   "consolidatedScanned": 4,
-  "countiesScanned": 46,
+  "countiesScanned": 49,
   "emoji": "🏗️",
-  "generatedAt": "2026-11-18T18:15:26Z",
+  "generatedAt": "2026-11-20T04:29:45Z",
   "label": "Land use",
-  "placesScanned": 59,
-  "placesWithMentions": 56,
+  "placesScanned": 62,
+  "placesWithMentions": 58,
   "topic": "land-use",
   "universeCities": 537,
   "universeConsolidated": 9,

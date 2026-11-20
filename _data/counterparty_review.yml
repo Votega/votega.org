@@ -91,7 +91,7 @@ entities:
   reviewNote: 1 of 5 awardees
 - key: advance-auto-parts
   status: approved
-  displayName: Advance Auto Parts
+  displayName: Advance Stores Co., Inc.
   role: vendor
   date: '2026-07-14'
   reference: 2026-0919
@@ -99,7 +99,9 @@ entities:
     with 2 Options to Renew). Exercising 1st renewal option through September 30, 2027. Awarded to O’Reilly
     Auto Parts, Advance Stores Co., Inc., dba Advance Auto Parts, Tidewater Fleet Supply LLC., dba TNT
     Parts, Inc., Parts Authority LLC., and Cummins, Inc. Total Amount Not To Exceed: $450,000.00.'
-  reviewNote: 1 of 5 awardees
+  reviewNote: DBA
+  aka:
+  - Advance Auto Parts
 - key: advance-auto-parts-tidewater-fleet-supply
   status: rejected
   displayName: Advance Auto Parts, Tidewater Fleet Supply LLC.
@@ -269,9 +271,9 @@ entities:
     services to DeKalb County citizens. Seeking increase in contract funds. Awarded to Metro Ambulance
     Services, Inc. d/b/a American Medical Response, Inc.: Amount Not To Exceed: $1,480,000.00.'
 - key: arcadis-u-s
-  status: pending
+  status: approved
   displayName: Arcadis U.S., Inc.
-  role: other
+  role: vendor
   date: '2026-07-07'
   reference: 2026-0822
   itemName: 'RFP-Request for Proposals No. 2025-154-RFP Construction Management Services for Snapfinger
@@ -280,7 +282,7 @@ entities:
     construction inspection and other field services. Recommend award to the highest scoring proposer:
     Arcadis U.S., Inc.: Total Amount Not to Exceed: $20,583,045.01.'
 - key: arcadis-us
-  status: pending
+  status: approved
   displayName: Arcadis US, Inc
   role: vendor
   date: '2026-08-25'
@@ -290,7 +292,7 @@ entities:
     funds, scope of services, and term through June 30, 2028. Awarded to Arcadis US, Inc: Amount Not To
     Exceed: $2,299,900.00.'
 - key: architectural-standard
-  status: pending
+  status: approved
   displayName: Architectural Standard, LLC
   role: applicant
   date: '2025-11-18'
@@ -300,15 +302,15 @@ entities:
     for a mixed-use development in the MU-4 (Mixed-Use High Density) zoning district and Tier 2 of the
     I-20 Overlay District, at 4015 Flat Shoals Parkway.'
 - key: arts
-  status: pending
-  displayName: Arts, Inc.
+  status: approved
+  displayName: Dekalb Council for the Arts, Inc.
   role: other
   date: '2026-01-27'
   reference: 2025-0751
   itemName: A Resolution of the Dekalb County Board of Commissioners to Urge Modifications to the Dekalb
     Council for the Arts, Inc. to Ensure BOC-Appointed Voting Representation
 - key: artscape
-  status: pending
+  status: approved
   displayName: Artscape, Inc.
   role: vendor
   date: '2026-06-09'
@@ -320,10 +322,11 @@ entities:
     for the County’s public grounds. Seeking increase in contract funds and term through December 31,
     2026. Awarded to Artscape, Inc., The Simmons Group, and Let Us Love Your Lawn. Total Amount Not To
     Exceed: $867,010.00.'
+  reviewNote: 1 of 3
 - key: asap-landscape-management
-  status: pending
-  displayName: ASAP Landscape Management Group
-  role: other
+  status: approved
+  displayName: ASAP Landscape Management Group, LLC
+  role: vendor
   date: '2026-06-09'
   reference: 2025-1800
   itemName: 'CO - Change Order No. 2 to Contract Nos.: 1335341, 1335342, 1335468, and 1355409 and Change
@@ -334,9 +337,9 @@ entities:
     Management Group, LLC; Mariani Enterprises, LLC dba Ed Castro Landscape; Executive Realty Solutions,
     Inc.; and Phillips Lawncare & Services, LLC. Total Amount Not To Exceed: $2,900,000.00.'
 - key: asap-management
-  status: pending
-  displayName: ASAP Management Group
-  role: other
+  status: approved
+  displayName: ASAP Management Group, LLC
+  role: vendor
   date: '2026-03-10'
   reference: 2025-1718
   itemName: 'LB - Invitation No. 2025-025 Fence Installation, Repair, and Maintenance (Annual Contract
@@ -344,10 +347,20 @@ entities:
     and Facilities Management (FM). Consists of the purchase, repair, and installation of fencing for
     County facilities. Recommend award to the lowest, responsive and responsible bidders: Hawk Fences
     LLC and ASAP Management Group LLC. Total Amont Not To Exceed: $750,000.00.'
-- key: associates
+- key: assoc
   status: pending
-  displayName: Associates, Inc.
+  displayName: Assoc., LLC
   role: other
+  date: '2026-11-10'
+  reference: 2026-1367
+  itemName: 'CA - Cooperative Agreement - Indefinite Delivery-Indefinite Quantity Construction Contract
+    (Sourcewell Contract No. GA-ST-043024-FHP). For use by Public Works - Solid Waste Management to obtain
+    the installation and furnishing of a new metal canopy at the DeKalb County North Transfer Station.
+    Awarded to F. H. Paschen, S. N. Nielsen & Assoc., LLC: Amount Not To Exceed: $668,000.00.'
+- key: associates
+  status: approved
+  displayName: R. J. Haynie & Associates, Inc.
+  role: vendor
   date: '2026-10-27'
   reference: 2026-1333
   itemName: 'CO - Change Order No. 1 to Contract 2000821 Stephenson Road & Valley Brook Road Traffic Signals
@@ -356,7 +369,7 @@ entities:
     of Valley Brook Road at Hollywood Drive. Seeking increase in contract funds and term through November
     26, 2027. Awarded to R. J. Haynie and Associates, Inc. Amount Not To Exceed: $5,890.69.'
 - key: at-and-t-enterprises
-  status: pending
+  status: approved
   displayName: AT&T Enterprises, LLC
   role: vendor
   date: '2026-10-27'
@@ -365,7 +378,7 @@ entities:
     For use by E911 Communications (e911) to obtain Emergency Call Handling System. Ratifying increase
     in contract scope and funds. Awarded to AT&T Enterprises, LLC: Amount Not To Exceed: $16,117.36.'
 - key: atkins-north-america
-  status: pending
+  status: approved
   displayName: Atkins North America, Inc.
   role: vendor
   date: '2025-12-09'
@@ -377,9 +390,9 @@ entities:
     is to increase contract scope and funds. Awarded to Atkins North America, Inc. Amount Not To Exceed:
     $363,268.00.'
 - key: atkinsr-alis-usa
-  status: pending
+  status: approved
   displayName: AtkinsRéalis USA, Inc.
-  role: other
+  role: vendor
   date: '2026-09-29'
   reference: 2026-1066
   itemName: 'RFQ - Request for Qualifications: 2025-113-RFQ, Design Services for Flat Shoals Parkway (SR
@@ -389,9 +402,9 @@ entities:
     pedestrian crossing. Recommend award to the highest scoring proposer: AtkinsRéalis USA, Inc.: Amount
     Not To Exceed: $3,210,410.84.'
 - key: atkinsrealis-usa
-  status: pending
+  status: approved
   displayName: AtkinsRealis USA, Inc.
-  role: other
+  role: vendor
   date: '2026-10-27'
   reference: 2026-1391
   itemName: 'RFP-Request for Proposals No. 2026-013-RFP On Call Construction Management Services (CMS)
@@ -401,8 +414,9 @@ entities:
     Venture of Engineering Design Technologies, Inc. and STV Inc.], Graham-GMC [Joint Venture of Graham
     & Associates, Inc. and Goodwyn Mills Cawood LLC.], and Wade Trim-CERM [Joint Venture of Wade Trim,
     Inc. and Corporate Environmental Risk Management LLC.] Total Amount Not to Exceed $55,000,000.00'
+  reviewNote: 1 of 5
 - key: atl-aggregates
-  status: pending
+  status: approved
   displayName: ATL Aggregates, LLC.
   role: vendor
   date: '2026-03-24'
@@ -413,7 +427,7 @@ entities:
     provided contract term increase. This request also seeks to exercise the first renewal option through
     February 28, 2027. Awarded to ATL Aggregates, LLC. Amount Not To Exceed: $175,000.00.'
 - key: atlanta-gas-light
-  status: pending
+  status: approved
   displayName: Atlanta Gas Light Company
   role: vendor
   date: '2026-08-25'
@@ -424,7 +438,7 @@ entities:
     in contract funds and term through November 30, 2027. Awarded to Atlanta Gas Light Company: Amount
     Not To Exceed: $200,000.00.'
 - key: atlanta-metropolitan-cathedral
-  status: pending
+  status: approved
   displayName: Atlanta Metropolitan Cathedral, Inc.
   role: other
   date: '2025-12-09'
@@ -433,9 +447,9 @@ entities:
     999 Briarcliff Road NE, Atlanta, GA 30306 (Parcel I.D. 18 001 05 024) and Sublease to Atlanta Metropolitan
     Cathedral, Inc.'
 - key: atlanta-peach-movers
-  status: pending
+  status: approved
   displayName: Atlanta Peach Movers, Inc.
-  role: other
+  role: vendor
   date: '2026-02-26'
   reference: 2026-0186
   itemName: 'CO - Change Order No. 2 to Contract 2000027 Commercial Mover to Transport Voting Equipment
@@ -445,7 +459,7 @@ entities:
     to increase contract term through June 30, 2026. Awarded to: Atlanta Peach Movers, Inc. CONTRACT TERM
     INCREASE ONLY'
 - key: atlanta-soundworks
-  status: pending
+  status: approved
   displayName: Atlanta Soundworks, LLC
   role: vendor
   date: '2026-04-28'
@@ -499,7 +513,7 @@ entities:
     award to the responsive and responsible bidders: Peek Pavement Marking, LLC, and Autaco Development,
     Inc. Total Amount Not To Exceed: $3,330,000.00.'
 - key: avaya
-  status: pending
+  status: approved
   displayName: Avaya Inc.
   role: vendor
   date: '2026-09-22'
@@ -544,7 +558,7 @@ entities:
     and terms through August 1, 2027. Awarded to WSP USA Environment & Infrastructure Inc., LDDBlueline
     and Axis Infrastructure, LLC. Amount Not To Exceed: $6,000,000.00.'
 - key: axon-enterprise
-  status: pending
+  status: approved
   displayName: Axon Enterprise, Inc.
   role: vendor
   date: '2026-06-23'
@@ -555,7 +569,7 @@ entities:
     100 additional tasers and previously issued purchase order. Awarded to Axon Enterprise, Inc. Amount
     Not To Exceed: $1,442,514.00.'
 - key: b-and-w-mechanical-contractors
-  status: pending
+  status: approved
   displayName: B& W Mechanical Contractors, Inc.
   role: vendor
   date: '2026-07-14'
@@ -628,6 +642,16 @@ entities:
   itemName: An Ordinance to Amend Chapter 18 of the Code of DeKalb County, Georgia, as Revised 1988, to
     Add a New Article IX Related to Blighted Property to Allow A Millage Rate Increase for Blighted Properties
     and Other Purposes
+- key: blount-construction
+  status: pending
+  displayName: Blount Construction Company
+  role: vendor
+  date: '2026-11-10'
+  reference: 2026-1341
+  itemName: 'CO - Change Order No. 1 to Contract No. 2000512 Hot Asphaltic Mix Concrete (Annual Contract
+    with 2 Options to Renew): for use by Public Works - Roads and Drainage (R&D) to complete multiple
+    asphalt repair and maintenance projects. Seeking increase in contract funds. Awarded to Blount Construction
+    Company, Inc.: Amount Not To Exceed: $200,000.00.'
 - key: blue-cypress-consulting
   status: pending
   displayName: Blue Cypress Consulting, LLC
@@ -724,9 +748,9 @@ entities:
     23, 2027. Awarded to Budget Car & Truck Rental of Atlanta: Amount Not To Exceed: $76,641.60.'
   reviewNote: Correct vendor name
 - key: c
-  status: pending
-  displayName: C, Inc.
-  role: other
+  status: approved
+  displayName: SD & C, Inc
+  role: vendor
   date: '2026-06-23'
   reference: 2026-0927
   itemName: 'LB - Invitation No. 2025-070 Indefinite Quantities Water, Sewer, and Emergency (Multiyear
@@ -735,10 +759,11 @@ entities:
     to the lowest, responsive, and responsible bidders: Georgia Sewer and Storm, LLC; GS Construction,
     Inc.; Insituform Technologies, LLC; Ruby-Collins, Inc.; SAK Construction, LLC; and SD & C, Inc.: Total
     Amount Not To Exceed: $325,572,028.52'
+  reviewNote: 1 of 6
 - key: caldwell
-  status: pending
-  displayName: Caldwell, Inc.
-  role: other
+  status: approved
+  displayName: Brown and Caldwell, Inc
+  role: vendor
   date: '2026-01-13'
   reference: 2025-1835
   itemName: 'CO - Change Order No. 2 to Contract Nos.: 1284731 1284732, 1284730, 1284724 and Change Order
@@ -751,6 +776,7 @@ entities:
     vendors the ability to complete current design projects that cannot be transferred to a new engineer.
     Awarded to Brown and Caldwell, Inc., CDM Smith, Inc., Tetra Tech, Inc., WSP USA Inc, Arcadis, and
     Freese and Nichols- Graham Joint Venture. CONTRACT TERM INCREASE ONLY.'
+  reviewNote: Updated name
 - key: callanwolde-foundation
   status: pending
   displayName: Callanwolde Foundation, Inc.
@@ -898,8 +924,17 @@ entities:
   reference: 2024-1237
   itemName: A Request for the Director of Planning & Sustainability to amend the DeKalb County Nuisance
     Ordinance to Add a Closure of Chronic Nuisance Properties Ordinance Chapter.
-- key: civicplus
+- key: cintas
   status: pending
+  displayName: Cintas Corporation
+  role: vendor
+  date: '2026-11-10'
+  reference: 2026-1466
+  itemName: 'CA - Cooperative Agreement - Workplace Solutions (OMNIA Partners Contract No. 001299). For
+    use by Facilities Management (FM) to obtain inspection and maintenance of FM200 fire suppression services.
+    Awarded to Cintas Corporation 2. Amount Not To Exceed: $120,000.00.'
+- key: civicplus
+  status: approved
   displayName: CivicPlus LLC
   role: vendor
   date: '2026-07-14'
@@ -907,6 +942,18 @@ entities:
   itemName: 'CA - Cooperative Agreement - General Services Administration Multiple Award Schedule (GSA
     Contract No. GS-35F-0124U). For use by Recreation, Parks, and Cultural Affairs to obtain recreation
     management software. Awarded to CivicPlus LLC: Amount Not To Exceed: $112,890.01.'
+- key: cleanstar-national
+  status: pending
+  displayName: Cleanstar National, Inc.
+  role: other
+  date: '2026-11-10'
+  reference: 2026-1473
+  itemName: 'CO - Change Order No. 12 to Contract Nos.: 1213631, 1213634 and 1213635 Commercial Janitorial
+    Services (Multiyear Contract). For use by the Departments of Facilities Management (FM) and Recreation,
+    Parks and Cultural Affairs (RPCA) to obtain the development, management, and monitoring of high quality
+    commercial janitorial/cleaning/ custodial services and Day Porters. Seeking increase in contract funds
+    and term through June 30, 2027 Awarded to Scopes Facility Services (formerly Building Maintenance
+    Services), Cleanstar National, Inc., and A-Action Janitorial: Total Amount Not To Exceed: $1,826,281.62.'
 - key: cleveland-electric-company
   status: pending
   displayName: Cleveland Electric Company
@@ -971,8 +1018,8 @@ entities:
     to the lowest, responsive and responsible bidders: Cole Technology, Inc. and Capital City Machine
     Shop, LLC. Amount Not To Exceed: $5,500,000.00.'
 - key: communications
-  status: pending
-  displayName: Communications, Inc
+  status: approved
+  displayName: R. B. Communications, Inc
   role: vendor
   date: '2026-09-29'
   reference: 2026-1245
@@ -1030,9 +1077,9 @@ entities:
     Microsoft 365 Enterprise and virtual machines within the County. Awarded to Carahsoft Technology Corporation,
     c/o Computacenter US, Inc. Amount Not to Exceed: $177,012.00.'
 - key: construction
-  status: pending
-  displayName: Construction, LLC.
-  role: other
+  status: approved
+  displayName: Triple R Paving & Construction, LLC
+  role: vendor
   date: '2026-01-13'
   reference: 2025-1550
   itemName: 'LB - Invitation No. 2025-040-ITB 2025 LMIG Road Resurfacing Projects: for use by Public Works
@@ -1076,7 +1123,7 @@ entities:
     option through March 31, 2027. Awarded to Utilicom Supply Associates, LLC, Control Technologies, Inc.
     and Wavetronics, LLC. Total Amount Not To Exceed: $975,000.00.'
 - key: convergint-technologies
-  status: pending
+  status: approved
   displayName: Convergint Technologies, LLC
   role: vendor
   date: '2026-05-12'
@@ -1150,8 +1197,30 @@ entities:
     repair of overhead bridge cranes, gantry cranes, monorails, and hoists. Awarded to Crane Services
     Solutions and Material Handling Systems, Inc. Total Amount Not To Exceed: $300,000.00.'
   reviewNote: Changed to &
-- key: cues
+- key: crown-equipment
   status: pending
+  displayName: Crown Equipment Corporation
+  role: vendor
+  date: '2026-11-10'
+  reference: 2026-1412
+  itemName: 'CA - Cooperative Agreement - Forklifts, Lift Trucks with Related Products and Services (Sourcewell
+    Contract No. 053024-CRO). For use by Public Works-Fleet Management to be used by Public Works-Roads
+    and Drainage (R&D) and the Department of Watershed Management (DWM) to obtain two (2) 5,000 lb. Capacity,
+    IC Pneumatic Tire Forklifts (Model No. CSP 1050-50), and one (1) Lift-N-Tow Forklift attachment. Awarded
+    to Crown Equipment Corporation, dba Crown Lift Trucks: Amount Not To Exceed: $104,526.00.'
+- key: css
+  status: pending
+  displayName: CSS Corp.
+  role: vendor
+  date: '2026-11-17'
+  reference: 2026-1421
+  itemName: CO - Change Order No. 1 to Contract No. 1349726 In-Home Services for Seniors and Their Caregiver
+    (Three (3) Year Multiyear Contract). For use by the Department of Human Services to obtain in-home
+    services for seniors who need assistance for their daily living. This request seeks to increase contract
+    term through December 31, 2027. Awarded to CSS Corp. dba CSS Healthcare Services. CONTRACT TERM INCREASE
+    ONLY.
+- key: cues
+  status: approved
   displayName: Cues, Inc.
   role: vendor
   date: '2026-10-27'
@@ -1213,7 +1282,7 @@ entities:
     replacement and additional digital displays and signs at the airport. Also seeking to ratify a previously
     issued purchase order. Awarded to Daktronics, Inc.: Amount Not To Exceed: $215,467.00.'
 - key: dana-safety-supply
-  status: pending
+  status: approved
   displayName: Dana Safety Supply Inc.
   role: vendor
   date: '2026-09-22'
@@ -1222,6 +1291,7 @@ entities:
     Contract with 2 Options to Renew). For use by the Marshal’s Office to obtain uniforms for personnel.
     Exercising 2nd renewal option with price increases, through August 31, 2027 and ratifying term increase.
     Awarded to Galls LLC and Dana Safety Supply Inc.: Total Amount Not To Exceed: $340,000.00.'
+  reviewNote: 1 of 2
 - key: dc-power-technologies
   status: pending
   displayName: DC Power Technologies LLC
@@ -1272,7 +1342,7 @@ entities:
     Authority (“Decide DeKalb”) and to provide up to one million nine hundred seventy-five thousand ($1,975,000)
     dollars of additional annual funding to Decide DeKalb for DDC’s operations
 - key: dekalb-schools-educational-foundation
-  status: pending
+  status: approved
   displayName: DeKalb Schools Educational Foundation, Inc.
   role: other
   date: '2026-03-24'
@@ -1291,9 +1361,9 @@ entities:
     a previously provided contract term increase, to increase the contract’s term through April 30, 2027,
     and funds. Awarded to Dell Marketing, LP. Amount Not to Exceed: $2,300,000.00.'
 - key: delta-specialty-contractors
-  status: pending
+  status: approved
   displayName: Delta Specialty Contractors, LLC.
-  role: other
+  role: vendor
   date: '2026-05-26'
   reference: 2026-0714
   itemName: 'LB - Invitation No. 2026-040-ITB Perimeter Security Fencing at the DeKalb Peachtree (PDK)
@@ -1346,8 +1416,8 @@ entities:
     as required by the Metropolitan North Georgia Water Planning District. Seeking to increase the contract
     term to December 31, 2027. Awarded to Dewberry Engineers, Inc. CONTRACT TERM INCREASE ONLY.
 - key: digital
-  status: pending
-  displayName: Digital, Inc.
+  status: approved
+  displayName: BIS (Business Information Systems) Digital, Inc
   role: vendor
   date: '2026-02-26'
   reference: 2025-1831
@@ -1406,17 +1476,27 @@ entities:
     sanitizing, and disinfecting of police vehicles as needed. This request seeks to exercise the 2nd
     renewal option through June 30, 2027. Awarded to Dokun Technologies LLC. Amount Not To Exceed: $45,000.00.'
 - key: dominion-voting-systems
-  status: pending
+  status: approved
   displayName: Dominion Voting Systems Inc.
-  role: other
+  role: vendor
   date: '2025-12-16'
   reference: 2025-1204
   itemName: 'CO - Change Order No. 3 to Contract No. 1274583 for Voting Equipment (Sole Source): for use
     by the Department of Voter Registration & Elections (VRE). Consists of the purchase of electronic
     voting software and hardware products. This request seeks approval to increase contract funds and
     term through December 31, 2026. Awarded to: Dominion Voting Systems Inc. Amount Not To Exceed: $500,000.00.'
-- key: dsiys-solutions
+- key: doxim
   status: pending
+  displayName: Doxim Company
+  role: other
+  date: '2026-11-17'
+  reference: 2026-1549
+  itemName: 'CO - Change Order No. 8 to Contract No. 988895 Print and Mail Services, Electronic Bill Presentment,
+    and Data Processing (Annual Contract with 4 Options to Renew)./ For use by Finance (UCO) to obtain
+    hosting services for the County’s water and sewer portal. Seeking increase in contract term through
+    February 28, 2027. Awarded to Level One LLC, a Doxim Company: CONTRACT TERM INCREASE ONLY.'
+- key: dsiys-solutions
+  status: approved
   displayName: DSIYS Solutions, Inc.
   role: vendor
   date: '2025-12-16'
@@ -1457,7 +1537,7 @@ entities:
     previous term increase. Awarded to GC&E Systems Group, LLC and Electrical Contractor Inc: Total Amount
     Not To Exceed: $430,000.00.'
 - key: emergent
-  status: pending
+  status: approved
   displayName: Emergent, LLC
   role: vendor
   date: '2026-07-14'
@@ -1493,9 +1573,9 @@ entities:
     & Associates, Inc. and Goodwyn Mills Cawood LLC.], and Wade Trim-CERM [Joint Venture of Wade Trim,
     Inc. and Corporate Environmental Risk Management LLC.] Total Amount Not to Exceed $55,000,000.00'
 - key: enterprises
-  status: pending
-  displayName: Enterprises, Inc.
-  role: other
+  status: approved
+  displayName: Brown Management Services (BMS) Enterprises, Inc
+  role: vendor
   date: '2025-12-09'
   reference: 2025-1572
   itemName: 'LB - Invitation No. 2025-2000165 Conventional Grassing (Annual Contract with 2 Options to
@@ -1589,10 +1669,40 @@ entities:
     as part of the Juvenile Court’s Commitment Alternative Program (CAP), a program aimed at restoring
     at-risk minors within their communities. Recommend award to the lowest, responsive and responsible
     bidder: Family Ties Enterprises, Inc. Amount Not to Exceed: $330,730.00.'
-- key: fireline
+- key: ferguson-enterprises
   status: pending
-  displayName: Fireline Inc.
+  displayName: Ferguson Enterprises, LLC.
   role: other
+  date: '2026-11-10'
+  reference: 2026-1256
+  itemName: 'LB - Invitation No. 2026-029-ITB Manhole Casting and Accessories (Three (3) Year Multiyear
+    Contract). For use by the Department of Watershed Management (DWM) and Public Works - Roads & Drainage
+    (R&D) to obtain manhole castings and accessories. Recommend award to the lowest, responsive and responsible
+    bidder: Ferguson Enterprises, LLC. Amount Not to Exceed: $844,547.60.'
+- key: ferguson-waterworks
+  status: pending
+  displayName: Ferguson Waterworks, LLC.
+  role: vendor
+  date: '2026-11-10'
+  reference: 2026-1471
+  itemName: CO - Change Order No. 2 to Contract No. 1309680 Ductile Water Main Fittings (Three (3) Year
+    Multiyear Contract). For use by the Department of Watershed Management to obtain ductile iron water
+    main fittings. Seeking increase to contract term through June 30, 2027. Awarded to Ferguson Waterworks,
+    LLC. CONTRACT TERM INCREASE ONLY.
+- key: finance-co
+  status: pending
+  displayName: Finance Co., LLC.
+  role: other
+  date: '2026-11-10'
+  reference: 2026-1430
+  itemName: 'SS - Lease Buyout for Cisco and NetApp All‑Flash Controller Equipment (Sole Source). For
+    use by the Department of Innovation and Technology (DoIT) to obtain ownership of critical server and
+    storage equipment currently deployed and in use at various County facilities. Seeking to ratify previously
+    issued Purchase Order No. 5088977. Awarded to: Tech. Finance Co., LLC. Amount Not To Exceed: $185,233.00.'
+- key: fireline
+  status: approved
+  displayName: Fireline Inc.
+  role: vendor
   date: '2025-12-09'
   reference: 2025-1600
   itemName: 'REN - Contract Nos.: 2000170, 2000171, 2000173 and 2000182, Engine and Aerial Accessories
@@ -1602,6 +1712,7 @@ entities:
     1, 2025. This request also seeks to exercise the 1st renewal option. Awarded to: Williams Fire Apparatus
     Inc., Ten8 Fire and Safety LLC, Fireline Inc., and Pro Fire and Tactical LLC. Total Amount Not To
     Exceed: $1,830,000.00.'
+  reviewNote: 1 of 4
 - key: first-african-community-development
   status: pending
   displayName: First African Community Development Corporation
@@ -1612,9 +1723,9 @@ entities:
     5 appropriations, to First African Community Development Corporation for the purpose of organizing
     and hosting food distribution events throughout District 5 for the remainder of calendar year 2026
 - key: flex-landscaping-management
-  status: pending
+  status: approved
   displayName: Flex Landscaping Management, LLC.
-  role: other
+  role: vendor
   date: '2026-04-14'
   reference: 2026-0413
   itemName: 'LB - Invitation No. 2025-137-ITB County Abatement Properties Mowing and Maintenance (Annual
@@ -1629,6 +1740,17 @@ entities:
   reference: 2026-0392
   itemName: Consent to Sublease under Contract No. 16-1710 with 2005 Flightway Drive, L.L.C. There is
     no cost to the County.
+- key: fm-shelton
+  status: pending
+  displayName: FM Shelton, Inc.
+  role: other
+  date: '2026-11-10'
+  reference: 2026-1363
+  itemName: 'LB - Invitation No. 2026-030-ITB Granite Rubble Stone (Three (3) Year Multiyear Contract).
+    For use by Public Works - Roads & Drainage Division (R&D) and the Departments of Watershed Management
+    (DWM) and Recreation, Parks and Cultural Affairs (RPCA) to obtain granite rubble stone. Recommend
+    award to the sole responsive and responsible bidders: Bedrock Granite Co., Inc. and FM Shelton, Inc.
+    Total Amount Not To Exceed: $2,618,000.00.'
 - key: foresite
   status: pending
   displayName: Foresite Group
@@ -1665,29 +1787,35 @@ entities:
     citizens. Seeking increase in contract funds and term through December 31, 2026. Awarded to Fuentes
     Enterprises, Inc., dba IPCOMM: Amount Not to Exceed: $50,000.00.'
 - key: ga
-  status: pending
-  displayName: GA, Inc.
-  role: other
+  status: approved
+  displayName: Rush Truck Centers of GA, Inc
+  role: vendor
   date: '2026-06-09'
   reference: 2026-0679
   itemName: 'SWC - Statewide Contract (SWC) No. 99999-001-SPD0000155-0001 Truck Chassis and Truck Bodies:
     for use by Public Works-Fleet Management to be used by the Storm Water Department and the Department
     of Recreation, Parks & Cultural Affairs (RPCA) to obtain twenty (20) new 2027 International Dump Trucks.
     Awarded to Rush Truck Centers of GA, Inc., dba Rush Truck Center, Atlanta. Amount Not To Exceed: $3,328,370.00.'
+  aka:
+  - Rush Truck Center, Atlanta
+  reviewNote: DBA
 - key: ga-ii
-  status: pending
-  displayName: GA II, LLC
-  role: other
+  status: approved
+  displayName: CAR Industries of GA II, LLC
+  role: vendor
   date: '2026-06-09'
   reference: 2026-0837
   itemName: 'CO - Change Order No. 2 to Contract No. 2000430 Roll Off and Compactor Service and Repair.
     For use by Public Works-Sanitation to obtain repair and maintenance services to roll-off containers
     and self-contained trash compactors throughout the County. Seeking increase in contract funds. Awarded
     to CAR Industries of GA II, LLC, dba Container Repair Services. Amount Not To Exceed: $200,000.00.'
+  aka:
+  - Container Repair Services
+  reviewNote: DBA
 - key: gainesville
-  status: pending
-  displayName: Gainesville, Inc.
-  role: other
+  status: approved
+  displayName: Mansfield Oil Co. of Gainesville, Inc
+  role: vendor
   date: '2025-12-16'
   reference: 2025-1592
   itemName: 'CO - Change order No. 1 to Contract No. 2000183 for Fuel Delivery with Related Services (Sourcewell
@@ -1723,7 +1851,7 @@ entities:
     Exceed: $1,458,043.70.'
   reviewNote: 1 of 3
 - key: galls
-  status: pending
+  status: approved
   displayName: Galls LLC
   role: vendor
   date: '2026-09-22'
@@ -1732,6 +1860,7 @@ entities:
     Contract with 2 Options to Renew). For use by the Marshal’s Office to obtain uniforms for personnel.
     Exercising 2nd renewal option with price increases, through August 31, 2027 and ratifying term increase.
     Awarded to Galls LLC and Dana Safety Supply Inc.: Total Amount Not To Exceed: $340,000.00.'
+  reviewNote: 1 of 2
 - key: gartner
   status: pending
   displayName: Gartner, Inc.
@@ -1797,7 +1926,7 @@ entities:
     seeks to increase the contract term and funds through December 31, 2026. Awarded to Georgia Hydrant
     Services, Inc. Amount Not To Exceed: $1,500,000.00.'
 - key: georgia-power
-  status: pending
+  status: approved
   displayName: Georgia Power Company
   role: other
   date: '2025-12-09'
@@ -1843,9 +1972,9 @@ entities:
   itemName: Authorizing Two-Year Parking Lease Agreement with The Task Force for Global Health, Inc. and
     DeKalb County Government
 - key: govos
-  status: pending
+  status: approved
   displayName: GovOS Inc.
-  role: other
+  role: vendor
   date: '2025-12-09'
   reference: 2025-1429
   itemName: 'CO - Change Order No. 2 to Contract 1373878 Cloud Based Software - Form Builder (Annual Contract
@@ -1878,7 +2007,7 @@ entities:
     Recommend award to the most responsive and responsible bidders: The Simmons Group LLC, Grand Landscapes
     LLC, and Universal Landscaping Services LLC. Total Amount Not To Exceed: $573,576.00.'
 - key: granicus
-  status: pending
+  status: approved
   displayName: Granicus, LLC
   role: vendor
   date: '2026-09-29'
@@ -1908,7 +2037,7 @@ entities:
     and two school zone flashing beacons. Recommend award to the lowest responsive and responsible bidder:
     GTG Traffic Signals, LLC: Amount Not To Exceed: $110,335.00.'
 - key: gulf-states-distributors
-  status: pending
+  status: approved
   displayName: Gulf States Distributors, Inc.
   role: other
   date: '2026-05-12'
@@ -1919,6 +2048,7 @@ entities:
     Contracts for Guns, Ammunition and Accessories. This request seeks to increase contract funds for
     Police Services. Awarded to: Gulf States Distributors, Inc., Dana Safety Supply Inc. and Precision
     Delta Corporation. Total Amount Not To Exceed: $265,000.00.'
+  reviewNote: 1 of 3
 - key: halo-branded-solutions
   status: pending
   displayName: Halo Branded Solutions, Inc.
@@ -2004,9 +2134,9 @@ entities:
     continued HPE services within the County. Awarded to Hewlett Packard Enterprise Company. Amount Not
     To Exceed: $372,944.37.'
 - key: hi-lite-airfield-services
-  status: pending
+  status: approved
   displayName: Hi-Lite Airfield Services, LLC.
-  role: other
+  role: vendor
   date: '2026-03-24'
   reference: 2026-0439
   itemName: 'LB - Invitation No. 2025-158-ITB Airfield Crack Seal & Remarking at the DeKalb Peachtree
@@ -2015,7 +2145,7 @@ entities:
     aircrafts that are taking off and landing on the runways. Recommend award to the lowest responsive
     and responsible bidder: Hi-Lite Airfield Services, LLC. Amount Not To Exceed: $835,275.45.'
 - key: home-depot-u-s-a
-  status: pending
+  status: approved
   displayName: Home Depot U.S.A., Inc.
   role: vendor
   date: '2025-11-10'
@@ -2036,7 +2166,7 @@ entities:
   itemName: An Item to Allocate $25,000 to How Big Is Your Dream, Inc. from the District 5 Reserve For
     Appropriations Funds for the Summer Youth Academy of the Arts
 - key: hr-trucheck
-  status: pending
+  status: approved
   displayName: HR TruCheck, Inc.
   role: vendor
   date: '2026-08-25'
@@ -2093,6 +2223,17 @@ entities:
     Records Management Solution for Emergency Medical services and National Fire Incident Reporting System.
     This request seeks to increase the contract funds to add the Health Information Hub app module for
     the life of the contract. Awarded to ImageTrend, LLC. Amount Not To Exceed $41,980.00.'
+- key: impact-marketing-solutions-amount-not
+  status: pending
+  displayName: Impact Marketing Solutions Amount Not
+  role: vendor
+  date: '2026-11-10'
+  reference: 2026-1122
+  itemName: RA - Ratification of Purchase Order No. 5084954, Integrated Multi-Channel Election Advertising
+    Services (Purchasing Policy Exemption). For use by the Department of Voter Registration and Elections
+    (VRE) to obtain media advertising service to provide an enhanced voter education and outreach campaign
+    for the 2026 election cycle. Ratifying previously issued purchase order. Awarded to Impact Marketing
+    Solutions Amount Not to Exceed $363,756.03.
 - key: in-the-door
   status: pending
   displayName: In The Door, LLC.
@@ -2104,9 +2245,9 @@ entities:
     of workforce services as required by WIOA. This request seeks to increase contract term through June
     30, 2027. Awarded to: In The Door, LLC. CONTRACT TERM INCREASE ONLY.'
 - key: infrastructure
-  status: pending
-  displayName: Infrastructure Inc.
-  role: other
+  status: approved
+  displayName: WSP USA Environment & Infrastructure Inc
+  role: vendor
   date: '2026-10-27'
   reference: 2026-1425
   itemName: 'CO - Change Order No. 2 to Contract No. 1272821 and Change Order No. 1 to Contract Nos.:
@@ -2115,8 +2256,9 @@ entities:
     to obtain on call architect and engineering and design services. Seeking increase in contract funds
     and terms through August 1, 2027. Awarded to WSP USA Environment & Infrastructure Inc., LDDBlueline
     and Axis Infrastructure, LLC. Amount Not To Exceed: $6,000,000.00.'
+  reviewNote: 1 of 2
 - key: insight-public-sector
-  status: pending
+  status: approved
   displayName: Insight Public Sector, Inc.
   role: vendor
   date: '2025-11-10'
@@ -2230,9 +2372,9 @@ entities:
     and Company, Arcadis U.S. Inc., Kimley-Horn & Associates, Inc., and Jacobs Engineering Group, Inc.
     Total Amount Not To Exceed: $3,600,000.00.'
 - key: jds
-  status: pending
+  status: approved
   displayName: JDS, Inc.
-  role: other
+  role: vendor
   date: '2026-02-10'
   reference: 2026-0103
   itemName: 'LB - Invitation No. 2025-098-ITB CD Trunks - Shoal Creek Section 1: for use by the Department
@@ -2261,7 +2403,7 @@ entities:
     Columbia Engineering & Services Inc., Foresite Group LLC, Jericho Design Group LLC, Kimley-Horn &
     Associates, Inc., and WSP USA Environment & Infrastructure Inc.: Total Amount Not To Exceed: $3,297,250.00.'
 - key: jmb-landscaping
-  status: pending
+  status: approved
   displayName: JMB Landscaping Inc.
   role: vendor
   date: '2026-10-27'
@@ -2346,6 +2488,16 @@ entities:
     Watershed Management (DWM) to obtain gravity sewer rehabilitation and replacement services. Seeking
     to increase in contract funds and term through June 30, 2027. Awarded to Kemi Construction Company,
     Inc. Amount Not to Exceed $1,000,000.00.
+- key: kendall-supply
+  status: pending
+  displayName: Kendall Supply, Inc.
+  role: vendor
+  date: '2026-11-10'
+  reference: 2026-1476
+  itemName: CO - Change Order No. 2 to Contract No. 1329222 Water Meters and Parts (Three (3) Year Multiyear
+    Contract). For use by the Department of Watershed Management (DWM) to replace and install water meters
+    and parts. Seeking increase in term through December 31, 2027. Awarded to Kendall Supply, Inc. CONTRACT
+    TERM INCREASE ONLY
 - key: kenworth-truck
   status: pending
   displayName: Kenworth Truck Company
@@ -2512,6 +2664,16 @@ entities:
   date: '2025-12-09'
   reference: 2025-1703
   itemName: Lease Agreement with WBT Properties, LP. There is no cost to the County.
+- key: level-one
+  status: pending
+  displayName: Level One LLC
+  role: vendor
+  date: '2026-11-17'
+  reference: 2026-1549
+  itemName: 'CO - Change Order No. 8 to Contract No. 988895 Print and Mail Services, Electronic Bill Presentment,
+    and Data Processing (Annual Contract with 4 Options to Renew)./ For use by Finance (UCO) to obtain
+    hosting services for the County’s water and sewer portal. Seeking increase in contract term through
+    February 28, 2027. Awarded to Level One LLC, a Doxim Company: CONTRACT TERM INCREASE ONLY.'
 - key: lichty-commercial-construction
   status: pending
   displayName: Lichty Commercial Construction, Inc.
@@ -2524,9 +2686,9 @@ entities:
     funds to repair and repaint three (3) additional storage tanks. Awarded to Lichty Commercial Construction,
     Inc. Amount Not to Exceed: $2,947,894.72.'
 - key: lifeline-animal-project
-  status: pending
+  status: approved
   displayName: Lifeline Animal Project, Inc.
-  role: other
+  role: vendor
   date: '2026-03-10'
   reference: 2026-0284
   itemName: 'CO - Change Order No. 6 to Contract No. 1132039 Animal Shelter Operation Services for DeKalb
@@ -2587,6 +2749,15 @@ entities:
   itemName: 'REN - Contract Nos.: 2000447, 2000449, and 2000450 Lubricants (Annual Contract with 2 Options
     to Renew). Exercising 1st renewal option through September 30, 2027. Awarded to Dilmar Oil Co., The
     McPherson Companies and Lubrication Engineers, Inc. Total Amount Not To Exceed: $820,000.00.'
+- key: main
+  status: pending
+  displayName: Main, LP.
+  role: other
+  date: '2026-11-10'
+  reference: 2026-1356
+  itemName: 'LB - Invitation No. 2026-036-ITB Ductile Iron Water Pipe (Three (3) Year Multiyear Contract).
+    For use by the Department of Watershed Management (DWM) to obtain ductile iron water pipes. Recommend
+    award to the lowest, responsive and responsible bidder: Core & Main, LP. Amount Not to Exceed: $5,219,511.00.'
 - key: mansfield-oil-co-of-gainesville
   status: pending
   displayName: Mansfield Oil Co. of Gainesville, Inc.
@@ -2657,6 +2828,18 @@ entities:
     further seeks to increase contract funds for DWM and P&S. Awarded to MATRIX Engineering Group, Inc.,
     Corporate Environmental Risk Management, LLC (CERM), ACCURA Engineering & Consulting Services, Inc.
     and United Consulting Group, Ltd. Total Amount Not To Exceed: $436,148.82.'
+- key: matthews-contracting
+  status: pending
+  displayName: Matthews Contracting Company
+  role: other
+  date: '2026-11-17'
+  reference: 2026-1583
+  itemName: 'RFVQ - Request for Vendor Qualifications No. 22-500603, Cedar Grove Road Bridge Replacement
+    Design Build (Multiyear Contract), for use by Public Works - Transportation. Consists of design and
+    construction services in support of: (1) the demolition of the existing 3-span bridge that spans the
+    Norfolk Southern (NS) tracks; (2) construction of a 1-span bridge spanning over existing and future
+    NS tracks; and (3) reconstruction of Cedar Grove Road approaching and departing the bridge. Recommended
+    award to the sole, responsive and responsible proposer: C.W. Matthews Contracting Company, Inc.'
 - key: mauldin-and-jenkins
   status: pending
   displayName: Mauldin & Jenkins, LLC.
@@ -2839,7 +3022,7 @@ entities:
     contract will be developed and executed in a form acceptable to the County Attorney or his designee.
     Awarded to: Mosaic Health Center, Inc. Amount Not to Exceed: $1,500,000.00.'
 - key: motorola-solutions
-  status: pending
+  status: approved
   displayName: Motorola Solutions Inc.
   role: vendor
   date: '2026-10-13'
@@ -2905,6 +3088,16 @@ entities:
     Headquarters and the roof replacement, helipad membrane and waterproofing services at Bobby Burgess
     and to increase the contracts terms through June 30, 2027. Awarded to National Building Contractors,
     Inc. and Hawk Construction Company, LLC. Total Amount Not To Exceed: $4,397,227.00.'
+- key: national-property-institute
+  status: pending
+  displayName: National Property Institute LLC.
+  role: vendor
+  date: '2026-11-17'
+  reference: 2026-1485
+  itemName: CO - Change Order No. 1 to Contract No. 1382513 Neighborhood Stabilization Program (NSP-1)
+    Implementation. For use by the Department of Community Development (CD) to obtain services acquiring,
+    rehabilitating, and selling DeKalb residential properties. Seeking increase in contract term through
+    December 31, 2027. Awarded to National Property Institute LLC. CONTRACT TERM INCREASE ONLY.
 - key: ndm-edens
   status: pending
   displayName: NDM (EDENS), LLC
@@ -2954,6 +3147,17 @@ entities:
     option through July 31, 2027. Awarded to Action Tire Co., Atlanta Commercial Tire, Best Drive Tire,
     LLC., J&R Tire, Inc., Southern Tire Mart, LLC, and Nextire Commercial, Inc. Total Amount Not To Exceed:
     $3,640,000.00.'
+- key: ngt
+  status: pending
+  displayName: NGT Group
+  role: vendor
+  date: '2026-11-10'
+  reference: 2026-1368
+  itemName: CO - Change Order No. 1 to Contract No. 2000482 Redan Road at South Stone Mountain Lithonia
+    Road Traffic Signal (270 Days). For use by Public Works - Transportation to obtain construction services
+    for the installation of a new traffic signal with mast arms at the intersection of Redan Road and
+    South Stone Mountain Lithonia Road. Seeking increase in contract term through March 31, 2027, and
+    ratifying pervious term increase. Awarded to NGT Group, LLC. CONTRACT TERM EXTENSION ONLY.
 - key: nichols
   status: pending
   displayName: Nichols, Inc.
@@ -2966,6 +3170,16 @@ entities:
     to the eight (8) highest scoring proposers: Blue Cypress Consulting, LLC; Kimley-Horn, Inc.; Freese
     and Nichols, Inc.; The Collaborative, Inc.; Pond & Company; NEOO Development, LLC; Inspire Placemaking
     Collective, Inc.; Geographic Technologies Group, Inc.: Total Amount Not To Exceed: $1,250,000.00'
+- key: nielsen-and-assoc
+  status: pending
+  displayName: Nielsen & Assoc., LLC
+  role: vendor
+  date: '2026-11-10'
+  reference: 2026-1367
+  itemName: 'CA - Cooperative Agreement - Indefinite Delivery-Indefinite Quantity Construction Contract
+    (Sourcewell Contract No. GA-ST-043024-FHP). For use by Public Works - Solid Waste Management to obtain
+    the installation and furnishing of a new metal canopy at the DeKalb County North Transfer Station.
+    Awarded to F. H. Paschen, S. N. Nielsen & Assoc., LLC: Amount Not To Exceed: $668,000.00.'
 - key: nielsen-and-associates
   status: pending
   displayName: Nielsen & Associates, LLC.
@@ -3186,8 +3400,8 @@ entities:
     in the amount of $850,000.00 and to increase contract funds to Contract 1191813. Awarded to Autaco
     Development LLC, Kissberg/Parker-Fry JV, LLC and SoCo Contracting. Amount Not To Exceed: $627,877.51.'
 - key: partridge
-  status: pending
-  displayName: Partridge, Inc.
+  status: approved
+  displayName: E.R. Partridge, Inc.
   role: vendor
   date: '2025-12-16'
   reference: 2025-1428
@@ -3198,6 +3412,7 @@ entities:
     the County. This request seeks to increase the contract term and funds through December 31, 2026.
     Awarded to E.R. Partridge, Inc., Dana Safety Supply, Inc., and Safety Products, Inc. Total Amount
     Not To Exceed: $130,000.00'
+  reviewNote: 1 of 3
 - key: parts-authority
   status: pending
   displayName: Parts Authority LLC.
@@ -3436,9 +3651,9 @@ entities:
     term increase and an increase in contract funds and term through March 31, 2027. Awarded to Prologic
     ITS, LLC.: Amount Not To Exceed: $100,000.00.'
 - key: promotional-products
-  status: pending
-  displayName: Promotional Products Inc.
-  role: other
+  status: approved
+  displayName: Safeguard Printing & Promotional Products Inc.
+  role: vendor
   date: '2026-10-27'
   reference: 2026-1330
   itemName: 'LB - Invitation No. 2026-078-ITB Athletic Uniforms for RPCA (3 Year Multiyear Contract with
@@ -3701,16 +3916,16 @@ entities:
     increase the contract amount and term through December 31, 2026, to continue services for the 2026
     election cycles. Awarded to: Ryder Transportation Services, Inc. Amount Not To Exceed: $45,000.00.'
 - key: safehouse-outreach
-  status: pending
+  status: approved
   displayName: SafeHouse Outreach, Inc.
   role: other
   date: '2026-10-27'
   reference: 2026-1054
   itemName: Rental Assistance and Supportive Services Project for SafeHouse Outreach, Inc.
 - key: safety
-  status: pending
-  displayName: Safety LLC
-  role: other
+  status: approved
+  displayName: Ten8 Fire and Safety LLC
+  role: vendor
   date: '2025-12-09'
   reference: 2025-1600
   itemName: 'REN - Contract Nos.: 2000170, 2000171, 2000173 and 2000182, Engine and Aerial Accessories
@@ -3720,10 +3935,11 @@ entities:
     1, 2025. This request also seeks to exercise the 1st renewal option. Awarded to: Williams Fire Apparatus
     Inc., Ten8 Fire and Safety LLC, Fireline Inc., and Pro Fire and Tactical LLC. Total Amount Not To
     Exceed: $1,830,000.00.'
+  reviewNote: 1 of 4
 - key: safety-products
-  status: pending
+  status: approved
   displayName: Safety Products, Inc.
-  role: other
+  role: vendor
   date: '2025-12-16'
   reference: 2025-1428
   itemName: 'CO - Change Order No. 1 to Contract Nos. 1302428, 1302433 and 1302427 High Visibility Reflective
@@ -3733,8 +3949,9 @@ entities:
     the County. This request seeks to increase the contract term and funds through December 31, 2026.
     Awarded to E.R. Partridge, Inc., Dana Safety Supply, Inc., and Safety Products, Inc. Total Amount
     Not To Exceed: $130,000.00'
+  reviewNote: 1 of 3
 - key: safeware
-  status: pending
+  status: approved
   displayName: Safeware, Inc.
   role: vendor
   date: '2026-09-22'
@@ -4283,9 +4500,9 @@ entities:
     request seeks to increase contract funds. Awarded to Systems and Software, Inc. Amount Not To Exceed:
     $7,550,000.00.'
 - key: tactical
-  status: pending
-  displayName: Tactical LLC.
-  role: other
+  status: approved
+  displayName: Pro Fire and Tactical LLC
+  role: vendor
   date: '2025-12-09'
   reference: 2025-1600
   itemName: 'REN - Contract Nos.: 2000170, 2000171, 2000173 and 2000182, Engine and Aerial Accessories
@@ -4295,6 +4512,7 @@ entities:
     1, 2025. This request also seeks to exercise the 1st renewal option. Awarded to: Williams Fire Apparatus
     Inc., Ten8 Fire and Safety LLC, Fireline Inc., and Pro Fire and Tactical LLC. Total Amount Not To
     Exceed: $1,830,000.00.'
+  reviewNote: 1 of 4
 - key: tattnall-ballot-solutions
   status: pending
   displayName: Tattnall Ballot Solutions, Inc.
@@ -4328,6 +4546,17 @@ entities:
     (DWM) to obtain services to inspect, services, repair, rebuild and maintain electrical/mechanical
     and electronic equipment. Awarded to Cole Technology, Inc and Tekwell Services, LLC.: Total Amount
     Not To Exceed: $1,500,00.00.'
+- key: telchine-energy-technologies
+  status: pending
+  displayName: Telchine Energy Technologies, LLC.
+  role: vendor
+  date: '2026-11-10'
+  reference: 2026-1470
+  itemName: 'CO - Change Order No. 2 to Contract No. 1294325 Ozone Generation Support (Three (3) Year
+    Multiyear Contract). For use by the Department of Watershed Management to obtain professional maintenance,
+    repair and replacement services for Scott Candler Water Treatment Plant ozone generation systems.
+    Seeking increase to contract funds and term through June 30, 2027. Awarded to Telchine Energy Technologies,
+    LLC. Amount Not To Exceed: $100,000.00.'
 - key: teledyne-instruments
   status: pending
   displayName: Teledyne Instruments, Inc.
@@ -4420,6 +4649,17 @@ entities:
     to The McPherson Companies, Inc., Napa Auto Parts and Taylor Enterprises, Inc. Total Amount Not To
     Exceed: $70,000.00.'
   reviewNote: 1 of 3 awardees
+- key: the-momentum-firm
+  status: pending
+  displayName: The Momentum Firm, LLC.
+  role: other
+  date: '2026-11-10'
+  reference: 2026-1627
+  itemName: 'Strategic Planning and Organizational Development Consulting Services (Purchasing Policy
+    Exemption). Consists of the 24-month contract renewal for Continued Implementation of the Operational
+    and Performance Assessment and Additional Assessment as Prioritized by the County, Strategic Planning,
+    Data Analytics, and Change Management Support. Awarded To: The Momentum Firm, LLC. Amount Not to Exceed:
+    $1,450,000.00'
 - key: the-national-association-of-minority-contractors-of-greater-atlanta
   status: approved
   displayName: National Association of Minority Contractors of Greater Atlanta
@@ -4652,6 +4892,16 @@ entities:
     consist of diving services for the removal of blockages that inhibit proper flow of water in various
     raw water pump stations. This request seeks to increase the contract term through December 31, 2026.
     Awarded to Underwater Construction Corporation and Zion Marine, Inc. CONTRACT TERM INCREASE ONLY.'
+- key: unifirst
+  status: pending
+  displayName: UniFirst Corporation
+  role: vendor
+  date: '2026-11-10'
+  reference: 2026-1369
+  itemName: 'CA - Cooperative Agreement for High Visibility Reflective Safety Apparel (Sourcewell Contract
+    No. 011124-UFC): for use by the Department of Watershed Management (DWM), Department of Solid Waste
+    Management (SWM), and Public Works - Roads and Drainage (R&D) to obtain high visibility reflective
+    safety apparel and related products. Awarded to UniFirst Corporation. Amount Not To Exceed: $800,000.00.'
 - key: united
   status: pending
   displayName: United, Inc.
@@ -4718,6 +4968,16 @@ entities:
     and Cultural Affairs (RPCA). Consists of providing landscape maintenance services for County parks.
     Recommend award to the most responsive and responsible bidders: The Simmons Group LLC, Grand Landscapes
     LLC, and Universal Landscaping Services LLC. Total Amount Not To Exceed: $573,576.00.'
+- key: urban-institute
+  status: pending
+  displayName: Urban Institute, Inc.
+  role: other
+  date: '2026-11-10'
+  reference: 2026-1350
+  itemName: 'RFP - Request for Proposals No. 2026-005 Feasibility Study Community Land Trust. For use
+    by the Office of the CEO to conduct a comprehensive feasibility study evaluating the potential establishment
+    of a Community Land Trust (CLT) serving residential and commercial properties within DeKalb County.
+    Recommend award to the highest scoring proposer: Urban Institute, Inc. Amount Not To Exceed: $123,000.00.'
 - key: utilicom-supply-associates
   status: pending
   displayName: Utilicom Supply Associates, LLC
@@ -4730,7 +4990,7 @@ entities:
     option through March 31, 2027. Awarded to Utilicom Supply Associates, LLC, Control Technologies, Inc.
     and Wavetronics, LLC. Total Amount Not To Exceed: $975,000.00.'
 - key: utility-associates
-  status: pending
+  status: approved
   displayName: Utility Associates, Inc.
   role: vendor
   date: '2026-10-13'
@@ -4781,7 +5041,7 @@ entities:
     by action of the Board of Commissioners for transient aircraft landing at PDK. Recommend award to
     the highest scoring proposer: Vector Airport Systems, LLC. Total Estimated Revenue Amount: $13,500,000.00.'
 - key: verizon-connect-nwf
-  status: pending
+  status: approved
   displayName: Verizon Connect NWF, Inc.
   role: vendor
   date: '2026-04-14'
@@ -4793,7 +5053,7 @@ entities:
     in contract funds and term through June 30, 2027. Awarded to Verizon Connect NWF, Inc. Amount Not
     To Exceed: $202,000.00.'
 - key: via
-  status: pending
+  status: approved
   displayName: Via, Inc.
   role: vendor
   date: '2025-12-16'
@@ -4805,8 +5065,11 @@ entities:
     These chairs will be securely bolted to the floor to enhance courtroom safety and will feature leather
     upholstery with ergonomic design to provide optimal comfort for extended periods of sitting. Awarded
     to Via, Inc., dba Via Seating, Inc., c/o Bright Interiors Group. Amount Not To Exceed: $179,058.00.'
+  aka:
+  - Via Seating, Inc
+  reviewNote: DBA
 - key: via-seating
-  status: pending
+  status: rejected
   displayName: Via Seating, Inc.
   role: other
   date: '2025-12-16'
@@ -4818,6 +5081,7 @@ entities:
     These chairs will be securely bolted to the floor to enhance courtroom safety and will feature leather
     upholstery with ergonomic design to provide optimal comfort for extended periods of sitting. Awarded
     to Via, Inc., dba Via Seating, Inc., c/o Bright Interiors Group. Amount Not To Exceed: $179,058.00.'
+  reviewNote: DBA name
 - key: vortex-services
   status: pending
   displayName: Vortex Services, LLC.
@@ -4900,9 +5164,9 @@ entities:
   itemName: Allocation of $20,000 from the 2026 District 2 Reserve for Appropriation to Wild Nest Bird
     Rehab, Inc. to Support the Helpline Public Assistance Project
 - key: williams-fire-apparatus
-  status: pending
+  status: approved
   displayName: Williams Fire Apparatus Inc.
-  role: other
+  role: vendor
   date: '2025-12-09'
   reference: 2025-1600
   itemName: 'REN - Contract Nos.: 2000170, 2000171, 2000173 and 2000182, Engine and Aerial Accessories
@@ -4912,6 +5176,7 @@ entities:
     1, 2025. This request also seeks to exercise the 1st renewal option. Awarded to: Williams Fire Apparatus
     Inc., Ten8 Fire and Safety LLC, Fireline Inc., and Pro Fire and Tactical LLC. Total Amount Not To
     Exceed: $1,830,000.00.'
+  reviewNote: 1 of 4
 - key: wilpro-enterprises
   status: pending
   displayName: Wilpro Enterprises, Inc.

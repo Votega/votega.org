@@ -109,8 +109,20 @@
    "region": "Northwest Georgia"
   },
   {
+   "placeId": "hall",
+   "placeName": "Hall County",
+   "placeType": "county",
+   "region": "Northeast Georgia"
+  },
+  {
    "placeId": "houston",
    "placeName": "Houston County",
+   "placeType": "county",
+   "region": "Middle Georgia"
+  },
+  {
+   "placeId": "laurens",
+   "placeName": "Laurens County",
    "placeType": "county",
    "region": "Middle Georgia"
   },
@@ -159,6 +171,12 @@
   {
    "placeId": "tift",
    "placeName": "Tift County",
+   "placeType": "county",
+   "region": "South Georgia"
+  },
+  {
+   "placeId": "toombs",
+   "placeName": "Toombs County",
    "placeType": "county",
    "region": "South Georgia"
   },
@@ -847,30 +865,6 @@
    ]
   },
   {
-   "body": "City Council",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-09-21",
-   "docType": "agenda",
-   "excerpt": "… E, TO ENTER INTO AMENDMENT NUMBER SIX FOR AGREEMENT SP-APD- 2212-1230170, BODY CAMERA/POLICE EQUIPMENT & SERVICES WITH AXON ENTERPRISE, INC., ON BEHALF OF THE ATLANTA POLICE …",
-   "excerptTerm": "body cam",
-   "fips": null,
-   "placeId": "atlanta",
-   "placeName": "City of Atlanta",
-   "placeType": "city",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=3934&Inline=True",
-   "tags": [],
-   "terms": [
-    "axon enterprise",
-    "body cam",
-    "body worn",
-    "fleet camera"
-   ],
-   "vendors": []
-  },
-  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "agenda-action",
@@ -993,27 +987,6 @@
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7517,plainText=false)",
-   "tags": [],
-   "terms": [
-    "axon enterprise"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "medium",
-   "context": null,
-   "date": "2026-08-27",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13139",
-   "placeId": "hall",
-   "placeName": "Hall County",
-   "placeType": "county",
-   "region": "Northeast Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-329-vm-20260827200611174072.pdf",
    "tags": [],
    "terms": [
     "axon enterprise"
@@ -1451,6 +1424,27 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "unknown",
+   "date": "2026-07-14",
+   "docType": "agenda",
+   "excerpt": "… Redaction subscription software for use in responding to Open Records Requests of Police In-car and Body Worn Camera footage. The first year cost of the subscription is $3,303.00 with subsequent year renewals (years 2- …",
+   "excerptTerm": "body worn",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3187,plainText=false)",
+   "tags": [],
+   "terms": [
+    "body worn"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "agenda-action",
    "date": "2026-07-14",
    "docType": "agenda",
@@ -1492,6 +1486,27 @@
    "vendors": [
     "Flock Safety"
    ]
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-06-23",
+   "docType": "agenda",
+   "excerpt": "… 54-53700) of $85,935 for the Safe Fleet Cloud Subscription. This is a multi-year contract for the in-car and body cameras, which started in 2025. This was not included in the original budget. 4. Consider request to ap …",
+   "excerptTerm": "body cam",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3178,plainText=false)",
+   "tags": [],
+   "terms": [
+    "body cam"
+   ],
+   "vendors": []
   },
   {
    "body": "Board of Commissioners",
@@ -1698,27 +1713,6 @@
    "vendors": [
     "ShotSpotter (SoundThinking)"
    ]
-  },
-  {
-   "body": "City Council",
-   "confidence": "medium",
-   "context": null,
-   "date": "2026-05-14",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": null,
-   "placeId": "savannah",
-   "placeName": "City of Savannah",
-   "placeType": "city",
-   "region": "Coastal Georgia",
-   "sourceType": "granicus",
-   "sourceUrl": "https://agenda.savannahga.gov/publishing/may-14-2026-city-council-regular-meeting/agenda.html",
-   "tags": [],
-   "terms": [
-    "axon enterprise"
-   ],
-   "vendors": []
   },
   {
    "body": "Board of Commissioners",
@@ -1987,11 +1981,11 @@
  "metadata": {
   "citiesScanned": 9,
   "consolidatedScanned": 4,
-  "countiesScanned": 46,
+  "countiesScanned": 49,
   "emoji": "📷",
-  "generatedAt": "2026-11-18T18:15:26Z",
+  "generatedAt": "2026-11-20T04:29:45Z",
   "label": "ALPR / surveillance",
-  "placesScanned": 59,
+  "placesScanned": 62,
   "placesWithMentions": 29,
   "topic": "alpr",
   "universeCities": 537,
