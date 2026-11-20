@@ -1928,6 +1928,12 @@ places:
     parentCounty: null
     region: Northwest Georgia
     hidden: true
+    domains:
+      meetings:
+        # No agendas or minutes exist. Chattooga has a sole commissioner, and the county
+        # posts recorded "public sessions" (Zoom links + summaries) on one hand-typed
+        # page, which no adapter reads. So: no platform, no schedule, link only.
+        agendas_url: "https://chattoogacounty.gov/244/Public-Administrative-Meeting-Informatio"
 
   - slug: floyd
     name: Floyd County
