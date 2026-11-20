@@ -142,3 +142,10 @@ docs/audits/2026-11-school-board-draft.txt
 docs/FOLLOW-THROUGH-SCOPE.md
 docs/georgia-civic-data-collaboration.md
 docs/georgia-civic-data-collaboration.md
+
+# Large third-party source files read by build scripts (redistricting block-equivalency
+# workbooks, plan packets, Census PL). Kept in the repo folder so they survive a
+# downloads clean-out, but never committed; data-inputs/README.md lists each with its
+# source and checksum so a lost file can be re-fetched and verified.
+/data-inputs/*
+!/data-inputs/README.md
