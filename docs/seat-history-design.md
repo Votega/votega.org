@@ -164,7 +164,20 @@ One definition across all domains, each with a stated basis:
   - `inferred` or `unknown`.
 
   A null date with no basis is not allowed.
-- `endedBy` must come from **one list, shared by every domain:** `term-ended | lost | did-not-run | resigned | removed | deceased | appointed-elsewhere | redistricted`. Today `scripts/test_executive_identity.py` carries its own copy without `redistricted` (executive seats aren't districted). The shared validator replaces that copy; see D8.
+- `endedBy` answers **one question: why did this hold on this seat end?** It must come from one list, shared by every domain:
+
+  | Value | Meaning |
+  |---|---|
+  | `term-limited` | Barred from another consecutive term (the Governor: two consecutive terms). Takes precedence over `did-not-run`: being ineligible is the reason, even if they then sought another office |
+  | `did-not-run` | Eligible, but did not seek this seat again (retired, or ran for something else) |
+  | `lost` | Lost this seat's election (primary, general or runoff) |
+  | `resigned` | Left mid-term, including to take another office |
+  | `removed` | Removed from office |
+  | `deceased` | Died in office |
+  | `redistricted` | The seat's map was superseded; the same person's next hold is on the new map |
+  | `term-ended` | The term ran out with no election choice involved (for example an appointed interim term expiring, D4) |
+
+  **What happened elsewhere is derived, never stored.** "Won a Senate seat" is the same vgId's next hold starting on or near this hold's end; "ran for governor and lost" is a candidacy in the crosswalk with no hold after it. Storing either here would conflate a win with a loss (a single "sought other office" value can't tell them apart) and copy a fact that can drift from its source. So `appointed-elsewhere`, which named a destination, is dropped: that case is `resigned` plus the next hold. Today `scripts/test_executive_identity.py` carries its own copy of this list; the shared validator replaces it (D8).
 
 Legislature caveat: the SOAP `GetMember` service gives the sessions each member served, with party and district inside each session record, but no start date. A hold therefore starts at the convening of the first session served in scope (`startBasis: convening`), unless an override or a writ gives the real date for someone who joined mid-term. `dateVacated` from the service gives an end where it exists. The departure itself still comes only from the editorial overrides, as today.
 
@@ -299,7 +312,7 @@ Deferred on purpose. When it is taken up:
 - **D5: 2021→2023 lineage links.** Run the 2021 block-equivalency files through the tract builder so each link carries a measured overlap, or publish no lineage until there's a reason to? The scope means pages will hit this boundary immediately.
 - **D6: published scope.** One combined `seat-holds` dataset, or per-domain files in the existing sibling repos?
 - ~~**D7: merging vgIds that already exist.**~~ Built: the ledger's `merged` forward. Miller's `000376` -> `000222`. See "Merging vgIds that already exist".
-- **D8: one `endedBy` list.** Adopt the shared list above and retire the copy in `test_executive_identity.py` when the shared validator lands (Phase 3).
+- **D8: one `endedBy` list.** List decided 2026-11-20 (see "Date semantics"): `term-limited` is its own value, the list describes only this seat, and outcomes elsewhere are derived. Still to do: retire the copy in `test_executive_identity.py` when the shared validator lands (Phase 3).
 - ~~**D9: local maps.**~~ Decided: every local seat carries an opaque per-jurisdiction map id (`@m1`) from first publish unless declared jurisdiction-wide. See "Local maps".
 
 ## Out of scope
