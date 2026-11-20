@@ -192,6 +192,11 @@ def build_entity_index(people):
     for p in people:
         if not (p.get("role") or p.get("vgId")):
             continue
+        # Former legislators (minted for seat history) are not news matches: adding them
+        # would also change which surnames are unique ("Collins" stops pinning Rep. Mike
+        # Collins once a former Rep. J Collins is indexed).
+        if (p.get("role") or {}).get("status") == "former":
+            continue
         surname_key, givens = name_parts(p)
         if not surname_key:
             continue

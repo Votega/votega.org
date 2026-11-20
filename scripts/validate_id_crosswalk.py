@@ -499,6 +499,13 @@ def main():
         if (ids.get("rosterId") or ids.get("executiveId") or ids.get("ocdPersonId")
                 or ids.get("bioguideId")):
             continue
+        if (p.get("role") or {}).get("status") == "former":
+            # A former legislator (seat history) is keyed legis:<legisGaGovId>.
+            key = f"legis:{ids.get('legisGaGovId')}"
+            if ids.get("legisGaGovId") is None or assign.get(key) != p["vgId"]:
+                err(f"{p['vgId']} ({p['name']['full']}) is a former legislator but ledger "
+                    f"key {key} maps to {assign.get(key)}")
+            continue
         # Candidate-only: every filing it carries must point at this same vgId.
         keys = [f"peachfile:{f}" for f in ids.get("peachfileFilerEntityIds") or []]
         keys += [f"fec:{f}" for f in ids.get("fecCandidateIds") or []]

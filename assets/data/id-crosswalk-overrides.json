@@ -54,6 +54,11 @@
   "_name": "Tanya Miller",
   "_note": "One person, two ids: state Rep. Tanya Miller (HD 62, legisGaGovId 5029, roster id ocd-person/6e5432a3-..., vgId vg-ga-p-000222, House filing 102734) ran for Attorney General under a new committee, 'Tanya For Georgia, Inc.' (filing 102716, which minted vg-ga-p-000376). The filings share no committee name, website or address on file, so the evidence is the reporting that the sitting HD 62 representative is the AG nominee and winner: Fox 5 Atlanta, 'Rep. Tanya Miller kicks off campaign for state attorney general' (2025) and 'Georgia AG candidates: Tanya Miller and Brian Strickland' (2026), and Atlanta News First, 'Tanya Miller wins Democrat attorney general primary' (2026-05-19). Both ids were already assigned, so this retires vg-ga-p-000376 via the ledger's merged forward onto vg-ga-p-000222 (the older id, which carries her legislator record). Reviewed 2026-11-20."
  },
+ "legis:5043": {
+  "sameAs": "peachfile:102756",
+  "_name": "Farooq Mughal",
+  "_note": "One person: Farooq Mughal represented Georgia House District 105 from 2023 to 2025 (legisGaGovId 5043; lost the 2024 general to Sandy Donatucci) and is the 2026 Democratic candidate for the same district, HD 105, whose PeachFile filing 102756 already carries vg-ga-p-000395. Seat history mints vgIds for former members by legis:<id>; this joins his legislator key to the existing candidate vgId instead of minting a second. Same name, same district, and Ballotpedia/Patch describe the 2026 candidate as the former representative. Sources: https://ballotpedia.org/Farooq_Mughal, https://patch.com/georgia/dacula/daculas-farooq-mughal-announces-campaign-ga-state-rep. Reviewed 2026-11-20."
+ },
  "ocd-person/2ba0916f-40b1-4255-9496-94b12ccabd1e": {
   "pinSlots": {
    "ballotpediaId": "Samuel_Park"

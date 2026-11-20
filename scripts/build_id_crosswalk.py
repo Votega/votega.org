@@ -74,6 +74,24 @@ FEC_FILE       = "assets/data/ga-fec-data.json"
 RACES_FILE     = "assets/data/races.json"
 OVERRIDES_FILE = "assets/data/ga-campaign-finance-overrides.json"
 XWALK_OVERRIDES_FILE = "assets/data/id-crosswalk-overrides.json"
+SESSIONS_SNAPSHOT_FILE = "scripts/data/ga-members-by-session.json"   # fetch_ga_members_by_session.py
+SOAP_CHAMBER = {"House": "House of Representatives", "Senate": "Senate"}
+SOAP_PARTY = {"Democrat": "Democratic"}
+
+
+def former_legislators(snapshot, on_roster):
+    """[(legisGaGovId, latest row, latest session description)] for everyone in the
+    session snapshot who is not on the current roster, oldest legisGaGovId first."""
+    meta = {str(s["id"]): s for s in (snapshot.get("metadata") or {}).get("sessions", [])}
+    latest = {}
+    # Regular sessions (an 8-digit library such as "20232024") name the biennium; a special
+    # session only fills in a row when the member served in no regular session in scope.
+    for sid in sorted(snapshot.get("sessions", {}),
+                      key=lambda s: (len(meta.get(s, {}).get("library") or "") == 8, int(s))):
+        for row in snapshot["sessions"][sid]:
+            if row.get("id") is not None and row["id"] not in on_roster:
+                latest[row["id"]] = (row, meta.get(sid, {}).get("description"))
+    return [(gid, row, desc) for gid, (row, desc) in sorted(latest.items())]
 LEDGER_FILE    = "assets/data/id-crosswalk-ledger.json"
 
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/id-crosswalk.json"
@@ -773,6 +791,46 @@ def main():
             person["ids"]["votegaCandidateIds"].append(cand["candidateId"])
         person["candidacies"].append(candidacy_record(cand, kind, filing_id, prov))
 
+    # --- Former legislators -------------------------------------------------
+    # Seat history (docs/seat-history-design.md) needs a vgId for everyone who held a
+    # seat in scope, including members who left before the current roster. They come
+    # from the committed session snapshot, are keyed `legis:<legisGaGovId>` (the
+    # primary key, so they keep the same vgId if they ever return), and carry
+    # role.status "former". A former member who is also a candidate already has a vgId
+    # under their filing; a `sameAs` override on `legis:<id>` joins the two instead of
+    # minting a second one.
+    on_roster = {m.get("legisGaGovId") for m, _ in officeholders_in
+                 if m.get("legisGaGovId") is not None}
+    for gid, row, last_session in former_legislators(load(SESSIONS_SNAPSHOT_FILE, {}), on_roster):
+        key = f"legis:{gid}"
+        target = same_as.get(key)
+        if target:
+            vg = ledger.merge(key, filing_owner.get(target) or ledger.id_for(target))
+        else:
+            vg = ledger.id_for(key)
+        person = people.get(vg)
+        prov = {"method": "authoritative",
+                "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"}
+        if person is None:
+            first = row.get("nickname") or row.get("first")
+            full = " ".join(x for x in (first, row.get("last"), row.get("suffix")) if x)
+            ids = blank_ids()
+            ids["legisGaGovId"] = gid
+            people[vg] = {
+                "vgId": vg,
+                "name": {"full": full, "first": first, "last": row.get("last")},
+                "role": {"level": "state", "office": "legislator",
+                         "chamber": SOAP_CHAMBER.get(row.get("chamber"), row.get("chamber")),
+                         "district": row.get("district"),
+                         "party": SOAP_PARTY.get(row.get("party"), row.get("party")),
+                         "status": "former", "lastSession": last_session},
+                "ids": ids, "candidacies": [],
+                "provenance": {"legisGaGovId": prov},
+            }
+        elif person["ids"].get("legisGaGovId") is None:
+            person["ids"]["legisGaGovId"] = gid
+            person["provenance"]["legisGaGovId"] = prov
+
     records = sorted(people.values(), key=lambda r: r["vgId"])
     records += sorted(unkeyed, key=lambda r: (r["name"]["full"] or "", r["candidacies"][0]["raceId"]))
 
@@ -809,7 +867,9 @@ def main():
             "mergedVgIds": dict(sorted(ledger.merged.items())),
             "scope": ("Georgia officeholders and 2026 ballot candidates: state legislators, "
                       "statewide executives, the Georgia federal delegation, and every "
-                      "candidate on a race in races.json."),
+                      "candidate on a race in races.json; plus former state legislators who "
+                      "served in a session in seat-history scope (role.status \"former\", "
+                      "keyed legis:<legisGaGovId>)."),
             "sources": [
                 "legis.ga.gov (General Assembly web services) — legisGaGovId, the primary key for state legislators",
                 "openstates/people (CC0 1.0) — ocdPersonId, ballotpediaId (cross-references, resolved on legisGaGovId)",

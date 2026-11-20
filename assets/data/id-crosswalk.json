@@ -2,12 +2,12 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Additive since version 2: rosterId, executiveId (statewide executives, from ga-executive.json), ballotpediaId, and metadata.mergedVgIds (a retired vgId forwards to the surviving one; follow it); ocdPersonId is now ONLY an OCD person id or null (it used to carry the roster id, which can be legis-<id>). Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-11-20T12:40:37+00:00",
-  "count": 758,
+  "generatedAt": "2026-11-20T23:34:07+00:00",
+  "count": 784,
   "mergedVgIds": {
    "vg-ga-p-000376": "vg-ga-p-000222"
   },
-  "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json.",
+  "scope": "Georgia officeholders and 2026 ballot candidates: state legislators, statewide executives, the Georgia federal delegation, and every candidate on a race in races.json; plus former state legislators who served in a session in seat-history scope (role.status \"former\", keyed legis:<legisGaGovId>).",
   "sources": [
    "legis.ga.gov (General Assembly web services) — legisGaGovId, the primary key for state legislators",
    "openstates/people (CC0 1.0) — ocdPersonId, ballotpediaId (cross-references, resolved on legisGaGovId)",
@@ -28,10 +28,10 @@
    "unresolved": "no lookup has populated this identifier yet; a null here is NOT a claim that none exists"
   },
   "coverage": {
-   "people": 758,
-   "officeholders": 276,
+   "people": 784,
+   "officeholders": 302,
    "candidateOnly": 482,
-   "withVgId": 676,
+   "withVgId": 702,
    "unkeyed": 82,
    "withAnyFiling": 649,
    "candidacies": 718,
@@ -27474,7 +27474,7 @@
     "rosterId": null,
     "executiveId": null,
     "ocdPersonId": null,
-    "legisGaGovId": null,
+    "legisGaGovId": 5043,
     "ballotpediaId": null,
     "bioguideId": null,
     "govtrackId": null,
@@ -27517,6 +27517,10 @@
      "method": "seat+surname",
      "confidence": "high",
      "source": "scripts/lib/ga_match.py"
+    },
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
     }
    }
   },
@@ -44424,6 +44428,968 @@
      "confidence": "high",
      "source": "assets/data/ga-campaign-finance-overrides.json",
      "key": "ga-senate-29-2026-d-1"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000703",
+   "name": {
+    "full": "Gloria Butler",
+    "first": "Gloria",
+    "last": "Butler"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "Senate",
+    "district": 55,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 5,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000704",
+   "name": {
+    "full": "Valencia Seay",
+    "first": "Valencia",
+    "last": "Seay"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "Senate",
+    "district": 34,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 41,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000705",
+   "name": {
+    "full": "Doug Stoner",
+    "first": "Doug",
+    "last": "Stoner"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 40,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 45,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000706",
+   "name": {
+    "full": "Horacena Tate",
+    "first": "Horacena",
+    "last": "Tate"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "Senate",
+    "district": 38,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 47,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000707",
+   "name": {
+    "full": "Roger Bruce",
+    "first": "Roger",
+    "last": "Bruce"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 61,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 69,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000708",
+   "name": {
+    "full": "Barry Fleming",
+    "first": "Barry",
+    "last": "Fleming"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 125,
+    "party": "Republican",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 101,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000709",
+   "name": {
+    "full": "Gloria Frazier",
+    "first": "Gloria",
+    "last": "Frazier"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 126,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 107,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000710",
+   "name": {
+    "full": "Mike Glanton",
+    "first": "Mike",
+    "last": "Glanton"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 75,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 111,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000711",
+   "name": {
+    "full": "Penny Houston",
+    "first": "Penny",
+    "last": "Houston"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 170,
+    "party": "Republican",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 130,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000712",
+   "name": {
+    "full": "David Knight",
+    "first": "David",
+    "last": "Knight"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 134,
+    "party": "Republican",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 148,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000713",
+   "name": {
+    "full": "Pedro \"Pete\" Marin",
+    "first": "Pedro \"Pete\"",
+    "last": "Marin"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 96,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 163,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000714",
+   "name": {
+    "full": "Richard Smith",
+    "first": "Richard",
+    "last": "Smith"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 139,
+    "party": "Republican",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 213,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000715",
+   "name": {
+    "full": "James Beverly",
+    "first": "James",
+    "last": "Beverly"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 143,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 793,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000716",
+   "name": {
+    "full": "Mike Dugan",
+    "first": "Mike",
+    "last": "Dugan"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "Senate",
+    "district": 30,
+    "party": "Republican",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 839,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000717",
+   "name": {
+    "full": "Clay Pirkle",
+    "first": "Clay",
+    "last": "Pirkle"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 169,
+    "party": "Republican",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 1877,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000718",
+   "name": {
+    "full": "Jodi Lott",
+    "first": "Jodi",
+    "last": "Lott"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 131,
+    "party": "Republican",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 4879,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000719",
+   "name": {
+    "full": "J Collins",
+    "first": "J",
+    "last": "Collins"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 71,
+    "party": "Republican",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 4892,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000720",
+   "name": {
+    "full": "Teri Anulewicz",
+    "first": "Teri",
+    "last": "Anulewicz"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 42,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 4915,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000721",
+   "name": {
+    "full": "Becky Evans",
+    "first": "Becky",
+    "last": "Evans"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 89,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 4946,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000722",
+   "name": {
+    "full": "Gregg Kennard",
+    "first": "Gregg",
+    "last": "Kennard"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 101,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 4950,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000723",
+   "name": {
+    "full": "Mesha Mainor",
+    "first": "Mesha",
+    "last": "Mainor"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 56,
+    "party": "Republican",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 4995,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000724",
+   "name": {
+    "full": "Mandisha A. Thomas",
+    "first": "Mandisha A.",
+    "last": "Thomas"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 65,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 4996,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000725",
+   "name": {
+    "full": "Shelly Echols",
+    "first": "Shelly",
+    "last": "Echols"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "Senate",
+    "district": 49,
+    "party": "Republican",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 5017,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000726",
+   "name": {
+    "full": "Tish Naghise",
+    "first": "Tish",
+    "last": "Naghise"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 68,
+    "party": "Democratic",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 5032,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000727",
+   "name": {
+    "full": "Lauren Daniel",
+    "first": "Lauren",
+    "last": "Daniel"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 117,
+    "party": "Republican",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 5047,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
+    }
+   }
+  },
+  {
+   "vgId": "vg-ga-p-000728",
+   "name": {
+    "full": "Ken Vance",
+    "first": "Ken",
+    "last": "Vance"
+   },
+   "role": {
+    "level": "state",
+    "office": "legislator",
+    "chamber": "House of Representatives",
+    "district": 133,
+    "party": "Republican",
+    "status": "former",
+    "lastSession": "2023-2024 Regular Session"
+   },
+   "ids": {
+    "rosterId": null,
+    "executiveId": null,
+    "ocdPersonId": null,
+    "legisGaGovId": 5049,
+    "ballotpediaId": null,
+    "bioguideId": null,
+    "govtrackId": null,
+    "openSecretsId": null,
+    "fecCandidateIds": [],
+    "peachfileFilerEntityIds": [],
+    "votegaCandidateIds": []
+   },
+   "candidacies": [],
+   "provenance": {
+    "legisGaGovId": {
+     "method": "authoritative",
+     "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"
     }
    }
   },
