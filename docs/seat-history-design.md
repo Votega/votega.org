@@ -85,8 +85,10 @@ Three different things, kept apart on purpose:
 | US House GA-6 | `us-house-ga-6@2023` | |
 | US Senate, Ossoff's seat | `us-senate-ga-class-2` | Senate seats differ by class, not district: Ossoff holds class 2, Warnock class 3 |
 | Palmetto at-large council | `local:palmetto:at-large` | One shared seat with capacity 6, never `at-large-1…6` |
-| Covington East Post 1 | `local:covington:east-post-1` | |
-| Newton County Commission District 3 | `local:newton:district-3` | Local prefix + the jurisdiction `id` + its `seat_id`, both already in `local_officials.yml` (see D9 on local maps) |
+| Covington East Post 1 | `local:covington:east-post-1@m1` | A geographic post, so it is on a map |
+| Newton County Commission District 3 | `local:newton:district-3@m1` | Local prefix + the jurisdiction `id` + its `seat_id` (both already in `local_officials.yml`) + the local map (see "Local maps") |
+| Newton County Commission Chair | `local:newton:at-large` | Declared jurisdiction-wide, so no map |
+| A countywide numbered post | `local:<county>:post-1` | No map only once declared in `jurisdiction_wide`; the label alone doesn't say so |
 
 Not seatIds:
 
@@ -96,6 +98,8 @@ Not seatIds:
 | `ga-house-15` | No map, so it silently joins two constituencies |
 | `ga-house-district-15-2023-map` | A URL slug, not an id; slugs may change, ids may not |
 | `district-3` | Only unique inside one jurisdiction |
+| `local:newton:district-3` | A districted local seat with no map; it would silently join constituencies across a redraw |
+| `local:newton:district-3@2022` (once published as `@m1`) | A map label is never renamed when its adoption year is found; the year goes on the map record |
 
 **Hold ids,** if one is ever needed (to key an override or a correction), are the seat plus the start date: `ga-governor:2027-01-11`. A hold with an unknown start (`before-history`) uses the seat plus `historyFrom`. Never a name.
 
@@ -106,6 +110,43 @@ The seatId is never shown to search engines, so it needs no SEO design. Findabil
 1. **Person pages already exist** (legislators, candidates, Congress, executives) and are what people find when they search a name. Seat history should add a line to them ("Governor since January 2027; succeeded Brian Kemp") rather than compete with them.
 2. **Seat pages, if built,** serve searches by office ("Georgia House District 15 representative", "who is the Georgia insurance commissioner"). Their slugs should read like that query: `/offices/governor/`, `/offices/ga-house-district-15/` for the current map, with an earlier map under its own path (`/offices/ga-house-district-15/2021-map/`). The `@` is a data-file convention and never appears in a URL. Slugs are built by `build_entity_pages.py` and kept alive by the same append-only URL ledger the legislator pages use, so they can be redesigned without breaking links.
 3. **Structured data.** Each person page's JSON-LD can describe every hold as a schema.org `Role` (`roleName`, `startDate`, `endDate`), which tells search engines who held what and when. It costs nothing once the holds file exists.
+
+### Local maps
+
+**Decided 2026-11-20 (was D9):** local seats follow the same rule as state and federal seats. Counties, cities and school boards redraw their districts too, usually by local act after each census and sometimes mid-decade, so a districted local seat's id carries its map from the day it is first published. Adding a map suffix later would change every local seatId, which is exactly what the "never changes" rule forbids, so the slot has to exist from the start.
+
+**Every local seat is on the jurisdiction's map unless it is declared jurisdiction-wide.** The two possible mistakes don't cost the same. Treating a districted seat as countywide is the costly one: its seatId goes out with no map suffix, and adding one later changes the id. Treating a countywide seat as districted is cheap: it carries an unneeded `@m1`, and declaring it jurisdiction-wide before the first publish fixes it. So the default is "on a map", and the jurisdiction lists the exceptions.
+
+**The seat_id helps draft the list but never decides it.** In the 71 jurisdictions today the shapes are `district-N` (310 rows), `at-large` (52), `post-N` (30), `mayor` (16), `ward-N` (8) and a long tail (`east-post-N`, `super-district-N`, `district-N-post-N`, Baker County's named districts such as `milford-district`). A seat_id containing `at-large` is reliably jurisdiction-wide, and so are `mayor` and a chair. The reverse doesn't hold: some counties elect numbered `post-N` seats countywide with only a residency rule. The label can't be fixed after the fact either, because `seat_id` is already published to `ga-local-government` and the YAML forbids renaming one. So a helper beside `suggest_seat_id()` in `scripts/lib/local_terms.py` pre-fills `jurisdiction_wide` from those obvious cases, and a person confirms it and adds the countywide posts the label doesn't reveal. Code reads the declaration, never the id string (ids are never parsed).
+
+Proposed fields in `local_officials.yml` (jurisdiction level; the YAML stays the editing surface and the publisher composes the global seatId):
+
+```yaml
+- id: newton
+  jurisdiction_wide: [at-large]   # no map: mayor, chair, at-large, countywide posts
+  maps:
+    - id: m1                      # written once, never renamed
+      adopted: null               # e.g. the local act, once found
+      effective: null             # first day officials elected under it serve
+      effectiveBasis: unknown     # same vocabulary as hold dates
+      firstElection: null
+      source: null
+      supersededBy: null          # m2 when the next redraw is recorded
+```
+
+Rules:
+
+- **Map ids are opaque, per jurisdiction, and need no research up front.** The map in force when a jurisdiction's history is first published is `m1`, with its dates `null` and `effectiveBasis: unknown`. When the adoption act and effective date are found, they go on the map record. The id is never renamed to a year, because that would change every seatId on it. (State and federal plans keep year labels like `@2023` because their years are known before publishing.)
+- **Every seat not in `jurisdiction_wide` is on the map in force,** so a map needs no seat list. A seat that exists only under one map (a district added when a board grows) is placed by its rows' dates.
+- **A redraw adds a map, it never edits one.** Record the new map (`m2`) with its effective date, set `supersededBy` on the old one, and the publisher closes every hold running on the old map that day with `endedBy: redistricted`, then opens the same people's holds on the new seats.
+- **A change of status is a new seat.** A county that converts at-large posts to districts (a resized board, a local act, a Voting Rights Act settlement) adds new seat_ids under the new map, and the at-large seat's holds close `redistricted`. Remove the old seat_id from `jurisdiction_wide` only if it is reused for a districted seat, which should be avoided.
+- **Member rows don't name their map.** A row's map is the one in force on its `takes_office` date. Only a row the dates can't place (blank `takes_office` straddling a recorded redraw) carries an explicit `map:`, and the validator asks for one.
+- **Seat_ids don't change across a redraw.** `district-3` stays `district-3` in the YAML; the map tells the two apart. This keeps the existing "never rename a seat_id" rule intact.
+- **The same rule covers school boards** (`_data/school_districts.yml`) and any future local body. Countywide constitutional officers (sheriffs in `_data/county_officers.yml`) are on no map.
+- **Validation:** tier 1, a jurisdiction publishing history with no `maps` while it has any seat outside `jurisdiction_wide`; a `jurisdiction_wide` entry naming a seat_id the jurisdiction doesn't have; a seat_id containing `at-large` that is NOT declared jurisdiction-wide (the one direction the label is reliable); or two maps in force on the same day. Tier 2, a map with `effectiveBasis: unknown`, and any `post-N` seat on a map, both reported as research to confirm, never gated.
+- **Spotting a redraw is a recurring task,** because no feed announces one: after each census (maps from roughly 2031–2033) and after any General Assembly session (local redistricting acts pass as local legislation), check the jurisdictions we cover and record new maps. Add this to `RECURRING-TASKS.md` when Phase 4 lands.
+
+Rolling this out needs no date research up front: Phase 4 adds `maps: [{id: m1}]` and a helper-drafted `jurisdiction_wide` list to every jurisdiction, a person confirms the countywide posts, and every map date stays `null` until found.
 
 ## Date semantics
 
@@ -237,7 +278,7 @@ Tier 2 (reported, commit proceeds):
 1. **Registry and plans:** write `seats.json` with the 2021 and 2023 plans and the statewide seats.
 2. **Legislature holds from 2023:** derive from SOAP for 2023–24 and 2025–26, closing every hold at the 2025 plan boundary. Tier-1 validator and tests with a fake SOAP response, like the existing generators.
 3. **Executives:** fold `ga-executive-seats.json` into the shared files, provisional holders included. Retire the executive-only checks in favour of the shared validator.
-4. **Federal and local:** map into the same files; local keeps its YAML as the editing surface.
+4. **Federal and local:** map into the same files; local keeps its YAML as the editing surface and gains `maps` (`m1`) and `jurisdiction_wide` on every jurisdiction, as described in "Local maps".
 5. **UI and publish:** open-seat derivation first, since it has the most immediate use.
 
 Phases 1–2 shouldn't run alongside the January legislature rollover. Waiting loses nothing, because the 2023–26 holds can be derived afterwards from `ga-bienniums/2025_26` and SOAP.
@@ -261,7 +302,7 @@ Deferred on purpose. When it is taken up:
 - **D6: published scope.** One combined `seat-holds` dataset, or per-domain files in the existing sibling repos?
 - **D7: merging vgIds that already exist.** Build the ledger `mergedInto` forwarding mechanism, which Tanya Miller's case needs before her AG hold is settled, and decide which id survives (lean: the older `000222`, which carries her legislator history).
 - **D8: one `endedBy` list.** Adopt the shared list above and retire the copy in `test_executive_identity.py` when the shared validator lands (Phase 3).
-- **D9: local maps.** County commission and city council districts are redrawn too, usually after each census, but `local_officials.yml` has no plan field. Either local seats carry a map suffix once a redraw is recorded (`local:newton:district-3@2022`), or local history is published with a note that district boundaries may have changed. Not hit until a local redraw falls inside the history window.
+- ~~**D9: local maps.**~~ Decided: every local seat carries an opaque per-jurisdiction map id (`@m1`) from first publish unless declared jurisdiction-wide. See "Local maps".
 
 ## Out of scope
 
