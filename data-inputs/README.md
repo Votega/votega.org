@@ -23,6 +23,15 @@ Official Georgia plan files from the Legislative and Congressional Reapportionme
 | `2023/congress-2023-county-report.pdf` | Congress 2023 county report | | `d9365edac597408a993286b7cd8d1934` | 150,478 |
 | `2022-psc/psc-2022-block-equiv.xlsx` | Public Service Commission residency districts, 2022 | Not used by any script yet | `df5ec333f6369fd9ec0d01de61b9a99a` | 3,718,073 |
 
-**Not here yet:** Census 2020 PL 94-171 block populations for Georgia (`ga2020.pl.zip`, which contains `gageo2020.pl`, from census.gov). The 2023 tract table needed it, and lineage population shares will. Put it in `redistricting/census/` when downloaded, and add a row above.
+### redistricting/census/
+
+Census 2020 PL 94-171 redistricting data for Georgia, public domain, from https://www2.census.gov/programs-surveys/decennial/2020/data/01-Redistricting_File--PL_94-171/Georgia/ga2020.pl.zip (downloaded 2026-11-20). `gageo2020.pl` is the only part the scripts read: it carries each block's `POP100`, read by `build_ga_tract_district_table.py --geo`. The three data segments stay inside the zip.
+
+| File | Notes | MD5 | Bytes |
+|---|---|---|---|
+| `census/ga2020.pl.zip` | The download as published. Contains `ga000012020.pl`, `ga000022020.pl`, `ga000032020.pl` and `gageo2020.pl` | `7d7ce3e40128ac26164abdf8398d8f76` | 35,831,859 |
+| `census/gageo2020.pl` | Extracted from the zip | `196b401389a3336979e0ba285f548273` | 126,739,688 |
+
+Checked on download: 232,717 blocks (the same set as every block-equivalency workbook above), a state total of 10,711,908, 159 counties, and the 2021 congressional plan's block roll-up matches the shapefile's official `POPULATION` for all 14 districts exactly. So the 2021 plans can be reconciled to the person, like the 2023 ones.
 
 To check every file: `md5sum -c` against the table, or `python -c "import hashlib,sys;print(hashlib.md5(open(sys.argv[1],'rb').read()).hexdigest())" <file>`.
