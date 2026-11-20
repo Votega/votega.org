@@ -1,6 +1,6 @@
 # Seat history: design
 
-Status: **draft.** Only Phase 0 (staging the January 2027 executive turnover) is done. Written 2026-11-20; revised the same day with that work's findings and the 2023 scope decision.
+Status: **design settled, implementation not started.** Every open decision (D1–D9) was decided on 2026-11-20; only Phase 0 (staging the January 2027 executive turnover) is built. Phase 1 can start.
 
 ## The question
 
@@ -55,9 +55,11 @@ This is the decision everything else depends on.
 
 - Seat ids: `ga-house-15@2023`, `ga-senate-7@2021`, `us-house-ga-6@2023`. Statewide and other non-districted seats have no plan suffix: `ga-governor`, `ga-psc-4`. Full examples and the rules for ids versus URLs are in the next section.
 - Plans in scope: `ga-house-2021`, `ga-senate-2021`, `us-house-ga-2021` (the 2023–24 General Assembly and the 118th Congress) and `ga-house-2023`, `ga-senate-2023`, `us-house-ga-2023` (from January 2025). Each records the first election it governed and the date it took effect.
+- **A mid-decade amendment is a new map only for the districts it redraws (decided 2026-11-20, was D1).** Its plan record names the districts it covers; every other district stays on the map it was on, so a member whose district was not touched keeps one continuous hold and `redistricted` is never claimed for a change that did not happen. One chamber can therefore have seats on two maps at once (`ga-house-15@2023` beside `ga-house-16@2026a`). This is the same model as local maps, where each jurisdiction's maps are its own.
 - At the boundary, every districted hold that was running closes with `endedBy: redistricted`, and the same person's new hold opens under the new plan, even if the district number did not change.
+- **No lineage links at launch (decided 2026-11-20, was D5).** Pages say the seat was redrawn and never list earlier holders as predecessors. Measured links are a separate, later task (below), started when a page needs "previously held by" across a redraw.
 - **Lineage between plans is optional and curated.** A `successorSeats` link (old seat → new seat) can be added by a person with a `_note` saying why. It is never inferred from the district number. Without a link, a page says "District 15 was redrawn in 2023; holders before that represented a different map" rather than listing them as predecessors.
-- **Measuring 2021→2023 overlap needs data we don't have committed.** `scripts/data/ga-tract-districts.json` assigns tracts to the **2023** districts only. Giving a link a population-overlap figure would need the 2021 block-equivalency files run through the same builder (see D5).
+- **Measuring 2021→2023 overlap needs data we don't have committed.** `scripts/data/ga-tract-districts.json` assigns tracts to the **2023** districts only. Giving a link a population-overlap figure would need the 2021 block-equivalency files run through the same builder, reconciled to the 2021 plans' official totals the way the 2023 tables were. When links are added, each carries that measured overlap, not a judgment.
 
 ## Seat ids, hold ids and URLs
 
@@ -222,6 +224,7 @@ One seat registry plus one holds file. Both use the same schema across every dom
 
 - **The person key is `vgId`**, with domain ids alongside. A hold whose person has no `vgId` can't be written as settled. It may exist only as a provisional hold with `vgId: null` and a note saying why. A hold always stores the surviving vgId, never a retired one (see "Merging vgIds that already exist").
 - `party` is party during the hold. A party switch mid-hold is a list (`partyHistory`), not a new hold.
+- **An appointed holder is an ordinary hold (decided 2026-11-20, was D4)** with `appointed: true` and `startBasis: official` (the appointment's effective date). It ends like any other: `term-ended` when the appointed term runs out, `lost` if they ran in the next election and lost, `did-not-run` if they chose not to. One kind of hold means one code path; `appointed` is what a page reads to say "appointed" rather than "elected". An appointment that ends with the appointee winning the seat is NOT a new hold: the hold continues and `appointed` describes how it began.
 - **Provisional holds** carry `provisional: true`, a reserved id (`execId` for executives), and `name` / `party` because the person has no record of their own yet. A seat has at most one, it is the newest holder, and its `start` equals the current holder's `end`. **The current holder is the first holder that is not provisional.** That rule depends on the data, not today's date, so nothing changes on its own on inauguration day. At the swearing-in, a person promotes the stub: adds the official to `ga-executive.json` under the reserved id and drops `provisional`, `name` and `party`.
 - `metadata.historyFrom` states, per body, where the record starts. A page must never imply a seat had no earlier holders when the record simply doesn't go back that far.
 ### Vacancies
@@ -324,7 +327,21 @@ Tier 2 (reported, commit proceeds):
 2. **Race and legislator pages:** "Previously held by …" with dates, stopping honestly at a plan boundary or at `historyFrom`.
 3. **Majority tracker on any date since 2023,** including vacancies.
 4. **Rollover becomes hold changes, not overwrites.** The January legislature rollover closes and opens holds; the freeze in `ga-bienniums` remains the page-permanence mechanism.
-5. **Published dataset** to a sibling repo: Georgia seat holders with dates and how each hold ended, keyed on `legisGaGovId` / `vgId`. Publish to the sibling repo first, then add the catalog entry (the open-data rule).
+5. **Published dataset** in `Votega/ga-district-information` (decided 2026-11-20, was D6): the seat registry with its maps, and every hold with its dates and how it ended, keyed on `vgId` with `legisGaGovId` / bioguide alongside. Publish to the sibling repo first, then add the catalog entry (the open-data rule).
+
+## Publishing
+
+**Decided 2026-11-20 (was D6): one combined dataset, in `Votega/ga-district-information`.** Not `ga-legislators`, for two reasons. Seat history spans every body (statewide executives, the federal delegation and local seats as well as the legislature), so people who change domains would leave a legislators repo's scope partway through their record. And `ga-legislators` is built around each General Assembly (`data/` overwritten at every rollover, history in `sessions/<biennium>/`), while holds are one append-only ledger across bienniums. `ga-district-information` already publishes the maps, the tract populations and `district-counties.csv`, so the registry sits with the geography it describes, and measured lineage (D5) would be built from that repo's own tract table.
+
+- **Files:** `data/seats.json` (registry and maps), `data/seat-holds.json` (holds and `vacancyNotes`), CSV twins, and JSON Schemas whose `$id` is their own published path.
+- **Attribution:** `REPO_SOURCES` in `scripts/lib/sibling_publish.py` is keyed by target repo, so the `ga-district-information` entry must add the new upstreams: legis.ga.gov, unitedstates/congress-legislators, the Secretary of State's results, and VoteGA's editorial overrides.
+- **Cadence:** the repo has only changed on redistricting until now. Holds change whenever someone leaves or is seated, so its publisher also runs after roster updates. A quiet day must publish nothing.
+- **Pointers, not copies:** `ga-legislators` member records carry the vgId and a link to the person's holds (optionally a filtered legislators-only `holds.csv` generated from the same file). `ga-local-government` does the same for local seats. There is one source of truth.
+- The repo's name undersells it once it holds tenure; its README says what is in it.
+
+## Later: measured lineage links
+
+Deferred by D5. Download the 2021 block-equivalency files, run them through `build_ga_tract_district_table.py`, require the same exact reconciliation to the official totals, then publish a `successorSeats` link only where the overlap is measured, with the share carried on the link.
 
 ## Phasing
 
@@ -337,7 +354,7 @@ Tier 2 (reported, commit proceeds):
 2. **Legislature holds from 2023:** derive from SOAP for 2023–24 and 2025–26, closing every hold at the 2025 plan boundary. Tier-1 validator and tests with a fake SOAP response, like the existing generators.
 3. **Executives:** fold `ga-executive-seats.json` into the shared files, provisional holders included. Retire the executive-only checks in favour of the shared validator.
 4. **Federal and local:** map into the same files; local keeps its YAML as the editing surface and gains `maps` (`m1`) and `jurisdiction_wide` on every jurisdiction, as described in "Local maps".
-5. **UI and publish:** open-seat derivation first, since it has the most immediate use.
+5. **UI and publish:** open-seat derivation first, since it has the most immediate use. Then publish to `ga-district-information` (see "Publishing").
 
 Phases 1–2 shouldn't run alongside the January legislature rollover. Waiting loses nothing, because the 2023–26 holds can be derived afterwards from `ga-bienniums/2025_26` and SOAP.
 
@@ -350,14 +367,14 @@ Deferred on purpose. When it is taken up:
 - **Executives:** no source has been chosen; holders before 2023 would be curated by hand.
 - Moving `historyFrom` back per body is the only contract change. Holds currently marked `before-history` get real starts.
 
-## Open decisions
+## Decisions (all decided 2026-11-20)
 
-- **D1: plan granularity.** Is a mid-decade amendment that touches a few districts a new plan for every seat in the chamber, or only for the districts it changed? Not hit inside the 2023 scope, so it can wait until a backfill.
+- ~~**D1: plan granularity.**~~ Decided: an amendment is a new map only for the districts it redraws. See "The identity rule".
 - ~~**D2: vacancies stored or computed.**~~ Decided: computed gaps plus `vacancyNotes` keyed by seat and gap start. See "Vacancies".
 - ~~**D3: suspended members.**~~ Decided: a status inside the hold (`suspensions[]`). See "Suspensions".
-- **D4: appointed interim holders** (PSC, judicial, local appointments): is an appointment a hold with `startBasis: official` and `endedBy` set on the next election, or a separate kind?
-- **D5: 2021→2023 lineage links.** Run the 2021 block-equivalency files through the tract builder so each link carries a measured overlap, or publish no lineage until there's a reason to? The scope means pages will hit this boundary immediately.
-- **D6: published scope.** One combined `seat-holds` dataset, or per-domain files in the existing sibling repos?
+- ~~**D4: appointed interim holders.**~~ Decided: an ordinary hold with `appointed: true`. See "Proposed contract".
+- ~~**D5: 2021→2023 lineage links.**~~ Decided: no links at launch; measured links are a later task. See "Later: measured lineage links".
+- ~~**D6: published scope.**~~ Decided: one combined dataset in `Votega/ga-district-information`. See "Publishing".
 - ~~**D7: merging vgIds that already exist.**~~ Built: the ledger's `merged` forward. Miller's `000376` -> `000222`. See "Merging vgIds that already exist".
 - **D8: one `endedBy` list.** List decided 2026-11-20 (see "Date semantics"): `term-limited` is its own value, the list describes only this seat, and outcomes elsewhere are derived. Still to do: retire the copy in `test_executive_identity.py` when the shared validator lands (Phase 3).
 - ~~**D9: local maps.**~~ Decided: every local seat carries an opaque per-jurisdiction map id (`@m1`) from first publish unless declared jurisdiction-wide. See "Local maps".
