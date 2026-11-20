@@ -51,14 +51,26 @@ The local model is already the right shape. The proposal below takes the local m
 
 This is the decision everything else depends on.
 
-**Rule: a districted seat's id includes its plan, and a seat never carries over to a new plan automatically.** House District 15 under the 2021 plan and House District 15 under the 2023 plan are different seats. The same number does not make them the same constituency, and the site must never present one lineage across two maps as if nothing changed.
+**Rule: a districted seat is its set of census blocks.** A new map does not create a new seat for a district whose blocks did not change: that seat, and every hold on it, simply continues. A district whose blocks changed is a new seat, even if it kept its number. Identity is decided by comparing the two plans' block-equivalency files, so it is exact and needs no judgment. (Decided 2026-11-20, replacing a "whole plan is new" reading that the data disproved.)
 
-- Seat ids: `ga-house-15@2023`, `ga-senate-7@2021`, `us-house-ga-6@2023`. Statewide and other non-districted seats have no plan suffix: `ga-governor`, `ga-psc-4`. Full examples and the rules for ids versus URLs are in the next section.
-- Plans in scope: `ga-house-2021`, `ga-senate-2021`, `us-house-ga-2021` (the 2023–24 General Assembly and the 118th Congress) and `ga-house-2023`, `ga-senate-2023`, `us-house-ga-2023` (from January 2025). Each records the first election it governed and the date it took effect.
-- **A mid-decade amendment is a new map only for the districts it redraws (decided 2026-11-20, was D1).** Its plan record names the districts it covers; every other district stays on the map it was on, so a member whose district was not touched keeps one continuous hold and `redistricted` is never claimed for a change that did not happen. One chamber can therefore have seats on two maps at once (`ga-house-15@2023` beside `ga-house-16@2026a`). This is the same model as local maps, where each jurisdiction's maps are its own.
-- At the boundary, every districted hold that was running closes with `endedBy: redistricted`, and the same person's new hold opens under the new plan, even if the district number did not change.
+- **Seat ids carry the map that first drew the seat,** and that suffix is never renamed, like the local `m1`. So today's House District 15, unchanged since 2021, is `ga-house-15@2021`, while a district the 2023 map redrew is `ga-house-61@2023`. Current seats therefore carry mixed suffixes; that is accurate (the suffix says when the constituency was drawn), and nothing reads the id as a date. Statewide and other non-districted seats have no suffix: `ga-governor`, `ga-psc-4`. Full examples and the rules for ids versus URLs are in the next section.
+- **The same number never means the same seat.** Measured 2026-11-20 against the official block-equivalency files: 2021 GA-6 is mostly 2023 GA-7 (75.7% of its blocks), 2021 SD 28 is 86% of 2023 SD 6, and 30 redrawn legislative districts are mostly inside a differently numbered district. Linking by number would join the wrong constituencies.
+- **An identical constituency under a new number is a new seat** with an exact 100% lineage link, because the number is part of what voters and pages see. One case: 2021 HD 149 is block-for-block 2023 HD 133. Its holder's hold closes `redistricted` and reopens on the new seat.
+- Plans in scope: `ga-house-2021`, `ga-senate-2021`, `us-house-ga-2021` (the 2023-24 General Assembly and the 118th Congress) and `ga-house-2023`, `ga-senate-2023`, `us-house-ga-2023` (from January 2025). Each records the first election it governed, the date it took effect, the districts it **newly drew**, and the districts it **carried over** unchanged.
+- **What the 2023 maps actually changed** (block-equivalency comparison, 2026-11-20):
+
+  | Chamber | Carried over unchanged | Newly drawn | Blocks that moved |
+  |---|---|---|---|
+  | GA Senate | 41 of 56 | 15 | 20,658 (8.9%) |
+  | GA House | 119 of 180 | 61 (incl. 149 -> 133, identical but renumbered) | 25,981 (11.2%) |
+  | US House | 5 of 14 (GA-1, 2, 3, 8, 12) | 9 | 34,108 (14.7%) |
+
+  Treating 2023 as an all-new map would have falsely closed 165 holds as `redistricted`.
+- **A mid-decade amendment follows the same rule (D1).** Whatever it is called, a district whose blocks change is a new seat and one whose blocks don't is the same seat, so a member whose district was not touched keeps one continuous hold. One chamber can therefore have seats drawn by several maps at once. This is the same model as local maps.
+- At a boundary, only holds on seats the new map **redrew** close with `endedBy: redistricted`; the same person's new hold opens on the new seat. Holds on carried-over seats continue untouched.
+- **Inputs** (not committed, like the 2023 inputs; from https://www.legis.ga.gov/joint-office/reapportionment): the 2021 plans as passed November 2021 (the `congress-prop1-2021`, `senate-prop1-2021` and `house-prop1-2021` block-equivalency workbooks, plus `congress-prop1-2021-shape.zip`, whose attribute table carries each district's official population for reconciliation) and the 2023 `*-block-equiv` workbooks already used by `build_ga_tract_district_table.py`. All six workbooks cover the same 232,717 blocks.
 - **No lineage links at launch (decided 2026-11-20, was D5).** Pages say the seat was redrawn and never list earlier holders as predecessors. Measured links are a separate, later task (below), started when a page needs "previously held by" across a redraw.
-- **Lineage between plans is optional and curated.** A `successorSeats` link (old seat → new seat) can be added by a person with a `_note` saying why. It is never inferred from the district number. Without a link, a page says "District 15 was redrawn in 2023; holders before that represented a different map" rather than listing them as predecessors.
+- **Lineage between plans is optional and curated.** A `successorSeats` link (old seat → new seat) can be added by a person with a `_note` saying why. It is never inferred from the district number. Without a link, a page says "District 61 was redrawn in 2023; holders before that represented a different map" rather than listing them as predecessors.
 - **Measuring 2021→2023 overlap needs data we don't have committed.** `scripts/data/ga-tract-districts.json` assigns tracts to the **2023** districts only. Giving a link a population-overlap figure would need the 2021 block-equivalency files run through the same builder, reconciled to the 2021 plans' official totals the way the 2023 tables were. When links are added, each carries that measured overlap, not a judgment.
 
 ## Seat ids, hold ids and URLs
@@ -81,10 +93,12 @@ Three different things, kept apart on purpose:
 | Lieutenant Governor | `ga-lt-governor` | Facts about the office (`presidesOver: Senate`) live on the seat |
 | Secretary of State | `ga-secretary-of-state` | Matches the existing `officeId` in `ga-executive.json` |
 | PSC District 5 | `ga-psc-5` | Elected statewide, so the PSC "district" is a residency rule, not a map |
-| GA House District 15, current map | `ga-house-15@2023` | |
-| GA House District 15, 2023–24 | `ga-house-15@2021` | A different seat from the one above, even though the number is the same |
-| GA Senate District 14 | `ga-senate-14@2023` | |
-| US House GA-6 | `us-house-ga-6@2023` | |
+| GA House District 15 | `ga-house-15@2021` | Unchanged by the 2023 map, so one seat from 2023 to today |
+| GA House District 61, 2023-24 | `ga-house-61@2021` | Redrawn in 2023, so a different seat from the one below |
+| GA House District 61, current | `ga-house-61@2023` | |
+| GA House District 133, current | `ga-house-133@2023` | Identical to 2021 HD 149 but renumbered: a new seat with a 100% link to `ga-house-149@2021` |
+| GA Senate District 14 | `ga-senate-14@2021` | Unchanged in 2023 |
+| US House GA-6, current | `us-house-ga-6@2023` | Redrawn; 2021 GA-6 (`us-house-ga-6@2021`) is mostly today's GA-7 |
 | US Senate, Ossoff's seat | `us-senate-ga-class-2` | Senate seats differ by class, not district: Ossoff holds class 2, Warnock class 3 |
 | Palmetto at-large council | `local:palmetto:at-large` | One shared seat with capacity 6, never `at-large-1…6` |
 | Covington East Post 1 | `local:covington:east-post-1@m1` | A geographic post, so it is on a map |
@@ -110,7 +124,7 @@ Not seatIds:
 The seatId is never shown to search engines, so it needs no SEO design. Findability comes from three places, all generated from the data:
 
 1. **Person pages already exist** (legislators, candidates, Congress, executives) and are what people find when they search a name. Seat history should add a line to them ("Governor since January 2027; succeeded Brian Kemp") rather than compete with them.
-2. **Seat pages, if built,** serve searches by office ("Georgia House District 15 representative", "who is the Georgia insurance commissioner"). Their slugs should read like that query: `/offices/governor/`, `/offices/ga-house-district-15/` for the current map, with an earlier map under its own path (`/offices/ga-house-district-15/2021-map/`). The `@` is a data-file convention and never appears in a URL. Slugs are built by `build_entity_pages.py` and kept alive by the same append-only URL ledger the legislator pages use, so they can be redesigned without breaking links.
+2. **Seat pages, if built,** serve searches by office ("Georgia House District 15 representative", "who is the Georgia insurance commissioner"). Their slugs should read like that query: `/offices/governor/`, `/offices/ga-house-district-15/` for a seat on the current map, with a redrawn seat's earlier version under its own path (`/offices/ga-house-district-61/2021-map/`). The `@` is a data-file convention and never appears in a URL. Slugs are built by `build_entity_pages.py` and kept alive by the same append-only URL ledger the legislator pages use, so they can be redesigned without breaking links.
 3. **Structured data.** Each person page's JSON-LD can describe every hold as a schema.org `Role` (`roleName`, `startDate`, `endDate`), which tells search engines who held what and when. It costs nothing once the holds file exists.
 
 ### Local maps
@@ -176,7 +190,7 @@ One definition across all domains, each with a stated basis:
   | `resigned` | Left mid-term, including to take another office |
   | `removed` | Removed from office |
   | `deceased` | Died in office |
-  | `redistricted` | The seat's map was superseded; the same person's next hold is on the new map |
+  | `redistricted` | A new map redrew this seat (its blocks changed, or it was renumbered); the same person's next hold, if any, is on a new seat. Never used for a carried-over seat |
   | `term-ended` | The term ran out with no election choice involved (for example an appointed interim term expiring, D4) |
 
   **What happened elsewhere is derived, never stored.** "Won a Senate seat" is the same vgId's next hold starting on or near this hold's end; "ran for governor and lost" is a candidacy in the crosswalk with no hold after it. Storing either here would conflate a win with a loss (a single "sought other office" value can't tell them apart) and copy a fact that can drift from its source. So `appointed-elsewhere`, which named a destination, is dropped: that case is `resigned` plus the next hold. Today `scripts/test_executive_identity.py` carries its own copy of this list; the shared validator replaces it (D8).
@@ -195,7 +209,7 @@ One seat registry plus one holds file. Both use the same schema across every dom
     { "id": "ga-house-2021", "body": "ga-house", "firstElection": "2022-11-08", "effective": "2023-01-09", "supersededBy": "ga-house-2023" },
     { "id": "ga-house-2023", "body": "ga-house", "firstElection": "2024-11-05", "effective": "2025-01-13", "supersededBy": null } ] },
   "seats": [
-    { "id": "ga-house-15@2023", "body": "ga-house", "district": 15, "plan": "ga-house-2023",
+    { "id": "ga-house-15@2021", "body": "ga-house", "district": 15, "plan": "ga-house-2021",
       "capacity": 1, "successorSeats": [], "facts": {} },
     { "id": "ga-lt-governor", "body": "ga-executive", "district": null, "plan": null,
       "capacity": 1, "facts": { "presidesOver": "Senate" } }
@@ -212,9 +226,9 @@ One seat registry plus one holds file. Both use the same schema across every dom
                                  "us-house-ga": "2023-01-03", "us-senate-ga": "2023-01-03",
                                  "ga-executive": "2023-01-09" } },
   "holds": [
-    { "seatId": "ga-house-15@2023", "vgId": "<vgId>",
+    { "seatId": "ga-house-15@2021", "vgId": "<vgId>",
       "ids": { "legisGaGovId": "<legisGaGovId>" },
-      "start": "2025-01-13", "startBasis": "convening",
+      "start": null, "startBasis": "before-history",
       "end": null, "endBasis": null, "endedBy": null,
       "party": "R", "provisional": false,
       "source": "legis.ga.gov GetMember", "note": null }
@@ -235,10 +249,10 @@ The facts a vacancy carries live in `vacancyNotes` in `seat-holds.json`, keyed b
 
 ```json
 "vacancyNotes": [
-  { "seatId": "ga-senate-7@2023", "from": "<departing hold's end>",
+  { "seatId": "ga-senate-7@2021", "from": "<departing hold's end>",
     "kind": "writ", "date": "<date issued>", "ref": "<EO number>",
     "source": "ga-executive-orders-*.json", "note": null },
-  { "seatId": "ga-senate-7@2023", "from": "<same>",
+  { "seatId": "ga-senate-7@2021", "from": "<same>",
     "kind": "special-election", "date": "<election day>", "raceId": "<races.json id>",
     "source": "races.json", "note": null }
 ]
@@ -304,7 +318,7 @@ Tier 1 (gates the commit, because these mean the file contradicts itself):
 - `end` is after `start` when both are present; every recorded `end` has an `endedBy` from the shared list, an `endBasis` and a `source` (already enforced for executive seats in `test_executive_identity.py`).
 - Every `seatId` exists in the registry. Every settled hold has a `vgId` that exists in the crosswalk ledger, and **one person never resolves to two vgIds across their holds.**
 - **A closed hold is immutable.** Compared against HEAD, the same way the ledger and `vgId`s are checked. Correcting one needs an explicit override with a `_note`, never a silent edit.
-- A districted seat's hold falls within its plan's effective period; holds running at a plan's end are closed `redistricted`.
+- A districted seat's hold falls within the period its seat exists (from the map that drew it until a map redraws it); a hold running when its seat is redrawn closes `redistricted`, and no hold on a carried-over seat does. Every district of a new plan is listed as exactly one of newly drawn or carried over, and a carried-over claim must match the block-equivalency comparison.
 - `successorSeats` links point at seats under a later plan, never the same plan.
 - **Suspensions:** each lies inside its hold (`start` on or after the hold's start; `end`, if any, on or before the hold's end); suspensions on one hold don't overlap; an open suspension on a closed hold is an error (it must end `hold-ended`).
 - **Vacancy notes:** every note's `(seatId, from)` matches a computed gap (a hold on that seat ends on `from` and the seat is then under capacity); its `date` is on or after `from`; `kind` is from the list; a `note` kind has text; a `raceId` exists in `races.json`.
@@ -341,7 +355,7 @@ Tier 2 (reported, commit proceeds):
 
 ## Later: measured lineage links
 
-Deferred by D5. Download the 2021 block-equivalency files, run them through `build_ga_tract_district_table.py`, require the same exact reconciliation to the official totals, then publish a `successorSeats` link only where the overlap is measured, with the share carried on the link.
+Deferred by D5. Links are needed only for the 85 redrawn seats (the 165 carried-over seats need none, and 149 -> 133 is an exact 100%). The 2021 block-equivalency files are now in hand; what is still missing is Census block population (`gageo2020.pl` from `ga2020.pl.zip`) to turn block shares into population shares. Run both through `build_ga_tract_district_table.py`, require the roll-up to match each 2021 district's official population exactly (for Congress, the shapefile's `POPULATION`), then publish a `successorSeats` link only where the overlap is measured, with the share carried on the link.
 
 ## Phasing
 
@@ -350,8 +364,8 @@ Deferred by D5. Download the 2021 block-equivalency files, run them through `bui
    - **Incoming winners (9):** staged as provisional holders with reserved execIds, vgIds and candidate ids.
    - **Test:** `test_executive_identity.py` now pins the end-record and provisional rules.
    - **Still to do at the swearing-in** (checklist in `RECURRING-TASKS.md`): confirm the dates against the certified results and the actual oath dates, and promote the stubs.
-1. **Registry and plans:** write `seats.json` with the 2021 and 2023 plans and the statewide seats.
-2. **Legislature holds from 2023:** derive from SOAP for 2023–24 and 2025–26, closing every hold at the 2025 plan boundary. Tier-1 validator and tests with a fake SOAP response, like the existing generators.
+1. **Registry and plans:** write `seats.json` with the 2021 and 2023 plans and the statewide seats. The plan records come from comparing the 2021 and 2023 block-equivalency files per chamber (exact, no population data): carried-over districts keep their `@2021` seat, redrawn ones get an `@2023` seat. That is 335 districted seats (250 drawn in 2021 plus 85 redrawn in 2023), plus 2 US Senate and 13 statewide seats.
+2. **Legislature holds from 2023:** derive from SOAP for 2023-24 and 2025-26, closing at the 2025 boundary only the holds on redrawn seats. Tier-1 validator and tests with a fake SOAP response, like the existing generators.
 3. **Executives:** fold `ga-executive-seats.json` into the shared files, provisional holders included. Retire the executive-only checks in favour of the shared validator.
 4. **Federal and local:** map into the same files; local keeps its YAML as the editing surface and gains `maps` (`m1`) and `jurisdiction_wide` on every jurisdiction, as described in "Local maps".
 5. **UI and publish:** open-seat derivation first, since it has the most immediate use. Then publish to `ga-district-information` (see "Publishing").
@@ -369,7 +383,7 @@ Deferred on purpose. When it is taken up:
 
 ## Decisions (all decided 2026-11-20)
 
-- ~~**D1: plan granularity.**~~ Decided: an amendment is a new map only for the districts it redraws. See "The identity rule".
+- ~~**D1: plan granularity.**~~ Decided: a seat is its block set, for any new plan or amendment; only districts whose blocks change become new seats. Measured on the 2023 maps. See "The identity rule".
 - ~~**D2: vacancies stored or computed.**~~ Decided: computed gaps plus `vacancyNotes` keyed by seat and gap start. See "Vacancies".
 - ~~**D3: suspended members.**~~ Decided: a status inside the hold (`suspensions[]`). See "Suspensions".
 - ~~**D4: appointed interim holders.**~~ Decided: an ordinary hold with `appointed: true`. See "Proposed contract".
