@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "note": "Statewide offices as SEATS. A seat is the office, with a stable id; ga-executive.json holds the PEOPLE and each official's `officeId` points here. Facts about the office (presidesOver) live on the seat, so they do not have to be copied to the next holder. `holders` is newest first. History is NOT backfilled: each seat lists only its current holder, with start/end/endedBy null, because no source of prior holders has been chosen or reviewed. Hand-maintained; nothing reads this file yet.",
+    "note": "Statewide offices as SEATS. A seat is the office, with a stable id; ga-executive.json holds the PEOPLE and each official's `officeId` points here. Facts about the office (presidesOver) live on the seat, so they do not have to be copied to the next holder; ga-executive.html reads presidesOver from here. `holders` is newest first. History is NOT backfilled: no source of prior holders has been chosen or reviewed, so every `start` is null and a null is not a claim. History is recorded forward from the January 2027 turnover: on 2026-11-20 the outgoing holders' `end` / `endedBy` were staged from the unofficial 2026 general results (each with `endBasis`, `note` and `source`). The incoming winners are staged as `provisional: true` holders (newest first, so holders[0]); their execIds are reserved here and the people join ga-executive.json at the swearing-in. The current holder is the first holder that is not provisional. Hand-maintained; see docs/seat-history-design.md.",
     "historyStatus": "not-backfilled",
     "seatCount": 13
   },
@@ -10,10 +10,27 @@
       "title": "Governor",
       "holders": [
         {
+          "execId": "exec:ga-bottoms-keisha",
+          "name": "Keisha Lance Bottoms",
+          "party": "D",
+          "start": "2027-01-11",
+          "startBasis": "reported",
+          "end": null,
+          "endedBy": null,
+          "provisional": true,
+          "vgId": "vg-ga-p-000335",
+          "candidateId": "challenger-keisha-bottoms-gov-2026",
+          "note": "Projected winner (54.3%); results not yet certified. Stub until the swearing-in: then add this person to ga-executive.json under this execId and drop `provisional`, `name`, `party`.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
+        },
+        {
           "execId": "exec:ga-kemp-brian",
           "start": null,
-          "end": null,
-          "endedBy": null
+          "end": "2027-01-11",
+          "endedBy": "term-ended",
+          "endBasis": "reported",
+          "note": "Term-limited. Won by Keisha Lance Bottoms (D), 54.3%. Successor takes office at the inauguration on the day the General Assembly convenes, reported as 2027-01-11; confirm at the swearing-in.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
         }
       ]
     },
@@ -23,10 +40,29 @@
       "presidesOver": "Senate",
       "holders": [
         {
+          "execId": "exec:ga-mclaurin-josh",
+          "name": "Josh McLaurin",
+          "party": "D",
+          "start": "2027-01-11",
+          "startBasis": "reported",
+          "end": null,
+          "endedBy": null,
+          "provisional": true,
+          "vgId": "vg-ga-p-000115",
+          "candidateId": "challenger-josh-mclaurin-ltgov-2026",
+          "legisGaGovId": 4942,
+          "legacyRosterId": "ocd-person/b83b0486-773f-4979-a1ce-e2f7f3e6d7e1",
+          "note": "Projected winner (56.0%); results not yet certified. Stub until the swearing-in: then add this person to ga-executive.json under this execId and drop `provisional`, `name`, `party`. Carry legacyRosterId into ga-executive.json: it is the key that reaches this person's existing legislator vgId.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
+        },
+        {
           "execId": "exec:ga-jones-burt",
           "start": null,
-          "end": null,
-          "endedBy": null
+          "end": "2027-01-11",
+          "endedBy": "did-not-run",
+          "endBasis": "reported",
+          "note": "Did not seek re-election. Won by Josh McLaurin (D), 56.0%. Successor takes office at the inauguration on the day the General Assembly convenes, reported as 2027-01-11; confirm at the swearing-in.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
         }
       ]
     },
@@ -35,10 +71,27 @@
       "title": "Secretary of State",
       "holders": [
         {
+          "execId": "exec:ga-reynolds-penny",
+          "name": "Penny Brown Reynolds",
+          "party": "D",
+          "start": "2027-01-11",
+          "startBasis": "reported",
+          "end": null,
+          "endedBy": null,
+          "provisional": true,
+          "vgId": "vg-ga-p-000361",
+          "candidateId": "challenger-penny-brown-reynolds-sos-2026",
+          "note": "Projected winner (55.7%); results not yet certified. Stub until the swearing-in: then add this person to ga-executive.json under this execId and drop `provisional`, `name`, `party`.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
+        },
+        {
           "execId": "exec:ga-raffensperger-brad",
           "start": null,
-          "end": null,
-          "endedBy": null
+          "end": "2027-01-11",
+          "endedBy": "did-not-run",
+          "endBasis": "reported",
+          "note": "Did not seek re-election. Won by Penny Brown Reynolds (D), 55.7%. Successor takes office at the inauguration on the day the General Assembly convenes, reported as 2027-01-11; confirm at the swearing-in.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
         }
       ]
     },
@@ -47,10 +100,29 @@
       "title": "Attorney General",
       "holders": [
         {
+          "execId": "exec:ga-miller-tanya",
+          "name": "Tanya Miller",
+          "party": "D",
+          "start": "2027-01-11",
+          "startBasis": "reported",
+          "end": null,
+          "endedBy": null,
+          "provisional": true,
+          "vgId": null,
+          "candidateId": "challenger-tanya-miller-ag-2026",
+          "legisGaGovId": 5029,
+          "legacyRosterId": "ocd-person/6e5432a3-09ed-4813-b11d-e97222bb7e4d",
+          "note": "Projected winner (55.6%); results not yet certified. Stub until the swearing-in: then add this person to ga-executive.json under this execId and drop `provisional`, `name`, `party`. Two crosswalk vgIds look like this person (vg-ga-p-000222 as the HD 62 legislator, vg-ga-p-000376 as the AG candidate); left null until a sameAs override settles it. Carry legacyRosterId into ga-executive.json: it is the key that reaches this person's existing legislator vgId.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
+        },
+        {
           "execId": "exec:ga-carr-chris",
           "start": null,
-          "end": null,
-          "endedBy": null
+          "end": "2027-01-11",
+          "endedBy": "did-not-run",
+          "endBasis": "reported",
+          "note": "Did not seek re-election. Won by Tanya Miller (D), 55.6%. Successor takes office at the inauguration on the day the General Assembly convenes, reported as 2027-01-11; confirm at the swearing-in.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
         }
       ]
     },
@@ -59,10 +131,27 @@
       "title": "State School Superintendent",
       "holders": [
         {
+          "execId": "exec:ga-powell-lydia",
+          "name": "Lydia Powell",
+          "party": "D",
+          "start": "2027-01-11",
+          "startBasis": "reported",
+          "end": null,
+          "endedBy": null,
+          "provisional": true,
+          "vgId": "vg-ga-p-000344",
+          "candidateId": "challenger-lydia-powell-super-2026",
+          "note": "Projected winner (54.6%); results not yet certified. Stub until the swearing-in: then add this person to ga-executive.json under this execId and drop `provisional`, `name`, `party`.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
+        },
+        {
           "execId": "exec:ga-woods-richard",
           "start": null,
-          "end": null,
-          "endedBy": null
+          "end": "2027-01-11",
+          "endedBy": "lost",
+          "endBasis": "reported",
+          "note": "Lost to Lydia Powell (D), 54.6% to 45.4%. Successor takes office at the inauguration on the day the General Assembly convenes, reported as 2027-01-11; confirm at the swearing-in.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
         }
       ]
     },
@@ -71,10 +160,27 @@
       "title": "Commissioner of Agriculture",
       "holders": [
         {
+          "execId": "exec:ga-juhan-arnold-katherine",
+          "name": "Katherine E. Juhan-Arnold",
+          "party": "D",
+          "start": "2027-01-11",
+          "startBasis": "reported",
+          "end": null,
+          "endedBy": null,
+          "provisional": true,
+          "vgId": "vg-ga-p-000334",
+          "candidateId": "challenger-katherine-juhan-arnold-agcom-2026",
+          "note": "Projected winner (53.8%); results not yet certified. Stub until the swearing-in: then add this person to ga-executive.json under this execId and drop `provisional`, `name`, `party`.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
+        },
+        {
           "execId": "exec:ga-harper-tyler",
           "start": null,
-          "end": null,
-          "endedBy": null
+          "end": "2027-01-11",
+          "endedBy": "lost",
+          "endBasis": "reported",
+          "note": "Lost to Katherine E. Juhan-Arnold (D), 53.8% to 46.2%. Successor takes office at the inauguration on the day the General Assembly convenes, reported as 2027-01-11; confirm at the swearing-in.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
         }
       ]
     },
@@ -83,10 +189,27 @@
       "title": "Commissioner of Labor",
       "holders": [
         {
+          "execId": "exec:ga-porcher-nikki",
+          "name": "Nikki Porcher",
+          "party": "D",
+          "start": "2027-01-11",
+          "startBasis": "reported",
+          "end": null,
+          "endedBy": null,
+          "provisional": true,
+          "vgId": "vg-ga-p-000355",
+          "candidateId": "challenger-nikki-porcher-laborcom-2026",
+          "note": "Projected winner (54.6%); results not yet certified. Stub until the swearing-in: then add this person to ga-executive.json under this execId and drop `provisional`, `name`, `party`.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
+        },
+        {
           "execId": "exec:ga-rivera-holmes-barbara",
           "start": null,
-          "end": null,
-          "endedBy": null
+          "end": "2027-01-11",
+          "endedBy": "lost",
+          "endBasis": "reported",
+          "note": "Lost to Nikki Porcher (D), 54.6% to 45.4%. Successor takes office at the inauguration on the day the General Assembly convenes, reported as 2027-01-11; confirm at the swearing-in.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
         }
       ]
     },
@@ -95,10 +218,27 @@
       "title": "Commissioner of Insurance",
       "holders": [
         {
+          "execId": "exec:ga-waites-keisha",
+          "name": "Keisha Sean Waites",
+          "party": "D",
+          "start": "2027-01-11",
+          "startBasis": "reported",
+          "end": null,
+          "endedBy": null,
+          "provisional": true,
+          "vgId": "vg-ga-p-000336",
+          "candidateId": "challenger-keisha-waites-inscom-2026",
+          "note": "Projected winner (54.3%); results not yet certified. Stub until the swearing-in: then add this person to ga-executive.json under this execId and drop `provisional`, `name`, `party`.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
+        },
+        {
           "execId": "exec:ga-king-john",
           "start": null,
-          "end": null,
-          "endedBy": null
+          "end": "2027-01-11",
+          "endedBy": "lost",
+          "endBasis": "reported",
+          "note": "Lost to Keisha Sean Waites (D), 54.3% to 45.7%. Successor takes office at the inauguration on the day the General Assembly convenes, reported as 2027-01-11; confirm at the swearing-in.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
         }
       ]
     },
@@ -155,10 +295,27 @@
       "title": "Public Service Commission - District 5",
       "holders": [
         {
+          "execId": "exec:ga-edwards-shelia",
+          "name": "Shelia Edwards",
+          "party": "D",
+          "start": "2027-01-01",
+          "startBasis": "term-rule",
+          "end": null,
+          "endedBy": null,
+          "provisional": true,
+          "vgId": "vg-ga-p-000373",
+          "candidateId": "challenger-shelia-edwards-psc5-2026",
+          "note": "Projected winner (55.3%); results not yet certified. Stub until the swearing-in: then add this person to ga-executive.json under this execId and drop `provisional`, `name`, `party`.",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
+        },
+        {
           "execId": "exec:ga-pridemore-tricia",
           "start": null,
-          "end": null,
-          "endedBy": null
+          "end": "2027-01-01",
+          "endedBy": "did-not-run",
+          "endBasis": "term-rule",
+          "note": "Not on the ballot. Won by Shelia Edwards (D), 55.3%. PSC terms begin 1 January after the election (O.C.G.A. 46-2-1).",
+          "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
         }
       ]
     }
