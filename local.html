@@ -80,6 +80,15 @@ breadcrumb:
   .lh-also { margin: 0.6rem 0 0 1.25rem; font-size: 0.82rem; color: var(--color-text-secondary); display: flex; flex-wrap: wrap; gap: 0.35rem 0.5rem; align-items: center; }
   .lh-also-chip { border: 1px solid var(--color-success-line); background: var(--color-surface-sunken); color: var(--color-success); border-radius: 999px; padding: 0.1rem 0.6rem; text-decoration: none; }
   .lh-also-chip:hover { border-color: var(--color-success); }
+  /* Stub: a county or city we do not cover yet (_data/local_stubs.json). Quiet on
+     purpose: no link, no inventory glyphs, muted text (token colours, not opacity,
+     so the contrast stays readable). It is in the list so the whole state is visible
+     and searchable, and so the layout is tested at full size. */
+  .lh-stub { border-left-color: var(--color-border); background: var(--color-surface-sunken); color: var(--color-text-secondary); }
+  .lh-stub .lh-name { color: var(--color-text-secondary); font-weight: 600; margin-bottom: 0.15rem; }
+  .lh-stub-note { font-size: 0.75rem; color: var(--color-text-muted); font-style: italic; }
+  .lh-child.lh-stub .lh-name { font-size: 0.92rem; }
+  .lh-also-chip.lh-stub-chip { border-color: var(--color-border); color: var(--color-text-secondary); background: var(--color-surface-sunken); }
   /* A-Z jump bar + "show more" paging for the county list */
   .lh-az { display: flex; flex-wrap: wrap; gap: 0.25rem; margin: 0 0 1rem; }
   .lh-az a, .lh-az span {
@@ -205,7 +214,12 @@ breadcrumb:
 
 {%- comment %} Slug set of real (non-hidden) counties, for orphan detection. {% endcomment -%}
 {% assign county_slugs = "" %}
-{% for c in counties %}{% unless c.hidden %}{% assign county_slugs = county_slugs | append: "|" | append: c.slug | append: "|" %}{% endunless %}{% endfor %}
+{% assign county_fips_set = "" %}
+{% for c in counties %}{% unless c.hidden %}{% assign county_slugs = county_slugs | append: "|" | append: c.slug | append: "|" %}{% assign county_fips_set = county_fips_set | append: "|" | append: c.fips | append: "|" %}{% endunless %}{% endfor %}
+{%- comment %} Every Georgia county and the incorporated places in it that have no card of
+    their own (scripts/build_local_stubs.py, from Georgia Civic Data). Real counties
+    take stub CITIES; a county we do not cover (or that is hidden) becomes a stub group. {% endcomment -%}
+{% assign stub_counties = site.data.local_stubs.counties %}
 
 <div class="lh-groups" id="lhGroups">
 
@@ -238,7 +252,9 @@ breadcrumb:
     {%- assign kids = cities | where: "parentCounty", county.slug | sort: "name" %}
     {%- assign visibleKids = 0 %}
     {%- for city in kids %}{% unless city.hidden %}{% assign visibleKids = visibleKids | plus: 1 %}{% endunless %}{% endfor %}
-    {%- if visibleKids > 0 %}
+    {%- assign stubRow = stub_counties | where: "fips", county.fips | first %}
+    {%- assign stubKids = stubRow.cities | default: empty %}
+    {%- if visibleKids > 0 or stubKids.size > 0 %}
     <div class="lh-children">
       {%- for city in kids %}
       {%- if city.hidden %}{% continue %}{% endif %}
@@ -267,16 +283,26 @@ breadcrumb:
         </div>
       </a>
       {%- endfor %}
+      {%- for st in stubKids %}
+      <div class="lh-card lh-child lh-stub" data-name="{{ st.name | downcase }}" data-stub="1">
+        <div class="lh-name">{{ st.name }}</div>
+        <div class="lh-stub-note">We&rsquo;re working on it&hellip;</div>
+      </div>
+      {%- endfor %}
     </div>
     {%- endif %}
     {%- comment %} Cities primarily in another county that also extend into this one: a
         link chip, not a second card (one card per city keeps search and counts honest). {% endcomment -%}
     {%- assign alsoCities = cities | where_exp: "c", "c.alsoIn contains county.slug" | sort: "name" %}
-    {%- if alsoCities.size > 0 %}
+    {%- assign stubAlso = stubRow.alsoCities | default: empty %}
+    {%- if alsoCities.size > 0 or stubAlso.size > 0 %}
     <p class="lh-also">
       <span class="lh-also-label">Also partly in {{ county.name }}:</span>
       {%- for city in alsoCities %}{% if city.hidden %}{% continue %}{% endif %}
       <a class="lh-also-chip" href="{{ '/local/' | append: city.slug | append: '/' | relative_url }}" data-name="{{ city.name | downcase }}">{{ city.name }}</a>
+      {%- endfor %}
+      {%- for st in stubAlso %}
+      <span class="lh-also-chip lh-stub-chip" data-name="{{ st.name | downcase }}" title="{{ st.name }} is mostly in {{ st.primaryCounty }} County. We&rsquo;re working on it.">{{ st.name }}</span>
       {%- endfor %}
     </p>
     {%- endif %}
@@ -330,6 +356,37 @@ breadcrumb:
       </a>
       {%- endfor %}
     </div>
+  </section>
+  {%- endfor %}
+
+  {%- comment %} Stub counties: not a real card yet (never added, or hidden while being built).
+      Same group shape as a real county so paging, the A-Z bar and search treat it alike. {% endcomment -%}
+  {%- for sc in stub_counties %}
+  {%- assign scToken = "|" | append: sc.fips | append: "|" %}
+  {%- if county_fips_set contains scToken %}{% continue %}{% endif %}
+  <section class="lh-group">
+    <div class="lh-card lh-county lh-stub" data-name="{{ sc.name | downcase }} county" data-stub="1">
+      <div class="lh-name">{{ sc.name }} County</div>
+      <div class="lh-stub-note">We&rsquo;re working on it&hellip;</div>
+    </div>
+    {%- if sc.cities.size > 0 %}
+    <div class="lh-children">
+      {%- for st in sc.cities %}
+      <div class="lh-card lh-child lh-stub" data-name="{{ st.name | downcase }}" data-stub="1">
+        <div class="lh-name">{{ st.name }}</div>
+        <div class="lh-stub-note">We&rsquo;re working on it&hellip;</div>
+      </div>
+      {%- endfor %}
+    </div>
+    {%- endif %}
+    {%- if sc.alsoCities.size > 0 %}
+    <p class="lh-also">
+      <span class="lh-also-label">Also partly in {{ sc.name }} County:</span>
+      {%- for st in sc.alsoCities %}
+      <span class="lh-also-chip lh-stub-chip" data-name="{{ st.name | downcase }}" title="{{ st.name }} is mostly in {{ st.primaryCounty }} County. We&rsquo;re working on it.">{{ st.name }}</span>
+      {%- endfor %}
+    </p>
+    {%- endif %}
   </section>
   {%- endfor %}
 
