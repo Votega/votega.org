@@ -107,6 +107,12 @@ class Ledger:
     candidate id, which is positional, and never an identifier SLOT such as a
     later-arriving ocdPersonId. Assignments are append-only: a member who leaves
     keeps theirs so historical references stay resolvable.
+
+    `merged` forwards a RETIRED vgId to the surviving one, for the case `alias()` cannot
+    fix: two vgIds that were both already assigned to one person (a legislator who later
+    filed for another office under a new committee). Assignments are never rewritten:
+    the retired id's keys keep pointing at it, and every lookup follows the forward via
+    `canonical()`. A merge happens only through an explicit `sameAs` override.
     """
 
     def __init__(self, path):
@@ -114,13 +120,24 @@ class Ledger:
         data = load(path, {"nextSeq": 1, "assign": {}})
         self.next_seq = data.get("nextSeq", 1)
         self.assign = dict(data.get("assign", {}))
+        self.merged = dict(data.get("merged", {}))
         self._initial = dict(self.assign)
+
+    def canonical(self, vg_id):
+        """The surviving vgId for `vg_id` (itself unless it was retired by a merge)."""
+        seen = set()
+        while vg_id in self.merged:
+            if vg_id in seen:
+                raise SystemExit(f"Error: ledger merge cycle through {vg_id}")
+            seen.add(vg_id)
+            vg_id = self.merged[vg_id]
+        return vg_id
 
     def id_for(self, natural_key):
         if natural_key not in self.assign:
             self.assign[natural_key] = f"vg-ga-p-{self.next_seq:06d}"
             self.next_seq += 1
-        return self.assign[natural_key]
+        return self.canonical(self.assign[natural_key])
 
     def id_for_any(self, keys):
         """vgId for a person known by several keys, in resolution order.
@@ -132,13 +149,32 @@ class Ledger:
         """
         for k in keys:
             if k in self.assign:
-                return self.assign[k]
+                return self.canonical(self.assign[k])
         return self.id_for(keys[0])
 
     def alias(self, key, vg_id):
         """Point an additional natural key at an already-assigned vgId (a merge)."""
         self.assign.setdefault(key, vg_id)
-        return self.assign[key]
+        return self.canonical(self.assign[key])
+
+    def merge(self, key, vg_id):
+        """An explicit `sameAs`: `key` is the same person as `vg_id`.
+
+        A key not yet in the ledger is simply pointed at `vg_id`. A key already assigned
+        to a DIFFERENT vgId retires that id, forwarding it to `vg_id`; the assignment
+        itself stays exactly as published.
+        """
+        survivor = self.canonical(vg_id)
+        existing = self.assign.get(key)
+        if existing is None:
+            self.assign[key] = survivor
+        elif self.canonical(existing) != survivor:
+            retired = self.canonical(existing)
+            self.merged[retired] = survivor
+            for old, fwd in list(self.merged.items()):   # keep forwards one hop long
+                if fwd == retired:
+                    self.merged[old] = survivor
+        return survivor
 
     @property
     def newly_assigned(self):
@@ -161,6 +197,14 @@ class Ledger:
             "nextSeq": self.next_seq,
             "assign": dict(sorted(self.assign.items())),
         }
+        if self.merged:
+            payload["_mergedComment"] = (
+                "merged: retired vgId -> surviving vgId. Written only by an explicit sameAs "
+                "override joining two ids that were both already assigned to one person. "
+                "Append-only like assign: a retired id keeps its assignments and is never "
+                "reused; readers follow the forward."
+            )
+            payload["merged"] = dict(sorted(self.merged.items()))
         with atomic_write(self.path) as f:
             json.dump(payload, f, ensure_ascii=False, indent=1)
             f.write("\n")
@@ -691,17 +735,25 @@ def main():
             unkeyed.append(rec)
             continue
 
-        natural = f"{kind}:{filing_id}"
-        natural = same_as.get(natural, natural)   # explicit merge, never inferred
+        own_key = f"{kind}:{filing_id}"
+        natural = same_as.get(own_key, own_key)   # explicit merge, never inferred
 
         if natural in filing_owner:
             vg = filing_owner[natural]
         else:
             vg = ledger.id_for(natural)
             filing_owner[natural] = vg
-        # A merged key must resolve to the same vgId however it was reached.
-        ledger.alias(f"{kind}:{filing_id}", vg)
-        filing_owner[f"{kind}:{filing_id}"] = vg
+        # A merged key must resolve to the same vgId however it was reached. Only an
+        # explicit sameAs may retire an already-assigned vgId (Ledger.merge). Without one,
+        # alias() records the key if it is new and otherwise leaves the ledger alone --
+        # and its return value is deliberately IGNORED: a few filings already carry a
+        # stale second vgId from an earlier build (McLaurin's peachfile:100828 ->
+        # 000329), and the owner found above must win, exactly as before.
+        if natural != own_key:
+            vg = ledger.merge(own_key, vg)
+        else:
+            ledger.alias(own_key, vg)
+        filing_owner[own_key] = vg
 
         person = people.get(vg)
         if person is None:
@@ -739,8 +791,9 @@ def main():
             "schemaVersion": SCHEMA_VERSION,
             "schemaStability": (
                 "Stable field names and meanings. Additive since version 2: rosterId, "
-                "executiveId (statewide executives, from ga-executive.json) "
-                "and ballotpediaId; ocdPersonId is now ONLY an OCD person id "
+                "executiveId (statewide executives, from ga-executive.json), "
+                "ballotpediaId, and metadata.mergedVgIds (a retired vgId forwards to "
+                "the surviving one; follow it); ocdPersonId is now ONLY an OCD person id "
                 "or null (it used to carry the roster id, which can be legis-<id>). "
                 "Changed in version 2: "
                 "peachfileFilerEntityId and fecCandidateId became the lists "
@@ -751,6 +804,9 @@ def main():
             ),
             "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "count": len(records),
+            # Retired vgId -> surviving vgId. A retired id appears on no record; a
+            # consumer holding one should follow this map. Additive in version 2.
+            "mergedVgIds": dict(sorted(ledger.merged.items())),
             "scope": ("Georgia officeholders and 2026 ballot candidates: state legislators, "
                       "statewide executives, the Georgia federal delegation, and every "
                       "candidate on a race in races.json."),

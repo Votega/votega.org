@@ -108,11 +108,11 @@
           "end": null,
           "endedBy": null,
           "provisional": true,
-          "vgId": null,
+          "vgId": "vg-ga-p-000222",
           "candidateId": "challenger-tanya-miller-ag-2026",
           "legisGaGovId": 5029,
           "legacyRosterId": "ocd-person/6e5432a3-09ed-4813-b11d-e97222bb7e4d",
-          "note": "Projected winner (55.6%); results not yet certified. Stub until the swearing-in: then add this person to ga-executive.json under this execId and drop `provisional`, `name`, `party`. Two crosswalk vgIds look like this person (vg-ga-p-000222 as the HD 62 legislator, vg-ga-p-000376 as the AG candidate); left null until a sameAs override settles it. Carry legacyRosterId into ga-executive.json: it is the key that reaches this person's existing legislator vgId.",
+          "note": "Projected winner (55.6%); results not yet certified. Stub until the swearing-in: then add this person to ga-executive.json under this execId and drop `provisional`, `name`, `party`. Her AG-candidate vgId (vg-ga-p-000376) was merged into her legislator vgId on 2026-11-20 (sameAs on peachfile:102716; the ledger forwards 000376 -> 000222). Carry legacyRosterId into ga-executive.json: it is the key that reaches this person's existing legislator vgId.",
           "source": "2026 general election results (_data/election_results/ga-general-2026-results.json, unofficial as of 2026-11-18)"
         },
         {

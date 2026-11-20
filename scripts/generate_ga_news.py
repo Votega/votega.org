@@ -225,7 +225,7 @@ def build_entity_index(people):
     return by_surname, sole_bare, indexed
 
 
-def build_id_index(people):
+def build_id_index(people, merged=None):
     """Map any stable person id -> vgId, for resolving a feed's `entity` binding.
 
     Accepts the id forms news_sources.yml is allowed to reference: the vgId
@@ -245,6 +245,11 @@ def build_id_index(people):
             val = ids.get(key)
             if val:
                 index[val] = vg
+    # A retired vgId (id-crosswalk.json metadata.mergedVgIds) still resolves, to the
+    # surviving person, so a feed bound to the old id keeps tagging the right official.
+    for retired, survivor in (merged or {}).items():
+        if survivor in index:
+            index.setdefault(retired, survivor)
     return index
 
 
@@ -766,13 +771,15 @@ def main():
         print(f"Error: {CROSSWALK_FILE} not found -- run build_id_crosswalk.py first")
         sys.exit(1)
     with open(CROSSWALK_FILE, encoding="utf-8") as f:
-        people = json.load(f)["people"]
+        crosswalk = json.load(f)
+    people = crosswalk["people"]
+    merged_vgids = (crosswalk.get("metadata") or {}).get("mergedVgIds") or {}
     by_surname, sole_bare, indexed = build_entity_index(people)
     print(f"Indexed {indexed} linkable people across {len(by_surname)} surnames "
           f"({len(sole_bare)} bare-surname-eligible)\n")
 
     person_by_vgid = {p.get("vgId"): p for p in people if p.get("vgId")}
-    id_index = build_id_index(people)
+    id_index = build_id_index(people, merged_vgids)
     entity_urls = load_entity_urls()
     overrides = load_overrides()
 
@@ -949,6 +956,9 @@ def main():
             "disclaimer": DISCLAIMER,
         },
         "entities": entities,
+        # Retired vgId -> survivor, only for people on this page, so an old
+        # ga-news.html?entity=<retired id> link still filters to the right person.
+        "mergedEntities": {r: s for r, s in sorted(merged_vgids.items()) if s in entities},
         "items": windowed,
     }
 
