@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-19T17:58:50Z",
+  "generatedAt": "2026-11-20T04:13:55Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
   "count": 25
@@ -12,18 +12,28 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-12-08",
+  "lastActivity": "2026-12-14",
   "topicTotals": {
-   "development": 10,
+   "variance": 3,
+   "development": 9,
    "appointment": 5,
    "budget": 3,
    "contract": 8,
    "local-taxes": 8,
-   "variance": 3,
    "millage-budget": 3
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission Regular Meeting",
+    "date": "2026-12-14",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4520,plainText=false)",
+    "tags": [
+     "variance"
+    ],
+    "excerpt": "… Applicant: Ken Corbin Parcel Number: 095-238 Character Area: Gateway Corridor Case 208 is requesting a variance to Section 27-2.2.3 accessing nursing home from a local road. 3. Location Address: 1625 Mill Creek Road Ap …",
+    "excerptTerm": "variance"
+   },
    {
     "title": "BOC Public Hearing",
     "date": "2026-12-08",
@@ -103,17 +113,6 @@
     "tags": [
      "development"
     ]
-   },
-   {
-    "title": "Planning Commission Regular Meeting",
-    "date": "2026-09-14",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4276,plainText=false)",
-    "tags": [
-     "development",
-     "variance"
-    ],
-    "excerpt": "… 083-008 Character Area: Gateway Corridor Overlay Case 186 is a request for a Preliminary Plat of a Class VIII subdivision entitled Wright Industrial Park (7 lots). 3. Location: 40 PATRIOT VIEW DRIVE; DAHLONEGA, GA 30533 Applican …",
-    "excerptTerm": "subdivision"
    }
   ],
   "landUseMeetings": 10,
@@ -226,6 +225,38 @@
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "1157",
+   "date": "2026-12-14",
+   "body": "Planning Commission",
+   "title": "Planning Commission Regular Meeting",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4520,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4520,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1247,
+   "pdfSha256": "e4509a62129fc69d019dce8fd9a2c9e370f1081cae961249dac094cc9625c3a1",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Applicant: Ken Corbin Parcel Number: 095-238 Character Area: Gateway Corridor Case 208 is requesting a variance to Section 27-2.2.3 accessing nursing home from a local road. 3. Location Address: 1625 Mill Creek Road Ap …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1428",
    "date": "2026-12-08",
@@ -1091,46 +1122,6 @@
     }
    },
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1154",
-   "date": "2026-09-14",
-   "body": "Planning Commission",
-   "title": "Planning Commission Regular Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4276,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4276,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1355,
-   "pdfSha256": "109eeadbfa9dceb00e11cc8f9f753650f8fcd8678b2d4e53654cc2e946214eeb",
-   "topics": {
-    "development": 1,
-    "variance": 1
-   },
-   "tags": [
-    "development",
-    "variance"
-   ],
-   "matchedTerms": [
-    "subdivision",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… 083-008 Character Area: Gateway Corridor Overlay Case 186 is a request for a Preliminary Plat of a Class VIII subdivision entitled Wright Industrial Park (7 lots). 3. Location: 40 PATRIOT VIEW DRIVE; DAHLONEGA, GA 30533 Applican …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… cant: Josh Gray Parcel Number: 019-199 Character Area: Agricultural Preservation Case 187 is a request a variance from Sec. 26-68. Exemptions. (2) b. These tracts cannot be further divided within a three-year time period. 4. C …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
    "dataCenterItems": []
   }
  ]
