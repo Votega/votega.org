@@ -247,6 +247,25 @@ The facts a vacancy carries live in `vacancyNotes` in `seat-holds.json`, keyed b
 - **A note never closes or opens a gap.** Only holds do. A special-election note does not imply anyone won; the winner's hold does.
 - `vacancyNotes` are append-only like holds: a note on a closed gap is not edited without an override and a `_note`.
 
+### Suspensions
+
+**Decided 2026-11-20 (was D3): a suspension is a status inside the hold, not a span of its own.** A suspended member still holds the seat: the site already lists them with a badge, the seat is not vacant, and no successor is seated. Splitting the hold in two would invent an end and a restart that never happened, and would make the seat look vacant to anything that computes gaps.
+
+A hold carries an optional list:
+
+```json
+"suspensions": [
+  { "start": "2026-01-22", "startBasis": "official", "end": null, "endBasis": null,
+    "endedBy": null, "ref": "EO 01.22.26.02",
+    "source": "ga-members-overrides.json (status Suspended)", "note": null }
+]
+```
+
+- **`endedBy`** for a suspension is `reinstated` or `hold-ended`. `hold-ended` means the hold itself ended while suspended (resigned, removed, term over), and the hold's own `endedBy` says which.
+- **Source:** the roster override that already records it (`status: "Suspended"`, `statusDate`, `statusNote` with the governor's executive order). Sharon Henderson (HD 113, suspended 2026-01-22 by executive order) is the one case in scope.
+- **What it changes downstream:** the seat counts as held for capacity, gaps and party composition. A consumer that needs who could vote on a date (participation, the majority tracker's "voting members" line) reads the suspension. Votes during a suspension are absent, not "missed".
+- **A suspension never opens a gap** and never needs a vacancy note.
+
 - `ga-executive-seats.json` is folded into these two files. Its seats become registry rows and its `holders` become holds, provisional ones included.
 
 ## Where each domain's history comes from
@@ -284,6 +303,7 @@ Tier 1 (gates the commit, because these mean the file contradicts itself):
 - **A closed hold is immutable.** Compared against HEAD, the same way the ledger and `vgId`s are checked. Correcting one needs an explicit override with a `_note`, never a silent edit.
 - A districted seat's hold falls within its plan's effective period; holds running at a plan's end are closed `redistricted`.
 - `successorSeats` links point at seats under a later plan, never the same plan.
+- **Suspensions:** each lies inside its hold (`start` on or after the hold's start; `end`, if any, on or before the hold's end); suspensions on one hold don't overlap; an open suspension on a closed hold is an error (it must end `hold-ended`).
 - **Vacancy notes:** every note's `(seatId, from)` matches a computed gap (a hold on that seat ends on `from` and the seat is then under capacity); its `date` is on or after `from`; `kind` is from the list; a `note` kind has text; a `raceId` exists in `races.json`.
 - **Provisional holds:** at most one per seat, newest first, `start` equal to the current holder's `end`, a reserved id not used by any settled holder, and a `name`, `startBasis` and `source`. Already enforced for executive seats; the shared validator takes over these checks.
 
@@ -293,6 +313,7 @@ Tier 2 (reported, commit proceeds):
 - A gap longer than 180 days.
 - A gap on a legislative seat with no `writ` note after 30 days (the governor normally issues one within days; the 2025–26 writs came 1–17 days after each departure).
 - A gap whose `special-election` date has passed with no hold starting since.
+- A suspension still open after 365 days, reported as a prompt to check for reinstatement or removal.
 - A hold with a null date and `unknown` basis.
 - A provisional hold whose `start` has passed and has not been promoted. This is reported, never gated: a gate tied to the date would turn CI red on inauguration day.
 - A hold the source supports but the overrides haven't approved closing (the "proposed, not disposed" queue).
@@ -333,7 +354,7 @@ Deferred on purpose. When it is taken up:
 
 - **D1: plan granularity.** Is a mid-decade amendment that touches a few districts a new plan for every seat in the chamber, or only for the districts it changed? Not hit inside the 2023 scope, so it can wait until a backfill.
 - ~~**D2: vacancies stored or computed.**~~ Decided: computed gaps plus `vacancyNotes` keyed by seat and gap start. See "Vacancies".
-- **D3: suspended members.** They still hold the seat (and stay listed today). Does a suspension stay a status inside the hold, or become its own span? The lean is a status inside the hold.
+- ~~**D3: suspended members.**~~ Decided: a status inside the hold (`suspensions[]`). See "Suspensions".
 - **D4: appointed interim holders** (PSC, judicial, local appointments): is an appointment a hold with `startBasis: official` and `endedBy` set on the next election, or a separate kind?
 - **D5: 2021→2023 lineage links.** Run the 2021 block-equivalency files through the tract builder so each link carries a measured overlap, or publish no lineage until there's a reason to? The scope means pages will hit this boundary immediately.
 - **D6: published scope.** One combined `seat-holds` dataset, or per-domain files in the existing sibling repos?
