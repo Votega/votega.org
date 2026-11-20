@@ -1,7 +1,7 @@
 """Which places have a recorded-votes file, derived from the files themselves.
 
 `generate_meeting_votes.py` writes assets/data/local-<slug>-votes.json for a
-CivicClerk or Legistar place whose portal publishes votes, and writes NO file
+CivicClerk, Legistar or IQM2 place whose portal publishes votes, and writes NO file
 for one that does not. This module turns that into `_data/local_votes.json`,
 read by Jekyll (the /local/ badge) and by the sibling-repo registry publisher:
 
@@ -22,7 +22,7 @@ quiet run rewrites nothing.
 import json
 import os
 
-READER_PLATFORMS = ('civicclerk', 'legistar')
+READER_PLATFORMS = ('civicclerk', 'legistar', 'iqm2')
 
 
 def votes_path(data_dir, slug):
@@ -55,7 +55,7 @@ def build_index(places, data_dir):
     return {
         'metadata': {
             'source': 'Derived from assets/data/local-<slug>-votes.json by scripts/generate_meeting_votes.py',
-            'note': 'Only places on a platform with a vote reader (CivicClerk, Legistar) appear. '
+            'note': 'Only places on a platform with a vote reader (CivicClerk, Legistar, IQM2) appear. '
                     '"not-published" means the reader exists but the place\'s portal records no votes.',
         },
         'places': dict(sorted(out.items())),

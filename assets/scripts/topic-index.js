@@ -249,7 +249,8 @@
           var key = (m.date || '') + '|' + (m.body || '');
           var mt = g.meetings[key] || (g.meetings[key] = {
             date: m.date, body: m.body, confidence: 'medium', context: null,
-            tags: {}, terms: {}, excerpts: [], sources: {}
+            tags: {}, terms: {}, excerpts: [], sources: {},
+            follow: null, outcomes: [], minutesUrl: null, minutesDraft: false
           });
           if (m.confidence === 'high') mt.confidence = 'high';
           // Context precedence: agenda-action > public-comment > unknown.
@@ -264,6 +265,18 @@
           // residents from sign-up rosters, so their verbatim quote is withheld;
           // the matched term, context chip, and source link below still render, so
           // voters still see WHAT surfaced and can open the source to read it.
+          // Follow-through (convention in CLAUDE.md): what the minutes record.
+          // "recorded" outranks "not-in-minutes" outranks "no-results".
+          var RANK = { 'recorded': 3, 'not-in-minutes': 2, 'no-results': 1 };
+          if (m.followThrough && (RANK[m.followThrough] || 0) > (RANK[mt.follow] || 0)) mt.follow = m.followThrough;
+          if (m.minutesUrl) mt.minutesUrl = m.minutesUrl;
+          if (m.minutesDraft) mt.minutesDraft = true;
+          (m.outcomes || []).forEach(function (o) {
+            var k = (o.reference || '') + '|' + (o.outline || '') + '|' + (o.name || '');
+            if (!mt.outcomes.some(function (x) { return x._k === k; })) {
+              mt.outcomes.push(Object.assign({ _k: k }, o));
+            }
+          });
           if (m.context === 'agenda-action' && m.excerpt &&
               !mt.excerpts.some(function (e) { return e.excerpt === m.excerpt; })) {
             mt.excerpts.push({ excerpt: m.excerpt, term: m.excerptTerm });
@@ -304,8 +317,43 @@
             return '<blockquote class="ti-excerpt">' + highlightExcerpt(e.excerpt, e.term) + '</blockquote>';
           }).join('') +
           (evidence ? '<div class="ti-evidence">Matched: ' + esc(evidence) + '</div>' : '') +
-          srcHtml +
+          srcHtml + outcomeHtml(mt) +
         '</li>';
+      }
+
+      // What the minutes record for this meeting's items on this topic. Only
+      // results the body's own minutes carry; nothing is shown before they are read.
+      function outcomeHtml(mt) {
+        var O = global.VoteGAOutcome;
+        if (!mt.follow || !O) return '';
+        var link = mt.minutesUrl ? ' · <a href="' + esc(mt.minutesUrl) +
+          '" target="_blank" rel="noopener">Minutes ↗</a>' : '';
+        var head = '<div class="ti-outcome-head"><i class="fa-solid fa-gavel" aria-hidden="true"></i> ' +
+          'What the minutes record' + (mt.minutesDraft ? ' (draft minutes)' : '') + link + '</div>';
+        if (mt.follow === 'not-in-minutes') {
+          return '<div class="ti-outcome">' + head +
+            '<p class="ti-outcome-none">No recorded vote in these minutes names this topic. It may have been discussed, or appear only in the packet.</p></div>';
+        }
+        if (mt.follow === 'no-results') {
+          return '<div class="ti-outcome">' + head +
+            '<p class="ti-outcome-none">These minutes record no votes.</p></div>';
+        }
+        var rows = mt.outcomes.map(function (o) {
+          var name = o.name || 'Agenda item';
+          var short = name.length > 180 ? name.slice(0, 180).replace(/\s+\S*$/, '') + '…' : name;
+          var label = [o.reference, o.outline].filter(Boolean).join(' ');
+          return '<li class="ti-oc">' +
+            '<span class="ti-oc-name" title="' + esc(name) + '">' +
+              (label ? '<span class="ti-oc-ref">' + esc(label) + '</span> ' : '') + esc(short) + '</span>' +
+            (o.motions || []).map(function (mo) {
+              var t = O.tally(mo);
+              return '<span class="ti-oc-motion">' +
+                (mo.motion ? '<span class="cmv-action">' + esc(mo.motion) + '</span> ' : '') +
+                O.chip(mo) + (t ? ' <span class="cmv-tally">' + esc(t) + '</span>' : '') +
+                O.flags(mo) + '</span>';
+            }).join('') + '</li>';
+        }).join('');
+        return '<div class="ti-outcome">' + head + '<ul class="ti-oc-list">' + rows + '</ul></div>';
       }
 
       function groupHtml(g) {

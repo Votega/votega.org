@@ -1,9 +1,17 @@
 {
   "metadata": {
     "source": "Derived from assets/data/local-<slug>-votes.json by scripts/generate_meeting_votes.py",
-    "note": "Only places on a platform with a vote reader (CivicClerk, Legistar) appear. \"not-published\" means the reader exists but the place's portal records no votes."
+    "note": "Only places on a platform with a vote reader (CivicClerk, Legistar, IQM2) appear. \"not-published\" means the reader exists but the place's portal records no votes."
   },
   "places": {
+    "atlanta": {
+      "platform": "iqm2",
+      "status": "available",
+      "meetings": 82,
+      "meetingsWithVotes": 81,
+      "firstMeeting": "2025-11-24",
+      "lastMeeting": "2026-11-16"
+    },
     "bibb": {
       "platform": "civicclerk",
       "status": "available",
@@ -23,6 +31,10 @@
       "meetingsWithVotes": 30,
       "firstMeeting": "2024-12-03",
       "lastMeeting": "2026-11-17"
+    },
+    "chatham": {
+      "platform": "iqm2",
+      "status": "not-published"
     },
     "cobb": {
       "platform": "civicclerk",
@@ -91,6 +103,14 @@
     "oconee": {
       "platform": "civicclerk",
       "status": "not-published"
+    },
+    "socialcircle": {
+      "platform": "iqm2",
+      "status": "available",
+      "meetings": 29,
+      "meetingsWithVotes": 27,
+      "firstMeeting": "2025-11-20",
+      "lastMeeting": "2026-11-10"
     },
     "walker": {
       "platform": "civicclerk",

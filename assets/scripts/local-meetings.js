@@ -76,30 +76,30 @@
     var state = { body: 'all', year: 'all', minutesOnly: false, limit: PAGE_SIZE };
     var ALL = [];
     var BODIES = [];
-    // Recorded votes by meeting id (local-<slug>-votes.json). Only CivicClerk and Legistar
+    // Recorded votes by meeting id (local-<slug>-votes.json). Only CivicClerk, Legistar and IQM2
     // places that publish them have the file; a missing file just means no vote panels.
     var VOTES = {};
 
     var VOTE_COLS = [['yes', 'Yes'], ['no', 'No'], ['abstain', 'Abstain'], ['absent', 'Absent']];
 
     function motionHtml(mo) {
-      var chip = '';
-      if (mo.result === 'passed') {
-        chip = '<span class="cmv-result cmv-passed"><i class="fa-solid fa-check" aria-hidden="true"></i> Passed</span>';
-      } else if (mo.result === 'failed') {
-        chip = '<span class="cmv-result cmv-failed"><i class="fa-solid fa-xmark" aria-hidden="true"></i> Failed</span>';
-      }
+      // Chip, tally and flags come from meeting-outcome.js, shared with the topic
+      // pages; guarded so an older cached copy of the page still renders votes.
+      var O = global.VoteGAOutcome;
+      var chip = O ? O.chip(mo) : '';
       var by = [];
       if (mo.movedBy) by.push('Moved by ' + esc(mo.movedBy));
       if (mo.secondedBy) by.push('seconded by ' + esc(mo.secondedBy));
       var tally = VOTE_COLS.filter(function (c) { return (mo[c[0]] || []).length; })
         .map(function (c) { return c[1] + ' ' + mo[c[0]].length; }).join(' · ');
+      if (!tally && O) tally = O.tally(mo);
       var who = VOTE_COLS.filter(function (c) { return (mo[c[0]] || []).length; })
         .map(function (c) { return '<li><strong>' + c[1] + ':</strong> ' + mo[c[0]].map(esc).join(', ') + '</li>'; }).join('');
       return '<div class="cmv-motion">' +
-        '<span class="cmv-action">' + esc(mo.motion || 'Action') + '</span> ' + chip +
+        (mo.motion ? '<span class="cmv-action">' + esc(mo.motion) + '</span> ' : '') + chip +
         (by.length ? '<span class="cmv-by">' + by.join(', ') + '</span>' : '') +
         (tally ? '<span class="cmv-tally">' + tally + '</span>' : '') +
+        (O ? O.flags(mo) : '') +
         (who ? '<details class="cmv-who"><summary>How each member voted</summary><ul>' + who + '</ul></details>' : '') +
         '</div>';
     }
@@ -108,7 +108,7 @@
       var v = VOTES[m.id];
       if (!v || !v.items || !v.items.length) return '';
       return '<details class="cm-votes"><summary><i class="fa-solid fa-gavel" aria-hidden="true"></i> Recorded votes (' +
-        v.items.length + ')</summary>' +
+        v.items.length + ')' + (v.minutesDraft ? ' · from draft minutes' : '') + '</summary>' +
         v.items.map(function (it) {
           var head = [it.outline, it.name].filter(Boolean).map(esc).join(' ');
           var meta = [it.reference && 'Ref. ' + esc(it.reference), it.district && 'District ' + esc(it.district)]
@@ -316,9 +316,9 @@
         render();
 
         // Votes load after the list is up, so a slow or absent file never delays it.
-        // Only CivicClerk and Legistar places have a votes file; skip the request (a console
-        // 404) for the rest. metadata.source reads "<Place> (<platform>)".
-        if (/\((civicclerk|legistar)\)/.test((data.metadata || {}).source || '')) {
+        // Only CivicClerk, Legistar and IQM2 places have a votes file; skip the request (a
+        // console 404) for the rest. metadata.source reads "<Place> (<platform>)".
+        if (/\((civicclerk|legistar|iqm2)\)/.test((data.metadata || {}).source || '')) {
           fetch(getBasePath() + 'assets/data/local-' + slug + '-votes.json')
             .then(function (res) { return res.ok ? res.json() : null; })
             .then(function (vd) {

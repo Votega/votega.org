@@ -77,6 +77,10 @@
   .cmv-result { font-size: 0.75rem; font-weight: 700; border-radius: 4px; padding: 0.05rem 0.4rem; }
   .cmv-passed { background: var(--color-success-tint); color: var(--color-success); border: 1px solid var(--color-success-line); }
   .cmv-failed { background: var(--color-warning-tint); color: var(--color-warning); border: 1px solid var(--color-warning-line); }
+  /* A step that is neither adopted nor failed (held, referred, recommended): neutral. */
+  .cmv-step { background: var(--color-neutral-tint); color: var(--color-neutral-text); border: 1px solid var(--color-neutral-line); }
+  .cmv-flag { flex: 1 1 100%; font-size: 0.82rem; color: var(--color-warning); }
+  .cmv-next { font-size: 0.82rem; color: var(--color-text-secondary); }
   .cmv-by, .cmv-tally { color: var(--color-text-secondary); }
   .cmv-who { flex: 1 1 100%; font-size: 0.82rem; }
   .cmv-who summary { cursor: pointer; color: var(--color-link); }
@@ -512,6 +516,7 @@
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/local-subjects.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/meeting-outcome.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/local-meetings.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   // window.VOTEGA_PLACE is emitted by build_entity_pages.py above this include.
