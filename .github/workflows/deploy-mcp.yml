@@ -3,9 +3,18 @@ name: Deploy MCP server
 # The VoteGA MCP Worker (mcp/, served at mcp.votega.org). Tests run in the Workers runtime on
 # every PR and push that touches mcp/; a push to main then deploys with Wrangler.
 #
-# Secrets (repository): CLOUDFLARE_API_TOKEN, a token scoped to "Edit Cloudflare Workers" on
-# this account (and the votega.org zone, for the custom-domain route); CLOUDFLARE_ACCOUNT_ID.
-# Until both exist the deploy job skips with a notice instead of failing.
+# Secrets (repository): CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID. Until both exist the
+# deploy job skips with a notice instead of failing.
+#
+# The token is an account-owned API token (Manage Account > Account API Tokens) under
+# Cloudflare's Workers roles (2026-09) with exactly two policies:
+#   - Workers: scope "All Workers" (the product scope), role Editor. NOT "Specified Workers":
+#     custom domains (mcp.votega.org) do not support per-Worker roles yet. Editor deploys an
+#     existing Worker but cannot create or delete one.
+#   - Zone > Workers Routes > Edit, on the votega.org zone (the custom-domain route).
+# Found 2026-11-21: a token without the Workers grant can still list scripts (an empty list) but
+# GET /accounts/<id>/workers/services/votega-mcp returns 403 "No access to the specified
+# service", which is the error wrangler deploy reports.
 #
 # The Worker reads its data from www.votega.org/assets/data/mcp/ at request time, so a data or
 # index change never needs a Worker deploy; only code in mcp/ does.
