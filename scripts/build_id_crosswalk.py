@@ -74,6 +74,24 @@ FEC_FILE       = "assets/data/ga-fec-data.json"
 RACES_FILE     = "assets/data/races.json"
 OVERRIDES_FILE = "assets/data/ga-campaign-finance-overrides.json"
 XWALK_OVERRIDES_FILE = "assets/data/id-crosswalk-overrides.json"
+SESSIONS_SNAPSHOT_FILE = "scripts/data/ga-members-by-session.json"   # fetch_ga_members_by_session.py
+SOAP_CHAMBER = {"House": "House of Representatives", "Senate": "Senate"}
+SOAP_PARTY = {"Democrat": "Democratic"}
+
+
+def former_legislators(snapshot, on_roster):
+    """[(legisGaGovId, latest row, latest session description)] for everyone in the
+    session snapshot who is not on the current roster, oldest legisGaGovId first."""
+    meta = {str(s["id"]): s for s in (snapshot.get("metadata") or {}).get("sessions", [])}
+    latest = {}
+    # Regular sessions (an 8-digit library such as "20232024") name the biennium; a special
+    # session only fills in a row when the member served in no regular session in scope.
+    for sid in sorted(snapshot.get("sessions", {}),
+                      key=lambda s: (len(meta.get(s, {}).get("library") or "") == 8, int(s))):
+        for row in snapshot["sessions"][sid]:
+            if row.get("id") is not None and row["id"] not in on_roster:
+                latest[row["id"]] = (row, meta.get(sid, {}).get("description"))
+    return [(gid, row, desc) for gid, (row, desc) in sorted(latest.items())]
 LEDGER_FILE    = "assets/data/id-crosswalk-ledger.json"
 
 OUTPUT_FILE = sys.argv[1] if len(sys.argv) > 1 else "assets/data/id-crosswalk.json"
@@ -107,6 +125,12 @@ class Ledger:
     candidate id, which is positional, and never an identifier SLOT such as a
     later-arriving ocdPersonId. Assignments are append-only: a member who leaves
     keeps theirs so historical references stay resolvable.
+
+    `merged` forwards a RETIRED vgId to the surviving one, for the case `alias()` cannot
+    fix: two vgIds that were both already assigned to one person (a legislator who later
+    filed for another office under a new committee). Assignments are never rewritten:
+    the retired id's keys keep pointing at it, and every lookup follows the forward via
+    `canonical()`. A merge happens only through an explicit `sameAs` override.
     """
 
     def __init__(self, path):
@@ -114,13 +138,24 @@ class Ledger:
         data = load(path, {"nextSeq": 1, "assign": {}})
         self.next_seq = data.get("nextSeq", 1)
         self.assign = dict(data.get("assign", {}))
+        self.merged = dict(data.get("merged", {}))
         self._initial = dict(self.assign)
+
+    def canonical(self, vg_id):
+        """The surviving vgId for `vg_id` (itself unless it was retired by a merge)."""
+        seen = set()
+        while vg_id in self.merged:
+            if vg_id in seen:
+                raise SystemExit(f"Error: ledger merge cycle through {vg_id}")
+            seen.add(vg_id)
+            vg_id = self.merged[vg_id]
+        return vg_id
 
     def id_for(self, natural_key):
         if natural_key not in self.assign:
             self.assign[natural_key] = f"vg-ga-p-{self.next_seq:06d}"
             self.next_seq += 1
-        return self.assign[natural_key]
+        return self.canonical(self.assign[natural_key])
 
     def id_for_any(self, keys):
         """vgId for a person known by several keys, in resolution order.
@@ -132,13 +167,32 @@ class Ledger:
         """
         for k in keys:
             if k in self.assign:
-                return self.assign[k]
+                return self.canonical(self.assign[k])
         return self.id_for(keys[0])
 
     def alias(self, key, vg_id):
         """Point an additional natural key at an already-assigned vgId (a merge)."""
         self.assign.setdefault(key, vg_id)
-        return self.assign[key]
+        return self.canonical(self.assign[key])
+
+    def merge(self, key, vg_id):
+        """An explicit `sameAs`: `key` is the same person as `vg_id`.
+
+        A key not yet in the ledger is simply pointed at `vg_id`. A key already assigned
+        to a DIFFERENT vgId retires that id, forwarding it to `vg_id`; the assignment
+        itself stays exactly as published.
+        """
+        survivor = self.canonical(vg_id)
+        existing = self.assign.get(key)
+        if existing is None:
+            self.assign[key] = survivor
+        elif self.canonical(existing) != survivor:
+            retired = self.canonical(existing)
+            self.merged[retired] = survivor
+            for old, fwd in list(self.merged.items()):   # keep forwards one hop long
+                if fwd == retired:
+                    self.merged[old] = survivor
+        return survivor
 
     @property
     def newly_assigned(self):
@@ -161,6 +215,14 @@ class Ledger:
             "nextSeq": self.next_seq,
             "assign": dict(sorted(self.assign.items())),
         }
+        if self.merged:
+            payload["_mergedComment"] = (
+                "merged: retired vgId -> surviving vgId. Written only by an explicit sameAs "
+                "override joining two ids that were both already assigned to one person. "
+                "Append-only like assign: a retired id keeps its assignments and is never "
+                "reused; readers follow the forward."
+            )
+            payload["merged"] = dict(sorted(self.merged.items()))
         with atomic_write(self.path) as f:
             json.dump(payload, f, ensure_ascii=False, indent=1)
             f.write("\n")
@@ -691,17 +753,25 @@ def main():
             unkeyed.append(rec)
             continue
 
-        natural = f"{kind}:{filing_id}"
-        natural = same_as.get(natural, natural)   # explicit merge, never inferred
+        own_key = f"{kind}:{filing_id}"
+        natural = same_as.get(own_key, own_key)   # explicit merge, never inferred
 
         if natural in filing_owner:
             vg = filing_owner[natural]
         else:
             vg = ledger.id_for(natural)
             filing_owner[natural] = vg
-        # A merged key must resolve to the same vgId however it was reached.
-        ledger.alias(f"{kind}:{filing_id}", vg)
-        filing_owner[f"{kind}:{filing_id}"] = vg
+        # A merged key must resolve to the same vgId however it was reached. Only an
+        # explicit sameAs may retire an already-assigned vgId (Ledger.merge). Without one,
+        # alias() records the key if it is new and otherwise leaves the ledger alone --
+        # and its return value is deliberately IGNORED: a few filings already carry a
+        # stale second vgId from an earlier build (McLaurin's peachfile:100828 ->
+        # 000329), and the owner found above must win, exactly as before.
+        if natural != own_key:
+            vg = ledger.merge(own_key, vg)
+        else:
+            ledger.alias(own_key, vg)
+        filing_owner[own_key] = vg
 
         person = people.get(vg)
         if person is None:
@@ -721,6 +791,46 @@ def main():
             person["ids"]["votegaCandidateIds"].append(cand["candidateId"])
         person["candidacies"].append(candidacy_record(cand, kind, filing_id, prov))
 
+    # --- Former legislators -------------------------------------------------
+    # Seat history (docs/seat-history-design.md) needs a vgId for everyone who held a
+    # seat in scope, including members who left before the current roster. They come
+    # from the committed session snapshot, are keyed `legis:<legisGaGovId>` (the
+    # primary key, so they keep the same vgId if they ever return), and carry
+    # role.status "former". A former member who is also a candidate already has a vgId
+    # under their filing; a `sameAs` override on `legis:<id>` joins the two instead of
+    # minting a second one.
+    on_roster = {m.get("legisGaGovId") for m, _ in officeholders_in
+                 if m.get("legisGaGovId") is not None}
+    for gid, row, last_session in former_legislators(load(SESSIONS_SNAPSHOT_FILE, {}), on_roster):
+        key = f"legis:{gid}"
+        target = same_as.get(key)
+        if target:
+            vg = ledger.merge(key, filing_owner.get(target) or ledger.id_for(target))
+        else:
+            vg = ledger.id_for(key)
+        person = people.get(vg)
+        prov = {"method": "authoritative",
+                "source": "legis.ga.gov (General Assembly web services, Members/GetMembersBySession)"}
+        if person is None:
+            first = row.get("nickname") or row.get("first")
+            full = " ".join(x for x in (first, row.get("last"), row.get("suffix")) if x)
+            ids = blank_ids()
+            ids["legisGaGovId"] = gid
+            people[vg] = {
+                "vgId": vg,
+                "name": {"full": full, "first": first, "last": row.get("last")},
+                "role": {"level": "state", "office": "legislator",
+                         "chamber": SOAP_CHAMBER.get(row.get("chamber"), row.get("chamber")),
+                         "district": row.get("district"),
+                         "party": SOAP_PARTY.get(row.get("party"), row.get("party")),
+                         "status": "former", "lastSession": last_session},
+                "ids": ids, "candidacies": [],
+                "provenance": {"legisGaGovId": prov},
+            }
+        elif person["ids"].get("legisGaGovId") is None:
+            person["ids"]["legisGaGovId"] = gid
+            person["provenance"]["legisGaGovId"] = prov
+
     records = sorted(people.values(), key=lambda r: r["vgId"])
     records += sorted(unkeyed, key=lambda r: (r["name"]["full"] or "", r["candidacies"][0]["raceId"]))
 
@@ -739,8 +849,9 @@ def main():
             "schemaVersion": SCHEMA_VERSION,
             "schemaStability": (
                 "Stable field names and meanings. Additive since version 2: rosterId, "
-                "executiveId (statewide executives, from ga-executive.json) "
-                "and ballotpediaId; ocdPersonId is now ONLY an OCD person id "
+                "executiveId (statewide executives, from ga-executive.json), "
+                "ballotpediaId, and metadata.mergedVgIds (a retired vgId forwards to "
+                "the surviving one; follow it); ocdPersonId is now ONLY an OCD person id "
                 "or null (it used to carry the roster id, which can be legis-<id>). "
                 "Changed in version 2: "
                 "peachfileFilerEntityId and fecCandidateId became the lists "
@@ -751,9 +862,14 @@ def main():
             ),
             "generatedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "count": len(records),
+            # Retired vgId -> surviving vgId. A retired id appears on no record; a
+            # consumer holding one should follow this map. Additive in version 2.
+            "mergedVgIds": dict(sorted(ledger.merged.items())),
             "scope": ("Georgia officeholders and 2026 ballot candidates: state legislators, "
                       "statewide executives, the Georgia federal delegation, and every "
-                      "candidate on a race in races.json."),
+                      "candidate on a race in races.json; plus former state legislators who "
+                      "served in a session in seat-history scope (role.status \"former\", "
+                      "keyed legis:<legisGaGovId>)."),
             "sources": [
                 "legis.ga.gov (General Assembly web services) — legisGaGovId, the primary key for state legislators",
                 "openstates/people (CC0 1.0) — ocdPersonId, ballotpediaId (cross-references, resolved on legisGaGovId)",

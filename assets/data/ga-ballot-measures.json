@@ -1,19 +1,19 @@
 {
   "metadata": {
-    "generatedAt": "2026-10-16",
+    "generatedAt": "2026-11-20",
     "election": "November 3, 2026 General Election",
     "electionDate": "2026-11-03",
     "source": "Georgia Secretary of State; Georgia General Assembly (legis.ga.gov)",
     "note": "Curated manually; conforms to ga-ballot-measures.schema.json. Lifecycle: 'potential' (passed the General Assembly, not yet certified) → 'certified' (on the ballot) → 'passed'/'failed' (terminal outcome recorded after results are certified); a measure tracked as potential that was never referred to voters ends at 'not-on-ballot'. Measures are retained across cycles as a historical record and are never deleted; consumers select the focal election by electionDate and archive past-cycle measures from active display without altering the data.",
     "schemaVersion": "1.0.0",
-    "certifiedCount": 3,
+    "certifiedCount": 0,
     "potentialCount": 0,
     "notOnBallotCount": 1
   },
   "measures": [
     {
       "id": "ga-2026-conservation-acreage",
-      "status": "certified",
+      "status": "passed",
       "type": "Constitutional Amendment",
       "title": "Increase Acre Limit for Agriculture and Timber Conservation Use Property Tax Classification Amendment",
       "subjects": ["Agriculture", "Forestry", "Tax exemptions"],
@@ -36,18 +36,17 @@
         "url": "https://www.legis.ga.gov/legislation/69433"
       },
       "results": null,
-      "unofficialResults": {
+      "results": {
         "yesPercent": 53.85,
         "noPercent": 46.15,
-        "passing": true,
-        "totalVotes": 4010569,
-        "asOf": "2026-11-04",
-        "source": "Georgia Secretary of State unofficial results; not certified"
+        "passed": true,
+        "totalVotes": 4018145,
+        "source": "Georgia Secretary of State certified results, November 3, 2026 General Election"
       }
     },
     {
       "id": "ga-2026-nonpartisan-probate",
-      "status": "certified",
+      "status": "passed",
       "type": "Constitutional Amendment",
       "title": "Require Nonpartisan Elections for Probate Judges Amendment",
       "subjects": ["Judiciary"],
@@ -70,18 +69,17 @@
         "url": "https://www.legis.ga.gov/legislation/70279"
       },
       "results": null,
-      "unofficialResults": {
+      "results": {
         "yesPercent": 68.36,
         "noPercent": 31.64,
-        "passing": true,
-        "totalVotes": 4019577,
-        "asOf": "2026-11-04",
-        "source": "Georgia Secretary of State unofficial results; not certified"
+        "passed": true,
+        "totalVotes": 4027169,
+        "source": "Georgia Secretary of State certified results, November 3, 2026 General Election"
       }
     },
     {
       "id": "ga-2026-ng911-fund",
-      "status": "certified",
+      "status": "passed",
       "type": "Constitutional Amendment",
       "title": "Authorize Creation of Next Generation 9-1-1 Fund Amendment",
       "subjects": ["Restricted-use funds"],
@@ -105,13 +103,12 @@
         "url": "https://www.legis.ga.gov/legislation/72891"
       },
       "results": null,
-      "unofficialResults": {
-        "yesPercent": 77.74,
-        "noPercent": 22.26,
-        "passing": true,
-        "totalVotes": 4025899,
-        "asOf": "2026-11-04",
-        "source": "Georgia Secretary of State unofficial results; not certified"
+      "results": {
+        "yesPercent": 77.73,
+        "noPercent": 22.27,
+        "passed": true,
+        "totalVotes": 4033554,
+        "source": "Georgia Secretary of State certified results, November 3, 2026 General Election"
       }
     },
     {

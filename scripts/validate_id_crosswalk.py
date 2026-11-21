@@ -223,6 +223,62 @@ def ledger_identity_errors(people, assign):
     return errors
 
 
+def resolve(merged, vg):
+    """Follow a retired vgId's forward (ledger `merged`) to the surviving id."""
+    seen = set()
+    while vg in merged and vg not in seen:
+        seen.add(vg)
+        vg = merged[vg]
+    return vg
+
+
+def merge_errors(assign, merged, overrides, old_merged=None, people=(), published=None):
+    """Tier 1: a ledger forward (retired vgId -> survivor) must be explicit and sound.
+
+    A forward is only ever written by an explicit `sameAs` override that joins two ids
+    both already assigned, so every forward must (1) name ids the ledger really issued,
+    (2) be one hop to a live id (no chains, no cycles), (3) be justified by a sameAs
+    override with a `_note` whose key sits on the retired id and whose target sits on
+    the survivor, (4) never disappear or change once committed, and (5) leave the
+    retired id on no published record. `published` is the crosswalk's mergedVgIds.
+    """
+    errors = []
+    issued = set(assign.values())
+    for retired, survivor in merged.items():
+        if retired not in issued:
+            errors.append(f"merged forward from {retired}, which the ledger never issued")
+        if survivor not in issued:
+            errors.append(f"merged forward {retired} -> {survivor}: survivor was never issued")
+        if survivor in merged:
+            errors.append(f"merged forward {retired} -> {survivor} is a chain "
+                          f"({survivor} is itself retired); forwards must be one hop")
+        if retired == survivor:
+            errors.append(f"merged forward {retired} points at itself")
+        why = [k for k, p in overrides.items()
+               if p.get("sameAs") and assign.get(k) == retired
+               and resolve(merged, assign.get(p["sameAs"])) == survivor]
+        if not why:
+            errors.append(f"merged forward {retired} -> {survivor} has no sameAs override "
+                          f"behind it (a key on {retired} with sameAs a key on {survivor})")
+        elif not all(overrides[k].get("_note") for k in why):
+            errors.append(f"merged forward {retired} -> {survivor}: its sameAs override "
+                          f"needs a _note recording the evidence")
+    for retired, survivor in (old_merged or {}).items():
+        if retired not in merged:
+            errors.append(f"ledger dropped merged forward {retired} -> {survivor} "
+                          f"(forwards are append-only)")
+        elif merged[retired] != survivor:
+            errors.append(f"ledger changed merged forward {retired}: was {survivor}, "
+                          f"now {merged[retired]}")
+    for p in people:
+        if p.get("vgId") in merged:
+            errors.append(f"record {p['vgId']} ({(p.get('name') or {}).get('full')}) "
+                          f"uses a retired vgId; it forwards to {merged[p['vgId']]}")
+    if published is not None and published != merged:
+        errors.append("id-crosswalk.json metadata.mergedVgIds does not match the ledger's merged")
+    return errors
+
+
 def pin_errors(people, overrides):
     """Every `pinSlots` override must be well-formed and must have landed. Error strings.
 
@@ -320,7 +376,11 @@ def main():
     people = data.get("people", [])
     meta   = data.get("metadata", {})
     ledger = load(LEDGER_FILE, {"assign": {}})
-    assign = ledger.get("assign", {})
+    raw_assign = ledger.get("assign", {})
+    merged = ledger.get("merged", {})
+    # Every identity comparison below reads through the merge forwards; the append-only
+    # check reads the raw assignments, which are never rewritten.
+    assign = {k: resolve(merged, v) for k, v in raw_assign.items()}
 
     members = load(MEMBERS_FILE)["members"]
     federal = load(FEDERAL_FILE)["members"]
@@ -421,7 +481,7 @@ def main():
                 err(f"{p.get('vgId')} kept {field} despite an ambiguous match")
 
     # --- Ledger --------------------------------------------------------------
-    for key, vg in assign.items():
+    for key, vg in raw_assign.items():
         if POSITIONAL_ID.match(key):
             err(f"ledger key {key!r} is a positional races.json candidate id — "
                 f"those shift between SoS exports and must never key identity")
@@ -439,6 +499,13 @@ def main():
         if (ids.get("rosterId") or ids.get("executiveId") or ids.get("ocdPersonId")
                 or ids.get("bioguideId")):
             continue
+        if (p.get("role") or {}).get("status") == "former":
+            # A former legislator (seat history) is keyed legis:<legisGaGovId>.
+            key = f"legis:{ids.get('legisGaGovId')}"
+            if ids.get("legisGaGovId") is None or assign.get(key) != p["vgId"]:
+                err(f"{p['vgId']} ({p['name']['full']}) is a former legislator but ledger "
+                    f"key {key} maps to {assign.get(key)}")
+            continue
         # Candidate-only: every filing it carries must point at this same vgId.
         keys = [f"peachfile:{f}" for f in ids.get("peachfileFilerEntityIds") or []]
         keys += [f"fec:{f}" for f in ids.get("fecCandidateIds") or []]
@@ -452,13 +519,20 @@ def main():
     old = git_show(LEDGER_FILE)
     if old:
         for key, vg in (old.get("assign") or {}).items():
-            if key not in assign:
+            if key not in raw_assign:
                 err(f"ledger dropped assignment {key} -> {vg} (the ledger is append-only)")
-            elif assign[key] != vg:
-                err(f"ledger renumbered {key}: was {vg}, now {assign[key]} "
+            elif raw_assign[key] != vg:
+                err(f"ledger renumbered {key}: was {vg}, now {raw_assign[key]} "
                     f"(a published vgId must never change meaning)")
     else:
         warn("ledger has no committed baseline yet — append-only check skipped")
+
+    # --- Merge forwards (retired vgId -> survivor) ---------------------------
+    xov_all = {k: v for k, v in load(OVERRIDES_FILE, {}).items() if not k.startswith("_")}
+    for msg in merge_errors(raw_assign, merged, xov_all,
+                            old_merged=(old or {}).get("merged") or {},
+                            people=people, published=meta.get("mergedVgIds") or {}):
+        err(msg)
 
     # --- sameAs merges must actually merge -----------------------------------
     xov = {k: v for k, v in load(OVERRIDES_FILE, {}).items() if not k.startswith("_")}

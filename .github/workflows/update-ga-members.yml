@@ -71,12 +71,19 @@ jobs:
             --baseline-ref HEAD \
             --report-out "$RUNNER_TEMP/ga-roster-changes.md"
 
+      # Tier 1 gate on the append-only page ledger: a published /ga-legislators/ URL must
+      # never 404. The producer already refuses (LedgerError) before writing; this re-checks
+      # the committed-vs-working diff and the roster/frozen cross-references.
+      - name: Validate legislator page ledger
+        run: python scripts/validate_ga_legislator_ledger.py --base-ref HEAD
+
       - name: Commit and push generated data
         run: |
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f assets/data/ga-members.json
+          git add -f assets/data/ga-legislator-ledger.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else

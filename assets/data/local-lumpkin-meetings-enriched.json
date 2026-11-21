@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-10T22:20:38Z",
+  "generatedAt": "2026-11-20T12:13:21Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
   "count": 25
@@ -12,18 +12,46 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-17",
+  "lastActivity": "2026-12-14",
   "topicTotals": {
+   "variance": 3,
+   "development": 9,
    "appointment": 5,
    "budget": 3,
    "contract": 8,
    "local-taxes": 8,
-   "development": 9,
-   "variance": 3,
-   "millage-budget": 4
+   "millage-budget": 3
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission Regular Meeting",
+    "date": "2026-12-14",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4520,plainText=false)",
+    "tags": [
+     "variance"
+    ],
+    "excerpt": "… Applicant: Ken Corbin Parcel Number: 095-238 Character Area: Gateway Corridor Case 208 is requesting a variance to Section 27-2.2.3 accessing nursing home from a local road. 3. Location Address: 1625 Mill Creek Road Ap …",
+    "excerptTerm": "variance"
+   },
+   {
+    "title": "BOC Public Hearing",
+    "date": "2026-12-08",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4512,plainText=false)",
+    "tags": [
+     "development"
+    ],
+    "excerpt": "… 4:00 PM • CALL TO ORDER • PUBLIC HEARING - PROPOSED REVISIONS 1. Ch. 26 Land Development, Art. III - Subdivisions, Sec. 26-64 Class V Subdivision 2. Ch. 26 Land Development, Art. III - Subdivisions, Sec. 26-65 Class VI …",
+    "excerptTerm": "subdivision"
+   },
+   {
+    "title": "Land Use & Development Regulations Review Committee Meeting",
+    "date": "2026-11-18",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4478,plainText=false)",
+    "tags": [
+     "development"
+    ]
+   },
    {
     "title": "Land Use & Development Regulations Review Committee Meeting",
     "date": "2026-11-10",
@@ -85,35 +113,16 @@
     "tags": [
      "development"
     ]
-   },
-   {
-    "title": "Planning Commission Regular Meeting",
-    "date": "2026-09-14",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4276,plainText=false)",
-    "tags": [
-     "development",
-     "variance"
-    ],
-    "excerpt": "… 083-008 Character Area: Gateway Corridor Overlay Case 186 is a request for a Preliminary Plat of a Class VIII subdivision entitled Wright Industrial Park (7 lots). 3. Location: 40 PATRIOT VIEW DRIVE; DAHLONEGA, GA 30533 Applican …",
-    "excerptTerm": "subdivision"
-   },
-   {
-    "title": "Land Use & Development Regulations Review Committee Meeting",
-    "date": "2026-09-08",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4315,plainText=false)",
-    "tags": [
-     "development"
-    ]
    }
   ],
-  "landUseMeetings": 9,
+  "landUseMeetings": 10,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
    {
     "title": "Lumpkin County Board of Commissioners Regular Meeting",
     "date": "2026-11-17",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4499,plainText=false)",
     "terms": [
      "splost"
     ]
@@ -121,7 +130,7 @@
    {
     "title": "Lumpkin County Board of Commissioners Work Session II",
     "date": "2026-11-17",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4501,plainText=false)",
     "terms": [
      "splost"
     ],
@@ -188,7 +197,7 @@
    {
     "title": "Lumpkin County Board of Commissioners Regular Meeting",
     "date": "2026-11-17",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4499,plainText=false)",
     "terms": [
      "budget calendar"
     ]
@@ -196,7 +205,7 @@
    {
     "title": "Lumpkin County Board of Commissioners Work Session II",
     "date": "2026-11-17",
-    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4501,plainText=false)",
     "terms": [
      "budget calendar"
     ]
@@ -211,22 +220,119 @@
    }
   ],
   "budgetCitations": 3,
-  "landUseCitations": 9,
+  "landUseCitations": 10,
   "alprCitations": 0,
   "dataCenterCitations": 0
  },
  "meetings": [
   {
+   "id": "1157",
+   "date": "2026-12-14",
+   "body": "Planning Commission",
+   "title": "Planning Commission Regular Meeting",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4520,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4520,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 1247,
+   "pdfSha256": "e4509a62129fc69d019dce8fd9a2c9e370f1081cae961249dac094cc9625c3a1",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Applicant: Ken Corbin Parcel Number: 095-238 Character Area: Gateway Corridor Case 208 is requesting a variance to Section 27-2.2.3 accessing nursing home from a local road. 3. Location Address: 1625 Mill Creek Road Ap …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1428",
+   "date": "2026-12-08",
+   "body": "Board of Commissioners",
+   "title": "BOC Public Hearing",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4512,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4512,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 905,
+   "pdfSha256": "e882021965b4d970df09915fc7c64139c96a8c23da04d98a5806860913314e76",
+   "topics": {
+    "development": 1
+   },
+   "tags": [
+    "development"
+   ],
+   "matchedTerms": [
+    "multifamily",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… 4:00 PM • CALL TO ORDER • PUBLIC HEARING - PROPOSED REVISIONS 1. Ch. 26 Land Development, Art. III - Subdivisions, Sec. 26-64 Class V Subdivision 2. Ch. 26 Land Development, Art. III - Subdivisions, Sec. 26-65 Class VI …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1426",
+   "date": "2026-11-18",
+   "body": "Land Use & Development Regulations Review Committee",
+   "title": "Land Use & Development Regulations Review Committee Meeting",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4478,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4478,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 695,
+   "pdfSha256": "7bfec6f68ce84ed7c38bb08f771d7e5bbf4b5586de7e0ff9545684bf005d2409",
+   "topics": {
+    "development": 1
+   },
+   "tags": [
+    "development"
+   ],
+   "matchedTerms": [
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… ulations Committee Minutes 2. Review the Gateway Corridor Overlay District Sec: 27 3.1.10 3. Review Class VI Subdivision in Chapter 26 • ADJOURNMENT",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
    "id": "1122",
    "date": "2026-11-17",
    "body": "Board of Commissioners",
    "title": "Lumpkin County Board of Commissioners Regular Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4499,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4499,plainText=false)",
    "textMethod": "pdftotext",
    "textChars": 3984,
-   "pdfSha256": "efb0a5ff05ec1aa8b749dd869c49d0b7840f9e85f45fd717c0e4a3f9edf8ac44",
+   "pdfSha256": "fa4be4feacf0edb231aa65869463a15df700d99e4e55c5367bf9a9f2ecd7f398",
    "topics": {
     "appointment": 1,
     "budget": 1,
@@ -279,12 +385,12 @@
    "date": "2026-11-17",
    "body": "Board of Commissioners",
    "title": "Lumpkin County Board of Commissioners Work Session II",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4501,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4501,plainText=false)",
    "textMethod": "pdftotext",
    "textChars": 3808,
-   "pdfSha256": "6549e82133e491013a0356445ba70e3964530124b582707e3478eafbc609e505",
+   "pdfSha256": "8ff2b1d022e9cf57f73f3c8bbb83ecfdba6c547338c247dfa29c683a40c68a39",
    "topics": {
     "appointment": 1,
     "budget": 1,
@@ -1016,111 +1122,6 @@
     }
    },
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1154",
-   "date": "2026-09-14",
-   "body": "Planning Commission",
-   "title": "Planning Commission Regular Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4276,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4276,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1355,
-   "pdfSha256": "109eeadbfa9dceb00e11cc8f9f753650f8fcd8678b2d4e53654cc2e946214eeb",
-   "topics": {
-    "development": 1,
-    "variance": 1
-   },
-   "tags": [
-    "development",
-    "variance"
-   ],
-   "matchedTerms": [
-    "subdivision",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… 083-008 Character Area: Gateway Corridor Overlay Case 186 is a request for a Preliminary Plat of a Class VIII subdivision entitled Wright Industrial Park (7 lots). 3. Location: 40 PATRIOT VIEW DRIVE; DAHLONEGA, GA 30533 Applican …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… cant: Josh Gray Parcel Number: 019-199 Character Area: Agricultural Preservation Case 187 is a request a variance from Sec. 26-68. Exemptions. (2) b. These tracts cannot be further divided within a three-year time period. 4. C …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1309",
-   "date": "2026-09-08",
-   "body": "Land Use & Development Regulations Review Committee",
-   "title": "Land Use & Development Regulations Review Committee Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4315,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4315,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 678,
-   "pdfSha256": "e0b21e8da2db2a4cb93b692ba4b8dc04d06745cb0b32dbb2586bda875caf0503",
-   "topics": {
-    "development": 1
-   },
-   "tags": [
-    "development"
-   ],
-   "matchedTerms": [
-    "multi-family",
-    "subdivision"
-   ],
-   "topicExcerpts": {
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… • CALL TO ORDER • OTHER ITEMS 1. Approve the August 31, 2026, Meeting Minutes 2. Review Class V and Class VI subdivision classes in Chapter 26 Land Development 3. Review Multi-Family Housing Chapter 26 - Article XXI • PUBLIC COMME …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1306",
-   "date": "2026-09-01",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Public Hearing",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4300,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4300,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 432,
-   "pdfSha256": "91e5c378bca9470b5cae38e509ca1122cb507052f785f2f7fe183ae611261f7d",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… tember 1, 2026 5:30 PM • CALL TO ORDER • PUBLIC COMMENT ON PROPOSED 2027 BUDGET 1. 2027 Budget Handout • ADJOURNMENT",
-     "context": "public-comment"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
    "dataCenterItems": []
   }
  ]

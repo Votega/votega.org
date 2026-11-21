@@ -1,0 +1,28 @@
+{
+  "name": "votega-mcp",
+  "private": true,
+  "version": "0.1.0",
+  "description": "VoteGA's read-only MCP server (Cloudflare Worker) at mcp.votega.org. Spec: docs/superpowers/specs/2026-10-23-mcp-server-design.md.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "bundle": "wrangler deploy --dry-run --outdir dist",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0",
+    "agents": "0.33.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "1.6.0",
+    "@cloudflare/workers-types": "5.20261104.1",
+    "@vitest/runner": "4.1.12",
+    "@vitest/snapshot": "4.1.12",
+    "typescript": "5.9.3",
+    "vitest": "4.1.12",
+    "wrangler": "4.157.0"
+  }
+}

@@ -1,12 +1,24 @@
 {
   "metadata": {
-    "description": "Approved departure labels for members leaving the General Assembly at the January 2027 rollover. Display text states only the fact and date. Not yet shown on any page: labels appear only on the former-members index and former members' pages (rollover decision D6). Keyed by legisGaGovId.",
+    "description": "Approved departure labels for members whose 2025-26 service ends at the January 2027 rollover, plus members who move to the other chamber. Display text states only the fact and date. Not yet shown on any page. Placement (rollover decision D6): former members' index and pages; a member who stays in the General Assembly after winning another seat shows the label on their own page (decided 2026-11-21). Keyed by legisGaGovId. Entries without a batch field are batch 1.",
     "session": "2025_26",
-    "batch": 1,
     "approvedBy": "site owner",
-    "approvedOn": "2026-10-30",
-    "draft": "docs/ga-departure-labels-batch1-draft.md",
-    "count": 33
+    "batches": [
+      {
+        "batch": 1,
+        "approvedOn": "2026-10-30",
+        "draft": "docs/ga-departure-labels-batch1-draft.md"
+      },
+      {
+        "batch": 2,
+        "approvedOn": "2026-11-21",
+        "draft": "docs/ga-departure-labels-batch2-draft.md",
+        "pending": [
+          "81 (Mike Cheokas, House 151): December 1, 2026 general election runoff"
+        ]
+      }
+    ],
+    "count": 61
   },
   "labels": {
     "840": {
@@ -44,10 +56,11 @@
       "name": "Mandi Ballinger",
       "chamber": "House of Representatives",
       "district": 23,
-      "type": "resigned",
-      "label": "Resigned October 12, 2025",
+      "type": "deceased",
+      "label": "Died October 12, 2025",
       "sources": [
-        "ga-members.json status and statusDate (legis.ga.gov)"
+        "ga-members.json status and statusDate (legis.ga.gov date; status corrected 2026-11-20 from Resigned)",
+        "https://www.ajc.com/politics/2025/10/state-rep-mandi-ballinger-advocate-for-children-dies-after-cancer-fight"
       ]
     },
     "4956": {
@@ -153,7 +166,7 @@
       "chamber": "House of Representatives",
       "district": 165,
       "type": "withdrew",
-      "label": "Withdrew her candidacy for re-election after qualifying. Announced on March 19, 2026 that she was leaving the Legislature.",
+      "label": "Qualified for re-election on March 4, 2026 and later withdrew her candidacy. Announced on March 19, 2026 that she was leaving the Legislature.",
       "sources": [
         "Georgia Secretary of State qualifying report (assets/data/ga-legislative-candidates.json; re-downloaded 2026-10-30)",
         "Savannah Tribune, 2026-03-25, https://www.savannahtribune.com/articles/georgia-state-representative-edna-jackson-retires-from-public-office/"
@@ -164,7 +177,7 @@
       "chamber": "Senate",
       "district": 15,
       "type": "announced-departure",
-      "label": "Announced in March 2026 he would retire after the 2026 session. Appeared on the 2026 Democratic primary ballot and received 5,574 votes.",
+      "label": "Announced on March 4, 2026 that he would not seek re-election. Qualified on March 6, 2026 and lost the Democratic primary on May 19, 2026.",
       "sources": [
         "Georgia Secretary of State qualifying report (assets/data/ga-legislative-candidates.json; re-downloaded 2026-10-30)",
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)",
@@ -177,7 +190,7 @@
       "chamber": "House of Representatives",
       "district": 157,
       "type": "lost-primary",
-      "label": "Lost the 2026 Republican primary.",
+      "label": "Lost the Republican primary on May 19, 2026.",
       "sources": [
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)"
       ]
@@ -187,7 +200,7 @@
       "chamber": "House of Representatives",
       "district": 117,
       "type": "lost-primary",
-      "label": "Lost the 2026 Democratic primary runoff.",
+      "label": "Lost the Democratic primary runoff on June 16, 2026.",
       "sources": [
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)",
         "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)"
@@ -198,7 +211,7 @@
       "chamber": "House of Representatives",
       "district": 177,
       "type": "lost-primary",
-      "label": "Lost the 2026 Democratic primary runoff.",
+      "label": "Lost the Democratic primary runoff on June 16, 2026.",
       "sources": [
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)",
         "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)"
@@ -209,71 +222,84 @@
       "chamber": "House of Representatives",
       "district": 100,
       "type": "ran-for-other-office",
-      "label": "Ran for Lieutenant Governor in 2026 (lost the Republican primary).",
+      "label": "Ran for Lieutenant Governor in 2026 (lost the Republican primary on May 19, 2026).",
       "sources": [
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)"
-      ]
+      ],
+      "office": "Lieutenant Governor",
+      "result": "lost-primary"
     },
     "4908": {
       "name": "Blake Tillery",
       "chamber": "Senate",
       "district": 19,
       "type": "ran-for-other-office",
-      "label": "Ran for Lieutenant Governor in 2026 (lost the Republican primary).",
+      "label": "Ran for Lieutenant Governor in 2026 (lost the Republican primary on May 19, 2026).",
       "sources": [
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)"
-      ]
+      ],
+      "office": "Lieutenant Governor",
+      "result": "lost-primary"
     },
     "752": {
       "name": "Steve Gooch",
       "chamber": "Senate",
       "district": 51,
       "type": "ran-for-other-office",
-      "label": "Ran for Lieutenant Governor in 2026 (lost the Republican primary).",
+      "label": "Ran for Lieutenant Governor in 2026 (lost the Republican primary on May 19, 2026).",
       "sources": [
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)"
-      ]
+      ],
+      "office": "Lieutenant Governor",
+      "result": "lost-primary"
     },
     "9": {
       "name": "Bill Cowsert",
       "chamber": "Senate",
       "district": 46,
       "type": "ran-for-other-office",
-      "label": "Ran for Attorney General in 2026 (lost the Republican primary).",
+      "label": "Ran for Attorney General in 2026 (lost the Republican primary on May 19, 2026).",
       "sources": [
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)"
-      ]
+      ],
+      "office": "Attorney General",
+      "result": "lost-primary"
     },
     "28": {
       "name": "Emanuel Jones",
       "chamber": "Senate",
       "district": 10,
       "type": "ran-for-other-office",
-      "label": "Ran for U.S. House District 13 in 2026 (lost the Democratic primary).",
+      "label": "Ran for U.S. House District 13 in 2026 (lost the Democratic primary on May 19, 2026).",
       "sources": [
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)"
-      ]
+      ],
+      "office": "U.S. House District 13",
+      "result": "lost-primary"
     },
     "4891": {
       "name": "Derrick Jackson",
       "chamber": "House of Representatives",
       "district": 68,
       "type": "ran-for-other-office",
-      "label": "Ran for Governor in 2026 (lost the Democratic primary).",
+      "label": "Ran for Governor in 2026 (lost the Democratic primary on May 19, 2026).",
       "sources": [
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)"
-      ]
+      ],
+      "office": "Governor",
+      "result": "lost-primary"
     },
     "797": {
       "name": "Emory Dunahoo",
       "chamber": "House of Representatives",
       "district": 31,
       "type": "did-not-run",
-      "label": "Did not run for re-election in 2026.",
+      "label": "Did not run for re-election in 2026 (qualifying closed March 6, 2026).",
       "sources": [
         "Georgia Secretary of State qualifying report (assets/data/ga-legislative-candidates.json; re-downloaded 2026-10-30)",
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)",
-        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)"
+        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)",
+        "Georgia Secretary of State, Federal and State Qualifying FAQ 2026 (qualifying March 2-6, 2026), https://sos.ga.gov/federal-and-state-qualifying-faq-2026"
       ]
     },
     "142": {
@@ -281,11 +307,12 @@
       "chamber": "House of Representatives",
       "district": 47,
       "type": "did-not-run",
-      "label": "Did not run for re-election in 2026.",
+      "label": "Did not run for re-election in 2026 (qualifying closed March 6, 2026).",
       "sources": [
         "Georgia Secretary of State qualifying report (assets/data/ga-legislative-candidates.json; re-downloaded 2026-10-30)",
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)",
-        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)"
+        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)",
+        "Georgia Secretary of State, Federal and State Qualifying FAQ 2026 (qualifying March 2-6, 2026), https://sos.ga.gov/federal-and-state-qualifying-faq-2026"
       ]
     },
     "4880": {
@@ -293,11 +320,12 @@
       "chamber": "House of Representatives",
       "district": 58,
       "type": "did-not-run",
-      "label": "Did not run for re-election in 2026.",
+      "label": "Did not run for re-election in 2026 (qualifying closed March 6, 2026).",
       "sources": [
         "Georgia Secretary of State qualifying report (assets/data/ga-legislative-candidates.json; re-downloaded 2026-10-30)",
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)",
-        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)"
+        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)",
+        "Georgia Secretary of State, Federal and State Qualifying FAQ 2026 (qualifying March 2-6, 2026), https://sos.ga.gov/federal-and-state-qualifying-faq-2026"
       ]
     },
     "212": {
@@ -305,11 +333,12 @@
       "chamber": "House of Representatives",
       "district": 70,
       "type": "did-not-run",
-      "label": "Did not run for re-election in 2026.",
+      "label": "Did not run for re-election in 2026 (qualifying closed March 6, 2026).",
       "sources": [
         "Georgia Secretary of State qualifying report (assets/data/ga-legislative-candidates.json; re-downloaded 2026-10-30)",
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)",
-        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)"
+        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)",
+        "Georgia Secretary of State, Federal and State Qualifying FAQ 2026 (qualifying March 2-6, 2026), https://sos.ga.gov/federal-and-state-qualifying-faq-2026"
       ]
     },
     "845": {
@@ -317,11 +346,12 @@
       "chamber": "House of Representatives",
       "district": 109,
       "type": "did-not-run",
-      "label": "Did not run for re-election in 2026.",
+      "label": "Did not run for re-election in 2026 (qualifying closed March 6, 2026).",
       "sources": [
         "Georgia Secretary of State qualifying report (assets/data/ga-legislative-candidates.json; re-downloaded 2026-10-30)",
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)",
-        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)"
+        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)",
+        "Georgia Secretary of State, Federal and State Qualifying FAQ 2026 (qualifying March 2-6, 2026), https://sos.ga.gov/federal-and-state-qualifying-faq-2026"
       ]
     },
     "738": {
@@ -329,11 +359,12 @@
       "chamber": "House of Representatives",
       "district": 128,
       "type": "did-not-run",
-      "label": "Did not run for re-election in 2026.",
+      "label": "Did not run for re-election in 2026 (qualifying closed March 6, 2026).",
       "sources": [
         "Georgia Secretary of State qualifying report (assets/data/ga-legislative-candidates.json; re-downloaded 2026-10-30)",
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)",
-        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)"
+        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)",
+        "Georgia Secretary of State, Federal and State Qualifying FAQ 2026 (qualifying March 2-6, 2026), https://sos.ga.gov/federal-and-state-qualifying-faq-2026"
       ]
     },
     "4881": {
@@ -341,11 +372,12 @@
       "chamber": "House of Representatives",
       "district": 162,
       "type": "did-not-run",
-      "label": "Did not run for re-election in 2026.",
+      "label": "Did not run for re-election in 2026 (qualifying closed March 6, 2026).",
       "sources": [
         "Georgia Secretary of State qualifying report (assets/data/ga-legislative-candidates.json; re-downloaded 2026-10-30)",
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)",
-        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)"
+        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)",
+        "Georgia Secretary of State, Federal and State Qualifying FAQ 2026 (qualifying March 2-6, 2026), https://sos.ga.gov/federal-and-state-qualifying-faq-2026"
       ]
     },
     "768": {
@@ -353,11 +385,12 @@
       "chamber": "Senate",
       "district": 44,
       "type": "did-not-run",
-      "label": "Did not run for re-election in 2026.",
+      "label": "Did not run for re-election in 2026 (qualifying closed March 6, 2026).",
       "sources": [
         "Georgia Secretary of State qualifying report (assets/data/ga-legislative-candidates.json; re-downloaded 2026-10-30)",
         "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)",
-        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)"
+        "Georgia Secretary of State certified results (primary runoff 2026-06-16, certified 2026-08-20)",
+        "Georgia Secretary of State, Federal and State Qualifying FAQ 2026 (qualifying March 2-6, 2026), https://sos.ga.gov/federal-and-state-qualifying-faq-2026"
       ]
     },
     "5097": {
@@ -371,6 +404,336 @@
         "Senate Press Office, https://senatepress.net/sen-adrienne-white-carden-officially-sworn-in-as-georgia-state-senator.html",
         "Capitol Beat, 2026-06-29, https://capitol-beat.org/2026/06/new-state-senator-fills-vacancy-restores-senate-to-capacity/"
       ]
+    },
+    "5051": {
+      "name": "Bethany Ballard",
+      "chamber": "House of Representatives",
+      "district": 147,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "823": {
+      "name": "Bill Hitchens",
+      "chamber": "House of Representatives",
+      "district": 161,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "4887": {
+      "name": "Deborah Silcox",
+      "chamber": "House of Representatives",
+      "district": 53,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "184": {
+      "name": "Don Parsons",
+      "chamber": "House of Representatives",
+      "district": 44,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "5091": {
+      "name": "Eric Gisler",
+      "chamber": "House of Representatives",
+      "district": 121,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "4936": {
+      "name": "Joseph Gullett",
+      "chamber": "House of Representatives",
+      "district": 19,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "5030": {
+      "name": "Kimberly New",
+      "chamber": "House of Representatives",
+      "district": 40,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "4886": {
+      "name": "Matt Dubnik",
+      "chamber": "House of Representatives",
+      "district": 29,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "5040": {
+      "name": "Matt Reeves",
+      "chamber": "House of Representatives",
+      "district": 99,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "5075": {
+      "name": "Noelle Kahaian",
+      "chamber": "House of Representatives",
+      "district": 81,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "219": {
+      "name": "Ron Stephens",
+      "chamber": "House of Representatives",
+      "district": 164,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "5077": {
+      "name": "Sandy Donatucci",
+      "chamber": "House of Representatives",
+      "district": 105,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "4899": {
+      "name": "Scott Hilton",
+      "chamber": "House of Representatives",
+      "district": 48,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "5042": {
+      "name": "Soo Hong",
+      "chamber": "House of Representatives",
+      "district": 103,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "4982": {
+      "name": "Clint Dixon",
+      "chamber": "Senate",
+      "district": 45,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "203": {
+      "name": "Ed Setzler",
+      "chamber": "Senate",
+      "district": 37,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "5016": {
+      "name": "Shawn Still",
+      "chamber": "Senate",
+      "district": 48,
+      "type": "lost-general",
+      "label": "Lost the general election on November 3, 2026.",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "835": {
+      "name": "Brian Strickland",
+      "chamber": "Senate",
+      "district": 42,
+      "type": "ran-for-other-office",
+      "label": "Ran for Attorney General in 2026 (lost the general election on November 3, 2026).",
+      "office": "Attorney General",
+      "result": "lost-general",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "4925": {
+      "name": "Greg Dolezal",
+      "chamber": "Senate",
+      "district": 27,
+      "type": "ran-for-other-office",
+      "label": "Ran for Lieutenant Governor in 2026 (lost the general election on November 3, 2026).",
+      "office": "Lieutenant Governor",
+      "result": "lost-general",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "5046": {
+      "name": "Tim Fleming",
+      "chamber": "House of Representatives",
+      "district": 114,
+      "type": "ran-for-other-office",
+      "label": "Ran for Secretary of State in 2026 (lost the general election on November 3, 2026).",
+      "office": "Secretary of State",
+      "result": "lost-general",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "5029": {
+      "name": "Tanya Miller",
+      "chamber": "House of Representatives",
+      "district": 62,
+      "type": "ran-for-other-office",
+      "label": "Won the general election for Attorney General on November 3, 2026.",
+      "office": "Attorney General",
+      "result": "won",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "4942": {
+      "name": "Josh McLaurin",
+      "chamber": "Senate",
+      "district": 14,
+      "type": "ran-for-other-office",
+      "label": "Won the general election for Lieutenant Governor on November 3, 2026.",
+      "office": "Lieutenant Governor",
+      "result": "won",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "4955": {
+      "name": "Houston Gaines",
+      "chamber": "House of Representatives",
+      "district": 120,
+      "type": "ran-for-other-office",
+      "label": "Won the general election for U.S. House District 10 on November 3, 2026.",
+      "office": "U.S. House District 10",
+      "result": "won",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "4953": {
+      "name": "Jasmine Clark",
+      "chamber": "House of Representatives",
+      "district": 108,
+      "type": "ran-for-other-office",
+      "label": "Won the general election for U.S. House District 13 on November 3, 2026.",
+      "office": "U.S. House District 13",
+      "result": "won",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "5039": {
+      "name": "Ruwa Romman",
+      "chamber": "House of Representatives",
+      "district": 97,
+      "type": "ran-for-other-office",
+      "label": "Won the general election for State Senate District 7 on November 3, 2026.",
+      "office": "State Senate District 7",
+      "result": "won",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "5050": {
+      "name": "Teddy Reese",
+      "chamber": "House of Representatives",
+      "district": 140,
+      "type": "ran-for-other-office",
+      "label": "Won the general election for State Senate District 15 on November 3, 2026.",
+      "office": "State Senate District 15",
+      "result": "won",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "5038": {
+      "name": "Saira Draper",
+      "chamber": "House of Representatives",
+      "district": 90,
+      "type": "ran-for-other-office",
+      "label": "Won the general election for State Senate District 44 on November 3, 2026.",
+      "office": "State Senate District 44",
+      "result": "won",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
+    },
+    "4988": {
+      "name": "Will Wade",
+      "chamber": "House of Representatives",
+      "district": 9,
+      "type": "ran-for-other-office",
+      "label": "Won the general election for State Senate District 51 on November 3, 2026.",
+      "office": "State Senate District 51",
+      "result": "won",
+      "sources": [
+        "Georgia Secretary of State certified results (general 2026-11-03, results page marked certified 2026-11-20)"
+      ],
+      "batch": 2
     }
   }
 }

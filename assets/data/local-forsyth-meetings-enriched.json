@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-10T22:20:35Z",
+  "generatedAt": "2026-11-20T12:13:20Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
   "count": 25
@@ -13,22 +13,35 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-10",
+  "lastActivity": "2026-11-19",
   "topicTotals": {
+   "contract": 25,
+   "development": 13,
+   "local-taxes": 16,
+   "rezoning": 18,
+   "special-land-use": 8,
+   "variance": 13,
    "appointment": 8,
    "budget": 2,
-   "contract": 25,
-   "rezoning": 18,
-   "special-land-use": 7,
-   "variance": 12,
    "alpr": 2,
-   "development": 12,
-   "local-taxes": 15,
-   "millage-budget": 20,
+   "millage-budget": 19,
    "comprehensive-plan": 6
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-11-19",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5419,plainText=false)",
+    "tags": [
+     "development",
+     "rezoning",
+     "special-land-use",
+     "variance"
+    ],
+    "excerpt": "… Board approval for staff to commence with the Public Hearing process regarding a County-Initiated Conditional Use Permit (CUP) to build a new dance studio on property zoned Commercial Business District (CBD) with …",
+    "excerptTerm": "conditional use"
+   },
    {
     "title": "Board of Commissioners Work Session",
     "date": "2026-11-10",
@@ -220,16 +233,6 @@
     "tags": [
      "special-land-use"
     ]
-   },
-   {
-    "title": "Board of Commissioners Regular Meeting",
-    "date": "2026-05-21",
-    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5113,plainText=false)",
-    "tags": [
-     "development",
-     "rezoning",
-     "variance"
-    ]
    }
   ],
   "landUseMeetings": 21,
@@ -253,6 +256,14 @@
   ],
   "alprMeetings": 2,
   "localTaxItems": [
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-11-19",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5419,plainText=false)",
+    "terms": [
+     "ad valorem"
+    ]
+   },
    {
     "title": "Board of Commissioners Regular Meeting",
     "date": "2026-11-05",
@@ -376,7 +387,7 @@
     ]
    }
   ],
-  "localTaxCitations": 15,
+  "localTaxCitations": 16,
   "budgetItems": [
    {
     "title": "Board of Commissioners Work Session",
@@ -405,6 +416,81 @@
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "462",
+   "date": "2026-11-19",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5419,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5419,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 28074,
+   "pdfSha256": "d8f2e50548acb51082b466108138bdef8d24e99d51a9c4e7f1d5e6ad72f5b3a7",
+   "topics": {
+    "contract": 1,
+    "development": 1,
+    "local-taxes": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "development",
+    "local-taxes",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "ad valorem",
+    "conditional use",
+    "contract",
+    "rezon",
+    "subdivision",
+    "task order",
+    "variance",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "task order",
+     "excerpt": "… Adaptive Tennis Program – Director, Department of Parks and Recreation (B) Board approval of a Task Order with United Pump and Controls, Inc. in the amount of $109,664.25 to provide services for the insta …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… 25MPH on Santiago Blvd., Maggiore Lane and all other property and property rights as shown on the Subdivision Plat for Hemingway Farm Phase 3A, recorded in Plat Book 227, Pages 75-85, Forsyth County, Georgia records …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "ad valorem",
+     "excerpt": "… deration of “Claim, Request and Demand for [Tax] Refund” requested by David and Kelly Douglas concerning ad valorem (property) taxes with regard to property located at 8980 Beaver Trl, Gainesville, Georgia 30506, designa …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Department of Planning and Community Development (AA) Board approval to postpone a Board generated rezoning for ZA4108, Vijay Garlapati, for 18 months. In accordance with UDC 8-5.5(I), if an application …",
+     "context": "unknown"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… Board approval for staff to commence with the Public Hearing process regarding a County-Initiated Conditional Use Permit (CUP) to build a new dance studio on property zoned Commercial Business District (CBD) with …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… new dance studio on property zoned Commercial Business District (CBD) with a variance to 1. Reduce the buffer abutting Georgia Highway 400 adjacent to the existing drainage easement on …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "440",
    "date": "2026-11-10",
@@ -2040,55 +2126,6 @@
     "variance": {
      "term": "variance",
      "excerpt": "… arking spaces on 1.881 acres zoned Restricted Industrial District (M1) with the following variance to: 1. Reduce the zoning buffer from 40 ft. to 0 ft. (UDC Table 14.2); 2. Reduce the zoning setback adja …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "428",
-   "date": "2026-05-12",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Work Session",
-   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5101,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5101,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 6637,
-   "pdfSha256": "c4fc65f9a2b95522934e74a7eea3a900e677d55842e0839e4be2c50f1850a152",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract",
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… and Sewer (4) Board consideration and approval of Change Order #1 to the General Services Contract No. 25-24-5211 with Tri Scapes, LLC for additional Landscaping, Ground Maintenance, and Detention Pond Cl …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… cements and Reports V. Items for Consideration and Discussion (1) Board consideration and approval of a Budget Resolution for the replacement of a total loss for unit #392 - Chief of Staff of Business Operations, She …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… a \"Time Sensitive\" basis – CIO, Department of IS&T (6) Board consideration and possible direction regarding rezoning of Parcel 118-200 from Res3 to Res1 — District 1 - Planner II, Department of Planning and Community …",
      "context": "unknown"
     }
    },

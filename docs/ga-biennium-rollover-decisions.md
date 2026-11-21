@@ -34,7 +34,7 @@ Options: (1) fresh start, archives only in the repos; (2) keep the people, archi
 6. Sponsor links for non-returning sponsors depend on D3.
 Estimate 40-60k tokens. Not verified: that every generator tolerates carrying a new biennium forward; the code comments describe the replacement as an operator rule, but this needs a review.
 
-### D3. Former members keep pages after the rollover — Proposed
+### D3. Former members keep pages after the rollover — **Decided 2026-11-13: see `docs/superpowers/specs/2026-11-13-ga-legislator-page-permanence-design.md`** (one page per person, biennium switch built now, every member's data frozen per biennium, the 11 resigned members get pages now)
 Same clean URL (`/ga-legislators/<slug>/`) for current and former members, so Georgia Commons links survive. Pages are still **built at deploy**, so the repo's "generated at build, never committed" rule holds; what changes is their source once the live roster and votes are replaced.
 **Proposed source: a former-members index written at the final freeze.** At the final `freeze-ga-roster` (see Timing below), and whenever a member departs, write a compact committed index: identity (`legisGaGovId`, roster id), name, party, chamber, district, term dates, departure classification (D6), successor, and page URL. Freeze each former member's per-member vote and sponsorship files alongside it (small ID-keyed files the generators already produce; the 11 resigned members have both today). The page builder reads the index plus those files, and survives the roster replacement.
 Not verified: whether the generators delete those per-member files for members dropped at the rollover, which determines how much needs freezing. Estimate 60-100k tokens.
@@ -59,7 +59,7 @@ Not verified: whether the generators delete those per-member files for members d
 - **One abstraction for both sides.** Build a generic "term" parameter (a Congress or a biennium) once, with the frozen index, frozen per-member files and retired-record rule shared by D3 and D12.
 - Estimate 70-110k tokens including the per-biennium data paths (the earlier 60-100k for separate pages was similar; the selector trades new pages for template changes). Rough, not measured.
 
-### D4. Indexing — Proposed
+### D4. Indexing — **Reversed 2026-11-13: former-member pages are indexed and in the sitemap** (Georgia Commons links them; see the page-permanence spec). Original proposal kept below for the record
 Former-member pages `noindex`, out of the sitemap, until we decide (avoids a thin-content risk; legislator pages already carry a per-member record summary from the thin-content SEO work). Revisit after the rollover.
 
 ### D5. Contact details on former members' pages — Proposed
@@ -100,11 +100,13 @@ Hide phone, address and email. Today the legacy shell for a resigned member stil
 
 **Decided 2026-10-30, placement:** labels appear only on the former-members index and former members' pages, not on sitting members' pages (note that a mover who wins is not in the index, per the refinement above).
 
+**Amended 2026-11-21, placement:** a member who wins another General Assembly seat and stays (Romman, Reese, Draper and Wade, House to Senate) shows their label on their own member page. They are still not in the former-members index. All other labels keep the rule above.
+
 **Decided 2026-10-30, hard gate:** the rollover refuses to run while any departing member is unresolved.
 
 **Qualifying export:** the site owner downloads it from the Secretary of State when needed. The May 19 primary report's candidate list closed with that primary, and the 2026-10-30 re-download matched the committed file, so no further pull is expected for the primary-based labels. The November report is the one that may need pulling, after certification, for any label that depends on it.
 
-**Still undecided:** nothing in the D6 process; the remaining D6 work is writing the labels (batch 1 now, batch 2 after November certification).
+**Still undecided:** nothing in the D6 process. Batch 1 (33 labels) was approved 2026-10-30, and batch 2 (28 labels, from the certified November results; `docs/ga-departure-labels-batch2-draft.md`) on 2026-11-21. One label is still to write: Cheokas (House 151), after the December 1 runoff is certified.
 
 **Sources for the cases above.**
 - Sims: notarized Affidavit for Withdrawal of Candidacy dated 2026-03-23 (a scanned PDF; per the user it came from the WALB article below, which is the citable source); WALB, 2026-03-23, https://www.walb.com/2026/03/23/state-sen-freddie-powell-sims-announces-resignation-due-husbands-illness/ (announced she would leave at the end of her current term).
@@ -209,7 +211,7 @@ The 120th Congress convenes **January 3, 2027**, eight days before the General A
 
 **Still open:** the transition guard on the roster run, who curates the 120th's key votes, and whether the D6 departure labels extend to federal members. Whether departed federal members keep a page is answered by the proposal above, pending agreement.
 
-### D13. Georgia Commons — Proposed 2026-10-30
+### D13. Georgia Commons — Proposed 2026-10-30. **Update 2026-11-12: their sponsor links are already live**, so the ordering below is moot; tell them URLs are preserved once the page-permanence spec's rollout step 1 ships
 Tell them that links to members who leave office will be preserved, or hold the sponsor-link request until D1-D4 are settled. Include the licensing questions from `docs/georgia-civic-data-collaboration.md`.
 
 **Proposed: tell them the URLs will be preserved, with two caveats, and ask the licensing questions in the same message — but do not ask them to launch the sponsor links until D3 is BUILT, not merely agreed.**
@@ -243,6 +245,8 @@ What this needs, checked 2026-11-04 against the code (nothing run):
 
 **The guard checks existence, not freshness.** `--new-biennium` refuses to run unless `sessions/<slug>/members.json` returns HTTP 200 (`outgoing_archived()` in `generate_ga_members_soap.py`). The August snapshot already satisfies that, so the rollover could proceed against a stale freeze, and the code notes that once it writes "the outgoing roster is gone from the repo."
 
+**Fixed 2026-11-21: the guard now checks freshness.** `--new-biennium` fetches the published `sessions/<slug>/members.json` and refuses unless it matches the committed roster: the same `metadata.session`, the same members by roster `id`, and the same `status`/`statusDate` for each (`frozen_roster_differences()`; cases in `scripts/test_ga_members_rollover.py`). It prints the differences. `--archive-confirmed` still skips the check. The 2026-11-21 re-freeze (step 1) matched the live roster: 247 members, no differences.
+
 **What changes after sine die, so a sine-die-only freeze misses it:** resignations, suspensions and deaths; special-election successors seating (Alvin Payton now holds House 177); and the 2026 election outcomes, which decide who returns. The roster's departure classification (D6) can only be filled in once results are certified.
 
 **What a freeze is for.** It records who served in the General Assembly. Returning members are not "former" in it. The classification belongs in the former-members index (D3), not in edits to the snapshot.
@@ -254,10 +258,10 @@ What this needs, checked 2026-11-04 against the code (nothing run):
 | **C. Two steps (proposed)** | Refresh now as a safety net, then re-freeze after results are certified | The final file is current and the early one protects against an early rollover | Two runs; the re-freeze overwrites the first (the publisher updates existing files; I have not tested an overwrite) |
 
 **Proposed sequence**
-1. **Now:** re-run `freeze-ga-roster` for 2025-2026 so the archive reflects the SOAP-era roster (11 Resigned, `votegaUrl`, current statuses).
+1. **Done 2026-11-21. Now:** re-run `freeze-ga-roster` for 2025-2026 so the archive reflects the SOAP-era roster (11 Resigned, `votegaUrl`, current statuses).
 2. **After certification and any general-election runoff:** final `freeze-ga-roster` (overwrites step 1), then generate the departure classification (D6) and the former-members index (D3) from the certified results.
 3. **Before 2027-01-11:** confirm the frozen file matches the live roster (same IDs and statuses). Then run `update-ga-members` with `new_biennium` once legis.ga.gov lists the new session (not verified how soon it does).
-4. **Strengthen the guard (about 10-15k tokens):** replace the existence check with a freshness check, for example the frozen roster's member IDs and statuses must equal the live roster's, and fail with the differences. It also makes the final freeze impossible to forget.
+4. **Done 2026-11-21: strengthen the guard.** replace the existence check with a freshness check, for example the frozen roster's member IDs and statuses must equal the live roster's, and fail with the differences. It also makes the final freeze impossible to forget.
 5. **Freeze the on-site copies before the `lib/ga_sessions.py` bump (new, 2026-11-04).** `docs/RECURRING-TASKS.md` §3 freezes only the roster; the producers then drop the outgoing biennium from the live files, and the slice builders delete stale slices. If the D2, D3, D10 and D12 selectors are built, the frozen sets must exist first: the 2025-26 bills file (D2), the vote index and per-member vote and sponsorship slices (D3), `ga-party-unity.json` (D10), and, for the federal side, the 119th set under `assets/data/federal-119th/` (D12, due by 2 January 2027). Put them under per-biennium paths the builders do not clear, and never re-run the party-vote enricher on a frozen bills file. Add this as step 2b of `RECURRING-TASKS.md` §3 when it is built.
 6. Fold two items from `docs/RECURRING-TASKS.md` §3 step 5 into the same plan: work `newMemberNameReview` before the first entity-page build of the new biennium (a newcomer's URL is slugged from the formal legis.ga.gov name, and fixing it later moves the URL), and confirm or replace the carried-forward Lt. Governor record, since a new Lt. Governor takes office in January 2027.
 7. Assign an owner and a calendar reminder for steps 2-3 and 5.

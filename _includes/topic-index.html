@@ -106,11 +106,13 @@
 </p>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/meeting-outcome.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/topic-index.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   TopicIndex.init({
     topic: {{ page.topic | jsonify }},
     name: {{ t.name | jsonify }},
-    emoji: {{ t.emoji | jsonify }}
+    emoji: {{ t.emoji | jsonify }}{% if t.default_sort %},
+    defaultSort: {{ t.default_sort | jsonify }}{% endif %}
   });
 </script>

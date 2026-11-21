@@ -13,6 +13,18 @@
    "region": "East Georgia"
   },
   {
+   "placeId": "dalton",
+   "placeName": "City of Dalton",
+   "placeType": "city",
+   "region": "Northwest Georgia"
+  },
+  {
+   "placeId": "hall",
+   "placeName": "Hall County",
+   "placeType": "county",
+   "region": "Northeast Georgia"
+  },
+  {
    "placeId": "newton",
    "placeName": "Newton County",
    "placeType": "county",
@@ -23,18 +35,164 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-19",
+   "docType": "agenda",
+   "excerpt": "… deration of “Claim, Request and Demand for [Tax] Refund” requested by David and Kelly Douglas concerning ad valorem (property) taxes with regard to property located at 8980 Beaver Trl, Gainesville, Georgia 30506, designa …",
+   "excerptTerm": "ad valorem",
+   "fips": "13117",
+   "followThrough": "not-in-minutes",
+   "meetingId": "462",
+   "outcomes": [],
+   "placeId": "forsyth",
+   "placeName": "Forsyth County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5419,plainText=false)",
+   "tags": [],
+   "terms": [
+    "ad valorem"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-19",
+   "docType": "agenda",
+   "excerpt": "… Gold, Silver, and Bronze Award. PUBLIC HEARING 3. To conduct a public hearing regarding proposed Cobb County Tax Allocation District #1: Town Center Area Redevelopment Plan. PUBLIC COMMENT Those persons wishing to address the Board of Com …",
+   "excerptTerm": "tax allocation district",
+   "fips": "13067",
+   "placeId": "cobb",
+   "placeName": "Cobb County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10359,plainText=false)",
+   "tags": [],
+   "terms": [
+    "local option sales tax",
+    "special purpose local option",
+    "tax allocation district"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of County Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-19",
+   "docType": "agenda",
+   "excerpt": "… Chairman Martin Turner Roll Call Public Hearing • To receive comments from the public regarding the tentative Millage Rate. Adjourn Public Hearing As set forth in the Americans with Disabilities Act of 1992, Camden County does …",
+   "excerptTerm": "millage",
+   "fips": "13039",
+   "placeId": "camden",
+   "placeName": "Camden County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_11192026-679",
+   "tags": [],
+   "terms": [
+    "millage"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of County Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-19",
+   "docType": "agenda",
+   "excerpt": "… Chairman Martin Turner Roll Call Public Hearing • To receive comments from the public regarding the tentative Millage Rate. Adjourn Public Hearing As set forth in the Americans with Disabilities Act of 1992, Camden County does …",
+   "excerptTerm": "millage",
+   "fips": "13039",
+   "placeId": "camden",
+   "placeName": "Camden County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_11192026-678",
+   "tags": [],
+   "terms": [
+    "millage"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "… t will add significant tax revenue for the county over the 30-year life term. Inman Solar is not requesting any form of tax abatement. We estimate the personal property tax revenue to the county to be over $500,000, with $193,000 of tax revenue being pa …",
+   "excerptTerm": "tax abatement",
+   "fips": "13211",
+   "placeId": "morgan",
+   "placeName": "Morgan County",
+   "placeType": "county",
+   "region": "Northeast Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.morgancountyga.gov/AgendaCenter/ViewFile/Agenda/_11172026-889",
+   "tags": [],
+   "terms": [
+    "ad valorem",
+    "homestead exemption",
+    "local option sales tax",
+    "millage",
+    "splost",
+    "tax abatement",
+    "tax digest"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "public-comment",
    "date": "2026-11-17",
    "docType": "agenda",
    "excerpt": "… Members of the Lumpkin County Board of Commissioners (District 3 Commissioner Nathan Davis) 16. 2026-67 IGA for TSPLOST Distribution 17. 2026-68 TSPLOST Resolution Call for Election 18. 2026-69 Resolution Requesting Georgia Department of …",
    "excerptTerm": "splost",
    "fips": "13187",
+   "followThrough": "recorded",
+   "meetingId": "1122",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "2026-67 IGA for TSPLOST Distribution",
+     "outline": "16.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Table",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "2026-68 TSPLOST Resolution Call for Election",
+     "outline": "17.",
+     "reference": null
+    }
+   ],
    "placeId": "lumpkin",
    "placeName": "Lumpkin County",
    "placeType": "county",
    "region": "Northeast Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4468,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4499,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -50,12 +208,15 @@
    "excerpt": "… Members of the Lumpkin County Board of Commissioners (District 3 Commissioner Nathan Davis) 16. 2026-67 IGA for TSPLOST Distribution 17. 2026-68 TSPLOST Resolution Call for Election 18. 2026-69 Resolution Requesting Georgia Department of …",
    "excerptTerm": "splost",
    "fips": "13187",
+   "followThrough": "no-results",
+   "meetingId": "1110",
+   "outcomes": [],
    "placeId": "lumpkin",
    "placeName": "Lumpkin County",
    "placeType": "county",
    "region": "Northeast Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4466,plainText=false)",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4501,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -68,7 +229,28 @@
    "context": "agenda-action",
    "date": "2026-11-17",
    "docType": "agenda",
-   "excerpt": "… unty Funds Account. (Presenter: Rhett Wheeler, Director of Fleet Services)(Exhibit 6) SPLOST A. Resolution approving a change order for Sol Construction, LLC in the amount of $13 …",
+   "excerpt": "… e Extension project, with Georgia Power, in an amount not to exceed $2,612,827. This project will be funded by the 2024 SPLOST and the Georgia Department of Transportation. 4. Resolution (Ocmulgee National Park and Preserve Initiative) – Comm …",
+   "excerptTerm": "splost",
+   "fips": "13153",
+   "placeId": "houston",
+   "placeName": "Houston County",
+   "placeType": "county",
+   "region": "Middle Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.houstoncountyga.gov/minutes/2026-11-17%20Agenda.pdf",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "… Account. (Presenter: Rhett Wheeler, Director of Fleet Services)(Exhibit 6) Resolution 26-396 SPLOST A. Resolution approving a change order for Sol Construction, LLC in the amount of $139,225. …",
    "excerptTerm": "splost",
    "fips": "13151",
    "placeId": "henry",
@@ -76,10 +258,244 @@
    "placeType": "county",
    "region": "Metro Atlanta",
    "sourceType": "ocr",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2695,plainText=false)",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2705,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "… he Chairwoman, or designee, to sign any and all related documents. The local match will be funded by the 2023 SPLOST Program. IX. Comments from Audience X. Adjournment",
+   "excerptTerm": "splost",
+   "fips": "13135",
+   "placeId": "gwinnett",
+   "placeName": "Gwinnett County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261117/a_80124_2026.11.17___AMENDED_Public_Hearing_Agenda.pdf",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "… request from Administration to approve contract with Denson Engineering, Inc. for design services for the 2018 SPLOST Sugar Valley Station project in the amount of $20,000 budgeted using GL Account 328-542511. XII.​ Ad …",
+   "excerptTerm": "splost",
+   "fips": "13129",
+   "placeId": "gordon",
+   "placeName": "Gordon County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_11172026-1133",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "… ly purchased ambulances for the Douglas County Fire Department, in the amount of $7,294.24 to be funded through SPLOST 2022 funds and authorize the Chairman to sign all related documents pending further legal review. 22. Approval of a …",
+   "excerptTerm": "splost",
+   "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1180",
+   "outcomes": [],
+   "placeId": "douglas",
+   "placeName": "Douglas County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7688,plainText=false)",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "Commission District(s): All To Appropriate SPLOST 1 3J Funding to Purchase, Install and Repair Lou Walker Kitchen Equipment, Substitute Item & Correction to Agenda Item …",
+   "excerptTerm": "splost",
+   "fips": "13089",
+   "placeId": "dekalb",
+   "placeName": "DeKalb County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "legistar",
+   "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4498&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Mayor & Commission Meetings",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "… 7 contingency funds to support expanded day services provided by the Sparrow’s Nest. 6. Adopt: TSPLOST 2023 Project 11, East Athens MLK Parkway Oconee River Greenway Trail – Budget Ordinance – 176/2026 …",
+   "excerptTerm": "splost",
+   "fips": "13059",
+   "placeId": "clarke",
+   "placeName": "Athens-Clarke County",
+   "placeType": "consolidated",
+   "region": "Northeast Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_11172026-3143",
+   "tags": [],
+   "terms": [
+    "local option sales tax",
+    "referendum",
+    "special purpose local option",
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of County Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "… the tax revenue for the properties. It's my understanding that Mr. Tovey has specifically acknowledged that he wants NO tax abatements. Imagine what that additional money could do to benefit the community, no, a better question would be \"What benefits w …",
+   "excerptTerm": "tax abatement",
+   "fips": "13039",
+   "placeId": "camden",
+   "placeName": "Camden County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_11172026-677",
+   "tags": [],
+   "terms": [
+    "millage",
+    "referendum",
+    "splost",
+    "tax abatement"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-16",
+   "docType": "agenda",
+   "excerpt": "… sioner James Dutton to lead the Pledge to the Flag. IV. PRESENTATIONS/PROCLAMATIONS 1. Recognition of the SPLOST Committee for their hard work and dedication. 2. Recognition of GRPA State Award Recipients. V. PRESENTA …",
+   "excerptTerm": "splost",
+   "fips": "13255",
+   "placeId": "spalding",
+   "placeName": "Spalding County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://spaldingcounty.granicus.com/AgendaViewer.php?view_id=1&event_id=955",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-16",
+   "docType": "agenda",
+   "excerpt": "… ly purchased ambulances for the Douglas County Fire Department, in the amount of $7,294.24 to be funded through SPLOST 2022 funds and authorize the Chairman to sign all related documents pending further legal review. (Julia Janka) 19. …",
+   "excerptTerm": "splost",
+   "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1218",
+   "outcomes": [],
+   "placeId": "douglas",
+   "placeName": "Douglas County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7673,plainText=false)",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "City Council",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-16",
+   "docType": "agenda",
+   "excerpt": "… NOT TO EXCEED FOUR MILLION DOLLARS AND ZERO CENTS ($4,000,000.00), FROM THE PARKS MILLAGE FUND TO SUPPORT THE DESIGN AND CONSTRUCTION OF THE IMPROVEMENTS; AND FOR SUCH OTHER …",
+   "excerptTerm": "millage",
+   "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4421",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4175&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "next": "Community Development/Human Services Committee (11/24/2026 1:30 PM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS BYRON D. AMOS, ANTONIO LEWIS, DUSTIN HILLIS, AND ESHÉ COLLINS TO RESERVE FIFTY PERCENT (50%) OF AVAILABLE EXISTING FUNDS WITHIN THE ATLANTA BELTLINE TAX ALLOCATION DISTRICT AS OF JANUARY 1, 2027, AND ALL AVAILABLE FUTURE DEPOSITS THEREIN, EXCLUSIVELY FOR ELIGIBLE…",
+     "outline": null,
+     "reference": "26-O-1592"
+    },
+    {
+     "motions": [
+      {
+       "next": "Finance/Executive Committee (11/24/2026 1:30 PM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS JASON DOZIER, MATT WESTMORELAND, JASON H. WINSTON, LILIANA BAKHTIARI, DUSTIN HILLIS, AND KELSEA BOND AS SUBSTITUTED BY FINANCE/EXECUTIVE COMMITTEE TO PROVIDE FOR RESTRICTIONS ON THE USE OF THE EMERGENCY TELEPHONE SYSTEM FUND, THE COMMUNITY DEVELOPMENT BLOCK GRANT…",
+     "outline": null,
+     "reference": "26-O-1400"
+    }
+   ],
+   "placeId": "atlanta",
+   "placeName": "City of Atlanta",
+   "placeType": "city",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=3966&Inline=True",
+   "tags": [],
+   "terms": [
+    "hotel/motel tax",
+    "millage",
+    "splost",
+    "tax abatement",
+    "tax allocation district"
    ],
    "vendors": []
   },
@@ -178,6 +594,27 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-10",
+   "docType": "agenda",
+   "excerpt": "… . Rome Floyd Planning Commission Next Meeting, Thursday, December 3, 2:00 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5284,plainText=false)",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "agenda-action",
    "date": "2026-11-10",
    "docType": "agenda",
@@ -226,6 +663,24 @@
    "excerpt": "… TELEPHONE SYSTEM FUND, THE COMMUNITY DEVELOPMENT BLOCK GRANT FUND, THE TSPLOST FUND, THE INTERGOVERNMENTAL GRANT FUND, THE JOB TRAINING GRANT FUND, THE HOME INVESTMENT …",
    "excerptTerm": "splost",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4300",
+   "minutesDraft": true,
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4173&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "next": "11/16/2026 1:00 PM",
+       "resultClass": "held",
+       "resultText": "Held in committee"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS JASON DOZIER, MATT WESTMORELAND, JASON H. WINSTON, LILIANA BAKHTIARI, DUSTIN HILLIS, AND KELSEA BOND AS SUBSTITUTED BY FINANCE/EXECUTIVE COMMITTEE TO PROVIDE FOR RESTRICTIONS ON THE USE OF THE EMERGENCY TELEPHONE SYSTEM FUND, THE COMMUNITY DEVELOPMENT BLOCK GRANT…",
+     "outline": null,
+     "reference": "26-O-1400"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -350,12 +805,36 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-06",
+   "docType": "agenda",
+   "excerpt": "… Connection Partnership Grant. 3. Request approval of a resolution to open an account with GA Fund 1 for SPLOST VIII proceeds. 4. Request Board Approval to Add One Additional Community Paramedic I Position …",
+   "excerptTerm": "splost",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1750&Inline=True",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "unknown",
    "date": "2026-11-05",
    "docType": "agenda",
    "excerpt": "… As-Needed Agreement for Volkert, Inc. in an amount not to exceed $141,365.00 for SPLOST IX Transportation Bundle 7, Holtzclaw Road at Chattahoochee Road (PE148) Roundabout Project – Tran …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "not-in-minutes",
+   "meetingId": "461",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -527,6 +1006,9 @@
    "excerpt": "… Members of the Lumpkin County Board of Commissioners (District 3 Commissioner Nathan Davis) 16. 2026-67 IGA for TSPLOST Distribution Regular Meeting 17. 2026-68 TSPLOST Resolution Call for Election Regular Meeting 18. 2026-69 Resolution …",
    "excerptTerm": "splost",
    "fips": "13187",
+   "followThrough": "no-results",
+   "meetingId": "1098",
+   "outcomes": [],
    "placeId": "lumpkin",
    "placeName": "Lumpkin County",
    "placeType": "county",
@@ -720,6 +1202,9 @@
    "excerpt": "… The Purpose Of Funding Site Work And Planning Services (Sponsored by: Lester M. Miller, Mayor) 7. Other Local Option Sales Tax a. A Resolution Of The Macon-Bibb County Commission Requesting The Elections Superintendent To Iss …",
    "excerptTerm": "local option sales tax",
    "fips": "13021",
+   "followThrough": "no-results",
+   "meetingId": "2537",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -744,6 +1229,9 @@
    "excerpt": "… esolution Of The Macon-Bibb County Commission Requesting The Elections Superintendent To Issue A Call For A Referendum On The Question Of Whether To Renew The Other Local Option Sales Tax (“OLOST”) For A Period Of Five …",
    "excerptTerm": "referendum",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2396",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -789,6 +1277,36 @@
    "excerpt": "… n 2 $87,290.50 + Contingency $12,709.50) for the Chicago Avenue Maintenance Complex fence and gates to be funded by SPLOST 2022 and authorize the Chairman to sign all related documents pending final legal review. (Julia Janka) 15. App …",
    "excerptTerm": "splost",
    "fips": "13097",
+   "followThrough": "recorded",
+   "meetingId": "1377",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "Approval of a contract with Green Heart Enterprises in the amount of $100,000.00 (Option 2 $87,290.50 + Contingency $12,709.50) for the Chicago Avenue Maintenance Complex fence and gates to be funded by SPLOST 2022 and authorize the Chairman to sign all related documents pending final legal review.",
+     "outline": "14.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "Approval of an agreement with Greystone Power in the amount of $93,211.57, in connection with the installation of streetlights on Lee Road Phase II, to be funded by SPLOST 2016 and authorize the Chairman to sign all related documents pending final legal review. (Was left off of the last Consent…",
+     "outline": "17.",
+     "reference": null
+    }
+   ],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -810,6 +1328,64 @@
    "excerpt": "… ORDINANCE BY FINANCE/EXECUTIVE COMMITTEE TO AMEND SECTION 146-26 OF ATLANTA CITY CODE, TO SET THE AD VALOREM TAX RATE FOR THE GENERAL LEVY, BONDED INDEBTEDNESS LEVY, PARKS LEVY, EDUCATION LEVY, SPECIAL …",
    "excerptTerm": "ad valorem",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4420",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4157&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "absent": 5,
+       "result": "passed",
+       "resultClass": "adopted-substitute",
+       "resultText": "Adopted on substitute",
+       "tally": [
+        10,
+        0
+       ],
+       "yes": 10
+      },
+      {
+       "absent": 5,
+       "result": "passed",
+       "resultClass": "adopted",
+       "resultText": "Adopted",
+       "tally": [
+        10,
+        0
+       ],
+       "yes": 10
+      }
+     ],
+     "name": "A SUBSTITUTE ORDINANCE BY FINANCE/EXECUTIVE COMMITTEE TO AMEND SECTION 146-26 OF ATLANTA CITY CODE, TO SET THE AD VALOREM TAX RATE FOR THE GENERAL LEVY, BONDED INDEBTEDNESS LEVY, PARKS LEVY, EDUCATION LEVY, SPECIAL TAX DISTRICT LEVY, THE ATLANTA BELTLINE SPECIAL SERVICE DISTRICT LEVY, AND THE…",
+     "outline": null,
+     "reference": "26-O-1238"
+    },
+    {
+     "motions": [
+      {
+       "next": "Community Development/Human Services Committee (11/10/2026 1:30 PM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS BYRON D. AMOS, ANTONIO LEWIS, DUSTIN HILLIS, AND ESHÉ COLLINS TO RESERVE FIFTY PERCENT (50%) OF AVAILABLE EXISTING FUNDS WITHIN THE ATLANTA BELTLINE TAX ALLOCATION DISTRICT AS OF JANUARY 1, 2027, AND ALL AVAILABLE FUTURE DEPOSITS THEREIN, EXCLUSIVELY FOR ELIGIBLE…",
+     "outline": null,
+     "reference": "26-O-1592"
+    },
+    {
+     "motions": [
+      {
+       "next": "Finance/Executive Committee (11/10/2026 1:30 PM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS JASON DOZIER, MATT WESTMORELAND, JASON H. WINSTON, LILIANA BAKHTIARI, DUSTIN HILLIS, AND KELSEA BOND AS SUBSTITUTED BY FINANCE/EXECUTIVE COMMITTEE TO PROVIDE FOR RESTRICTIONS ON THE USE OF THE EMERGENCY TELEPHONE SYSTEM FUND, THE COMMUNITY DEVELOPMENT BLOCK GRANT…",
+     "outline": null,
+     "reference": "26-O-1400"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -836,6 +1412,44 @@
    "excerpt": "… XECUTIVE COMMITTEE TO AMEND SECTION 146-26 OF ATLANTA CITY CODE OF ORDINANCES, TO SET THE AD VALOREM TAX RATE FOR THE GENERAL LEVY, BONDED INDEBTEDNESS LEVY, PARKS …",
    "excerptTerm": "ad valorem",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4299",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4155&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "absent": 2,
+       "next": "11/2/2026 1:00 PM",
+       "resultClass": "recommended",
+       "resultText": "Favorable on substitute",
+       "yes": 5
+      },
+      {
+       "absent": 2,
+       "result": "passed",
+       "resultClass": "adopted",
+       "resultText": "Approved",
+       "yes": 5
+      }
+     ],
+     "name": "A SUBSTITUTE ORDINANCE BY FINANCE/EXECUTIVE COMMITTEE TO AMEND SECTION 146-26 OF ATLANTA CITY CODE, TO SET THE AD VALOREM TAX RATE FOR THE GENERAL LEVY, BONDED INDEBTEDNESS LEVY, PARKS LEVY, EDUCATION LEVY, SPECIAL TAX DISTRICT LEVY, THE ATLANTA BELTLINE SPECIAL SERVICE DISTRICT LEVY, AND THE…",
+     "outline": null,
+     "reference": "26-O-1238"
+    },
+    {
+     "motions": [
+      {
+       "next": "11/2/2026 1:00 PM",
+       "resultClass": "held",
+       "resultText": "Held in committee"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS JASON DOZIER, MATT WESTMORELAND, JASON H. WINSTON, LILIANA BAKHTIARI, DUSTIN HILLIS, AND KELSEA BOND AS SUBSTITUTED BY FINANCE/EXECUTIVE COMMITTEE TO PROVIDE FOR RESTRICTIONS ON THE USE OF THE EMERGENCY TELEPHONE SYSTEM FUND, THE COMMUNITY DEVELOPMENT BLOCK GRANT…",
+     "outline": null,
+     "reference": "26-O-1400"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -867,6 +1481,27 @@
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261027/a_22349_2026.10.27___Public_Hearing_Agenda.pdf",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-10-27",
+   "docType": "agenda",
+   "excerpt": "… . Rome Floyd Planning Commission Next Meeting, Thursday, November 5, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD, 2026 j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5275,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -945,6 +1580,24 @@
    "excerpt": "… LINS TO RESERVE FIFTY PERCENT (50%) OF AVAILABLE EXISTING FUNDS WITHIN THE ATLANTA BELTLINE TAX ALLOCATION DISTRICT AS OF JANUARY 1, 2027, AND ALL AVAILABLE FUTURE DEPOSITS THEREIN, EXCLUSIVELY …",
    "excerptTerm": "tax allocation district",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4338",
+   "minutesDraft": true,
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4152&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "resultClass": "held",
+       "resultText": "Held in committee",
+       "yes": 7
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS BYRON D. AMOS, ANTONIO LEWIS, DUSTIN HILLIS, AND ESHÉ COLLINS TO RESERVE FIFTY PERCENT (50%) OF AVAILABLE EXISTING FUNDS WITHIN THE ATLANTA BELTLINE TAX ALLOCATION DISTRICT AS",
+     "outline": null,
+     "reference": "26-O-1592"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -1080,6 +1733,20 @@
    "excerpt": "… by Branan) 18. Amendment of Pay in Lieu of Benefits for Elected Officials (Finance Director Abby Branan) 19. 2026 SPLOST 2026 Work Plan Amendment (Finance Director Abby Branan) • COUNTY MANAGER • ASSISTANT COUNTY MANAGER & DEPARTMENT H …",
    "excerptTerm": "splost",
    "fips": "13187",
+   "followThrough": "recorded",
+   "meetingId": "1121",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve"
+      }
+     ],
+     "name": "2026 SPLOST 2026 Work Plan Amendment (Finance Director Abby Branan)&nbsp;",
+     "outline": "19.",
+     "reference": null
+    }
+   ],
    "placeId": "lumpkin",
    "placeName": "Lumpkin County",
    "placeType": "county",
@@ -1101,6 +1768,9 @@
    "excerpt": "… by Branan) 18. Amendment of Pay in Lieu of Benefits for Elected Officials (Finance Director Abby Branan) 19. 2026 SPLOST 2026 Work Plan Amendment (Finance Director Abby Branan) • COUNTY MANAGER • ASSISTANT COUNTY MANAGER & DEPARTMENT H …",
    "excerptTerm": "splost",
    "fips": "13187",
+   "followThrough": "no-results",
+   "meetingId": "1109",
+   "outcomes": [],
    "placeId": "lumpkin",
    "placeName": "Lumpkin County",
    "placeType": "county",
@@ -1206,6 +1876,9 @@
    "excerpt": "… Services As- Needed Agreement for Volkert, Inc. in an amount not to exceed $141,365.00 for SPLOST IX Transportation Bundle 7, Holtzclaw Road at Chattahoochee Road (PE148) Roundabout Project – Transportat …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "not-in-minutes",
+   "meetingId": "439",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -1227,6 +1900,9 @@
    "excerpt": "… ff's Department indoor shooting range (Building improvement) in the amount of $119,000 to be funded by the 2022 SPLOST fund and authorize the Chairman to sign all related documents pending final legal review. 23. Approval of the BIS D …",
    "excerptTerm": "splost",
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1179",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -1354,6 +2030,9 @@
    "excerpt": "… ommunications, Inc., For The Replacement Of Radio Equipment In The Amount Of $235,582.27, To Be Paid From The SPLOST 2025 Fund – Public Safety – Public Safety Other – Property Line Item; (Sponsored by: Lester M. Miller, Mayor) c. …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2408",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -1380,6 +2059,36 @@
    "excerpt": "… ommunications, Inc., For The Replacement Of Radio Equipment In The Amount Of $235,582.27, To Be Paid From The SPLOST 2025 Fund – Public Safety – Public Safety Other – Property Line Item; (Sponsored by: Lester M. Miller, Mayor) c. …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "recorded",
+   "meetingId": "2362",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Williams Communications, Inc., For The Replacement Of Radio Equipment In The Amount Of $235,582.27, To Be Paid From The SPLOST 2025 Fund – Public Safety – Public Safety Other – Property Line Item;",
+     "outline": "b.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "An Ordinance Of The Macon-Bibb County Commission Authorizing The Mayor To Execute Component Change Order # 4 To The Construction Manager-At-Risk Agreement With Barton Malow Builders LLC For The Macon Arena Project, In The Total Amount Of $59,428,861.00, Payable From 2026 Arena Bond Proceeds;…",
+     "outline": "h.",
+     "reference": null
+    }
+   ],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -1492,6 +2201,9 @@
    "excerpt": "… ff's Department indoor shooting range (Building improvement) in the amount of $119,000 to be funded by the 2022 SPLOST fund and authorize the Chairman to sign all related documents pending final legal review. (Tavarreus Pounds) Work …",
    "excerptTerm": "splost",
    "fips": "13097",
+   "followThrough": "no-results",
+   "meetingId": "1138",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -1513,6 +2225,47 @@
    "excerpt": "… THIRTY-FOUR THOUSAND THREE HUNDRED SEVENTY-FOUR DOLLARS AND SEVENTY-FIVE CENTS ($834,374.75), AND TAX ALLOCATION DISTRICT NUMBER FIVE - EASTSIDE (THE “EASTSIDE TAD”) IN AN AMOUNT NOT TO EXCEED SEVEN HUNDRED SIXTY …",
    "excerptTerm": "tax allocation district",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4419",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4149&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "next": "Finance/Executive Committee (10/28/2026 1:30 PM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "AN ORDINANCE BY FINANCE/EXECUTIVE COMMITTEE TO AMEND SECTION 146-26 OF ATLANTA CITY CODE OF ORDINANCES, TO SET THE AD VALOREM TAX RATE FOR THE GENERAL LEVY, BONDED INDEBTEDNESS LEVY, PARKS LEVY, EDUCATION LEVY, SPECIAL TAX DISTRICT LEVY, THE ATLANTA BELTLINE SPECIAL SERVICE DISTRICT LEVY, AND THE…",
+     "outline": null,
+     "reference": "26-O-1238"
+    },
+    {
+     "motions": [
+      {
+       "next": "Finance/Executive Committee (10/28/2026 1:30 PM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS JASON DOZIER, MATT WESTMORELAND, JASON H. WINSTON, LILIANA BAKHTIARI, DUSTIN HILLIS, AND KELSEA BOND AS SUBSTITUTED BY FINANCE/EXECUTIVE COMMITTEE TO PROVIDE FOR RESTRICTIONS ON THE USE OF THE EMERGENCY TELEPHONE SYSTEM FUND, THE COMMUNITY DEVELOPMENT BLOCK GRANT…",
+     "outline": null,
+     "reference": "26-O-1400"
+    },
+    {
+     "motions": [
+      {
+       "next": "Community Development/Human Services Committee (10/27/2026 1:30 PM)",
+       "resultClass": "referred",
+       "resultText": "Referred without objection"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS BYRON D. AMOS, ANTONIO LEWIS, DUSTIN HILLIS, AND ESHE' COLLINS TO RESERVE FIFTY PERCENT (50%) OF AVAILABLE EXISTING FUNDS WITHIN THE ATLANTA BELTLINE TAX ALLOCATION DISTRICT AS OF JANUARY 1, 2027, AND ALL AVAILABLE FUTURE DEPOSITS THEREIN, EXCLUSIVELY FOR ELIGIBLE…",
+     "outline": null,
+     "reference": "26-O-1592"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -1533,12 +2286,50 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-10-16",
+   "docType": "agenda",
+   "excerpt": "… t Program (PSGP) for the new Marine Patrol facility. (NOTE; A match of up to $250, 000 will be required (SPLOST & CIP Funds). 9. Request Board approval of resolution and approval of execution of warranty deed …",
+   "excerptTerm": "splost",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1747&Inline=True",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "public-comment",
    "date": "2026-10-15",
    "docType": "agenda",
    "excerpt": "… RESOLUTIONS 1. 2026-56 Amend the 2027 Budget (Finance Director Abby Branan) 2. 2026-57 Resolution Revising 2026 Ad Valorem Tax Millage Rate (Finance Director Abby Branan) • ADJOURNMENT",
    "excerptTerm": "ad valorem",
    "fips": "13187",
+   "followThrough": "recorded",
+   "meetingId": "1417",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "2026-57 Resolution Revising 2026 Ad Valorem Tax Millage Rate (Finance Director Abby Branan)",
+     "outline": "2.",
+     "reference": null
+    }
+   ],
    "placeId": "lumpkin",
    "placeName": "Lumpkin County",
    "placeType": "county",
@@ -1561,6 +2352,9 @@
    "excerpt": "… Management and Construction Engineering & Inspection (CEI) Services As- Needed Agreement for SPLOST IX Bundle 5, Old Atlanta Road Safety Improvement (PERS1) with Spicer Group Inc., in the amount no …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "not-in-minutes",
+   "meetingId": "460",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -1606,6 +2400,35 @@
    "excerpt": "… XECUTIVE COMMITTEE TO AMEND SECTION 146-26 OF ATLANTA CITY CODE OF ORDINANCES, TO SET THE AD VALOREM TAX RATE FOR THE GENERAL LEVY, BONDED INDEBTEDNESS LEVY, PARKS …",
    "excerptTerm": "ad valorem",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4298",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4147&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "next": "10/19/2026 1:00 PM",
+       "resultClass": "held",
+       "resultText": "Held in committee"
+      }
+     ],
+     "name": "AN ORDINANCE BY FINANCE/EXECUTIVE COMMITTEE TO AMEND SECTION 146-26 OF ATLANTA CITY CODE OF ORDINANCES, TO SET THE AD VALOREM TAX RATE FOR THE GENERAL LEVY, BONDED INDEBTEDNESS LEVY, PARKS LEVY, EDUCATION LEVY, SPECIAL TAX DISTRICT LEVY, THE ATLANTA BELTLINE SPECIAL SERVICE DISTRICT LEVY, AND THE…",
+     "outline": null,
+     "reference": "26-O-1238"
+    },
+    {
+     "motions": [
+      {
+       "next": "10/19/2026 1:00 PM",
+       "resultClass": "held",
+       "resultText": "Held in committee"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS JASON DOZIER, MATT WESTMORELAND, JASON H. WINSTON, LILIANA BAKHTIARI, DUSTIN HILLIS, AND KELSEA BOND AS SUBSTITUTED BY FINANCE/EXECUTIVE COMMITTEE TO PROVIDE FOR RESTRICTIONS ON THE USE OF THE EMERGENCY TELEPHONE SYSTEM FUND, THE COMMUNITY DEVELOPMENT BLOCK GRANT…",
+     "outline": null,
+     "reference": "26-O-1400"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -1683,6 +2506,27 @@
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/pauldingga-pubu/MEET-Agenda-88aa4905a5944413b6afbae04cdca768.pdf",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-10-13",
+   "docType": "agenda",
+   "excerpt": "… h. Rome Floyd Planning Commission Next Meeting, Tuesday, November 5, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD, 2026 j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5262,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -1809,6 +2653,10 @@
    "excerpt": "… IRTY-FOUR THOUSAND THREE HUNDRED SEVENTY-FOUR DOLLARS AND SEVENTY-FIVE CENTS ($834,374.75), AND TAX ALLOCATION DISTRICT NUMBER FIVE - EASTSIDE (THE “EASTSIDE TAD”) IN AN AMOUNT NOT TO EXCEED SEVEN HUNDRED SIXTY THOU …",
    "excerptTerm": "tax allocation district",
    "fips": null,
+   "followThrough": "not-in-minutes",
+   "meetingId": "4337",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4144&Inline=True",
+   "outcomes": [],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -2009,6 +2857,9 @@
    "excerpt": "… by Branan) 18. Amendment of Pay in Lieu of Benefits for Elected Officials (Finance Director Abby Branan) 19. 2026 SPLOST 2026 Work Plan Amendment (Finance Director Abby Branan) • COUNTY MANAGER • ASSISTANT COUNTY MANAGER & DEPARTMENT H …",
    "excerptTerm": "splost",
    "fips": "13187",
+   "followThrough": "no-results",
+   "meetingId": "1097",
+   "outcomes": [],
    "placeId": "lumpkin",
    "placeName": "Lumpkin County",
    "placeType": "county",
@@ -2018,6 +2869,27 @@
    "tags": [],
    "terms": [
     "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-10-06",
+   "docType": "agenda",
+   "excerpt": "… DER  INVOCATION  APPROVE MEETING MINUTES FOR SEPTEMBER 22, 2026  DISCUSSION/APPROVAL OF BOARD OF EDUCATION 2026 MILLAGE RATE  DISCUSSION/APPROVAL OF MAINTENANCE AGREEMENT ON EMS CARDIAC MONITORS  OTHER BUSINESS  CITIZEN COMMENTS  …",
+   "excerptTerm": "millage",
+   "fips": "13175",
+   "placeId": "laurens",
+   "placeName": "Laurens County",
+   "placeType": "county",
+   "region": "Middle Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.laurenscoga.org/AgendaCenter/ViewFile/Agenda/_10062026-401",
+   "tags": [],
+   "terms": [
+    "millage"
    ],
    "vendors": []
   },
@@ -2114,6 +2986,9 @@
    "excerpt": "… Management and Construction Engineering & Inspection (CEI) Services As-Needed Agreement for SPLOST IX Bundle 5, Old Atlanta Road Safety Improvement (PERS1) with Spicer Group Inc., in the amount not to ex …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "no-results",
+   "meetingId": "438",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -2157,6 +3032,9 @@
    "excerpt": "… 6. 2. Work Session Minutes of September 14, 2026. 3. Executive Session Minutes of September 14, 2026. 4. Special Called Millage Rate Public Hearing Minutes of September 15, 2026 and September 24, 2026. PROCLAMATIONS 5. Proclaiming October 4 - …",
    "excerptTerm": "millage",
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1297",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -2271,6 +3149,29 @@
    "excerpt": "… Construction Fund and naming of a Construction Fund Custodian; Adoption of the form of Bond; Preparation of a Tax Digest and Levy of a tax sufficient to pay the principal and interest on said Bonds; a Continuing Disclosure …",
    "excerptTerm": "tax digest",
    "fips": "13045",
+   "followThrough": "recorded",
+   "meetingId": "837",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 7
+      },
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 7
+      }
+     ],
+     "name": "Approval of resolution authorizing approximately $75,000,000 of the County's General Obligation Sales Tax Bonds, Series 2026; a Bond Purchase Agreement; Naming of a Bond Register and Paying Agent; Establishing a Construction Fund and naming of a Construction Fund Custodian; Adoption of the form of…",
+     "outline": "I.",
+     "reference": null
+    }
+   ],
    "placeId": "carroll",
    "placeName": "Carroll County",
    "placeType": "county",
@@ -2320,6 +3221,9 @@
    "excerpt": "… 1 Construction Services For The Macon Arena Project, In The Total Amount Of $14,230,428.00, Payable From 2025 SPLOST Proceeds And 2026 Arena Bond Proceeds (Sponsored by: ) h. An Ordinance Of The Macon-Bibb County Commission To Au …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2395",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -2343,6 +3247,62 @@
    "excerpt": "… Construction Services For The Macon Arena Project, In The Total Amount Of $14,230,428.00, Payable From 2025 SPLOST Proceeds And 2026 Arena Bond Proceeds (Sponsored by: Lester M. Miller, Mayor) 5. Appropriations a. …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "recorded",
+   "meetingId": "2136",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute Component Change Order # 3 To The Construction Manager-At-Risk Agreement With Barton Malow Builders LLC For Preliminary Work And Phase 1 Construction Services For The Macon Arena Project, In The Total Amount Of…",
+     "outline": "c.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "An Ordinance Of The Macon-Bibb County Commission To Authorize The Appropriation Of 2025 SPLOST Proceeds In The Amount Of $15,000,000.00",
+     "outline": "a.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "An Ordinance Of The Macon-Bibb County Commission To Authorize The Application For $3,000,000.00 From The 2025 Georgia Outdoor Stewardship Program (“GOSP”) And Acceptance Of Any Awarded Funds For The Expansion Of The Ocmulgee Heritage Trail And Development Of Conservation Park; Appropriating Up To…",
+     "outline": "a.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "An Ordinance Of The Macon-Bibb County Commission To Authorize The Application For $600,000.00 From The Land And Water Conservation Fund (“LWCF”) Grant And Acceptance Of Any Awarded Funds For The Josh Rogers Urban Play Space And Third Street Improvement Project; And Authorizing The Required Match Of…",
+     "outline": "b.",
+     "reference": null
+    }
+   ],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -2430,6 +3390,9 @@
    "excerpt": "… Work Session Minutes of September 14, 2026. () 3. Executive Session Minutes of September 14, 2026. () 4. Special Called Millage Rate Public Hearing Minutes of September 15, 2026 and September 24, 2026. () PROCLAMATIONS 5. Proclaiming October 4 …",
    "excerptTerm": "millage",
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1196",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -2452,6 +3415,35 @@
    "excerpt": "… THIRTY-FOUR THOUSAND THREE HUNDRED SEVENTY-FOUR DOLLARS AND SEVENTY-FIVE CENTS ($834,374.75), AND TAX ALLOCATION DISTRICT NUMBER FIVE - EASTSIDE (THE “EASTSIDE TAD”) IN AN AMOUNT NOT TO EXCEED SEVEN HUNDRED SIXTY …",
    "excerptTerm": "tax allocation district",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4418",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4140&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "next": "Finance/Executive Committee (10/14/2026 1:30 PM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "AN ORDINANCE BY FINANCE/EXECUTIVE COMMITTEE TO AMEND SECTION 146-26 OF ATLANTA CITY CODE OF ORDINANCES, TO SET THE AD VALOREM TAX RATE FOR THE GENERAL LEVY, BONDED INDEBTEDNESS LEVY, PARKS LEVY, EDUCATION LEVY, SPECIAL TAX DISTRICT LEVY, THE ATLANTA BELTLINE SPECIAL SERVICE DISTRICT LEVY, AND THE…",
+     "outline": null,
+     "reference": "26-O-1238"
+    },
+    {
+     "motions": [
+      {
+       "next": "Finance/Executive Committee (10/14/2026 1:30 PM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS JASON DOZIER, MATT WESTMORELAND, JASON H. WINSTON, LILIANA BAKHTIARI, DUSTIN HILLIS, AND KELSEA BOND AS SUBSTITUTED BY FINANCE/EXECUTIVE COMMITTEE TO PROVIDE FOR RESTRICTIONS ON THE USE OF THE EMERGENCY TELEPHONE SYSTEM FUND, THE COMMUNITY DEVELOPMENT BLOCK GRANT…",
+     "outline": null,
+     "reference": "26-O-1400"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -2478,6 +3470,24 @@
    "excerpt": "… amount of $87,120.00 due to a project change order for the Ivy Street Culvert Replacement Project. Funded by TSPLOST. 11. Commissioner Comments 12. Executive Session 13. Adjourn As set forth in the Americans with Disabilities Act of 1 …",
    "excerptTerm": "splost",
    "fips": "13295",
+   "followThrough": "recorded",
+   "meetingId": "3213",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "abstain": 1,
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Motion to Approve the proposed purchase order to Hasbun Construction in the amount of $87,120.00 due to a project change order for the Ivy Street Culvert Replacement Project. Funded by TSPLOST.",
+     "outline": "5.",
+     "reference": null
+    }
+   ],
    "placeId": "walker",
    "placeName": "Walker County",
    "placeType": "county",
@@ -2499,6 +3509,9 @@
    "excerpt": "… ward RFP 26-65-1514 to Backbone Infrastructure, LLC for Progressive Design Build Services for the SPLOST IX Bundle 5 Project, with a Preliminary Stage Cost of $692,500.00, and a Design-Builder's Fee of …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "not-in-minutes",
+   "meetingId": "459",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -2651,6 +3664,35 @@
    "excerpt": "… XECUTIVE COMMITTEE TO AMEND SECTION 146-26 OF ATLANTA CITY CODE OF ORDINANCES, TO SET THE AD VALOREM TAX RATE FOR THE GENERAL LEVY, BONDED INDEBTEDNESS LEVY, PARKS …",
    "excerptTerm": "ad valorem",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4297",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4139&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "next": "10/5/2026 1:00 PM",
+       "resultClass": "held",
+       "resultText": "Held in committee"
+      }
+     ],
+     "name": "AN ORDINANCE BY FINANCE/EXECUTIVE COMMITTEE TO AMEND SECTION 146-26 OF ATLANTA CITY CODE OF ORDINANCES, TO SET THE AD VALOREM TAX RATE FOR THE GENERAL LEVY, BONDED INDEBTEDNESS LEVY, PARKS LEVY, EDUCATION LEVY, SPECIAL TAX DISTRICT LEVY, THE ATLANTA BELTLINE SPECIAL SERVICE DISTRICT LEVY, AND THE…",
+     "outline": null,
+     "reference": "26-O-1238"
+    },
+    {
+     "motions": [
+      {
+       "next": "10/5/2026 1:00 PM",
+       "resultClass": "held",
+       "resultText": "Held in committee"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS JASON DOZIER, MATT WESTMORELAND, JASON H. WINSTON, LILIANA BAKHTIARI, DUSTIN HILLIS, AND KELSEA BOND AS SUBSTITUTED BY FINANCE/EXECUTIVE COMMITTEE TO PROVIDE FOR RESTRICTIONS ON THE USE OF THE EMERGENCY TELEPHONE SYSTEM FUND, THE COMMUNITY DEVELOPMENT BLOCK GRANT…",
+     "outline": null,
+     "reference": "26-O-1400"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -2823,6 +3865,10 @@
    "excerpt": "… THREE HUNDRED SEVENTY-FOUR DOLLARS AND SEVENTY-FIVE CENTS ($834,374.75), AND TAX ALLOCATION DISTRICT NUMBER FIVE - EASTSIDE (THE “EASTSIDE TAD”) IN AN AMOUNT NOT TO EXCEED SEVEN HUNDRED …",
    "excerptTerm": "tax allocation district",
    "fips": null,
+   "followThrough": "not-in-minutes",
+   "meetingId": "4336",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4136&Inline=True",
+   "outcomes": [],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -2850,27 +3896,6 @@
    "region": "Northeast Georgia",
    "sourceType": "ocr",
    "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_09282026-3087",
-   "tags": [],
-   "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-09-25",
-   "docType": "agenda",
-   "excerpt": "… e, parts, and labor for the data room chillers D. Change Order Engineering Raymond Global $84,972 SPLOST (2008- No. 2 to the Inc. 2014) – Marine professional design …",
-   "excerptTerm": "splost",
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1749&Inline=True",
    "tags": [],
    "terms": [
     "splost"
@@ -2954,6 +3979,23 @@
    "excerpt": "… 10:00 AM -- CITIZENS HALL COMMISSION MEETING CALL TO ORDER PUBLIC HEARING 1. Millage Rate NEW BUSINESS 2. Resolution to adopt the Douglas County Board of Commissioner's 2026 Millage Rate and authorize …",
    "excerptTerm": "millage",
    "fips": "13097",
+   "followThrough": "recorded",
+   "meetingId": "1321",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Resolution to adopt the Douglas County Board of Commissioner's 2026 Millage Rate and authorize the Chairman to sign all related documents pending final legal review.",
+     "outline": "2.",
+     "reference": null
+    }
+   ],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -3033,6 +4075,27 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-09-22",
+   "docType": "agenda",
+   "excerpt": "… NUTES FOR SEPTEMBER 1, 2026  PUBLIC HEARING ON CLOSING PORTION OF LOWERY SCHOOL ROAD  DISCUSSION/APPROVAL OF 2026 MILLAGE RATE  DISCUSSION/APPROVAL OF GDOT TIA CONTRACT FOR RESURFACING CHICKEN AND LORD ROAD  DISCUSSION/APPROVAL OF JAG …",
+   "excerptTerm": "millage",
+   "fips": "13175",
+   "placeId": "laurens",
+   "placeName": "Laurens County",
+   "placeType": "county",
+   "region": "Middle Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.laurenscoga.org/AgendaCenter/ViewFile/Agenda/_09222026-400",
+   "tags": [],
+   "terms": [
+    "millage"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "unknown",
    "date": "2026-09-22",
    "docType": "agenda",
@@ -3060,12 +4123,36 @@
    "excerpt": "… val to award RFP 26-65-1514 to Backbone Infrastructure, LLC for Progressive Design Build Services for the SPLOST IX Bundle 5 Project, with a Preliminary Stage Cost of $692,500.00, and a Design-Builder's Fee …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "no-results",
+   "meetingId": "437",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5347,plainText=false)",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-09-22",
+   "docType": "agenda",
+   "excerpt": "… h. Rome Floyd Planning Commission Next Meeting, Thursday, October 1, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5250,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -3153,31 +4240,6 @@
    "tags": [],
    "terms": [
     "tax digest"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "City Council",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-09-21",
-   "docType": "agenda",
-   "excerpt": "… VE COMMITTEE TO AMEND SECTION 146-26 OF ATLANTA CITY CODE OF ORDINANCES, TO SET THE AD VALOREM TAX RATE FOR THE GENERAL LEVY, BONDED INDEBTEDNESS LEVY, PARKS LEVY, EDUCATION LEVY, SPECIAL …",
-   "excerptTerm": "ad valorem",
-   "fips": null,
-   "placeId": "atlanta",
-   "placeName": "City of Atlanta",
-   "placeType": "city",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=3934&Inline=True",
-   "tags": [],
-   "terms": [
-    "ad valorem",
-    "hotel/motel tax",
-    "splost",
-    "tax abatement",
-    "tax rate"
    ],
    "vendors": []
   },
@@ -3296,6 +4358,20 @@
    "excerpt": "… Establishing & Adopting the 2027 Budget (Finance Director Abby Branan) 2. 2026-54 Resolution Establishing 2026 Ad Valorem Tax Millage Rate (Finance Director Abby Branan) • ADJOURNMENT",
    "excerptTerm": "ad valorem",
    "fips": "13187",
+   "followThrough": "recorded",
+   "meetingId": "1307",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve"
+      }
+     ],
+     "name": "2026-54 Resolution Establishing 2026 Ad Valorem Tax Millage Rate (Finance Director Abby Branan)",
+     "outline": "2.",
+     "reference": null
+    }
+   ],
    "placeId": "lumpkin",
    "placeName": "Lumpkin County",
    "placeType": "county",
@@ -3424,6 +4500,9 @@
    "excerpt": "… 10:00 AM -- CITIZENS HALL SPECIAL CALLED MEETING CALL TO ORDER PUBLIC HEARING Millage Rate (Dominic Ochei) RECESS",
    "excerptTerm": "millage",
    "fips": "13097",
+   "followThrough": "no-results",
+   "meetingId": "1319",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -3445,6 +4524,9 @@
    "excerpt": "… Proclaiming September 2026 as National Hispanic Heritage Month in Douglas County. (Wendy Caudle) PUBLIC HEARING 8. Millage Rate (Commission Meeting/Tuesday) 9. Second Public Hearing on an amendment to the Douglas County Code of Ordinances …",
    "excerptTerm": "millage",
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1178",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -3520,28 +4602,6 @@
    "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5415&compileOutputType=1",
    "tags": [],
    "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Mayor & Commission Meetings",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-09-15",
-   "docType": "agenda",
-   "excerpt": "… ittee reviewed the feasibility and implications of modifying the “definition of family” for properties receiving a homestead exemption and recommends passing the topic out with no action. 4. Approve: FY27 Change Order for Radio System Main …",
-   "excerptTerm": "homestead exemption",
-   "fips": "13059",
-   "placeId": "clarke",
-   "placeName": "Athens-Clarke County",
-   "placeType": "consolidated",
-   "region": "Northeast Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_09152026-3078",
-   "tags": [],
-   "terms": [
-    "homestead exemption",
     "splost"
    ],
    "vendors": []
@@ -3728,6 +4788,9 @@
    "excerpt": "… , smathis@douglascountyga.gov or 770-920-7416. PRESENTATIONS • Mauldin & Jenkins 2025 Audit Presentation () • TSPLOST Update () • Citizen Recognition of David Anderson (Commission Meeting/Tuesday) (Chief Allen) • Presentati …",
    "excerptTerm": "splost",
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1137",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -3737,6 +4800,49 @@
    "tags": [],
    "terms": [
     "millage",
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-09-11",
+   "docType": "minutes",
+   "excerpt": "… ded by Commissioner Alfred Cason. Motion carried unanimously. Business  Consideration of Adoption of 2026 Millage Rate Resolutions: County Manager John Jones address the Board regarding the 2026 Millage Rate Rollback of 6.979 …",
+   "excerptTerm": "millage",
+   "fips": "13279",
+   "placeId": "toombs",
+   "placeName": "Toombs County",
+   "placeType": "county",
+   "region": "South Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://toombscountyga.gov/wp-content/uploads/2026/09/09_11_2026_CALLED_MEETING.pdf",
+   "tags": [],
+   "terms": [
+    "millage",
+    "tax digest"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-09-11",
+   "docType": "agenda",
+   "excerpt": "… III, IV, V, VI & VII SPLOSTs, Capital …",
+   "excerptTerm": "splost",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1748&Inline=True",
+   "tags": [],
+   "terms": [
     "splost"
    ],
    "vendors": []
@@ -3935,12 +5041,65 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "unknown",
+   "date": "2026-09-08",
+   "docType": "agenda",
+   "excerpt": "… . Rome Floyd Planning Commission Next Meeting, Thursday, November 5, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5232,plainText=false)",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "agenda-action",
    "date": "2026-09-03",
    "docType": "agenda",
    "excerpt": "… o Adopt an Enterprise Funds & Special Revenue Budget for Fiscal 2027 12.3. Resolution R-063-26 to Adopt a Millage Rate for the Unincorporated and Incorporated Areas of Walker County 12.4. Resolution R-064-26 to Award a …",
    "excerptTerm": "millage",
    "fips": "13295",
+   "followThrough": "recorded",
+   "meetingId": "13",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "abstain": 1,
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Resolution R-063-26 to Adopt a Millage Rate for the Unincorporated and Incorporated Areas of Walker County",
+     "outline": "3.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "abstain": 1,
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Motion to Approve the proposed purchase order with Seaborn Commercial Refrigeration for Freezer/Cooler for the Walker County Jail in the amount of $69,874.29 to be paid from SPLOST funding",
+     "outline": "7.",
+     "reference": null
+    }
+   ],
    "placeId": "walker",
    "placeName": "Walker County",
    "placeType": "county",
@@ -3995,6 +5154,27 @@
     "hotel motel tax",
     "millage",
     "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-09-01",
+   "docType": "agenda",
+   "excerpt": "…  CALL TO ORDER  INVOCATION  APPROVE MEETING MINUTES FOR AUGUST 18, 2026  DISCUSSION/APPROVAL OF PROPOSED 2026 MILLAGE RATE  DISCUSSION/APPROVAL OF MOVING SEPTEMBER 15TH COMMISSION MEETING DATE  OTHER BUSINESS  CITIZEN COMMENTS  …",
+   "excerptTerm": "millage",
+   "fips": "13175",
+   "placeId": "laurens",
+   "placeName": "Laurens County",
+   "placeType": "county",
+   "region": "Middle Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.laurenscoga.org/AgendaCenter/ViewFile/Agenda/_09012026-399",
+   "tags": [],
+   "terms": [
+    "millage"
    ],
    "vendors": []
   },
@@ -4135,6 +5315,9 @@
    "excerpt": "… ugust 17, 2026. 3. Executive Session Minutes of August 17, 2026 and August 18, 2026. 4. Special Called Meeting Minutes (Millage Rate) of August 10, 2026 and August 18, 2026. FINANCIAL REPORT 5. Acceptance of the monthly Financial/Budget Repo …",
    "excerptTerm": "millage",
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1152",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -4178,6 +5361,9 @@
    "excerpt": "… e will be taken. 11.I. Consideration to Purchase Vehicles in the amount of $466,560 as a Capital Project (SPLOST) for FY 2026-2027, authorize the Chairman to negotiate and execute the contract and to take all necessary acti …",
    "excerptTerm": "splost",
    "fips": "13045",
+   "followThrough": "not-in-minutes",
+   "meetingId": "836",
+   "outcomes": [],
    "placeId": "carroll",
    "placeName": "Carroll County",
    "placeType": "county",
@@ -4199,6 +5385,9 @@
    "excerpt": "… t Of A Multiuse Trail And Sidewalk Loop Along Gray Highway; Appropriating Up To $1,407,610.00 From The 2018 Splost Fund – Roads, Other Line Item, To Be Used As The Required Local Match Funds; (Sponsored by: Les …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2394",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -4224,6 +5413,23 @@
    "excerpt": "… Page 2 of 433 Appropriating Up To $1,407,610.00 From The 2018 Splost Fund – Roads, Other Line Item, To Be Used As The Required Local Match Funds; (Sponsored by: Les …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "recorded",
+   "meetingId": "2135",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "An Ordinance Of The Macon-Bibb County Commission Authorizing The Mayor To Accept Federal Highway Administration FY 2024 Safe Streets And Roads For All (SS4A) Implementation Grant Funds In The Amount Of $5,630,440.00 To Fund The Development Of A Multiuse Trail And Sidewalk Loop Along Gray Highway;…",
+     "outline": "b.",
+     "reference": null
+    }
+   ],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -4291,6 +5497,9 @@
    "excerpt": "… 17, 2026. () 3. Executive Session Minutes of August 17, 2026 and August 18, 2026. () 4. Special Called Meeting Minutes (Millage Rate) of August 10, 2026 and August 18, 2026. () FINANCIAL REPORT 5. Acceptance of the monthly Financial/Budget Rep …",
    "excerptTerm": "millage",
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1209",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -4301,48 +5510,6 @@
    "terms": [
     "millage",
     "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-08-28",
-   "docType": "agenda",
-   "excerpt": "… odules to the existing subscription F. Construction Engineering SamJay Services, $349,935 SPLOST (1998- contract for the Inc. 2003) - Drainage miscellaneo …",
-   "excerptTerm": "splost",
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1746&Inline=True",
-   "tags": [],
-   "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-08-27",
-   "docType": "agenda",
-   "excerpt": "… 3,560.00. Other Business - Financial Services 32 Third public hearing regarding Hall County's intent to levy a 2026 millage rate for the County's General Fund greater than the calculated full rollback per the State of Georgia for …",
-   "excerptTerm": "millage",
-   "fips": "13139",
-   "placeId": "hall",
-   "placeName": "Hall County",
-   "placeType": "county",
-   "region": "Northeast Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-329-vm-20260827200611174072.pdf",
-   "tags": [],
-   "terms": [
-    "millage"
    ],
    "vendors": []
   },
@@ -4505,6 +5672,9 @@
    "excerpt": "… e Department - County Manager V. Items for Consideration and Discussion (1) Update on the SPLOST IX projects - County Manager (2) Board consideration and approval for Forsyth County, on behalf of the Sher …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "no-results",
+   "meetingId": "435",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -4520,12 +5690,50 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "unknown",
+   "date": "2026-08-25",
+   "docType": "agenda",
+   "excerpt": "… Rome Floyd Planning Commission Next Meeting, Thursday, September 3, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5220,plainText=false)",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "agenda-action",
    "date": "2026-08-25",
    "docType": "agenda",
    "excerpt": "… ents regarding the following items after each item is presented) 1. Second Public Hearing Regarding the Proposed 2026 Millage Rates Public Comments Regarding Items Not on the Agenda – This section is for any public comments regarding items NOT …",
    "excerptTerm": "millage",
    "fips": "13077",
+   "followThrough": "recorded",
+   "meetingId": "1161",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Close Public Hearing",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Second Public Hearing Regarding the Proposed 2026 Millage Rates",
+     "outline": "1.",
+     "reference": null
+    }
+   ],
    "placeId": "coweta",
    "placeName": "Coweta County",
    "placeType": "county",
@@ -4547,6 +5755,36 @@
    "excerpt": "… ments regarding the following items after each item is presented) 3. Third Public Hearing Regarding the Proposed 2026 Millage Rates 4. Request to Set the 2026 Millage Rates 5. Public Hearing Regarding Petition # REZ 26-10 Filed by BAF Ente …",
    "excerptTerm": "millage",
    "fips": "13077",
+   "followThrough": "recorded",
+   "meetingId": "1080",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Close Public Hearing",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "Third Public Hearing Regarding the Proposed 2026 Millage Rates",
+     "outline": "3.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Adopt",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "Request to Set the 2026 Millage Rates",
+     "outline": "4.",
+     "reference": null
+    }
+   ],
    "placeId": "coweta",
    "placeName": "Coweta County",
    "placeType": "county",
@@ -4626,27 +5864,6 @@
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "agenda-action",
-   "date": "2026-08-24",
-   "docType": "agenda",
-   "excerpt": "… of the County Attorney. Financial Services 13 Second public hearing regarding Hall County's intent to levy a 2026 millage rate for the County's General Fund greater than the calculated full rollback per the State of Georgia f …",
-   "excerptTerm": "millage",
-   "fips": "13139",
-   "placeId": "hall",
-   "placeName": "Hall County",
-   "placeType": "county",
-   "region": "Northeast Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-329-ws-20260821194034801533.pdf",
-   "tags": [],
-   "terms": [
-    "millage"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
    "date": "2026-08-20",
    "docType": "agenda",
    "excerpt": "… of IFB #500-26 - State Route 53 at Lumpkin Campground Road Intersection Improvements 3. Consideration of 2026 Millage Rate and Property Tax H. ADJOURNMENT *An Executive Session may follow the Voting Session. Those with disabilities …",
@@ -4715,6 +5932,9 @@
    "excerpt": "… rwoman Teems will Call the Budget Work Session to Order 2. Clerk to take attendance. 3. Fiscal Year 2027 Budget & Millage Rate Discussion 4. Adjourn As set forth in the Americans with Disabilities Act of 1992, Walker County does not discr …",
    "excerptTerm": "millage",
    "fips": "13295",
+   "followThrough": "no-results",
+   "meetingId": "2210",
+   "outcomes": [],
    "placeId": "walker",
    "placeName": "Walker County",
    "placeType": "county",
@@ -4736,6 +5956,34 @@
    "excerpt": "… CITIZENS REQUESTS VI. COUNCIL REQUESTS VII. AGENDA APPROVAL VIII. PUBLIC HEARINGS 1. 2026 Millage Rate Public Hearing 2. REZ-2026-006 - Request to Rezone from Agriculture (AG) to Residential-15 (R-15) as Par …",
    "excerptTerm": "millage",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "2677",
+   "minutesDraft": true,
+   "minutesUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=2310&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "resultClass": "completed",
+       "resultText": "Completed"
+      },
+      {
+       "no": 1,
+       "result": "passed",
+       "resultClass": "adopted",
+       "resultText": "Adopted",
+       "tally": [
+        4,
+        1
+       ],
+       "yes": 4
+      }
+     ],
+     "name": "2026 Millage Rate Public Hearing",
+     "outline": "VIII. 1.",
+     "reference": null
+    }
+   ],
    "placeId": "socialcircle",
    "placeName": "City of Social Circle",
    "placeType": "city",
@@ -4891,6 +6139,36 @@
    "excerpt": "… August 3, 2026. FINANCIAL REPORT 4. Approval of the Financial Report for the month of July 2026. () PUBLIC HEARING 5. Millage Rate (Dominic Ochei) NEW BUSINESS 6. Resolution to adopt the Douglas County Board of Education's 2026 Millage Rate. 7. …",
    "excerptTerm": "millage",
    "fips": "13097",
+   "followThrough": "recorded",
+   "meetingId": "1315",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "Resolution to adopt the Douglas County Board of Education's 2026 Millage Rate.",
+     "outline": "6.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "Resolution to adopt the Douglas County Board of Commissioner's 2026 Millage Rate.",
+     "outline": "7.",
+     "reference": null
+    }
+   ],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -4913,6 +6191,9 @@
    "excerpt": "… 10:00 AM -- CITIZENS HALL SPECIAL CALLED MEETING CALL TO ORDER PUBLIC HEARING Millage Rate (Dominic Ochei) RECESS",
    "excerptTerm": "millage",
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1314",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -5062,6 +6343,9 @@
    "excerpt": "… 1 Backup . Facility Project, extending the contract through 8/31/26, with an increase of $21,014.00, to be funded by SPLOST 2022's Public Safety funds and authorizing the Chairman to sign all related documents pending final legal review. (J …",
    "excerptTerm": "splost",
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1136",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -5092,6 +6376,27 @@
    "tags": [],
    "terms": [
     "millage"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-08-14",
+   "docType": "agenda",
+   "excerpt": "… FUNDING A. Summary Engineering Sandhill A.L.S. $108,945 SPLOST (2020- Change Order to the Construction, Inc. 2026) – Existing …",
+   "excerptTerm": "splost",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1745&Inline=True",
+   "tags": [],
+   "terms": [
+    "splost"
    ],
    "vendors": []
   },
@@ -5136,27 +6441,6 @@
    "terms": [
     "millage",
     "tax digest"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-08-13",
-   "docType": "agenda",
-   "excerpt": "… 3 of 5 Other Business - Financial Services 32 First public hearing regarding Hall County's intent to levy a 2026 millage rate for the County's General Fund greater than the calculated full rollback per the State of Georgia for …",
-   "excerptTerm": "millage",
-   "fips": "13139",
-   "placeId": "hall",
-   "placeName": "Hall County",
-   "placeType": "county",
-   "region": "Northeast Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-328-vm-20260812192908006643.pdf",
-   "tags": [],
-   "terms": [
-    "millage"
    ],
    "vendors": []
   },
@@ -5269,21 +6553,21 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
-   "context": "agenda-action",
+   "context": "unknown",
    "date": "2026-08-11",
    "docType": "agenda",
-   "excerpt": "… a Public Hearing Regarding the Proposed Fiscal Year 2027 Budget 5. First Public Hearing Regarding the Proposed 2026 Millage Rates Coweta County Board of Commissioners Page 1 of 3 6 …",
-   "excerptTerm": "millage",
-   "fips": "13077",
-   "placeId": "coweta",
-   "placeName": "Coweta County",
+   "excerpt": "… Rome Floyd Planning Commission Next Meeting, Thursday, September 3, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD, 2026 j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
    "placeType": "county",
-   "region": "Metro Atlanta",
+   "region": "Northwest Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3612,plainText=false)",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4206,plainText=false)",
    "tags": [],
    "terms": [
-    "millage"
+    "splost"
    ],
    "vendors": []
   },
@@ -5293,18 +6577,35 @@
    "context": "agenda-action",
    "date": "2026-08-11",
    "docType": "agenda",
-   "excerpt": "… of a State of Texas Department of Information Resources Contract (Texas DIR). This is a 2022 SPLOST project, Countywide Improvements Program B0010. PUBLIC COMMENT Those persons wishing to address the Board of Commissi …",
-   "excerptTerm": "splost",
-   "fips": "13067",
-   "placeId": "cobb",
-   "placeName": "Cobb County",
+   "excerpt": "… a Public Hearing Regarding the Proposed Fiscal Year 2027 Budget 5. First Public Hearing Regarding the Proposed 2026 Millage Rates Coweta County Board of Commissioners Page 1 of 3 6 …",
+   "excerptTerm": "millage",
+   "fips": "13077",
+   "followThrough": "recorded",
+   "meetingId": "1079",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Close Public Hearing",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "First Public Hearing Regarding the Proposed 2026 Millage Rates",
+     "outline": "5.",
+     "reference": null
+    }
+   ],
+   "placeId": "coweta",
+   "placeName": "Coweta County",
    "placeType": "county",
    "region": "Metro Atlanta",
    "sourceType": "ocr",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10156,plainText=false)",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3612,plainText=false)",
    "tags": [],
    "terms": [
-    "splost"
+    "millage"
    ],
    "vendors": []
   },
@@ -5426,6 +6727,9 @@
    "excerpt": "… 10:00 AM -- CITIZENS HALL SPECIAL CALLED MEETING CALL TO ORDER PUBLIC HEARING Millage Rate (Dominic Ochei) ADJOURN",
    "excerptTerm": "millage",
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1310",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -5489,6 +6793,23 @@
    "excerpt": "… se Reline, Inc. for the slip line or PVC fold-in-place liners for the Ivy Street Project. (Funded by TSPLOST) 16.10. Purchase Order 2026-00002314 in the amount of $44,811.00 to NABCO Electric Company for Emergency t …",
    "excerptTerm": "splost",
    "fips": "13295",
+   "followThrough": "recorded",
+   "meetingId": "12",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Purchase Order 2026-00002312 in the amount of $59,6750.00 to Chase Reline, Inc. for the slip line or PVC fold-in-place liners for the Ivy Street Project. (Funded by TSPLOST)",
+     "outline": "9.",
+     "reference": null
+    }
+   ],
    "placeId": "walker",
    "placeName": "Walker County",
    "placeType": "county",
@@ -5510,6 +6831,23 @@
    "excerpt": "… CALL TO ORDER Roll Call II. PLEDGE OF ALLEGIANCE III. INVOCATION IV. AGENDA ITEMS 1. 2026 Millage Rate Public Hearing 2. Planning Commission Review a. REZ-2026-006 - Request to Rezone from Agricult …",
    "excerptTerm": "millage",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "2676",
+   "minutesDraft": true,
+   "minutesUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=2307&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "resultClass": "completed",
+       "resultText": "Completed"
+      }
+     ],
+     "name": "2026 Millage Rate Public Hearing",
+     "outline": "IV. 1.",
+     "reference": null
+    }
+   ],
    "placeId": "socialcircle",
    "placeName": "City of Social Circle",
    "placeType": "city",
@@ -5531,6 +6869,9 @@
    "excerpt": "… , 2026) IX. Time Set Public Hearing - 6:00 p.m. (1) Public Hearing regarding proposed Fiscal Year 2026 Millage Rates - Chief Financial Officer, Department of Finance X. Public Comments XI. Old Business …",
    "excerptTerm": "millage",
    "fips": "13117",
+   "followThrough": "not-in-minutes",
+   "meetingId": "455",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -5766,6 +7107,29 @@
    "context": "unknown",
    "date": "2026-08-04",
    "docType": "agenda",
+   "excerpt": "… ES FOR JULY 21, 2026  DISCUSSION/APPROVAL OF ALCOHOL LICENSE AT 55 INDUSTRIAL BLVD DUBLIN  DISCUSSION/APPROVAL OF FLOST INTERGOVERNMENTAL AGREEMENT  DISCUSSION/APPROVAL TO CALL FOR A FLOATING LOCAL OPTION SALES TAX (FLOST)  DISCUSS …",
+   "excerptTerm": "flost",
+   "fips": "13175",
+   "placeId": "laurens",
+   "placeName": "Laurens County",
+   "placeType": "county",
+   "region": "Middle Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.laurenscoga.org/AgendaCenter/ViewFile/Agenda/_08042026-395",
+   "tags": [],
+   "terms": [
+    "floating local option",
+    "flost",
+    "local option sales tax"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-08-04",
+   "docType": "agenda",
    "excerpt": "… to $1,925,301.84, with no change in time, for the Flournoy Road Paving project. This project is funded through the 2006 SPLOST. This is the final change order for this project. Houston County Public Works …",
    "excerptTerm": "splost",
    "fips": "13153",
@@ -5812,6 +7176,28 @@
    "context": "unknown",
    "date": "2026-08-04",
    "docType": "agenda",
+   "excerpt": "… with Radarsign, LLC, amount not to exceed $136,540.00. This contract is funded 99.6% by the 2017 SPLOST Program. (Recommendation: Approval) 2026-0962 Approval to renew BL103-23, provision of sidewalk repair and …",
+   "excerptTerm": "splost",
+   "fips": "13135",
+   "placeId": "gwinnett",
+   "placeName": "Gwinnett County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260804/a_73554_2026.08.04_Work_Session_Agenda.pdf",
+   "tags": [],
+   "terms": [
+    "millage",
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-08-04",
+   "docType": "agenda",
    "excerpt": "… litigation, property acquisition, and personnel ​ ​ Reminders and Information 1.​ LOST / SPLOST / FLOST Report REGULAR SESSION I.​ Invocation and Pledge of Allegiance II.​ Call To Order …",
    "excerptTerm": "splost",
    "fips": "13129",
@@ -5843,27 +7229,6 @@
    "region": "Coastal Georgia",
    "sourceType": "ocr",
    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/effingham-pubu/MEET-Agenda-95b12bc6a0e54052bf95f6a9d51a9f65.pdf",
-   "tags": [],
-   "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-08-04",
-   "docType": "agenda",
-   "excerpt": "… nt of $33,745.93 (quote in the amount of $30,678.12 + 10% contingency amount of $3,067.81) to be funded by 2022 SPLOST funds and authorize the Chairman to sign all related documents pending final legal review. 20. Approval of a contra …",
-   "excerptTerm": "splost",
-   "fips": "13097",
-   "placeId": "douglas",
-   "placeName": "Douglas County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7453,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -5968,6 +7333,23 @@
    "excerpt": "… ipment Consideration to Purchase a Used 2018 Sky Jack SJ86T Boom Lift for $25,000 moving from SPLOST Roads Account to the SPLOST Equipment Purchases Account, authorize the Chairman to negotiate and execute t …",
    "excerptTerm": "splost",
    "fips": "13045",
+   "followThrough": "recorded",
+   "meetingId": "835",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 7
+      }
+     ],
+     "name": "Resolution to Levy 2026 TaxesConsideration of Proposed Resolution to Levy 2026 Carroll County, and Carroll County Schools Property Taxes and Adopting the 2026 Homestead Exemptions-Stacey Blackmon, County Attorney",
+     "outline": "I.",
+     "reference": null
+    }
+   ],
    "placeId": "carroll",
    "placeName": "Carroll County",
    "placeType": "county",
@@ -6012,6 +7394,9 @@
    "excerpt": "… The Amount Of $206,580.49 For Recreation Department Network Infrastructure Improvements, To Be Paid From The SPLOST 2025 Fund – Recreation – It Upgrade – Property Line Item (Sponsored by: Lester M. Miller, Mayor) e. A Resolution …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2393",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -6035,6 +7420,88 @@
    "excerpt": "… $206,580.49 For Recreation Department Network Infrastructure Improvements, To Be Paid From The SPLOST 2025 Fund – Recreation – It Upgrade – Property Line Item (Sponsored by: Lester M. Miller, Mayor) …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "recorded",
+   "meetingId": "2134",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Enter An Agreement With 1 Accord Technologies, Llc, In The Amount Of $206,580.49 For Recreation Department Network Infrastructure Improvements, To Be Paid From The SPLOST 2025 Fund – Recreation – It Upgrade – Property Line…",
+     "outline": "a.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute A Professional Services Agreement With Williams Communications, Inc., For The Construction Of A New Rooftop Communications Site At Atrium Health Navicent In The Amount Of $1,635,721.82, To Be Paid From The SPLOST 2025…",
+     "outline": "b.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Kw Underground, LLC, To Perform Sidewalk Construction Services Along Jeffersonville Road, At A Cost Of $499,143.33, To Be Paid From 2018 SPLOST – Road Work – Other Line Item",
+     "outline": "j.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission To Authorize The Mayor To Execute An Independent Contractor Agreement With Stafford Builders & Consultants, Inc., For Asphalt Paving & Resurfacing Services, In The Amount Of $2,458,187.00 , To Be Paid From The 2025 Splost Fund - Roads – Property Line…",
+     "outline": "a.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission To Authorize The Mayor To Execute An Independent Contractor Agreement With Professional Paving Services, LLC For Asphalt Paving & Resurfacing Services, In The Amount Of $2,517,305.93 , To Be Paid From The 2025 SPLOSt Fund - Roads – Property Line Item;",
+     "outline": "b.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "Resolution Of The Macon-Bibb County Commission To Authorize The Mayor To Execute An Independent Contractor Agreement With Professional Paving Services, LLC For Asphalt Paving & Resurfacing Services, In The Amount Of $2,354,757.90 , To Be Paid From The 2025 SPLOST Fund - Roads – Property Line Item;",
+     "outline": "c.",
+     "reference": null
+    }
+   ],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -6095,27 +7562,6 @@
    "vendors": []
   },
   {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-08-03",
-   "docType": "agenda",
-   "excerpt": "… nt of $33,745.93 (quote in the amount of $30,678.12 + 10% contingency amount of $3,067.81) to be funded by 2022 SPLOST funds and authorize the Chairman to sign all related documents pending final legal review. (Julia Janka) 20. Approv …",
-   "excerptTerm": "splost",
-   "fips": "13097",
-   "placeId": "douglas",
-   "placeName": "Douglas County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7449,plainText=false)",
-   "tags": [],
-   "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
    "body": "City Council",
    "confidence": "high",
    "context": "agenda-action",
@@ -6133,27 +7579,6 @@
    "tags": [],
    "terms": [
     "millage"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-07-31",
-   "docType": "agenda",
-   "excerpt": "… FUNDING A. Summary Engineering Sandhill A.L.S. $108,945 SPLOST (2020- Change Order to the Construction, Inc. 2026) – Existing …",
-   "excerptTerm": "splost",
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1745&Inline=True",
-   "tags": [],
-   "terms": [
-    "splost"
    ],
    "vendors": []
   },
@@ -6311,6 +7736,27 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "unknown",
+   "date": "2026-07-28",
+   "docType": "agenda",
+   "excerpt": "… h. Rome Floyd Planning Commission Next Meeting, Thursday, August 6, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD, 2026 j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4194,plainText=false)",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "agenda-action",
    "date": "2026-07-28",
    "docType": "agenda",
@@ -6446,6 +7892,23 @@
    "excerpt": "… SION 6:00 PM I. CALL TO ORDER Roll Call II. AGENDA ITEMS 1. Discussion of 2026 Property Tax Millage Rate III. EXECUTIVE SESSION An Executive Session may be called: • To discuss pending and/or potential …",
    "excerptTerm": "millage",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "2735",
+   "minutesDraft": true,
+   "minutesUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=2316&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "resultClass": "completed",
+       "resultText": "Completed"
+      }
+     ],
+     "name": "Discussion of 2026 Property Tax Millage Rate",
+     "outline": "II. 1.",
+     "reference": null
+    }
+   ],
    "placeId": "socialcircle",
    "placeName": "City of Social Circle",
    "placeType": "city",
@@ -6573,6 +8036,23 @@
    "excerpt": "… Community - District 3 17. Request to Schedule a Called Meeting and Set Public Hearings Regarding the Proposed 2026 Millage Rates Supplemental and Non-Agenda Items Public Comments Regarding Items Not on the Agenda – This section is for a …",
    "excerptTerm": "millage",
    "fips": "13077",
+   "followThrough": "recorded",
+   "meetingId": "1078",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "Request to Schedule a Called Meeting and Set Public Hearings Regarding the Proposed 2026 Millage Rates",
+     "outline": "17.",
+     "reference": null
+    }
+   ],
    "placeId": "coweta",
    "placeName": "Coweta County",
    "placeType": "county",
@@ -6607,29 +8087,6 @@
    "vendors": []
   },
   {
-   "body": "Board of County Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-07-21",
-   "docType": "agenda",
-   "excerpt": "… eem to think, by the way things are presented, that it's taxpayer money, we'll just tax them more. We'll just raise the millage rate. My property value went down this year. Does that make me excited to pay the same amount in taxes I paid last year …",
-   "excerptTerm": "millage",
-   "fips": "13039",
-   "placeId": "camden",
-   "placeName": "Camden County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_07212026-648",
-   "tags": [],
-   "terms": [
-    "local option sales tax",
-    "millage",
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
@@ -6638,6 +8095,9 @@
    "excerpt": "… greement With Williams Communications, Inc., For Radio Equipment In The Amount Of $204,800.00, To Be Paid From The SPLOST 2018 Fund – Public Safety – Public Safety Other – Property Line Item; (Sponsored by: Lester M. Miller, Mayor) …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2405",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -6663,6 +8123,101 @@
    "excerpt": "… ent With Williams Communications, Inc., For Radio Equipment In The Amount Of $204,800.00, To Be Paid From The SPLOST 2018 Fund – Public Safety – Public Safety Other – Property Line Item; (Sponsored by: Lester M. Mill …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "recorded",
+   "meetingId": "2359",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Williams Communications, Inc., For Radio Equipment In The Amount Of $204,800.00, To Be Paid From The SPLOST 2018 Fund – Public Safety – Public Safety Other – Property Line Item;",
+     "outline": "a.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Williams Communications, Inc., For The Replacement Of Radio Equipment In The Amount Of $137,277.52, To Be Paid From The SPLOST 2025 Fund – Public Safety – IT Upgrade – Property Line Item",
+     "outline": "b.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute A Professional Services Agreement With Williams Communications, Inc., For Post-Construction Drone Inspection Services In The Amount Of $82,320.00, To Be Paid From The SPLOST 2018 Fund – Public Safety – Public Safety…",
+     "outline": "c.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission To Authorize The Mayor To Execute An Amendment To The Independent Contractor Agreement With Smallwood, Reynolds, Stewart, Stewart & Associates For Professional Architectural, Engineering, & Design Services For The Phase Iv Improvements At The Macon…",
+     "outline": "i.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission To Authorize The Mayor To Execute An Independent Contractor Agreement With Professional Paving Services, LLC, For Asphalt Paving & Resurfacing Services, In The Amount Of $3,280,877.09, To Be Paid From 2026 LRA Grant Funds And 2018 SPLOST Funds – Road…",
+     "outline": "j.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute Component Change Orders # 1 And 2 To The Construction Manager-At-Risk Agreement With Barton Malow Builders LLC For Preliminary Work And Phase 1 Construction Services For The Macon Arena Project, In The Total Amount Of…",
+     "outline": "m.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute A Change Order With H.E. Hodge Company, Inc., For The Removal And Replacement Of Basketball Backboards At Kings Park, In The Amount Of $11,450.00, To Be Paid From The Splost 2018 Fund – Recreation – Other – Property…",
+     "outline": "a.",
+     "reference": null
+    }
+   ],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -6749,7 +8304,7 @@
    "context": "agenda-action",
    "date": "2026-07-15",
    "docType": "agenda",
-   "excerpt": "… IV. ROLL CALL V. FIRST PUBLIC HEARING AS REQUIRED BY THE STATE ON THE COUNTY'S 2026 MILLAGE LEVY To hold a Public Hearing as required by state law on the County's intent to levy a …",
+   "excerpt": "… IV. ROLL CALL V. SECOND PUBLIC HEARING AS REQUIRED BY THE STATE ON THE COUNTY'S 2026 MILLAGE LEVY To hold a Public Hearing as required by state law on the County's intent to levy a …",
    "excerptTerm": "millage",
    "fips": "13051",
    "placeId": "chatham",
@@ -6757,7 +8312,7 @@
    "placeType": "county",
    "region": "Coastal Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1743&Inline=True",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1744&Inline=True",
    "tags": [],
    "terms": [
     "ad valorem",
@@ -6860,12 +8415,36 @@
    "excerpt": "… Program Services As-Needed Agreement with Volkert, Inc. in the amount of $488,800.00 for the SPLOST IX Bundle 1 Projects. Staff requests this Item be considered on a \"Time Sensitive\" basis - Transportation …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "not-in-minutes",
+   "meetingId": "432",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5219,plainText=false)",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-07-14",
+   "docType": "agenda",
+   "excerpt": "… h. Rome Floyd Planning Commission Next Meeting, Thursday, August 6, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD, 2026 j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3187,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -6902,6 +8481,9 @@
    "excerpt": "… rder Pledge of Allegiance Invocation Regular Session 1. Discussion Regarding the Fiscal Year 2027 Budget and 2026 Millage Rate 2. Discussion Regarding the Coweta County Data Center Ordinance 3. Discussion Regarding the Georgia Cottag …",
    "excerptTerm": "millage",
    "fips": "13077",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1077",
+   "outcomes": [],
    "placeId": "coweta",
    "placeName": "Coweta County",
    "placeType": "county",
@@ -7021,6 +8603,27 @@
    "vendors": []
   },
   {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-07-10",
+   "docType": "agenda",
+   "excerpt": "… III, IV, V, VI & environmental •Terracon VII SPLOSTs, services Consultants, Inc. Capital …",
+   "excerptTerm": "splost",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1742&Inline=True",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
    "body": "City Council",
    "confidence": "high",
    "context": "agenda-action",
@@ -7093,6 +8696,9 @@
    "excerpt": "… Infrastructure, Inc. in the amount of $1,697,350.00 to provide design services for SPLOST IX Bundle 2 Projects - Director, Department of Capital Projects (J) Board approval of Commitment Cha …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "not-in-minutes",
+   "meetingId": "453",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -7283,27 +8889,6 @@
    "vendors": []
   },
   {
-   "body": "Board of County Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-07-07",
-   "docType": "agenda",
-   "excerpt": "… e-Chairman Turner seconded to add ten thousand dollars ($10,000.00) to the Thiokol line item which is coming out of the hotel motel tax and approve the Annual Budget Adoption for fiscal year 2027 (July 1, 2026 to June 30, 2027) for all funds. So Voted: C …",
-   "excerptTerm": "hotel motel tax",
-   "fips": "13039",
-   "placeId": "camden",
-   "placeName": "Camden County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_07072026-646",
-   "tags": [],
-   "terms": [
-    "hotel motel tax"
-   ],
-   "vendors": []
-  },
-  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": null,
@@ -7363,28 +8948,6 @@
    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-d50928b16be7408286ecc2d7e4daba65.pdf",
    "tags": [],
    "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-06-26",
-   "docType": "agenda",
-   "excerpt": "… n the Salt & Freshwater Mitigation Project. 2. Request Board approval to revise the FY2026/2027 Budget and MIllage Levy Calendar to change the dates of the Millage Levy Public Hearings and adoption of t …",
-   "excerptTerm": "millage",
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1740&Inline=True",
-   "tags": [],
-   "terms": [
-    "millage",
     "splost"
    ],
    "vendors": []
@@ -7506,12 +9069,36 @@
    "excerpt": "… with GFT Infrastructure, Inc. in the amount of $1,697,350.00 to provide design services for SPLOST IX Bundle 2 Projects - Director, Department of Capital Projects Work Session Agenda …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "no-results",
+   "meetingId": "431",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5188,plainText=false)",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-06-23",
+   "docType": "agenda",
+   "excerpt": "… h. Rome Floyd Planning Commission Next Meeting, Thursday, July 2, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD, 2026 j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3178,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -7572,6 +9159,9 @@
    "excerpt": "… and Consultants Inc. in the amount of $2,418,406.99 to provide design services for SPLOST IX Bundle 3 Projects - Director, Department of Capital Projects (H) Board appr …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "no-results",
+   "meetingId": "452",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -7602,6 +9192,28 @@
    "tags": [],
    "terms": [
     "ad valorem",
+    "millage",
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-06-17",
+   "docType": "agenda",
+   "excerpt": "… n the Salt & Freshwater Mitigation Project. 2. Request Board approval to revise the FY2026/2027 Budget and MIllage Levy Calendar to change the dates of the Millage Levy Public Hearings and adoption of t …",
+   "excerptTerm": "millage",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1740&Inline=True",
+   "tags": [],
+   "terms": [
     "millage",
     "splost"
    ],
@@ -7729,6 +9341,9 @@
    "excerpt": "… In The Amount Of $148,913.49, For The Purchase Of Furniture For Code Enforcement Offices, To Be Paid From The SPLOST 2018 Fund – Public Safety – Public Safety Other – Machinery & Equipment Line Item (Sponsored by: Lester M. Miller, …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2404",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -7751,6 +9366,36 @@
    "excerpt": "… t Of $148,913.49, For The Purchase Of Furniture For Code Enforcement Offices, To Be Paid From The SPLOST 2018 Fund – Public Safety – Public Safety Other – Machinery & Equipment Line Item (Sponsored by: Lester M. M …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "recorded",
+   "meetingId": "2358",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Advent Business Interiors, Inc., In The Amount Of $148,913.49, For The Purchase Of Furniture For Code Enforcement Offices, To Be Paid From The SPLOST 2018 Fund – Public Safety – Public Safety Other –…",
+     "outline": "b.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "An Ordinance Of The Macon-Bibb County Commission To Adopt The Fy 2027 Budget Of 2025 SPLOST Proceeds And Authorize Appropriations",
+     "outline": "b.",
+     "reference": null
+    }
+   ],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -7761,27 +9406,6 @@
    "terms": [
     "special purpose local option",
     "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-06-16",
-   "docType": "agenda",
-   "excerpt": "… 2 - a resolution to authorize acceptance of the Emergency Management Performance Grant - EMA Director. 3. Local Homestead Option Sales Tax Resolution R-2026-43 - a resolution to authorize a request that the local legislative delegation file Local …",
-   "excerptTerm": "homestead option sales tax",
-   "fips": "13009",
-   "placeId": "baldwin",
-   "placeName": "Baldwin County",
-   "placeType": "county",
-   "region": "Middle Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/baldwincga-pubu/MEET-Agenda-f5ac1a7e0b244f5fa4abfc600309eef5.pdf",
-   "tags": [],
-   "terms": [
-    "homestead option sales tax"
    ],
    "vendors": []
   },
@@ -7826,6 +9450,27 @@
    "tags": [],
    "terms": [
     "flost",
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-06-12",
+   "docType": "agenda",
+   "excerpt": "… erior Court as of January 31, 2026 I. Construction Engineering Griffin $469,380 SPLOST (1998- contract for the Contracting, Inc. 2003) – County Colonel Esti …",
+   "excerptTerm": "splost",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1735&Inline=True",
+   "tags": [],
+   "terms": [
     "splost"
    ],
    "vendors": []
@@ -7988,6 +9633,9 @@
    "excerpt": "… Engineers and Consultants Inc. in the amount of $2,418,406.99 to provide design services for SPLOST IX Bundle 3 Projects - Director, Department of Capital Projects (10) Board consideration and approval of a Pr …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "no-results",
+   "meetingId": "430",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -8003,18 +9651,18 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
-   "context": "agenda-action",
+   "context": "unknown",
    "date": "2026-06-09",
    "docType": "agenda",
-   "excerpt": "… Rescue (FR) to obtain roof maintenance, repair, and replacement services at County-owned facilities. Seeking to utilize SPLOST II funds for the roof replacement and repairs at North DeKalb Comprehensive Health Center, East DeKalb Health Center, E …",
+   "excerpt": "… h. Rome Floyd Planning Commission Next Meeting, Thursday, July 2, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD, 2026 j. Transportation Policy Committee …",
    "excerptTerm": "splost",
-   "fips": "13089",
-   "placeId": "dekalb",
-   "placeName": "DeKalb County",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
    "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "legistar",
-   "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4478&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2168,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -8209,6 +9857,23 @@
    "excerpt": "… County's local delegation to the General Assembly asking for local law to conduct a LHOST - County Manager (Item first discussed at the May 12, 2026 Work Session Meeting) …",
    "excerptTerm": "lhost",
    "fips": "13117",
+   "followThrough": "recorded",
+   "meetingId": "451",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "Board consideration and approval of a Resolution to the County's local delegation to the General Assembly asking for local law to conduct a LHOST - County Manager / County Attorney",
+     "outline": "2",
+     "reference": null
+    }
+   ],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -8415,27 +10080,6 @@
    "vendors": []
   },
   {
-   "body": "Committee of the Whole",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-06-02",
-   "docType": "agenda",
-   "excerpt": "… Rescue (FR) to obtain roof maintenance, repair, and replacement services at County-owned facilities. Seeking to utilize SPLOST II funds for the roof replacement and repairs at North DeKalb Comprehensive Health Center, East DeKalb Health Center, E …",
-   "excerptTerm": "splost",
-   "fips": "13089",
-   "placeId": "dekalb",
-   "placeName": "DeKalb County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "legistar",
-   "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4476&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-   "tags": [],
-   "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "agenda-action",
@@ -8487,6 +10131,9 @@
    "excerpt": "… er, Mayor) d. An Ordinance of the Macon-Bibb County Commission to Authorize Transfers and Appropriations of 2018 SPLOST Funds to Fund Recreation, Courthouse and Road Projects as Provided Herein. (Sponsored by: Lester M. Miller, Mayor) …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2391",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -8511,6 +10158,49 @@
    "excerpt": "… b. An Ordinance of the Macon-Bibb County Commission to Authorize Transfers and Appropriations of 2018 SPLOST Funds to Fund Recreation, Courthouse and Road Projects as Provided Herein. (Sponsored by: Lester M. Miller, …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "recorded",
+   "meetingId": "2132",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "An Ordinance of the Macon-Bibb County Commission to Authorize Transfers and Appropriations of 2018 SPLOST Funds to Fund Recreation, Courthouse and Road Projects as Provided Herein.",
+     "outline": "b.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Kardex Remstar, LLC For The Purchase Of A Megamat Office Vertical Carousel, In The Amount Of $104,882.38, To Be Paid From The SPLOST 2018 Fund – Public Safety – Public Safety Other – Property Line…",
+     "outline": "b.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Williams Communications, Inc., For The Replacement Of Radio Equipment In The Amount Of $146,883.87, To Be Paid From The SPLOST 2018 Fund – Public Safety – IT Upgrade – Property Line Item",
+     "outline": "c.",
+     "reference": null
+    }
+   ],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -8619,6 +10309,9 @@
    "excerpt": "… roval to award RFP 26-45-1514 to E.R. Snell Contractor Inc. for Progressive Design Build Services for the SPLOST IX Bundle 1 Project, with a Preliminary Stage Cost of $2,309,800.00 and a Design-Builder's Fee …",
    "excerptTerm": "splost",
    "fips": "13117",
+   "followThrough": "no-results",
+   "meetingId": "429",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -8635,17 +10328,17 @@
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
-   "date": "2026-05-22",
+   "date": "2026-05-26",
    "docType": "agenda",
-   "excerpt": "… SOURCE AMOUNT FUNDING K. Professional Engineering Kimley-Horn and $64,000 SPLOST (2014- services contract to Associates, Inc. 2020) - provide a County …",
+   "excerpt": "… h. Rome-Floyd Planning Commission Next Meeting, Thursday, June 4, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD j. Transportation Policy Committee …",
    "excerptTerm": "splost",
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
    "placeType": "county",
-   "region": "Coastal Georgia",
+   "region": "Northwest Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1737&Inline=True",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2139,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -8688,27 +10381,6 @@
    "region": "Northwest Georgia",
    "sourceType": "ocr",
    "sourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_05192026-1094",
-   "tags": [],
-   "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-05-19",
-   "docType": "agenda",
-   "excerpt": "… ce adjustment to align with the U.S Bureau of Labor Statistics reports. Funding is available through the 2021 SPLOST Fund. 6. Recommendation for Contract Amendment: ITB #24-79 Construction of Fire Station #9 for Clayton County, …",
-   "excerptTerm": "splost",
-   "fips": "13063",
-   "placeId": "clayton",
-   "placeName": "Clayton County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5351&compileOutputType=1",
    "tags": [],
    "terms": [
     "splost"
@@ -8880,6 +10552,27 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "unknown",
+   "date": "2026-05-12",
+   "docType": "agenda",
+   "excerpt": "… h. Rome Floyd Planning Commission Next Meeting, Thursday, June 4, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2132,plainText=false)",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": null,
    "date": "2026-05-12",
    "docType": "agenda",
@@ -8987,29 +10680,8 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-05-07",
-   "docType": "agenda",
-   "excerpt": "… ssure Compliance with the Constitution of the State of Georgia Concerning General Obligation Sales Tax Bonds (ESPLOST VII 2025) to be Issued by the Walker County Board of Education 17.4. Resolution R-035-26 to Approve Issuanc …",
-   "excerptTerm": "splost",
-   "fips": "13295",
-   "placeId": "walker",
-   "placeName": "Walker County",
-   "placeType": "county",
-   "region": "Northwest Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3227,plainText=false)",
-   "tags": [],
-   "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
    "context": "unknown",
-   "date": "2026-05-06",
+   "date": "2026-05-08",
    "docType": "agenda",
    "excerpt": "… III, IV, V, VI & to provide •WSP USA, Inc. VII SPLOSTs, geotechnical Savannah, GA Capital …",
    "excerptTerm": "splost",
@@ -9020,6 +10692,45 @@
    "region": "Coastal Georgia",
    "sourceType": "ocr",
    "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1736&Inline=True",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-05-07",
+   "docType": "agenda",
+   "excerpt": "… ssure Compliance with the Constitution of the State of Georgia Concerning General Obligation Sales Tax Bonds (ESPLOST VII 2025) to be Issued by the Walker County Board of Education 17.4. Resolution R-035-26 to Approve Issuanc …",
+   "excerptTerm": "splost",
+   "fips": "13295",
+   "followThrough": "recorded",
+   "meetingId": "9",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "abstain": 1,
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 3
+      }
+     ],
+     "name": "Resolution R-034-26 to Assure Compliance with the Constitution of the State of Georgia Concerning General Obligation Sales Tax Bonds (ESPLOST VII 2025) to be Issued by the Walker County Board of Education",
+     "outline": "3.",
+     "reference": null
+    }
+   ],
+   "placeId": "walker",
+   "placeName": "Walker County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://walkercoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3227,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -9183,6 +10894,9 @@
    "excerpt": "… 00,000.00 For The Completion Of The Law Enforcement Center Expansion And Upgrade Project, To Be Paid From The 2025 SPLOST Fund – Public Safety – Sheriff Buildings Line Item (Sponsored by: Lester M. Miller, Mayor) n. A Resoluti …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2390",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -9205,6 +10919,49 @@
    "excerpt": "… 0.00 For The Completion Of The Law Enforcement Center Expansion And Upgrade Project, To Be Paid From The 2025 SPLOST Fund – Public Safety – Sheriff Buildings Line Item (Sponsored by: Lester M. Miller, Mayor) c. …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "recorded",
+   "meetingId": "2131",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing A Not To Exceed Price Of $34,000,000.00 For The Completion Of The Law Enforcement Center Expansion And Upgrade Project, To Be Paid From The 2025 SPLOST Fund – Public Safety – Sheriff Buildings Line Item",
+     "outline": "b.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Issuance Of A Purchase Order In The Amount Of $194,361.95 To Fisher Scientific Company, LLC For The Purchase Of SCBA Equipment For The Fire Department, To Be Paid From The SPLOST 2018 Fund – Public Safety – Fire Upgrade – Property…",
+     "outline": "c.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission To Authorize The Mayor To Execute An Independent Contractor Agreement With Professional Paving Services, LLC, For Asphalt Paving & Resurfacing Services, In The Amount Of $3,248,988.49, To Be Paid From 2026 LMIG Grant Funds And 2018 SPLOST – Road Work…",
+     "outline": "d.",
+     "reference": null
+    }
+   ],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -9259,6 +11016,27 @@
     "millage",
     "splost",
     "tax digest"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-04-28",
+   "docType": "agenda",
+   "excerpt": "… h. Rome Floyd Planning Commission Next Meeting, Thursday, May 7, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2113,plainText=false)",
+   "tags": [],
+   "terms": [
+    "splost"
    ],
    "vendors": []
   },
@@ -9375,9 +11153,47 @@
    "context": "unknown",
    "date": "2026-04-21",
    "docType": "agenda",
+   "excerpt": "… www.veseris.com B. Change Order Engineering Vanasse Hangen $1,299,224 SPLOST (2020- No. 3 to the Brustlin, Inc. 2026) - Chevis professional …",
+   "excerptTerm": "splost",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1730&Inline=True",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-04-21",
+   "docType": "agenda",
    "excerpt": "… $1,271,811.62 For Network Configuration Services For Macon-Bibb County Courthouse, To Be Paid From 2018 SPLOST Funds – Public Safety – It Upgrade – Property Line Item (Sponsored by: Lester M. Miller, Mayor, Joey Hulett, …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "recorded",
+   "meetingId": "2356",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Enter An Agreement With 1 Accord Technologies, LLC, In The Amount Of $1,271,811.62 For Network Configuration Services For Macon-Bibb County Courthouse, To Be Paid From 2018 SPLOST Funds – Public Safety – It Upgrade – Property…",
+     "outline": "e.",
+     "reference": null
+    }
+   ],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -9437,21 +11253,20 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
-   "context": "agenda-action",
+   "context": "unknown",
    "date": "2026-04-14",
    "docType": "agenda",
-   "excerpt": "… r)(Exhibit 12) Announcement #3: The Following item will be added to tonight’s Regular agenda: T-SPLOST item. 1. Resolution approving a payment to Georgia DOT in the amount of $29,354,340 f …",
+   "excerpt": "… h. Rome Floyd Planning Commission Next Meeting, Thursday, May 7, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD j. Transportation Policy Committee …",
    "excerptTerm": "splost",
-   "fips": "13151",
-   "placeId": "henry",
-   "placeName": "Henry County",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
    "placeType": "county",
-   "region": "Metro Atlanta",
+   "region": "Northwest Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2489,plainText=false)",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2098,plainText=false)",
    "tags": [],
    "terms": [
-    "flost",
     "splost"
    ],
    "vendors": []
@@ -9635,34 +11450,15 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
-   "context": "unknown",
-   "date": "2026-04-07",
-   "docType": "agenda",
-   "excerpt": "… itigation, property acquisition, and personnel ​ ​ Reminders and Information 1.​ LOST / SPLOST / FLOST Report REGULAR SESSION I.​ Invocation and Pledge of Allegiance II.​ Call To Order …",
-   "excerptTerm": "splost",
-   "fips": "13129",
-   "placeId": "gordon",
-   "placeName": "Gordon County",
-   "placeType": "county",
-   "region": "Northwest Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_04072026-1084",
-   "tags": [],
-   "terms": [
-    "flost",
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
    "context": "agenda-action",
    "date": "2026-04-07",
    "docType": "agenda",
    "excerpt": "… nt With Bryx, Inc., In The Amount Of $1,256,750.00, To Upgrade The Fire Station Alert Systems, To Be Paid From The Splost 2018 Fund – Public Safety – Fire Upgrades Line Item; (Sponsored by: Lester M. Miller, Mayor) f. Resolution …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2389",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -9686,6 +11482,88 @@
    "excerpt": "… th Bryx, Inc., In The Amount Of $1,256,750.00, To Upgrade The Fire Station Alert Systems, To Be Paid From The Splost 2018 Fund – Public Safety – Fire Upgrades Line Item; (Sponsored by: Lester M. Miller, Mayor) d …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "recorded",
+   "meetingId": "2130",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Bryx, Inc., In The Amount Of $1,256,750.00, To Upgrade The Fire Station Alert Systems, To Be Paid From The Splost 2018 Fund – Public Safety – Fire Upgrades Line Item;",
+     "outline": "c.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Streetscan Usa, Inc, D/B/A Citylogix, For Sidewalk Analysis Consulting Services, In The Amount Of $394,167.00, To Be Paid From The 2018 SPLOST – Road Work, Other - Property Line Item",
+     "outline": "f.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "An Ordinance Of The Macon-Bibb County Commission Authorizing The Mayor To Approve A Change Order To The Independent Contract Agreement With Buxton Construction, LLC For The Construction Or Roadway And Parking Improvements On Walnut Street, In The Amount Of $218,249.11; To Authorize An…",
+     "outline": "g.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Kompan, Inc., In The Amount Of $149,982.60, For The Purchase And Installation Of Playground Equipment At The Bloomfield-Gilead Recreation Center Playground, To Be Paid From The Splost 2018 Fund –…",
+     "outline": "h.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "An Ordinance Of The Macon-Bibb County Commission To Authorize An Appropriation, In The Amount Of $9,996,848.00, From 2018 SPLOST Revenues To Fund The Projects Described Herein;",
+     "outline": "a.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "An Ordinance Of The Macon-Bibb County Commission To Authorize A Guaranteed Maximum Price (“GMP”) Of $1,244,030.00 For Phase I Of The Law Enforcement Center Expansion And Upgrade Project, To Be Paid From 2018 And 2025 SPLOST Funds Appropriated To Such Purpose; Transferring 2018 Splost Funds To The…",
+     "outline": "b.",
+     "reference": null
+    }
+   ],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -9709,6 +11587,52 @@
    "excerpt": "… r-Dodge-Jeep for $296,520.00 to purchase Seven (7) vehicles for the Walker County Sheriff’s Office (SPLOST). 15.3. Purchase Order 2026-00001364 to Jacky Jones Automotive for $85,737.00 for the purchase of two (2) …",
    "excerptTerm": "splost",
    "fips": "13295",
+   "followThrough": "recorded",
+   "meetingId": "8",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "abstain": 1,
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Resolution R-031-26 to Amend Project List and Budget for the 2020 Special Purpose Local Option Sales Tax (SPLOST)",
+     "outline": "6.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "abstain": 1,
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Purchase Order 2026-00001363 to Jenkins Chrysler-Dodge-Jeep for $296,520.00 to purchase Seven (7) vehicles for the Walker County Sheriff’s Office (SPLOST).",
+     "outline": "9.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "abstain": 1,
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Purchase Order 2026-00001364 to Jacky Jones Automotive for $85,737.00 for the purchase of two (2) vehicles for the Walker County Sheriff’s Office (SPLOST).",
+     "outline": "10.",
+     "reference": null
+    }
+   ],
    "placeId": "walker",
    "placeName": "Walker County",
    "placeType": "county",
@@ -9738,27 +11662,6 @@
    "region": "Metro Atlanta",
    "sourceType": "legistar",
    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6383&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
-   "tags": [],
-   "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-03-27",
-   "docType": "agenda",
-   "excerpt": "… increase Other Community Services - Vehicles $80,000. 2) In the Sales Tax VII Fund, increase SPLOST revenue $533,509 to establish a Marine Patrol Facility Project. 3) In the Capital Improvement Program …",
-   "excerptTerm": "splost",
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1731&Inline=True",
    "tags": [],
    "terms": [
     "splost"
@@ -9811,6 +11714,27 @@
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
+   "date": "2026-03-24",
+   "docType": "agenda",
+   "excerpt": "… h. Rome Floyd Planning Commission Next Meeting, Thursday, April 2, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2090,plainText=false)",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
    "date": "2026-03-23",
    "docType": "agenda",
    "excerpt": "… Discussion | Split Billing Brad Johnson ◻ WS (B) Discussion | Preliminary Rollback Rate Brad Johnson ◻ WS (C) Discussion | County Logo Revision Michael Brewer SEC …",
@@ -9839,6 +11763,9 @@
    "excerpt": "… $105,720.00, To Upgrade The Security Systems At The Thomas Jackson Juvenile Justice Center, To Be Paid From The SPLOST 2018 Fund – Judicial – Courthouse – Property Line Item (Sponsored by: Lester M. Miller, Mayor) m. A Resolution O …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2401",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -9863,6 +11790,88 @@
    "excerpt": "… 5,720.00, To Upgrade The Security Systems At The Thomas Jackson Juvenile Justice Center, To Be Paid From The SPLOST 2018 Fund – Judicial – Courthouse – Property Line Item (Sponsored by: Lester M. Miller, Mayor) b. A …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "recorded",
+   "meetingId": "2355",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Cana Communications, In The Amount Of $105,720.00, To Upgrade The Security Systems At The Thomas Jackson Juvenile Justice Center, To Be Paid From The SPLOST 2018 Fund – Judicial – Courthouse –…",
+     "outline": "a.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission To Authorize The Mayor To Execute An Independent Contractor Agreement With Professional Paving Services, LLC For Asphalt Paving & Resurfacing Services, In The Amount Of $1,231,636.36, To Be Paid From The 2025 SPLOST Fund - Roads – Property Line Item",
+     "outline": "b.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "An Ordinance Of The Macon-Bibb County Commission To Authorize Transfers And Appropriations From 2018 SPLOST Revenues And The Interest Earned Thereon As Provided For Herein;",
+     "outline": "a.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "An Ordinance Of The Macon-Bibb County Commission To Authorize Appropriations, In The Amount Of $31,500,000.00, From 2025 SPLOST Funds To The Jail Expansion And Upgrade Project, The Arena Project, Public Safety Projects, Cultural And Recreation Projects, I.T. Projects, And Debt Service",
+     "outline": "b.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing A Not To Exceed Price Of $14,000,000.00 For The Completion Of Renovations To The Bibb County Courthouse, To Be Paid From The 2018 SPLOST Fund – Judicial - Courthouse – Property Line Item And Declaring The Courthouse Project To Be…",
+     "outline": "b.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Deny",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 8
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Considering A Request For Refund Of 2023 And 2024 Ad Valorem Taxes To Flora Mae Ivey Pursuant To O.C.G.A. § 48-5-380",
+     "outline": "a.",
+     "reference": null
+    }
+   ],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -9896,27 +11905,6 @@
    "region": "Middle Georgia",
    "sourceType": "ocr",
    "sourceUrl": "https://www.houstoncountyga.gov/minutes/2026-03-17%20Department%20Head%20Copy.pdf",
-   "tags": [],
-   "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-03-17",
-   "docType": "agenda",
-   "excerpt": "… 11. [2026-123 Change Order] Lauren Shuman (Approved) Consideration to approve Change Order #4 for the TSPLOST District 3 Resurfacing Project with Reeves Construction Company 12. [2026-124 Policy] Stephanie Jo …",
-   "excerptTerm": "splost",
-   "fips": "13103",
-   "placeId": "effingham",
-   "placeName": "Effingham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/effingham-pubu/MEET-Agenda-32088c8996344738b1cac1a08b2a3e98.pdf",
    "tags": [],
    "terms": [
     "splost"
@@ -9981,6 +11969,27 @@
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://www.rockdalecountyga.gov/wp-content/uploads/2026/03/BOC-minutes-3.10.26.pdf",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-03-10",
+   "docType": "agenda",
+   "excerpt": "… h. Rome Floyd Planning Commission Next Meeting, Thursday, April 2, 2:30 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2065,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -10121,6 +12130,27 @@
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
+   "date": "2026-02-27",
+   "docType": "agenda",
+   "excerpt": "… SOURCE AMOUNT FUNDING C. Change Order Engineering B&D Clearing, $299,044 SPLOST (1998- No. 2 to the Inc. 2003) – County- construction …",
+   "excerptTerm": "splost",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1733&Inline=True",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
    "date": "2026-02-26",
    "docType": "minutes",
    "excerpt": "… for variances in actual grant awards versus estimated grant amounts included in the adopted budget. 3. To close 2017 SPLOST projects that have been completed, to transfer any residual funds to projects contingency, and to use projects contin …",
@@ -10132,6 +12162,27 @@
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda/02-26-2026%20BOC%20Agenda.pdf",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-02-24",
+   "docType": "agenda",
+   "excerpt": "… h. Rome Floyd Planning Commission Next Meeting, Thursday, March 5, 2:00 pm, 2026 i. SPLOST Project Overview Committee Next Meeting, TBD j. Transportation Policy Committee …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=1066,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -10184,27 +12235,6 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
-   "context": null,
-   "date": "2026-02-17",
-   "docType": "minutes",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13247",
-   "placeId": "rockdale",
-   "placeName": "Rockdale County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.rockdalecountyga.gov/wp-content/uploads/2026/03/BOC-minutes-2.17.26.pdf",
-   "tags": [],
-   "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
    "context": "unknown",
    "date": "2026-02-17",
    "docType": "agenda",
@@ -10232,6 +12262,9 @@
    "excerpt": "… .00, For The Resurfacing And Repair Of Pickleball Courts At Tattnall Pickleball Center, To Be Paid From The SPLOST 2018 Fund – Recreation – JDS Tennis – Property Line Item (Sponsored by: Lester M. Miller, Mayor) c. …",
    "excerptTerm": "splost",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2400",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -10241,28 +12274,6 @@
    "tags": [],
    "terms": [
     "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-02-13",
-   "docType": "agenda",
-   "excerpt": "… n Chatham County and the Town of Vernonburg to allow and approve for the Tax Commissioner to prepare the tax digest for the Town and to assess and collect municipal taxes. 6. Request Board approve the sale of …",
-   "excerptTerm": "tax digest",
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1728&Inline=True",
-   "tags": [],
-   "terms": [
-    "splost",
-    "tax digest"
    ],
    "vendors": []
   },
@@ -10281,6 +12292,27 @@
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda/02-12-2026%20BOC%20Agenda.pdf",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-02-10",
+   "docType": "agenda",
+   "excerpt": "… g. Airport Commission Next Meeting, Wednesday, March 18, 4:00 PM, 2026 h. h. SPLOST Project Overview Committee Next Meeting, TBD i. RFPR Advisory Committee N …",
+   "excerptTerm": "splost",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=50,plainText=false)",
    "tags": [],
    "terms": [
     "splost"
@@ -10340,6 +12372,38 @@
    "excerpt": "… 6-0001105 for $168,743.00 to Gordian for Containment and Remediation Phase 2 of the Walker County Courthouse. (SPLOST2020 Funding) 14.6. Purchase Order 2026-0001052 for $69,134.67 to Standby Service Solutions, LLC to …",
    "excerptTerm": "splost",
    "fips": "13295",
+   "followThrough": "recorded",
+   "meetingId": "6",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "abstain": 1,
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Purchase Order 2026-0001105 for $168,743.00 to Gordian for Containment and Remediation Phase 2 of the Walker County Courthouse. (SPLOST2020 Funding)",
+     "outline": "5.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "abstain": 1,
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Purchase Order 2026-0001052 for $69,134.67 to Standby Service Solutions, LLC to purchase a generator for the Elections Office (SPLOST2020 Funding)",
+     "outline": "6.",
+     "reference": null
+    }
+   ],
    "placeId": "walker",
    "placeName": "Walker County",
    "placeType": "county",
@@ -10371,27 +12435,6 @@
    "terms": [
     "local option sales tax",
     "special purpose local option",
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-01-30",
-   "docType": "agenda",
-   "excerpt": "… SOURCE AMOUNT FUNDING F. Deductive Engineering Paul S. Akins ($126,074) SPLOST (2020- Summary Change Company, Inc. 2026) – Mighty Order to the …",
-   "excerptTerm": "splost",
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1726&Inline=True",
-   "tags": [],
-   "terms": [
     "splost"
    ],
    "vendors": []
@@ -10535,12 +12578,51 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "unknown",
+   "date": "2026-01-09",
+   "docType": "agenda",
+   "excerpt": "… cute the LMIG application. There will be a 30% local match in the amount of $347,215 from SPLOST funds required when a construction contract is approved.) [Districts 3, 4, 5 and 6.] 10. Requ …",
+   "excerptTerm": "splost",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1727&Inline=True",
+   "tags": [],
+   "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "agenda-action",
    "date": "2026-01-08",
    "docType": "agenda",
    "excerpt": "… e, GA 14.6. Resolution R-010-26 to Adopt Recommendations from the Georgia Department of Community Affairs Hotel-Motel Tax Performance Review Board 14.7. Resolution R-011-26 to Contract Services with Yellowstone Landscape, LLC f …",
    "excerptTerm": "hotel-motel tax",
    "fips": "13295",
+   "followThrough": "recorded",
+   "meetingId": "5",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "abstain": 1,
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Resolution R-010-26 to Adopt Recommendations from the Georgia Department of Community Affairs Hotel-Motel Tax Performance Review Board",
+     "outline": "6.",
+     "reference": null
+    }
+   ],
    "placeId": "walker",
    "placeName": "Walker County",
    "placeType": "county",
@@ -10604,19 +12686,41 @@
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
-   "date": "2025-12-19",
-   "docType": "agenda",
-   "excerpt": "… Recreation and Recreation L. Construction Engineering Platinum Paving $2,943,597 •SPLOST (2020- contract for the and Concrete, LLC 2026) – Walthour Slope …",
+   "date": "2025-12-29",
+   "docType": "minutes",
+   "excerpt": "… or $14,503,340. Special funds are for the for the Fiscal Year 2026 following departments: E-911 $854,540; Jail $10,000; SPLOST $7,780,000; Special Revenue Budget: T-SPLOST $648,443; Landfill $2,266,967; EMS $2,886,790; Juvenile Service Fund …",
    "excerptTerm": "splost",
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
+   "fips": "13279",
+   "placeId": "toombs",
+   "placeName": "Toombs County",
    "placeType": "county",
-   "region": "Coastal Georgia",
+   "region": "South Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1725&Inline=True",
+   "sourceUrl": "https://toombscountyga.gov/wp-content/uploads/2026/01/12_29_2025-Called-Board-Meeting-December-29-2025.pdf",
    "tags": [],
    "terms": [
+    "splost"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2025-12-16",
+   "docType": "minutes",
+   "excerpt": "… se, this will help off-set the total cost of $27,473.56. The County’s portion will be paid from SPLOST Funds. Commissioner Cason made a motion, seconded by Commissioner Moon …",
+   "excerptTerm": "splost",
+   "fips": "13279",
+   "placeId": "toombs",
+   "placeName": "Toombs County",
+   "placeType": "county",
+   "region": "South Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://toombscountyga.gov/wp-content/uploads/2026/01/12_2025-Regular-Board-Meeting-December-16-2025.pdf",
+   "tags": [],
+   "terms": [
+    "flost",
     "splost"
    ],
    "vendors": []
@@ -10713,12 +12817,64 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "agenda-action",
+   "date": "2025-12-05",
+   "docType": "agenda",
+   "excerpt": "… ty. This would be the cancellation of the previous resolution and ordinance allowing such tax abatement benefits. 3. Request Board approval of the Fiscal Year 2026/2027 Budget Adoption and Millage …",
+   "excerptTerm": "tax abatement",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1712&Inline=True",
+   "tags": [],
+   "terms": [
+    "millage",
+    "tax abatement"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "unknown",
    "date": "2025-12-04",
    "docType": "agenda",
    "excerpt": "… 6-00000564 for $30,952.00 to Stewart Signs for a Digital Message Board for the new Elections Office building (SPLOST 2020 Funds) 13.4. Purchase Order 2026-00000573 for $99,116.00 to NABCO Electric Company, Inc. for a traff …",
    "excerptTerm": "splost",
    "fips": "13295",
+   "followThrough": "recorded",
+   "meetingId": "4",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "Purchase Order 2026-00000564 for $30,952.00 to Stewart Signs for a Digital Message Board for the new Elections Office building (SPLOST 2020 Funds)",
+     "outline": "3.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "Purchase Order 2026-00000591 for $71,284.00 to Stowers CAT for the Walker County 911 UPS System Replacement (SPLOST)",
+     "outline": "5.",
+     "reference": null
+    }
+   ],
    "placeId": "walker",
    "placeName": "Walker County",
    "placeType": "county",
@@ -10772,81 +12928,18 @@
     "millage"
    ],
    "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2025-11-21",
-   "docType": "agenda",
-   "excerpt": "… Marshal Branch Canal Project, transfer $247,990 from Other Purchased Services to Transfer Out to the SPLOST III Fund. b) within the Green Island Project, transfer $41,343 from Land to Transfer Out $4,463 to the Ge …",
-   "excerptTerm": "splost",
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1724&Inline=True",
-   "tags": [],
-   "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2025-11-18",
-   "docType": "agenda",
-   "excerpt": "… in-stock 2025 Ford Police Interceptors 3.0L EcoBoost vehicles. This purchase will be funded as $186,000 charged to 2018 SPLOST and $46,500 charged to General Fund to be reimbursed by the Board of Education for the SRO unit. …",
-   "excerptTerm": "splost",
-   "fips": "13153",
-   "placeId": "houston",
-   "placeName": "Houston County",
-   "placeType": "county",
-   "region": "Middle Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.houstoncountyga.gov/minutes/2025-11-18%20Department%20Head%20Copy.pdf",
-   "tags": [],
-   "terms": [
-    "splost"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": null,
-   "date": "2025-11-18",
-   "docType": "minutes",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13005",
-   "placeId": "bacon",
-   "placeName": "Bacon County",
-   "placeType": "county",
-   "region": "South Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://baconcounty.org/uploads/November18%20regular%20meeting%20minutes.pdf",
-   "tags": [],
-   "terms": [
-    "millage",
-    "tax digest"
-   ],
-   "vendors": []
   }
  ],
  "metadata": {
-  "citiesScanned": 9,
+  "citiesScanned": 10,
   "consolidatedScanned": 4,
-  "countiesScanned": 46,
+  "countiesScanned": 49,
   "emoji": "🗳️",
-  "generatedAt": "2026-11-10T22:35:23Z",
+  "generatedAt": "2026-11-20T12:31:46Z",
   "label": "Local taxes & referenda",
-  "placesScanned": 59,
-  "placesWithMentions": 56,
+  "mentionsWithOutcomes": 45,
+  "placesScanned": 63,
+  "placesWithMentions": 58,
   "topic": "local-taxes",
   "universeCities": 537,
   "universeConsolidated": 9,

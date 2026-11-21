@@ -1,0 +1,22 @@
+{
+  // VoteGA MCP server. Deployed to the custom domain mcp.votega.org; the account's
+  // workers.dev URL is disabled so the server has exactly one public address.
+  "name": "votega-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-04",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "routes": [{ "pattern": "mcp.votega.org", "custom_domain": true }],
+  // Workers Paid (since 2026-11-21) allows 30 s of CPU per request by default, and CPU time over
+  // the monthly allowance is billed. The worst request measured on the live Worker was 41 ms
+  // (spec §12.13), so 100 ms leaves headroom for cold isolates while stopping a runaway or
+  // abusive request early. A request over the cap fails with exceededCpu.
+  "limits": { "cpu_ms": 100 },
+  // Off: invocation logs record client IPs, headers and URLs, which spec §9 rules out.
+  // Aggregate metrics (requests, errors, CPU quantiles) are still available in Workers
+  // analytics. For a measurement, turn this on briefly in a spike and off again.
+  "observability": { "enabled": false }
+  // Phase 0 benchmarks served data from an assets binding ("assets": { "directory":
+  // "./bench-data", "binding": "ASSETS", "run_worker_first": true }); see
+  // mcp/bench/make_bench_data.py and spec §12.11 to re-run them.
+}

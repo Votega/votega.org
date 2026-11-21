@@ -45,7 +45,8 @@ MARKER = "[races-structure-change]"
 ZERO_SHA = "0" * 40
 
 # Phases only move forward through an election. Anything else is a likely slip.
-ALLOWED_TRANSITIONS = {("primary", "runoff"), ("primary", "general"), ("runoff", "general")}
+ALLOWED_TRANSITIONS = {("primary", "runoff"), ("primary", "general"), ("runoff", "general"),
+                       ("general", "runoff")}  # a general-election runoff (Dec 1, 2026: HD 151)
 
 # Candidates come off a ballot a few at a time (withdrawals, off-ballot cleanups).
 # A bigger single-push drop is a damaged file, not an edit.

@@ -1,6 +1,6 @@
 # Departure labels, batch 1 (draft for approval)
 
-Drafted 2026-10-30 for the approval step in D6 of `ga-biennium-rollover-decisions.md`. Nothing here is built or published. Approval cutoff: 4 January 2027. Only the fact and date are stated; "lost" and "did not run" are used, never "retired", "ousted" or "unseated" (Harbison's own word is the one exception). No label names the winner of a contest; each would link to the certified results page.
+Drafted 2026-10-30 for the approval step in D6 of `ga-biennium-rollover-decisions.md`. Nothing here is built or published. Approval cutoff: 4 January 2027. Only the fact and date are stated; "lost" and "did not run" are used, never "retired", "ousted" or "unseated" (Harbison's own word was an exception until 2026-11-21; see Revisions). No label names the winner of a contest; each would link to the certified results page.
 
 Sources: the roster (`ga-members.json`, `status` and `statusDate`), the certified Secretary of State primary (5/19, certified 6/5) and runoff (6/16, certified 8/20) files, and the Secretary of State qualifying export (`ga-legislative-candidates.json`, matched by a second download on 2026-10-30). Vote figures are in the evidence column only; they are not in the label text, except Harbison's, which was decided earlier.
 
@@ -28,31 +28,31 @@ Sources: the roster (`ga-members.json`, `status` and `statusDate`), the certifie
 | legisGaGovId | Member | Seat | Draft label | Evidence |
 |---|---|---|---|---|
 | 209 | Freddie Powell Sims (D) | Senate 12 | Withdrew her candidacy for re-election on March 23, 2026 and announced she will leave the Senate at the end of her current term. | Qualifying export: Qualified 03/03/2026, status Withdrawn; affidavit of withdrawal dated 2026-03-23; WALB, 2026-03-23 |
-| 5011 | Edna Jackson (D) | House 165 | Withdrew her candidacy for re-election after qualifying. Announced on March 19, 2026 that she was leaving the Legislature. | Qualifying export: Qualified 03/04/2026, status Withdrawn (no withdrawal date in any source we hold). Announcement: Savannah Tribune, 2026-03-25, https://www.savannahtribune.com/articles/georgia-state-representative-edna-jackson-retires-from-public-office/ ("formally announced her retirement from the Georgia Legislature on Friday, March 19th"; the paper's word, so the label says "leaving the Legislature") |
-| 17 | Ed Harbison (D) | Senate 15 | Announced in March 2026 he would retire after the 2026 session. Appeared on the 2026 Democratic primary ballot and received 5,574 votes. | Wording decided 2026-10-29; WTVM 2026-03-04, Senate Press Office 2026-03-06; qualifying export: Qualified 03/06/2026, never withdrawn |
+| 5011 | Edna Jackson (D) | House 165 | Qualified for re-election on March 4, 2026 and later withdrew her candidacy. Announced on March 19, 2026 that she was leaving the Legislature. | Qualifying export: Qualified 03/04/2026, status Withdrawn (no withdrawal date in any source we hold). Announcement: Savannah Tribune, 2026-03-25, https://www.savannahtribune.com/articles/georgia-state-representative-edna-jackson-retires-from-public-office/ ("formally announced her retirement from the Georgia Legislature on Friday, March 19th"; the paper's word, so the label says "leaving the Legislature") |
+| 17 | Ed Harbison (D) | Senate 15 | Announced on March 4, 2026 that he would not seek re-election. Qualified on March 6, 2026 and lost the Democratic primary on May 19, 2026. | Wording decided 2026-10-29; WTVM 2026-03-04, Senate Press Office 2026-03-06; qualifying export: Qualified 03/06/2026, never withdrawn |
 
 ## C. Lost the primary or runoff for their own seat
 
 | legisGaGovId | Member | Seat | Draft label | Evidence |
 |---|---|---|---|---|
-| 863 | Bill Werkheiser (R) | House 157 | Lost the 2026 Republican primary. | 2,618 votes, 33.8%, second of 2 |
-| 5078 | Mary Ann Santos (D) | House 117 | Lost the 2026 Democratic primary runoff. | Primary 2,490 votes (26.5%, second of 5); runoff 531 votes, 12.2% |
-| 5096 | Alvin Payton Jr. (D) | House 177 | Lost the 2026 Democratic primary runoff. | Primary 1,025 votes (25.7%, second of 5); runoff 611 votes, 41.6% |
+| 863 | Bill Werkheiser (R) | House 157 | Lost the Republican primary on May 19, 2026. | 2,618 votes, 33.8%, second of 2 |
+| 5078 | Mary Ann Santos (D) | House 117 | Lost the Democratic primary runoff on June 16, 2026. | Primary 2,490 votes (26.5%, second of 5); runoff 531 votes, 12.2% |
+| 5096 | Alvin Payton Jr. (D) | House 177 | Lost the Democratic primary runoff on June 16, 2026. | Primary 1,025 votes (25.7%, second of 5); runoff 611 votes, 41.6% |
 
 ## D. Ran for a different office and lost the primary
 
 | legisGaGovId | Member | Seat | Draft label | Evidence |
 |---|---|---|---|---|
-| 867 | David Clark (R) | House 100 | Ran for Lieutenant Governor in 2026 (lost the Republican primary). | 140,416 votes, 15.8%, fourth of 7 |
-| 4908 | Blake Tillery (R) | Senate 19 | Ran for Lieutenant Governor in 2026 (lost the Republican primary). | 169,710 votes, 19.1%, third of 7 |
-| 752 | Steve Gooch (R) | Senate 51 | Ran for Lieutenant Governor in 2026 (lost the Republican primary). | 103,623 votes, 11.7%, fifth of 7 |
-| 9 | Bill Cowsert (R) | Senate 46 | Ran for Attorney General in 2026 (lost the Republican primary). | 241,391 votes, 28.4%, second of 2 |
-| 28 | Emanuel Jones (D) | Senate 10 | Ran for U.S. House District 13 in 2026 (lost the Democratic primary). | 8,204 votes, 7.5%, fourth of 6 |
-| 4891 | Derrick Jackson (D) | House 68 | Ran for Governor in 2026 (lost the Democratic primary). | 25,050 votes, 2.3%, fifth of 7 |
+| 867 | David Clark (R) | House 100 | Ran for Lieutenant Governor in 2026 (lost the Republican primary on May 19, 2026). | 140,416 votes, 15.8%, fourth of 7 |
+| 4908 | Blake Tillery (R) | Senate 19 | Ran for Lieutenant Governor in 2026 (lost the Republican primary on May 19, 2026). | 169,710 votes, 19.1%, third of 7 |
+| 752 | Steve Gooch (R) | Senate 51 | Ran for Lieutenant Governor in 2026 (lost the Republican primary on May 19, 2026). | 103,623 votes, 11.7%, fifth of 7 |
+| 9 | Bill Cowsert (R) | Senate 46 | Ran for Attorney General in 2026 (lost the Republican primary on May 19, 2026). | 241,391 votes, 28.4%, second of 2 |
+| 28 | Emanuel Jones (D) | Senate 10 | Ran for U.S. House District 13 in 2026 (lost the Democratic primary on May 19, 2026). | 8,204 votes, 7.5%, fourth of 6 |
+| 4891 | Derrick Jackson (D) | House 68 | Ran for Governor in 2026 (lost the Democratic primary on May 19, 2026). | 25,050 votes, 2.3%, fifth of 7 |
 
 ## E. Did not run for re-election (8 never qualified)
 
-Label for each: **Did not run for re-election in 2026.**
+Label for each: **Did not run for re-election in 2026 (qualifying closed March 6, 2026).**
 
 | legisGaGovId | Member | Seat |
 |---|---|---|
@@ -88,3 +88,12 @@ Batch 1 was approved on 2026-10-30 and recorded as data in `assets/data/ga-depar
 - **Not verified against the live pages.** These are drafts from the data files only.
 - **The matching is by name, chamber and district**, using the rule in the rollover doc; the first scan produced several false matches (for example two Ridleys and two Howards), which I discarded by hand.
 - The other 203 of the 236 sitting members the scan covered won their own seat's nomination outright, or in a runoff, and need no label. I did not read each of those 203 by hand; the scan only reported anyone who was not plainly carried forward.
+
+## Revisions
+
+- **2026-11-21:** three labels reworded so each states only the fact and a date.
+  - Harbison: "would retire" replaced with "would not seek re-election" (WTVM, 2026-03-04), plus his qualifying date (03/06/2026, qualifying export) and his primary loss (Reese 58.8% of the Democratic vote, a majority, so no runoff). The vote figure was dropped like everyone else's. The test's carve-out for "retire" is removed.
+  - Payton and Santos: the runoff date (2026-06-16) added.
+  - Werkheiser and the six who ran for another office: the primary date (2026-05-19) added. All seven were eliminated that day; none was in a runoff.
+  - The eight "did not run" labels: the close of qualifying (2026-03-06) added, sourced to the Secretary of State's 2026 qualifying FAQ (March 2-6). None of the eight is in HD 94 or 130, where qualifying was delayed by weather. The noon closing hour is left out: only a county copy of the state calendar gives it.
+  - Edna Jackson: her qualifying date (03/04/2026) added. No source we hold gives her withdrawal date, so none is stated.

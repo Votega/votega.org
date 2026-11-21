@@ -1,0 +1,62 @@
+name: Update Georgia Commons meeting links (daily, 10:30 UTC)
+
+permissions:
+  contents: write
+
+# Links each school-board meeting we list to its Georgia Commons summary page once
+# that board's minutes reach them (scripts/generate_georgia_commons_links.py).
+# Their API is public, keyless and CORS-open, but we resolve the join at build time
+# so the page makes one small static fetch. Daily because minutes arrive on the
+# board's schedule, not ours; a quiet day commits nothing.
+#
+# Renaming this workflow means updating notify-workflow-failure.yml in the same
+# commit (scripts/validate_workflow_triggers.py fails CI otherwise).
+on:
+  schedule:
+    - cron: '30 10 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: update-georgia-commons-links
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate Georgia Commons links
+        id: gen
+        continue-on-error: true
+        run: python scripts/generate_georgia_commons_links.py
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          F=assets/data/georgia-commons-meetings.json
+          [ -f "$F" ] || { echo "No output file."; exit 0; }
+          git add "$F"
+          # generatedAt alone changing is not news (the checker reads the staged file).
+          if python scripts/only_keys_changed.py "$F" metadata.generatedAt; then
+            echo "Only generatedAt changed; not committing."
+            exit 0
+          fi
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update Georgia Commons meeting links"
+            git pull --rebase origin main
+            git push
+          fi
+
+      # A district whose read failed kept its links; fail AFTER the rest committed.
+      - name: Fail if any district failed
+        if: steps.gen.outcome == 'failure'
+        run: exit 1

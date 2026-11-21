@@ -1,0 +1,5390 @@
+{
+ "metadata": {
+  "generatedAt": "2026-11-21T01:32:19+00:00",
+  "count": 336,
+  "schemaVersion": 1,
+  "historyFrom": {
+   "ga-house": "2023-01-09",
+   "ga-senate": "2023-01-09"
+  },
+  "meaning": "One record per person per continuous time in one seat, in the order held. start/end are the first day in and the first day out, each with a basis; endedBy says only why THIS hold ended (a win or loss elsewhere is the same vgId's next hold). A seat a new map carried over keeps one hold across bienniums; a redrawn seat's hold ends 'redistricted'. Vacancies are the gaps between holds.",
+  "sources": [
+   "legis.ga.gov Members/GetMembersBySession (scripts/data/ga-members-by-session.json)",
+   "assets/data/seats.json",
+   "assets/data/ga-members.json (status, termStart)",
+   "assets/data/seat-hold-overrides.json (hand-reviewed end reasons, with sources)",
+   "assets/data/id-crosswalk-ledger.json (vgIds)",
+   "assets/data/ga-executive-orders-*.json (writs of election, for vacancyNotes)",
+   "assets/data/ga-legislative-specials.json (special elections, for vacancyNotes)"
+  ]
+ },
+ "holds": [
+  {
+   "seatId": "ga-house-100@2021",
+   "vgId": "vg-ga-p-000051",
+   "ids": {
+    "legisGaGovId": 867
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-101@2021",
+   "vgId": "vg-ga-p-000722",
+   "ids": {
+    "legisGaGovId": 4950
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-102@2021",
+   "vgId": "vg-ga-p-000084",
+   "ids": {
+    "legisGaGovId": 5041
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-103@2021",
+   "vgId": "vg-ga-p-000211",
+   "ids": {
+    "legisGaGovId": 5042
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-104@2021",
+   "vgId": "vg-ga-p-000041",
+   "ids": {
+    "legisGaGovId": 846
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-105@2021",
+   "vgId": "vg-ga-p-000395",
+   "ids": {
+    "legisGaGovId": 5043
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-106@2021",
+   "vgId": "vg-ga-p-000689",
+   "ids": {
+    "legisGaGovId": 4952
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-107@2021",
+   "vgId": "vg-ga-p-000194",
+   "ids": {
+    "legisGaGovId": 4901
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-108@2021",
+   "vgId": "vg-ga-p-000100",
+   "ids": {
+    "legisGaGovId": 4953
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-109@2021",
+   "vgId": "vg-ga-p-000065",
+   "ids": {
+    "legisGaGovId": 845
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-10@2021",
+   "vgId": "vg-ga-p-000234",
+   "ids": {
+    "legisGaGovId": 4989
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-110@2021",
+   "vgId": "vg-ga-p-000200",
+   "ids": {
+    "legisGaGovId": 5044
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-111@2021",
+   "vgId": "vg-ga-p-000178",
+   "ids": {
+    "legisGaGovId": 5045
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-112@2021",
+   "vgId": "vg-ga-p-000027",
+   "ids": {
+    "legisGaGovId": 778
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-113@2021",
+   "vgId": "vg-ga-p-000202",
+   "ids": {
+    "legisGaGovId": 5003
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-114@2021",
+   "vgId": "vg-ga-p-000226",
+   "ids": {
+    "legisGaGovId": 5046
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-115@2021",
+   "vgId": "vg-ga-p-000177",
+   "ids": {
+    "legisGaGovId": 5001
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-116@2021",
+   "vgId": "vg-ga-p-000075",
+   "ids": {
+    "legisGaGovId": 4954
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-117@2021",
+   "vgId": "vg-ga-p-000727",
+   "ids": {
+    "legisGaGovId": 5047
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-118@2021",
+   "vgId": "vg-ga-p-000045",
+   "ids": {
+    "legisGaGovId": 5002
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-119@2021",
+   "vgId": "vg-ga-p-000092",
+   "ids": {
+    "legisGaGovId": 5060
+   },
+   "start": "2023-03-06",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-11@2021",
+   "vgId": "vg-ga-p-000181",
+   "ids": {
+    "legisGaGovId": 755
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-120@2021",
+   "vgId": "vg-ga-p-000093",
+   "ids": {
+    "legisGaGovId": 4955
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-121@2021",
+   "vgId": "vg-ga-p-000249",
+   "ids": {
+    "legisGaGovId": 4956
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-10-28",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "ga-members-overrides.json (status)"
+  },
+  {
+   "seatId": "ga-house-122@2021",
+   "vgId": "vg-ga-p-000212",
+   "ids": {
+    "legisGaGovId": 819
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-123@2021",
+   "vgId": "vg-ga-p-000185",
+   "ids": {
+    "legisGaGovId": 4993
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-124@2021",
+   "vgId": "vg-ga-p-000230",
+   "ids": {
+    "legisGaGovId": 876
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-125@2021",
+   "vgId": "vg-ga-p-000708",
+   "ids": {
+    "legisGaGovId": 101
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2024-01-10",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-house-125@2021",
+   "vgId": "vg-ga-p-000087",
+   "ids": {
+    "legisGaGovId": 5063
+   },
+   "start": "2024-03-20",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-126@2021",
+   "vgId": "vg-ga-p-000709",
+   "ids": {
+    "legisGaGovId": 107
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "did-not-run",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-house-127@2021",
+   "vgId": "vg-ga-p-000142",
+   "ids": {
+    "legisGaGovId": 4902
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-128@2021",
+   "vgId": "vg-ga-p-000141",
+   "ids": {
+    "legisGaGovId": 738
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-129@2021",
+   "vgId": "vg-ga-p-000120",
+   "ids": {
+    "legisGaGovId": 5056
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-12@2021",
+   "vgId": "vg-ga-p-000073",
+   "ids": {
+    "legisGaGovId": 826
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-130@2021",
+   "vgId": "vg-ga-p-000246",
+   "ids": {
+    "legisGaGovId": 5048
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2026-01-05",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "ga-members-overrides.json (status)"
+  },
+  {
+   "seatId": "ga-house-131@2021",
+   "vgId": "vg-ga-p-000718",
+   "ids": {
+    "legisGaGovId": 4879
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "did-not-run",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-house-132@2021",
+   "vgId": "vg-ga-p-000025",
+   "ids": {
+    "legisGaGovId": 847
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-133@2021",
+   "vgId": "vg-ga-p-000728",
+   "ids": {
+    "legisGaGovId": 5049
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-134@2021",
+   "vgId": "vg-ga-p-000712",
+   "ids": {
+    "legisGaGovId": 148
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-135@2021",
+   "vgId": "vg-ga-p-000009",
+   "ids": {
+    "legisGaGovId": 5004
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-136@2021",
+   "vgId": "vg-ga-p-000053",
+   "ids": {
+    "legisGaGovId": 5005
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-137@2021",
+   "vgId": "vg-ga-p-000057",
+   "ids": {
+    "legisGaGovId": 71
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-138@2021",
+   "vgId": "vg-ga-p-000232",
+   "ids": {
+    "legisGaGovId": 215
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-139@2021",
+   "vgId": "vg-ga-p-000714",
+   "ids": {
+    "legisGaGovId": 213
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2024-01-30",
+   "endBasis": "official",
+   "endedBy": "deceased",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-house-139@2021",
+   "vgId": "vg-ga-p-000034",
+   "ids": {
+    "legisGaGovId": 5064
+   },
+   "start": "2024-05-15",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-13@2021",
+   "vgId": "vg-ga-p-000122",
+   "ids": {
+    "legisGaGovId": 92
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-140@2021",
+   "vgId": "vg-ga-p-000223",
+   "ids": {
+    "legisGaGovId": 5050
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-141@2021",
+   "vgId": "vg-ga-p-000035",
+   "ids": {
+    "legisGaGovId": 133
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-142@2021",
+   "vgId": "vg-ga-p-000162",
+   "ids": {
+    "legisGaGovId": 794
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-143@2021",
+   "vgId": "vg-ga-p-000715",
+   "ids": {
+    "legisGaGovId": 793
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-144@2021",
+   "vgId": "vg-ga-p-000047",
+   "ids": {
+    "legisGaGovId": 4958
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-145@2021",
+   "vgId": "vg-ga-p-000187",
+   "ids": {
+    "legisGaGovId": 791
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-146@2021",
+   "vgId": "vg-ga-p-000203",
+   "ids": {
+    "legisGaGovId": 1878
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-147@2021",
+   "vgId": "vg-ga-p-000010",
+   "ids": {
+    "legisGaGovId": 5051
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-148@2021",
+   "vgId": "vg-ga-p-000168",
+   "ids": {
+    "legisGaGovId": 4960
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-149@2021",
+   "vgId": "vg-ga-p-000048",
+   "ids": {
+    "legisGaGovId": 4959
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-14@2021",
+   "vgId": "vg-ga-p-000164",
+   "ids": {
+    "legisGaGovId": 4964
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-150@2021",
+   "vgId": "vg-ga-p-000172",
+   "ids": {
+    "legisGaGovId": 811
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-151@2021",
+   "vgId": "vg-ga-p-000160",
+   "ids": {
+    "legisGaGovId": 81
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-152@2021",
+   "vgId": "vg-ga-p-000016",
+   "ids": {
+    "legisGaGovId": 4969
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-153@2021",
+   "vgId": "vg-ga-p-000055",
+   "ids": {
+    "legisGaGovId": 5052
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-154@2021",
+   "vgId": "vg-ga-p-000088",
+   "ids": {
+    "legisGaGovId": 115
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-155@2021",
+   "vgId": "vg-ga-p-000152",
+   "ids": {
+    "legisGaGovId": 781
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-156@2021",
+   "vgId": "vg-ga-p-000135",
+   "ids": {
+    "legisGaGovId": 5010
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-157@2021",
+   "vgId": "vg-ga-p-000015",
+   "ids": {
+    "legisGaGovId": 863
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-158@2021",
+   "vgId": "vg-ga-p-000031",
+   "ids": {
+    "legisGaGovId": 183
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-159@2021",
+   "vgId": "vg-ga-p-000111",
+   "ids": {
+    "legisGaGovId": 73
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-15@2021",
+   "vgId": "vg-ga-p-000154",
+   "ids": {
+    "legisGaGovId": 4934
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-160@2021",
+   "vgId": "vg-ga-p-000136",
+   "ids": {
+    "legisGaGovId": 5053
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-161@2021",
+   "vgId": "vg-ga-p-000014",
+   "ids": {
+    "legisGaGovId": 823
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-162@2021",
+   "vgId": "vg-ga-p-000033",
+   "ids": {
+    "legisGaGovId": 4881
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-163@2021",
+   "vgId": "vg-ga-p-000006",
+   "ids": {
+    "legisGaGovId": 5054
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-164@2021",
+   "vgId": "vg-ga-p-000189",
+   "ids": {
+    "legisGaGovId": 219
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-165@2021",
+   "vgId": "vg-ga-p-000074",
+   "ids": {
+    "legisGaGovId": 5011
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-166@2021",
+   "vgId": "vg-ga-p-000104",
+   "ids": {
+    "legisGaGovId": 862
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-167@2021",
+   "vgId": "vg-ga-p-000029",
+   "ids": {
+    "legisGaGovId": 303
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-168@2021",
+   "vgId": "vg-ga-p-000002",
+   "ids": {
+    "legisGaGovId": 230
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-169@2021",
+   "vgId": "vg-ga-p-000717",
+   "ids": {
+    "legisGaGovId": 1877
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "did-not-run",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-house-16@2021",
+   "vgId": "vg-ga-p-000229",
+   "ids": {
+    "legisGaGovId": 825
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-170@2021",
+   "vgId": "vg-ga-p-000711",
+   "ids": {
+    "legisGaGovId": 130
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "did-not-run",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-house-171@2021",
+   "vgId": "vg-ga-p-000105",
+   "ids": {
+    "legisGaGovId": 4970
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-172@2021",
+   "vgId": "vg-ga-p-000038",
+   "ids": {
+    "legisGaGovId": 5058
+   },
+   "start": "2023-02-06",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-173@2021",
+   "vgId": "vg-ga-p-000050",
+   "ids": {
+    "legisGaGovId": 786
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-174@2021",
+   "vgId": "vg-ga-p-000108",
+   "ids": {
+    "legisGaGovId": 859
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-175@2021",
+   "vgId": "vg-ga-p-000109",
+   "ids": {
+    "legisGaGovId": 4923
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-176@2021",
+   "vgId": "vg-ga-p-000098",
+   "ids": {
+    "legisGaGovId": 4967
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-177@2021",
+   "vgId": "vg-ga-p-000242",
+   "ids": {
+    "legisGaGovId": 831
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2026-03-09",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "ga-members-overrides.json (status)"
+  },
+  {
+   "seatId": "ga-house-178@2021",
+   "vgId": "vg-ga-p-000218",
+   "ids": {
+    "legisGaGovId": 4961
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-179@2021",
+   "vgId": "vg-ga-p-000182",
+   "ids": {
+    "legisGaGovId": 5055
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-17@2021",
+   "vgId": "vg-ga-p-000143",
+   "ids": {
+    "legisGaGovId": 4935
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-180@2021",
+   "vgId": "vg-ga-p-000219",
+   "ids": {
+    "legisGaGovId": 4962
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-18@2021",
+   "vgId": "vg-ga-p-000231",
+   "ids": {
+    "legisGaGovId": 4990
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-19@2021",
+   "vgId": "vg-ga-p-000113",
+   "ids": {
+    "legisGaGovId": 4936
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-1@2021",
+   "vgId": "vg-ga-p-000159",
+   "ids": {
+    "legisGaGovId": 4986
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-20@2021",
+   "vgId": "vg-ga-p-000037",
+   "ids": {
+    "legisGaGovId": 75
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-21@2021",
+   "vgId": "vg-ga-p-000022",
+   "ids": {
+    "legisGaGovId": 4991
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-22@2021",
+   "vgId": "vg-ga-p-000112",
+   "ids": {
+    "legisGaGovId": 5019
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-23@2021",
+   "vgId": "vg-ga-p-000248",
+   "ids": {
+    "legisGaGovId": 808
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-10-12",
+   "endBasis": "official",
+   "endedBy": "deceased",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "ga-members-overrides.json (status)"
+  },
+  {
+   "seatId": "ga-house-24@2021",
+   "vgId": "vg-ga-p-000036",
+   "ids": {
+    "legisGaGovId": 5020
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-25@2021",
+   "vgId": "vg-ga-p-000227",
+   "ids": {
+    "legisGaGovId": 4885
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-26@2021",
+   "vgId": "vg-ga-p-000132",
+   "ids": {
+    "legisGaGovId": 4992
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-27@2021",
+   "vgId": "vg-ga-p-000134",
+   "ids": {
+    "legisGaGovId": 19
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-28@2021",
+   "vgId": "vg-ga-p-000023",
+   "ids": {
+    "legisGaGovId": 5021
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-29@2021",
+   "vgId": "vg-ga-p-000151",
+   "ids": {
+    "legisGaGovId": 4886
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-2@2021",
+   "vgId": "vg-ga-p-000216",
+   "ids": {
+    "legisGaGovId": 849
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-30@2021",
+   "vgId": "vg-ga-p-000063",
+   "ids": {
+    "legisGaGovId": 5022
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-31@2021",
+   "vgId": "vg-ga-p-000078",
+   "ids": {
+    "legisGaGovId": 797
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-32@2021",
+   "vgId": "vg-ga-p-000040",
+   "ids": {
+    "legisGaGovId": 4965
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-33@2021",
+   "vgId": "vg-ga-p-000003",
+   "ids": {
+    "legisGaGovId": 187
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-34@2021",
+   "vgId": "vg-ga-p-000064",
+   "ids": {
+    "legisGaGovId": 5009
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-35@2021",
+   "vgId": "vg-ga-p-000137",
+   "ids": {
+    "legisGaGovId": 5023
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-36@2021",
+   "vgId": "vg-ga-p-000089",
+   "ids": {
+    "legisGaGovId": 4937
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-37@2021",
+   "vgId": "vg-ga-p-000147",
+   "ids": {
+    "legisGaGovId": 4938
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-38@2021",
+   "vgId": "vg-ga-p-000056",
+   "ids": {
+    "legisGaGovId": 760
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-39@2021",
+   "vgId": "vg-ga-p-000224",
+   "ids": {
+    "legisGaGovId": 5024
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-3@2021",
+   "vgId": "vg-ga-p-000163",
+   "ids": {
+    "legisGaGovId": 5018
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-40@2021",
+   "vgId": "vg-ga-p-000705",
+   "ids": {
+    "legisGaGovId": 45
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-41@2021",
+   "vgId": "vg-ga-p-000157",
+   "ids": {
+    "legisGaGovId": 832
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-42@2021",
+   "vgId": "vg-ga-p-000720",
+   "ids": {
+    "legisGaGovId": 4915
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-43@2021",
+   "vgId": "vg-ga-p-000209",
+   "ids": {
+    "legisGaGovId": 5025
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-44@2021",
+   "vgId": "vg-ga-p-000067",
+   "ids": {
+    "legisGaGovId": 184
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-45@2021",
+   "vgId": "vg-ga-p-000201",
+   "ids": {
+    "legisGaGovId": 86
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-46@2021",
+   "vgId": "vg-ga-p-000107",
+   "ids": {
+    "legisGaGovId": 795
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-47@2021",
+   "vgId": "vg-ga-p-000099",
+   "ids": {
+    "legisGaGovId": 142
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-48@2021",
+   "vgId": "vg-ga-p-000198",
+   "ids": {
+    "legisGaGovId": 4899
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-49@2021",
+   "vgId": "vg-ga-p-000043",
+   "ids": {
+    "legisGaGovId": 164
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-4@2021",
+   "vgId": "vg-ga-p-000121",
+   "ids": {
+    "legisGaGovId": 4911
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-50@2021",
+   "vgId": "vg-ga-p-000158",
+   "ids": {
+    "legisGaGovId": 4983
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-51@2021",
+   "vgId": "vg-ga-p-000081",
+   "ids": {
+    "legisGaGovId": 5026
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-52@2021",
+   "vgId": "vg-ga-p-000205",
+   "ids": {
+    "legisGaGovId": 4994
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-53@2021",
+   "vgId": "vg-ga-p-000058",
+   "ids": {
+    "legisGaGovId": 4887
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-54@2021",
+   "vgId": "vg-ga-p-000011",
+   "ids": {
+    "legisGaGovId": 4943
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-55@2021",
+   "vgId": "vg-ga-p-000095",
+   "ids": {
+    "legisGaGovId": 5027
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-56@2021",
+   "vgId": "vg-ga-p-000723",
+   "ids": {
+    "legisGaGovId": 4995
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-57@2021",
+   "vgId": "vg-ga-p-000213",
+   "ids": {
+    "legisGaGovId": 762
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-58@2021",
+   "vgId": "vg-ga-p-000171",
+   "ids": {
+    "legisGaGovId": 4880
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-59@2021",
+   "vgId": "vg-ga-p-000173",
+   "ids": {
+    "legisGaGovId": 5028
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-5@2021",
+   "vgId": "vg-ga-p-000149",
+   "ids": {
+    "legisGaGovId": 4966
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-60@2021",
+   "vgId": "vg-ga-p-000207",
+   "ids": {
+    "legisGaGovId": 143
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-61@2021",
+   "vgId": "vg-ga-p-000707",
+   "ids": {
+    "legisGaGovId": 69
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-62@2021",
+   "vgId": "vg-ga-p-000222",
+   "ids": {
+    "legisGaGovId": 5029
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-63@2021",
+   "vgId": "vg-ga-p-000126",
+   "ids": {
+    "legisGaGovId": 4916
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-64@2021",
+   "vgId": "vg-ga-p-000128",
+   "ids": {
+    "legisGaGovId": 5030
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-65@2021",
+   "vgId": "vg-ga-p-000724",
+   "ids": {
+    "legisGaGovId": 4996
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-66@2021",
+   "vgId": "vg-ga-p-000127",
+   "ids": {
+    "legisGaGovId": 806
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-67@2021",
+   "vgId": "vg-ga-p-000139",
+   "ids": {
+    "legisGaGovId": 5031
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-68@2021",
+   "vgId": "vg-ga-p-000726",
+   "ids": {
+    "legisGaGovId": 5032
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2023-03-08",
+   "endBasis": "official",
+   "endedBy": "deceased",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-house-68@2021",
+   "vgId": "vg-ga-p-000062",
+   "ids": {
+    "legisGaGovId": 4891
+   },
+   "start": "2023-06-29",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-69@2021",
+   "vgId": "vg-ga-p-000059",
+   "ids": {
+    "legisGaGovId": 4890
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-6@2021",
+   "vgId": "vg-ga-p-000103",
+   "ids": {
+    "legisGaGovId": 4883
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-70@2021",
+   "vgId": "vg-ga-p-000140",
+   "ids": {
+    "legisGaGovId": 212
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-71@2021",
+   "vgId": "vg-ga-p-000719",
+   "ids": {
+    "legisGaGovId": 4892
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "did-not-run",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-house-72@2021",
+   "vgId": "vg-ga-p-000052",
+   "ids": {
+    "legisGaGovId": 5033
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-73@2021",
+   "vgId": "vg-ga-p-000114",
+   "ids": {
+    "legisGaGovId": 4893
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-74@2021",
+   "vgId": "vg-ga-p-000118",
+   "ids": {
+    "legisGaGovId": 4894
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-75@2021",
+   "vgId": "vg-ga-p-000710",
+   "ids": {
+    "legisGaGovId": 111
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2023-01-18",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-house-75@2021",
+   "vgId": "vg-ga-p-000079",
+   "ids": {
+    "legisGaGovId": 5061
+   },
+   "start": "2023-03-27",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-76@2021",
+   "vgId": "vg-ga-p-000196",
+   "ids": {
+    "legisGaGovId": 766
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-77@2021",
+   "vgId": "vg-ga-p-000179",
+   "ids": {
+    "legisGaGovId": 4895
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-78@2021",
+   "vgId": "vg-ga-p-000060",
+   "ids": {
+    "legisGaGovId": 817
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-79@2021",
+   "vgId": "vg-ga-p-000237",
+   "ids": {
+    "legisGaGovId": 765
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-7@2021",
+   "vgId": "vg-ga-p-000110",
+   "ids": {
+    "legisGaGovId": 5057
+   },
+   "start": "2023-02-06",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-80@2021",
+   "vgId": "vg-ga-p-000138",
+   "ids": {
+    "legisGaGovId": 5034
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-81@2021",
+   "vgId": "vg-ga-p-000199",
+   "ids": {
+    "legisGaGovId": 769
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-82@2021",
+   "vgId": "vg-ga-p-000148",
+   "ids": {
+    "legisGaGovId": 181
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-83@2021",
+   "vgId": "vg-ga-p-000117",
+   "ids": {
+    "legisGaGovId": 5035
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-84@2021",
+   "vgId": "vg-ga-p-000170",
+   "ids": {
+    "legisGaGovId": 5036
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-85@2021",
+   "vgId": "vg-ga-p-000119",
+   "ids": {
+    "legisGaGovId": 95
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-86@2021",
+   "vgId": "vg-ga-p-000094",
+   "ids": {
+    "legisGaGovId": 5037
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-87@2021",
+   "vgId": "vg-ga-p-000235",
+   "ids": {
+    "legisGaGovId": 4947
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-88@2021",
+   "vgId": "vg-ga-p-000018",
+   "ids": {
+    "legisGaGovId": 172
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-89@2021",
+   "vgId": "vg-ga-p-000721",
+   "ids": {
+    "legisGaGovId": 4946
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-8@2021",
+   "vgId": "vg-ga-p-000214",
+   "ids": {
+    "legisGaGovId": 4987
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-90@2021",
+   "vgId": "vg-ga-p-000192",
+   "ids": {
+    "legisGaGovId": 5038
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-91@2021",
+   "vgId": "vg-ga-p-000004",
+   "ids": {
+    "legisGaGovId": 5008
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-92@2021",
+   "vgId": "vg-ga-p-000180",
+   "ids": {
+    "legisGaGovId": 4998
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-93@2021",
+   "vgId": "vg-ga-p-000069",
+   "ids": {
+    "legisGaGovId": 3877
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-94@2021",
+   "vgId": "vg-ga-p-000247",
+   "ids": {
+    "legisGaGovId": 810
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-95@2021",
+   "vgId": "vg-ga-p-000049",
+   "ids": {
+    "legisGaGovId": 770
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-house-96@2021",
+   "vgId": "vg-ga-p-000713",
+   "ids": {
+    "legisGaGovId": 163
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "did-not-run",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-house-97@2021",
+   "vgId": "vg-ga-p-000191",
+   "ids": {
+    "legisGaGovId": 5039
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-98@2021",
+   "vgId": "vg-ga-p-000145",
+   "ids": {
+    "legisGaGovId": 4999
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-99@2021",
+   "vgId": "vg-ga-p-000153",
+   "ids": {
+    "legisGaGovId": 5040
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-9@2021",
+   "vgId": "vg-ga-p-000236",
+   "ids": {
+    "legisGaGovId": 4988
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-10@2021",
+   "vgId": "vg-ga-p-000077",
+   "ids": {
+    "legisGaGovId": 28
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-11@2021",
+   "vgId": "vg-ga-p-000195",
+   "ids": {
+    "legisGaGovId": 837
+   },
+   "start": "2023-02-06",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-12@2021",
+   "vgId": "vg-ga-p-000240",
+   "ids": {
+    "legisGaGovId": 209
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-13@2021",
+   "vgId": "vg-ga-p-000032",
+   "ids": {
+    "legisGaGovId": 4971
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-14@2021",
+   "vgId": "vg-ga-p-000115",
+   "ids": {
+    "legisGaGovId": 4942
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-15@2021",
+   "vgId": "vg-ga-p-000071",
+   "ids": {
+    "legisGaGovId": 17
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-16@2021",
+   "vgId": "vg-ga-p-000144",
+   "ids": {
+    "legisGaGovId": 850
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-17@2021",
+   "vgId": "vg-ga-p-000026",
+   "ids": {
+    "legisGaGovId": 835
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-18@2021",
+   "vgId": "vg-ga-p-000244",
+   "ids": {
+    "legisGaGovId": 852
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-12-09",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "ga-members-overrides.json (status)"
+  },
+  {
+   "seatId": "ga-senate-19@2021",
+   "vgId": "vg-ga-p-000019",
+   "ids": {
+    "legisGaGovId": 4908
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-1@2021",
+   "vgId": "vg-ga-p-000008",
+   "ids": {
+    "legisGaGovId": 784
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-20@2021",
+   "vgId": "vg-ga-p-000131",
+   "ids": {
+    "legisGaGovId": 4878
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-21@2021",
+   "vgId": "vg-ga-p-000245",
+   "ids": {
+    "legisGaGovId": 840
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-05-05",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "ga-members-overrides.json (status)"
+  },
+  {
+   "seatId": "ga-senate-22@2021",
+   "vgId": "vg-ga-p-000091",
+   "ids": {
+    "legisGaGovId": 851
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-23@2021",
+   "vgId": "vg-ga-p-000155",
+   "ids": {
+    "legisGaGovId": 4979
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-24@2021",
+   "vgId": "vg-ga-p-000133",
+   "ids": {
+    "legisGaGovId": 723
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-25@2021",
+   "vgId": "vg-ga-p-000183",
+   "ids": {
+    "legisGaGovId": 4905
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-26@2021",
+   "vgId": "vg-ga-p-000054",
+   "ids": {
+    "legisGaGovId": 157
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-27@2021",
+   "vgId": "vg-ga-p-000090",
+   "ids": {
+    "legisGaGovId": 4925
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-28@2021",
+   "vgId": "vg-ga-p-000150",
+   "ids": {
+    "legisGaGovId": 4907
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-29@2021",
+   "vgId": "vg-ga-p-000176",
+   "ids": {
+    "legisGaGovId": 4926
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-2@2021",
+   "vgId": "vg-ga-p-000061",
+   "ids": {
+    "legisGaGovId": 5007
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-30@2021",
+   "vgId": "vg-ga-p-000716",
+   "ids": {
+    "legisGaGovId": 839
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2024-01-04",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-senate-30@2021",
+   "vgId": "vg-ga-p-000225",
+   "ids": {
+    "legisGaGovId": 62
+   },
+   "start": "2024-02-20",
+   "startBasis": "roster-termStart",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-31@2021",
+   "vgId": "vg-ga-p-000101",
+   "ids": {
+    "legisGaGovId": 4980
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-32@2021",
+   "vgId": "vg-ga-p-000123",
+   "ids": {
+    "legisGaGovId": 4910
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-33@2021",
+   "vgId": "vg-ga-p-000066",
+   "ids": {
+    "legisGaGovId": 855
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-34@2021",
+   "vgId": "vg-ga-p-000704",
+   "ids": {
+    "legisGaGovId": 41
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "did-not-run",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-senate-35@2021",
+   "vgId": "vg-ga-p-000068",
+   "ids": {
+    "legisGaGovId": 372
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-36@2021",
+   "vgId": "vg-ga-p-000165",
+   "ids": {
+    "legisGaGovId": 33
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-37@2021",
+   "vgId": "vg-ga-p-000072",
+   "ids": {
+    "legisGaGovId": 203
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-38@2021",
+   "vgId": "vg-ga-p-000706",
+   "ids": {
+    "legisGaGovId": 47
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-39@2021",
+   "vgId": "vg-ga-p-000210",
+   "ids": {
+    "legisGaGovId": 4985
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-3@2021",
+   "vgId": "vg-ga-p-000161",
+   "ids": {
+    "legisGaGovId": 5013
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-40@2021",
+   "vgId": "vg-ga-p-000193",
+   "ids": {
+    "legisGaGovId": 311
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-41@2021",
+   "vgId": "vg-ga-p-000125",
+   "ids": {
+    "legisGaGovId": 4981
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-42@2021",
+   "vgId": "vg-ga-p-000076",
+   "ids": {
+    "legisGaGovId": 768
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-43@2021",
+   "vgId": "vg-ga-p-000228",
+   "ids": {
+    "legisGaGovId": 807
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-44@2021",
+   "vgId": "vg-ga-p-000086",
+   "ids": {
+    "legisGaGovId": 10
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-45@2021",
+   "vgId": "vg-ga-p-000046",
+   "ids": {
+    "legisGaGovId": 4982
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-46@2021",
+   "vgId": "vg-ga-p-000012",
+   "ids": {
+    "legisGaGovId": 9
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-47@2021",
+   "vgId": "vg-ga-p-000083",
+   "ids": {
+    "legisGaGovId": 751
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-48@2021",
+   "vgId": "vg-ga-p-000204",
+   "ids": {
+    "legisGaGovId": 5016
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-49@2021",
+   "vgId": "vg-ga-p-000725",
+   "ids": {
+    "legisGaGovId": 5017
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "did-not-run",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-hold-overrides.json"
+  },
+  {
+   "seatId": "ga-senate-4@2021",
+   "vgId": "vg-ga-p-000017",
+   "ids": {
+    "legisGaGovId": 4972
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-50@2021",
+   "vgId": "vg-ga-p-000020",
+   "ids": {
+    "legisGaGovId": 4984
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-51@2021",
+   "vgId": "vg-ga-p-000215",
+   "ids": {
+    "legisGaGovId": 752
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-52@2021",
+   "vgId": "vg-ga-p-000042",
+   "ids": {
+    "legisGaGovId": 838
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-53@2021",
+   "vgId": "vg-ga-p-000688",
+   "ids": {
+    "legisGaGovId": 4933
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2026-01-13",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "ga-members-overrides.json (status)"
+  },
+  {
+   "seatId": "ga-senate-54@2021",
+   "vgId": "vg-ga-p-000044",
+   "ids": {
+    "legisGaGovId": 4909
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-55@2021",
+   "vgId": "vg-ga-p-000703",
+   "ids": {
+    "legisGaGovId": 5
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-56@2021",
+   "vgId": "vg-ga-p-000106",
+   "ids": {
+    "legisGaGovId": 754
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-5@2021",
+   "vgId": "vg-ga-p-000206",
+   "ids": {
+    "legisGaGovId": 4924
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-6@2021",
+   "vgId": "vg-ga-p-000243",
+   "ids": {
+    "legisGaGovId": 5014
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2025-01-13",
+   "endBasis": "convening",
+   "endedBy": "redistricted",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "seat-plan-comparison.json (the seat was redrawn)"
+  },
+  {
+   "seatId": "ga-senate-7@2021",
+   "vgId": "vg-ga-p-000241",
+   "ids": {
+    "legisGaGovId": 5015
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": "2026-03-13",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "ga-members-overrides.json (status)"
+  },
+  {
+   "seatId": "ga-senate-8@2021",
+   "vgId": "vg-ga-p-000190",
+   "ids": {
+    "legisGaGovId": 4977
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-9@2021",
+   "vgId": "vg-ga-p-000166",
+   "ids": {
+    "legisGaGovId": 4978
+   },
+   "start": "2023-01-09",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-101@2023",
+   "vgId": "vg-ga-p-000199",
+   "ids": {
+    "legisGaGovId": 769
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-102@2023",
+   "vgId": "vg-ga-p-000084",
+   "ids": {
+    "legisGaGovId": 5041
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-105@2023",
+   "vgId": "vg-ga-p-000197",
+   "ids": {
+    "legisGaGovId": 5077
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-106@2023",
+   "vgId": "vg-ga-p-000689",
+   "ids": {
+    "legisGaGovId": 4952
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": "2025-09-05",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "ga-members-overrides.json (status)"
+  },
+  {
+   "seatId": "ga-house-106@2023",
+   "vgId": "vg-ga-p-000001",
+   "ids": {
+    "legisGaGovId": 5089
+   },
+   "start": "2025-12-18",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-107@2023",
+   "vgId": "vg-ga-p-000194",
+   "ids": {
+    "legisGaGovId": 4901
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-108@2023",
+   "vgId": "vg-ga-p-000100",
+   "ids": {
+    "legisGaGovId": 4953
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-109@2023",
+   "vgId": "vg-ga-p-000065",
+   "ids": {
+    "legisGaGovId": 845
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-110@2023",
+   "vgId": "vg-ga-p-000200",
+   "ids": {
+    "legisGaGovId": 5044
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-111@2023",
+   "vgId": "vg-ga-p-000178",
+   "ids": {
+    "legisGaGovId": 5045
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-112@2023",
+   "vgId": "vg-ga-p-000027",
+   "ids": {
+    "legisGaGovId": 778
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-113@2023",
+   "vgId": "vg-ga-p-000202",
+   "ids": {
+    "legisGaGovId": 5003
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "suspensions": [
+    {
+     "start": "2026-01-22",
+     "startBasis": "official",
+     "end": null,
+     "endBasis": null,
+     "endedBy": null,
+     "source": "ga-members-overrides.json (status Suspended)",
+     "note": "[Suspended by Executive Order from the Governor of Georgia, effective January 22, 2026](https://gov.georgia.gov/document/2026-executive-order/01222602/download)"
+    }
+   ]
+  },
+  {
+   "seatId": "ga-house-114@2023",
+   "vgId": "vg-ga-p-000226",
+   "ids": {
+    "legisGaGovId": 5046
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-115@2023",
+   "vgId": "vg-ga-p-000177",
+   "ids": {
+    "legisGaGovId": 5001
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-116@2023",
+   "vgId": "vg-ga-p-000075",
+   "ids": {
+    "legisGaGovId": 4954
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-117@2023",
+   "vgId": "vg-ga-p-000146",
+   "ids": {
+    "legisGaGovId": 5078
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-118@2023",
+   "vgId": "vg-ga-p-000045",
+   "ids": {
+    "legisGaGovId": 5002
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-121@2021",
+   "vgId": "vg-ga-p-000080",
+   "ids": {
+    "legisGaGovId": 5091
+   },
+   "start": "2026-01-08",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-126@2021",
+   "vgId": "vg-ga-p-000129",
+   "ids": {
+    "legisGaGovId": 5079
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-130@2021",
+   "vgId": "vg-ga-p-000208",
+   "ids": {
+    "legisGaGovId": 4903
+   },
+   "start": null,
+   "startBasis": "unknown",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-131@2021",
+   "vgId": "vg-ga-p-000184",
+   "ids": {
+    "legisGaGovId": 5080
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-133@2023",
+   "vgId": "vg-ga-p-000048",
+   "ids": {
+    "legisGaGovId": 4959
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-134@2023",
+   "vgId": "vg-ga-p-000187",
+   "ids": {
+    "legisGaGovId": 791
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-135@2023",
+   "vgId": "vg-ga-p-000009",
+   "ids": {
+    "legisGaGovId": 5004
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-142@2023",
+   "vgId": "vg-ga-p-000162",
+   "ids": {
+    "legisGaGovId": 794
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-143@2023",
+   "vgId": "vg-ga-p-000167",
+   "ids": {
+    "legisGaGovId": 5081
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-144@2023",
+   "vgId": "vg-ga-p-000047",
+   "ids": {
+    "legisGaGovId": 4958
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-145@2023",
+   "vgId": "vg-ga-p-000221",
+   "ids": {
+    "legisGaGovId": 5082
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-147@2023",
+   "vgId": "vg-ga-p-000010",
+   "ids": {
+    "legisGaGovId": 5051
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-149@2023",
+   "vgId": "vg-ga-p-000082",
+   "ids": {
+    "legisGaGovId": 5083
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-169@2021",
+   "vgId": "vg-ga-p-000005",
+   "ids": {
+    "legisGaGovId": 5084
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-170@2021",
+   "vgId": "vg-ga-p-000096",
+   "ids": {
+    "legisGaGovId": 5085
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-177@2021",
+   "vgId": "vg-ga-p-000687",
+   "ids": {
+    "legisGaGovId": 5096
+   },
+   "start": null,
+   "startBasis": "unknown",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-17@2023",
+   "vgId": "vg-ga-p-000143",
+   "ids": {
+    "legisGaGovId": 4935
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-19@2023",
+   "vgId": "vg-ga-p-000113",
+   "ids": {
+    "legisGaGovId": 4936
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-22@2023",
+   "vgId": "vg-ga-p-000112",
+   "ids": {
+    "legisGaGovId": 5019
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-23@2021",
+   "vgId": "vg-ga-p-000013",
+   "ids": {
+    "legisGaGovId": 5092
+   },
+   "start": "2026-01-10",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-34@2023",
+   "vgId": "vg-ga-p-000064",
+   "ids": {
+    "legisGaGovId": 5009
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-35@2023",
+   "vgId": "vg-ga-p-000137",
+   "ids": {
+    "legisGaGovId": 5023
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-36@2023",
+   "vgId": "vg-ga-p-000089",
+   "ids": {
+    "legisGaGovId": 4937
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-37@2023",
+   "vgId": "vg-ga-p-000147",
+   "ids": {
+    "legisGaGovId": 4938
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-40@2023",
+   "vgId": "vg-ga-p-000128",
+   "ids": {
+    "legisGaGovId": 5030
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-42@2023",
+   "vgId": "vg-ga-p-000085",
+   "ids": {
+    "legisGaGovId": 5068
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-43@2023",
+   "vgId": "vg-ga-p-000209",
+   "ids": {
+    "legisGaGovId": 5025
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-55@2023",
+   "vgId": "vg-ga-p-000095",
+   "ids": {
+    "legisGaGovId": 5027
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-56@2023",
+   "vgId": "vg-ga-p-000028",
+   "ids": {
+    "legisGaGovId": 5069
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-57@2023",
+   "vgId": "vg-ga-p-000213",
+   "ids": {
+    "legisGaGovId": 762
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-58@2023",
+   "vgId": "vg-ga-p-000171",
+   "ids": {
+    "legisGaGovId": 4880
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-60@2023",
+   "vgId": "vg-ga-p-000207",
+   "ids": {
+    "legisGaGovId": 143
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-61@2023",
+   "vgId": "vg-ga-p-000156",
+   "ids": {
+    "legisGaGovId": 5070
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-64@2023",
+   "vgId": "vg-ga-p-000220",
+   "ids": {
+    "legisGaGovId": 5071
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-65@2023",
+   "vgId": "vg-ga-p-000186",
+   "ids": {
+    "legisGaGovId": 5072
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-66@2023",
+   "vgId": "vg-ga-p-000127",
+   "ids": {
+    "legisGaGovId": 806
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-71@2021",
+   "vgId": "vg-ga-p-000116",
+   "ids": {
+    "legisGaGovId": 5073
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-74@2023",
+   "vgId": "vg-ga-p-000188",
+   "ids": {
+    "legisGaGovId": 5074
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-78@2023",
+   "vgId": "vg-ga-p-000060",
+   "ids": {
+    "legisGaGovId": 817
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-81@2023",
+   "vgId": "vg-ga-p-000169",
+   "ids": {
+    "legisGaGovId": 5075
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-82@2023",
+   "vgId": "vg-ga-p-000118",
+   "ids": {
+    "legisGaGovId": 4894
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-83@2023",
+   "vgId": "vg-ga-p-000117",
+   "ids": {
+    "legisGaGovId": 5035
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-84@2023",
+   "vgId": "vg-ga-p-000148",
+   "ids": {
+    "legisGaGovId": 181
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-85@2023",
+   "vgId": "vg-ga-p-000119",
+   "ids": {
+    "legisGaGovId": 95
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-86@2023",
+   "vgId": "vg-ga-p-000094",
+   "ids": {
+    "legisGaGovId": 5037
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-87@2023",
+   "vgId": "vg-ga-p-000235",
+   "ids": {
+    "legisGaGovId": 4947
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-88@2023",
+   "vgId": "vg-ga-p-000018",
+   "ids": {
+    "legisGaGovId": 172
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-89@2023",
+   "vgId": "vg-ga-p-000170",
+   "ids": {
+    "legisGaGovId": 5036
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-90@2023",
+   "vgId": "vg-ga-p-000192",
+   "ids": {
+    "legisGaGovId": 5038
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-91@2023",
+   "vgId": "vg-ga-p-000004",
+   "ids": {
+    "legisGaGovId": 5008
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-92@2023",
+   "vgId": "vg-ga-p-000180",
+   "ids": {
+    "legisGaGovId": 4998
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-93@2023",
+   "vgId": "vg-ga-p-000069",
+   "ids": {
+    "legisGaGovId": 3877
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-94@2023",
+   "vgId": "vg-ga-p-000247",
+   "ids": {
+    "legisGaGovId": 810
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": "2026-01-01",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "ga-members-overrides.json (status)"
+  },
+  {
+   "seatId": "ga-house-94@2023",
+   "vgId": "vg-ga-p-000233",
+   "ids": {
+    "legisGaGovId": 5095
+   },
+   "start": "2026-04-18",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-95@2023",
+   "vgId": "vg-ga-p-000049",
+   "ids": {
+    "legisGaGovId": 770
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-house-96@2021",
+   "vgId": "vg-ga-p-000007",
+   "ids": {
+    "legisGaGovId": 5076
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-10@2023",
+   "vgId": "vg-ga-p-000077",
+   "ids": {
+    "legisGaGovId": 28
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-17@2023",
+   "vgId": "vg-ga-p-000086",
+   "ids": {
+    "legisGaGovId": 10
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-18@2021",
+   "vgId": "vg-ga-p-000217",
+   "ids": {
+    "legisGaGovId": 5093
+   },
+   "start": "2026-02-24",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-21@2021",
+   "vgId": "vg-ga-p-000102",
+   "ids": {
+    "legisGaGovId": 5088
+   },
+   "start": "2025-10-14",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-25@2023",
+   "vgId": "vg-ga-p-000183",
+   "ids": {
+    "legisGaGovId": 4905
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-28@2023",
+   "vgId": "vg-ga-p-000068",
+   "ids": {
+    "legisGaGovId": 372
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-30@2023",
+   "vgId": "vg-ga-p-000225",
+   "ids": {
+    "legisGaGovId": 62
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-33@2023",
+   "vgId": "vg-ga-p-000066",
+   "ids": {
+    "legisGaGovId": 855
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-34@2021",
+   "vgId": "vg-ga-p-000124",
+   "ids": {
+    "legisGaGovId": 5065
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-35@2023",
+   "vgId": "vg-ga-p-000243",
+   "ids": {
+    "legisGaGovId": 5014
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": "2025-09-10",
+   "endBasis": "official",
+   "endedBy": "resigned",
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession",
+   "endedBySource": "ga-members-overrides.json (status)"
+  },
+  {
+   "seatId": "ga-senate-35@2023",
+   "vgId": "vg-ga-p-000097",
+   "ids": {
+    "legisGaGovId": 5090
+   },
+   "start": "2025-12-31",
+   "startBasis": "roster-termStart",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-38@2023",
+   "vgId": "vg-ga-p-000174",
+   "ids": {
+    "legisGaGovId": 5066
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-39@2023",
+   "vgId": "vg-ga-p-000210",
+   "ids": {
+    "legisGaGovId": 4985
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-41@2023",
+   "vgId": "vg-ga-p-000125",
+   "ids": {
+    "legisGaGovId": 4981
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-42@2023",
+   "vgId": "vg-ga-p-000026",
+   "ids": {
+    "legisGaGovId": 835
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-43@2023",
+   "vgId": "vg-ga-p-000228",
+   "ids": {
+    "legisGaGovId": 807
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-44@2023",
+   "vgId": "vg-ga-p-000076",
+   "ids": {
+    "legisGaGovId": 768
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-49@2021",
+   "vgId": "vg-ga-p-000070",
+   "ids": {
+    "legisGaGovId": 5067
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-53@2021",
+   "vgId": "vg-ga-p-000130",
+   "ids": {
+    "legisGaGovId": 5094
+   },
+   "start": null,
+   "startBasis": "unknown",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-55@2023",
+   "vgId": "vg-ga-p-000175",
+   "ids": {
+    "legisGaGovId": 161
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-6@2023",
+   "vgId": "vg-ga-p-000150",
+   "ids": {
+    "legisGaGovId": 4907
+   },
+   "start": "2025-01-13",
+   "startBasis": "convening",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Republican",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  },
+  {
+   "seatId": "ga-senate-7@2021",
+   "vgId": "vg-ga-p-000686",
+   "ids": {
+    "legisGaGovId": 5097
+   },
+   "start": null,
+   "startBasis": "unknown",
+   "end": null,
+   "endBasis": null,
+   "endedBy": null,
+   "party": "Democratic",
+   "source": "legis.ga.gov Members/GetMembersBySession"
+  }
+ ],
+ "vacancyNotes": [
+  {
+   "seatId": "ga-house-119@2021",
+   "from": "2023-01-09",
+   "kind": "writ",
+   "date": "2022-12-31",
+   "ref": "12.31.22.01",
+   "url": "https://gov.georgia.gov/document/2022-executive-orders/12312201/download",
+   "source": "ga-executive-orders-2022.json",
+   "note": "Issuing a writ of election to fill the District 119 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-119@2021",
+   "from": "2023-01-09",
+   "kind": "special-election",
+   "date": "2023-01-31",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-119@2021",
+   "from": "2023-01-09",
+   "kind": "special-runoff",
+   "date": "2023-02-28",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-172@2021",
+   "from": "2023-01-09",
+   "kind": "writ",
+   "date": "2022-12-22",
+   "ref": "12.22.22.01",
+   "url": "https://gov.georgia.gov/document/2022-executive-orders/12222201/download",
+   "source": "ga-executive-orders-2022.json",
+   "note": "Issuing a writ of election to fill the District 172 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-172@2021",
+   "from": "2023-01-09",
+   "kind": "special-election",
+   "date": "2023-01-31",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-7@2021",
+   "from": "2023-01-09",
+   "kind": "writ",
+   "date": "2022-11-26",
+   "ref": "11.26.22.01",
+   "url": "https://gov.georgia.gov/document/2022-executive-orders/11262201/download",
+   "source": "ga-executive-orders-2022.json",
+   "note": "Issuing a writ of election to fill the District 7 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-7@2021",
+   "from": "2023-01-09",
+   "kind": "special-election",
+   "date": "2023-01-03",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-7@2021",
+   "from": "2023-01-09",
+   "kind": "special-runoff",
+   "date": "2023-01-31",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-11@2021",
+   "from": "2023-01-09",
+   "kind": "writ",
+   "date": "2022-12-21",
+   "ref": "12.21.22.02",
+   "url": "https://gov.georgia.gov/document/2022-executive-orders/12212202/download",
+   "source": "ga-executive-orders-2022.json",
+   "note": "Issuing a writ of election to fill the District 11 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-11@2021",
+   "from": "2023-01-09",
+   "kind": "special-election",
+   "date": "2023-01-31",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-75@2021",
+   "from": "2023-01-18",
+   "kind": "writ",
+   "date": "2023-01-23",
+   "ref": "01.23.23.01",
+   "url": "https://gov.georgia.gov/document/2023-executive-order/01232301/download",
+   "source": "ga-executive-orders-2023.json",
+   "note": "Issuing a writ of election to fill the District 75 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-75@2021",
+   "from": "2023-01-18",
+   "kind": "special-election",
+   "date": "2023-03-21",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-68@2021",
+   "from": "2023-03-08",
+   "kind": "writ",
+   "date": "2023-03-17",
+   "ref": "03.17.23.02",
+   "url": "https://gov.georgia.gov/document/2023-executive-order/03172302/download",
+   "source": "ga-executive-orders-2023.json",
+   "note": "Issuing a writ of election to fill the District 68 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-68@2021",
+   "from": "2023-03-08",
+   "kind": "special-election",
+   "date": "2023-05-16",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-68@2021",
+   "from": "2023-03-08",
+   "kind": "special-runoff",
+   "date": "2023-06-13",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-30@2021",
+   "from": "2024-01-04",
+   "kind": "writ",
+   "date": "2024-01-04",
+   "ref": "01.04.24.01",
+   "url": "https://gov.georgia.gov/document/2024-executive-order/01042401/download",
+   "source": "ga-executive-orders-2024.json",
+   "note": "Issuing a Writ of Election to fill the District 30 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-30@2021",
+   "from": "2024-01-04",
+   "kind": "special-election",
+   "date": "2024-02-13",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2024",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-125@2021",
+   "from": "2024-01-10",
+   "kind": "writ",
+   "date": "2024-01-03",
+   "ref": "01.03.24.01",
+   "url": "https://gov.georgia.gov/document/2024-executive-order/01032401/download",
+   "source": "ga-executive-orders-2024.json",
+   "note": "Issuing a Writ of Election to fill the District 125 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-125@2021",
+   "from": "2024-01-10",
+   "kind": "special-election",
+   "date": "2024-02-13",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2024",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-125@2021",
+   "from": "2024-01-10",
+   "kind": "special-runoff",
+   "date": "2024-03-12",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2024",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-139@2021",
+   "from": "2024-01-30",
+   "kind": "writ",
+   "date": "2024-02-09",
+   "ref": "02.09.24.01",
+   "url": "https://gov.georgia.gov/document/2024-executive-order/02092401/download",
+   "source": "ga-executive-orders-2024.json",
+   "note": "Issuing a writ of election to fill the vacancy in the District 139 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-139@2021",
+   "from": "2024-01-30",
+   "kind": "special-election",
+   "date": "2024-04-09",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2024",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-139@2021",
+   "from": "2024-01-30",
+   "kind": "special-runoff",
+   "date": "2024-05-07",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2024",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-21@2021",
+   "from": "2025-05-05",
+   "kind": "writ",
+   "date": "2025-05-22",
+   "ref": "05.22.25.02",
+   "url": "https://gov.georgia.gov/document/2025-executive-order/05222502/download",
+   "source": "ga-executive-orders-2025.json",
+   "note": "Issuing a Writ of Election to fill the District 21 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-21@2021",
+   "from": "2025-05-05",
+   "kind": "special-election",
+   "date": "2025-08-26",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-21@2021",
+   "from": "2025-05-05",
+   "kind": "special-runoff",
+   "date": "2025-09-23",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-106@2023",
+   "from": "2025-09-05",
+   "kind": "writ",
+   "date": "2025-09-08",
+   "ref": "09.08.25.01",
+   "url": "https://gov.georgia.gov/document/2025-executive-order/09082501/download",
+   "source": "ga-executive-orders-2025.json",
+   "note": "Issuing a Writ of Election to fill the District 106 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-106@2023",
+   "from": "2025-09-05",
+   "kind": "special-election",
+   "date": "2025-11-04",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-106@2023",
+   "from": "2025-09-05",
+   "kind": "special-runoff",
+   "date": "2025-12-02",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-35@2023",
+   "from": "2025-09-10",
+   "kind": "writ",
+   "date": "2025-09-19",
+   "ref": "09.19.25.01",
+   "url": "https://gov.georgia.gov/document/2025-executive-order/09192501/download",
+   "source": "ga-executive-orders-2025.json",
+   "note": "Issuing a Writ of Election to fill the District 35 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-35@2023",
+   "from": "2025-09-10",
+   "kind": "special-election",
+   "date": "2025-11-18",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-35@2023",
+   "from": "2025-09-10",
+   "kind": "special-runoff",
+   "date": "2025-12-16",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-23@2021",
+   "from": "2025-10-12",
+   "kind": "writ",
+   "date": "2025-10-22",
+   "ref": "10.22.25.01",
+   "url": "https://gov.georgia.gov/document/2025-executive-order/10222501/download",
+   "source": "ga-executive-orders-2025.json",
+   "note": "Issuing a Writ of Election to fill the District 23 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-23@2021",
+   "from": "2025-10-12",
+   "kind": "special-election",
+   "date": "2025-12-09",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-23@2021",
+   "from": "2025-10-12",
+   "kind": "special-runoff",
+   "date": "2026-01-06",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-121@2021",
+   "from": "2025-10-28",
+   "kind": "writ",
+   "date": "2025-10-30",
+   "ref": "10.30.25.01",
+   "url": "https://gov.georgia.gov/document/2025-executive-order/10302501/download",
+   "source": "ga-executive-orders-2025.json",
+   "note": "Issuing a Writ of Election to fill the District 121 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-121@2021",
+   "from": "2025-10-28",
+   "kind": "special-election",
+   "date": "2025-12-09",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-18@2021",
+   "from": "2025-12-09",
+   "kind": "writ",
+   "date": "2025-12-10",
+   "ref": "12.10.25.01",
+   "url": "https://gov.georgia.gov/document/2025-executive-order/12102501/download",
+   "source": "ga-executive-orders-2025.json",
+   "note": "Issuing a Writ of Election to fill the District 18 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-18@2021",
+   "from": "2025-12-09",
+   "kind": "special-election",
+   "date": "2026-01-20",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-18@2021",
+   "from": "2025-12-09",
+   "kind": "special-runoff",
+   "date": "2026-02-17",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-94@2023",
+   "from": "2026-01-01",
+   "kind": "writ",
+   "date": "2026-01-16",
+   "ref": "01.16.26.02",
+   "url": "https://gov.georgia.gov/document/2026-executive-order/01162602/download",
+   "source": "ga-executive-orders-2026.json",
+   "note": "Issuing a Writ of Election to fill the District 94 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-94@2023",
+   "from": "2026-01-01",
+   "kind": "special-election",
+   "date": "2026-03-10",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-94@2023",
+   "from": "2026-01-01",
+   "kind": "special-runoff",
+   "date": "2026-04-07",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-130@2021",
+   "from": "2026-01-05",
+   "kind": "writ",
+   "date": "2026-01-16",
+   "ref": "01.16.26.03",
+   "url": "https://gov.georgia.gov/document/2026-executive-order/01162603/download",
+   "source": "ga-executive-orders-2026.json",
+   "note": "Issuing a Writ of Election to fill the District 130 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-130@2021",
+   "from": "2026-01-05",
+   "kind": "special-election",
+   "date": "2026-03-10",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-130@2021",
+   "from": "2026-01-05",
+   "kind": "special-runoff",
+   "date": "2026-04-07",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-53@2021",
+   "from": "2026-01-13",
+   "kind": "writ",
+   "date": "2026-01-20",
+   "ref": "01.20.26.01",
+   "url": "https://gov.georgia.gov/document/2026-executive-order/01202601/download",
+   "source": "ga-executive-orders-2026.json",
+   "note": "Issuing a Writ of Election to fill the District 53 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-53@2021",
+   "from": "2026-01-13",
+   "kind": "special-election",
+   "date": "2026-03-10",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-53@2021",
+   "from": "2026-01-13",
+   "kind": "special-runoff",
+   "date": "2026-04-07",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-177@2021",
+   "from": "2026-03-09",
+   "kind": "writ",
+   "date": "2026-03-23",
+   "ref": "03.23.26.01",
+   "url": "https://gov.georgia.gov/document/2026-executive-order/03232601/download",
+   "source": "ga-executive-orders-2026.json",
+   "note": "Issuing a Writ of Election to fill the District 177 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-177@2021",
+   "from": "2026-03-09",
+   "kind": "special-election",
+   "date": "2026-05-12",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-177@2021",
+   "from": "2026-03-09",
+   "kind": "special-runoff",
+   "date": "2026-06-09",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-7@2021",
+   "from": "2026-03-13",
+   "kind": "writ",
+   "date": "2026-03-23",
+   "ref": "03.23.26.02",
+   "url": "https://gov.georgia.gov/document/2026-executive-order/03232602/download",
+   "source": "ga-executive-orders-2026.json",
+   "note": "Issuing a Writ of Election to fill the District 7 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-7@2021",
+   "from": "2026-03-13",
+   "kind": "special-election",
+   "date": "2026-05-19",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-7@2021",
+   "from": "2026-03-13",
+   "kind": "special-runoff",
+   "date": "2026-06-16",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  }
+ ]
+}

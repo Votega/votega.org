@@ -26,13 +26,15 @@ changed in reconciliation, both to fit VoteGA's existing pipeline:
 Output: one file per topic, assets/data/local-topics-<slug>.json, shape
 
     {
-      "metadata": { generatedAt, topic, label, emoji, placesScanned,
+      "metadata": { generatedAt, topic, label, emoji, placesScanned, mentionsWithOutcomes,
                     countiesScanned, citiesScanned, consolidatedScanned,
                     placesWithMentions, vendors[], universeCounties,
                     universeCities, universeConsolidated },
       "mentions": [ { placeId, placeName, placeType, fips, region, date, body,
                       docType, sourceUrl, confidence, vendors[], terms[],
-                      tags[] }, ... ],           # newest first
+                      tags[], and where the minutes were read: meetingId,
+                      followThrough, outcomes[], minutesUrl?, minutesDraft? },
+                    ... ],                       # newest first
       "coveredNoMention": [ { placeId, placeName, placeType, region }, ... ]
     }
 
@@ -60,6 +62,7 @@ from datetime import datetime, timezone
 # Import path so `scripts/lib/...` resolves whether run from repo root or scripts/.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.meeting_topics import (  # noqa: E402
+    classify,
     TOPIC_RULES,
     TOPIC_WORD_RULES,
     LAND_USE,
@@ -69,11 +72,8 @@ from lib.meeting_topics import (  # noqa: E402
 )
 from lib.atomic_io import atomic_write  # noqa: E402
 
-try:
-    import yaml
-except ImportError:  # pragma: no cover
-    print("PyYAML is required (pip install pyyaml)", file=sys.stderr)
-    raise
+# PyYAML is imported where the registry is read (load_places), not here, so the
+# offline test job, which installs no packages, can import the pure helpers.
 
 # Georgia's full local-government universe, for the coverage footer's
 # denominator (CLAUDE.md / handoff). Counties are fixed; the city count is the
@@ -110,6 +110,11 @@ ENRICHED_RE = re.compile(r"local-(.+)-meetings-enriched\.json$")
 
 def load_places(places_path: str) -> dict:
     """slug -> {name, type, fips, region} from _data/places.yml."""
+    try:
+        import yaml
+    except ImportError:  # pragma: no cover
+        print("PyYAML is required (pip install pyyaml)", file=sys.stderr)
+        raise
     with open(places_path, encoding="utf-8") as fh:
         doc = yaml.safe_load(fh)
     out = {}
@@ -201,6 +206,87 @@ def topic_hit(topic: str, meeting: dict):
     }
 
 
+# ---- follow-through: what the minutes record for a tagged meeting ----------
+#
+# The follow-through convention in CLAUDE.md. A mention is a meeting whose AGENDA we tagged.
+# Where the place has a recorded-votes file (local-<slug>-votes.json: CivicClerk,
+# Legistar, IQM2), the same meeting's recorded items are classified with the SAME
+# taxonomy, and the items that carry this page's topic are attached with their
+# results. The join is exact twice over: the meeting id is the portal's own (the
+# votes file and the meetings file are read from the same portal), and the item is
+# the portal's own agenda item, so there is no title matching anywhere.
+#
+# `followThrough` says which case a mention is in, so the page never implies
+# more than the record holds:
+#   "recorded"        minutes read; items carrying this topic listed in `outcomes`
+#   "not-in-minutes"  minutes read, but no recorded item names this topic (it may
+#                     have been discussed, or it sits in a packet, not a caption)
+#   "no-results"      minutes read, and they record no results at all
+#   null              no votes file for this place, or this meeting not read yet
+MAX_OUTCOME_NAME = 300
+
+
+def topic_in_tags(topic: str, tags) -> bool:
+    tags = set(tags)
+    if topic == "land-use":
+        return bool(tags & LU_TAGS)
+    return topic in tags
+
+
+def load_votes(data_dir: str, slug: str) -> dict:
+    path = os.path.join(data_dir, "local-%s-votes.json" % slug)
+    try:
+        with open(path, encoding="utf-8") as fh:
+            meetings = json.load(fh).get("meetings") or []
+    except (OSError, ValueError):
+        return {}
+    return {str(m.get("id")): m for m in meetings if m.get("id") is not None}
+
+
+def _motion_summary(mo: dict) -> dict:
+    """The fields a topic row needs, set ones only: these feeds are fetched whole
+    by the topic pages, so a null on every motion is paid for by every visitor."""
+    out = {
+        "resultText": mo.get("resultText") or (mo.get("result") or "").capitalize() or None,
+        "result": mo.get("result"),
+        "resultClass": mo.get("resultClass"),
+        "motion": mo.get("motion"),
+        "yes": len(mo.get("yes") or []),
+        "no": len(mo.get("no") or []),
+        "abstain": len(mo.get("abstain") or []),
+        "absent": len(mo.get("absent") or []),
+        "tally": mo.get("tally"),
+        "next": mo.get("next"),
+        "textDisagrees": mo.get("textDisagrees"),
+    }
+    return {k: v for k, v in out.items() if v}
+
+
+def follow_through(topic: str, vote_meeting):
+    """(status, outcomes, minutes fields) for one mention. See the block comment."""
+    if not vote_meeting:
+        return None, [], {}
+    extra = {"minutesUrl": vote_meeting.get("minutesUrl"),
+             "minutesDraft": vote_meeting.get("minutesDraft")}
+    items = vote_meeting.get("items") or []
+    if not items:
+        return "no-results", [], extra
+    outcomes = []
+    for it in items:
+        name = it.get("name") or ""
+        if not topic_in_tags(topic, classify(name)):
+            continue
+        if len(name) > MAX_OUTCOME_NAME:
+            name = name[:MAX_OUTCOME_NAME].rsplit(" ", 1)[0] + "…"
+        outcomes.append({
+            "reference": it.get("reference"),
+            "outline": it.get("outline"),
+            "name": name or None,
+            "motions": [_motion_summary(mo) for mo in it.get("motions") or []],
+        })
+    return ("recorded" if outcomes else "not-in-minutes"), outcomes, extra
+
+
 def build_topic(topic: str, enriched_files: list[str], places: dict) -> dict:
     mentions = []
     scanned = []            # (placeId, placeName, placeType, region)
@@ -224,6 +310,7 @@ def build_topic(topic: str, enriched_files: list[str], places: dict) -> dict:
         fips = meta.get("fips")
         region = meta.get("region", "")
         scanned.append((slug, place_name, place_type, region))
+        votes = load_votes(os.path.dirname(path), slug)
 
         for meeting in doc.get("meetings") or []:
             hit = topic_hit(topic, meeting)
@@ -231,6 +318,9 @@ def build_topic(topic: str, enriched_files: list[str], places: dict) -> dict:
                 continue
             with_mentions.add(slug)
             vendors_seen.update(hit["vendors"])
+            mid = meeting.get("id")
+            status, outcomes, minutes = follow_through(
+                topic, votes.get(str(mid)) if mid is not None else None)
             mentions.append({
                 "placeId": slug,
                 "placeName": place_name,
@@ -238,6 +328,13 @@ def build_topic(topic: str, enriched_files: list[str], places: dict) -> dict:
                 "fips": fips,
                 "region": region,
                 **hit,
+                # present only where the place has a votes record for this meeting
+                **({"meetingId": str(mid),
+                    "followThrough": status,
+                    "outcomes": outcomes,
+                    **({"minutesUrl": minutes["minutesUrl"]} if minutes.get("minutesUrl") else {}),
+                    **({"minutesDraft": True} if minutes.get("minutesDraft") else {}),
+                    } if status else {}),
             })
 
     # Newest first, stable tiebreak by place then body for clean diffs.
@@ -262,6 +359,7 @@ def build_topic(topic: str, enriched_files: list[str], places: dict) -> dict:
             "consolidatedScanned":
                 len({s for (s, _, t, _) in scanned if t == "consolidated"}),
             "placesWithMentions": len(with_mentions),
+            "mentionsWithOutcomes": sum(1 for m in mentions if m.get("followThrough") == "recorded"),
             "vendors": sorted(vendors_seen),
             "universeCounties": UNIVERSE_COUNTIES,
             "universeCities": UNIVERSE_CITIES,

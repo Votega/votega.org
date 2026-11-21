@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-12T04:55:12.384932+00:00",
+    "generatedAt": "2026-11-21T18:28:53.846888+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,33 +24,41 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 126,
+    "count": 125,
     "windowDays": 45,
-    "entityTagged": 83,
+    "entityTagged": 79,
     "topicCounts": {
-      "elections": 54,
-      "healthcare": 15,
-      "budget": 6,
-      "courts": 7,
+      "budget": 8,
       "education": 10,
-      "surveillance": 1,
-      "ethics": 1
+      "elections": 46,
+      "healthcare": 17,
+      "ethics": 3,
+      "courts": 6,
+      "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000258": {
-      "name": "Earl L. \"Buddy\" Carter",
+    "vg-ga-p-000021": {
+      "name": "Brad Raffensperger",
       "url": null,
-      "bioguideId": "C001103",
+      "rosterId": "ocd-person/02e75ac0-4350-4305-980e-8dc0462c5cc1",
       "candidateIds": [
-        "challenger-buddy-carter-senate-2026"
+        "challenger-brad-raffensperger-gov-2026"
       ]
     },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
       "url": null,
       "bioguideId": "W000788"
+    },
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
     },
     "vg-ga-p-000263": {
       "name": "Raphael G. Warnock",
@@ -62,35 +70,11 @@
       "url": null,
       "bioguideId": "O000174"
     },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
-    },
-    "vg-ga-p-000368": {
-      "name": "Rick Jackson",
+    "vg-ga-p-000361": {
+      "name": "Penny Brown Reynolds",
       "url": null,
       "candidateIds": [
-        "challenger-rick-jackson-gov-2026"
-      ]
-    },
-    "vg-ga-p-000335": {
-      "name": "Keisha Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
-      ]
-    },
-    "vg-ga-p-000189": {
-      "name": "Ron Stephens",
-      "url": null,
-      "ocdPersonId": "ocd-person/aeaeb854-ff9c-47cb-8069-395b60ba05b2",
-      "rosterId": "ocd-person/aeaeb854-ff9c-47cb-8069-395b60ba05b2",
-      "candidateIds": [
-        "ga-house-164-2026-r-1"
+        "challenger-penny-brown-reynolds-sos-2026"
       ]
     },
     "vg-ga-p-000024": {
@@ -98,16 +82,13 @@
       "url": null,
       "rosterId": "ocd-person/600e5c48-f5c0-4535-a219-60a5fd94c38f"
     },
-    "vg-ga-p-000256": {
-      "name": "Rick W. Allen",
+    "vg-ga-p-000227": {
+      "name": "Todd Jones",
       "url": null,
-      "bioguideId": "A000372"
-    },
-    "vg-ga-p-000459": {
-      "name": "Harry James",
-      "url": null,
+      "ocdPersonId": "ocd-person/45567c87-3ba6-49ec-9ea2-5ebb880aa94c",
+      "rosterId": "ocd-person/45567c87-3ba6-49ec-9ea2-5ebb880aa94c",
       "candidateIds": [
-        "ga-house-154-2026-d-1"
+        "ga-house-25-2026-r-2"
       ]
     },
     "vg-ga-p-000088": {
@@ -119,39 +100,6 @@
         "ga-house-154-2026-r-1"
       ]
     },
-    "vg-ga-p-000253": {
-      "name": "Mike Collins",
-      "url": null,
-      "bioguideId": "C001129",
-      "candidateIds": [
-        "challenger-mike-collins-senate-2026"
-      ]
-    },
-    "vg-ga-p-000697": {
-      "name": "Peter Hubbard",
-      "url": null
-    },
-    "vg-ga-p-000361": {
-      "name": "Penny Brown Reynolds",
-      "url": null,
-      "candidateIds": [
-        "challenger-penny-brown-reynolds-sos-2026"
-      ]
-    },
-    "vg-ga-p-000262": {
-      "name": "Lucy McBath",
-      "url": null,
-      "bioguideId": "M001208"
-    },
-    "vg-ga-p-000030": {
-      "name": "Burt Jones",
-      "url": null,
-      "ocdPersonId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
-      "rosterId": "ocd-person/ddfab174-3a42-42c0-946e-0ce3169c4d1b",
-      "candidateIds": [
-        "challenger-burt-jones-gov-2026"
-      ]
-    },
     "vg-ga-p-000111": {
       "name": "Jon Burns",
       "url": null,
@@ -161,21 +109,817 @@
         "ga-house-159-2026-r-1"
       ]
     },
-    "vg-ga-p-000021": {
-      "name": "Brad Raffensperger",
+    "vg-ga-p-000262": {
+      "name": "Lucy McBath",
       "url": null,
-      "rosterId": "ocd-person/02e75ac0-4350-4305-980e-8dc0462c5cc1",
+      "bioguideId": "M001208"
+    },
+    "vg-ga-p-000035": {
+      "name": "Carolyn Hugley",
+      "url": null,
+      "ocdPersonId": "ocd-person/0f5a9273-2fc6-458f-af59-b75070a1dc76",
+      "rosterId": "ocd-person/0f5a9273-2fc6-458f-af59-b75070a1dc76",
       "candidateIds": [
-        "challenger-brad-raffensperger-gov-2026"
+        "ga-house-141-2026-d-1"
       ]
     },
-    "vg-ga-p-000261": {
-      "name": "Sanford D. Bishop",
+    "vg-ga-p-000335": {
+      "name": "Keisha Lance Bottoms",
       "url": null,
-      "bioguideId": "B000490"
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
+      ]
+    },
+    "vg-ga-p-000258": {
+      "name": "Earl L. \"Buddy\" Carter",
+      "url": null,
+      "bioguideId": "C001103",
+      "candidateIds": [
+        "challenger-buddy-carter-senate-2026"
+      ]
+    },
+    "vg-ga-p-000256": {
+      "name": "Rick W. Allen",
+      "url": null,
+      "bioguideId": "A000372"
+    },
+    "vg-ga-p-000697": {
+      "name": "Peter Hubbard",
+      "url": null
+    },
+    "vg-ga-p-000253": {
+      "name": "Mike Collins",
+      "url": null,
+      "bioguideId": "C001129",
+      "candidateIds": [
+        "challenger-mike-collins-senate-2026"
+      ]
+    },
+    "vg-ga-p-000368": {
+      "name": "Rick Jackson",
+      "url": null,
+      "candidateIds": [
+        "challenger-rick-jackson-gov-2026"
+      ]
     }
   },
+  "mergedEntities": {},
   "items": [
+    {
+      "id": "7e207c807003",
+      "title": "Georgia Water Coalition releases its 14th ‘Dirty Dozen’ report for 2026",
+      "url": "https://thecurrentga.org/2026/11/21/georgia-water-coalition-releases-its-14th-dirty-dozen-report-for-2026/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-21T18:13:38+00:00",
+      "snippet": "The Georgia Water Coalition unveiled its 2026 Dirty Dozen Report, naming their picks for the worst offenders and most pressing threats to the state’s waterways. \nThe Current is an inclusive nonprofit,",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "5681b82c40a6",
+      "title": "Georgia Today: Morehouse College sexual assault; DFCS budget; Energy bill concerns",
+      "url": "https://www.gpb.org/news/2026/11/20/georgia-today-morehouse-college-sexual-assault-dfcs-budget-energy-bill-concerns",
+      "source": "GPB News",
+      "publishedAt": "2026-11-20T21:18:26+00:00",
+      "snippet": "On the Nov. 20 edition: Morehouse College is looking into its sexual misconduct policies after a senior was arrested on rape charges; state lawmakers want to figure out how to better track the state's",
+      "entityIds": [],
+      "topics": [
+        "budget",
+        "education"
+      ]
+    },
+    {
+      "id": "7d7dcb2772d0",
+      "title": "GPB evening headlines for November 20, 2026",
+      "url": "https://www.gpb.org/news/2026/11/20/gpb-evening-headlines-for-november-20-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-20T20:51:38+00:00",
+      "snippet": "Morehouse College says it's launching a review of its policies and procedures regarding allegations of sexual misconduct.\nGeorgia Democrat Stacey Abrams is shifting the focus of the group that she sta",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "4379ce1ff754",
+      "title": "It’s official: Raffensperger certifies Nov. 3 election results",
+      "url": "https://capitol-beat.org/2026/11/its-official-raffensperger-certifies-nov-3-election-results/?utm_source=rss&utm_medium=rss&utm_campaign=its-official-raffensperger-certifies-nov-3-election-results",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-20T19:38:21+00:00",
+      "snippet": "ATLANTA — The Democratic candidates who swept Republicans out of power on Nov. 3 no longer have an asterisk beside their names. Secretary of State Brad Raffensperger certified the election results on ",
+      "entityIds": [
+        "vg-ga-p-000021"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "3d92699f7123",
+      "title": "Georgia Board of Regents elects new leadership, backs DREAMS scholarship",
+      "url": "https://thecurrentga.org/2026/11/20/georgia-board-of-regents-elects-new-leadership-backs-dreams-scholarship/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-20T19:17:20+00:00",
+      "snippet": "The Georgia Board of Regents elected Deep J. Shah as its incoming chair and Mat Swift as vice chair, effective Jan. 1, while naming Timothy C. Lieuwen as the sole finalist for president of Georgia Tec",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "50296881c150",
+      "title": "An obscure utility calculation is putting a thumb on the scale for gas in Georgia",
+      "url": "https://thecurrentga.org/2026/11/20/an-obscure-utility-calculation-is-putting-a-thumb-on-the-scale-for-gas-in-georgia/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-20T18:29:59+00:00",
+      "snippet": "Georgia Power is facing scrutiny from renewable energy advocates over its decision to assign a significantly lower reliability rating to battery storage in its planned 2,000 to 6,000 megawatt grid exp",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "1b740cb4c1a8",
+      "title": "Board of Regents elects new leadership for 2027",
+      "url": "https://capitol-beat.org/2026/11/board-of-regents-elects-new-leadership-for-2027/?utm_source=rss&utm_medium=rss&utm_campaign=board-of-regents-elects-new-leadership-for-2027",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-20T17:35:27+00:00",
+      "snippet": "ATLANTA — Two Bulldogs will take leadership roles at the Georgia Board of Regents next year, after the body elected Dr. Deep J. Shah, a primary care physician, as the incoming chair and retired real e",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "2ec9afb5de7e",
+      "title": "Congresswoman Nikema Williams Leads Push to Restore CDC’s Drowning Prevention Program",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-leads-push-to-restore-cdcs-drowning-prevention-program",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-11-20T14:23:55+00:00",
+      "snippet": "WASHINGTON, D.C. – Congresswoman Nikema Williams (GA-05) led 14 congressional colleagues in a letter to Department of Health and Human Services Secretary Robert F. Kennedy Jr., demanding the departmen",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "18acb698d1eb",
+      "title": "Carr’s Human Trafficking Prosecution Unit Recovers Missing Child in Fulton County",
+      "url": "https://law.georgia.gov/press-releases/2026-11-20/carrs-human-trafficking-prosecution-unit-recovers-missing-child-fulton",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-20T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr’s Human Trafficking Prosecution Unit has recovered a missing 16-year-old female in Fulton County. The child was located on Thursday, Nov. 19, 2026, an",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
+      "id": "0e8ee613c99a",
+      "title": "Carr: McDonough Woman Indicted for $283k Medicaid Fraud",
+      "url": "https://law.georgia.gov/press-releases/2026-11-20/carr-mcdonough-woman-indicted-283k-medicaid-fraud",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-20T12:00:00+00:00",
+      "snippet": "HENRY COUNTY, GA – Georgia Attorney General Chris Carr today announced that his Medicaid Fraud and Patient Protection Division has secured an indictment in Henry County charging Shalunda Wimes, 51, of",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "96af41b336e0",
+      "title": "Runoff in southwest Georgia becomes high-stakes battle after House Democrats claim narrow majority",
+      "url": "https://georgiarecorder.com/2026/11/20/runoff-in-southwest-georgia-becomes-high-stakes-battle-after-house-democrats-claim-narrow-majority/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-20T09:00:29+00:00",
+      "snippet": "Voters in eight southwest Georgia counties have one more trip to make to their polling places before they ring in the new year, and they’ll decide whether House Democrats expand their newly won majori",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "583338e3de04",
+      "title": "Warnock Statement on Permitting Reform Bill",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-statement-on-permitting-reform-bill/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-11-20T02:49:56+00:00",
+      "snippet": "Washington, D.C. – Today, U.S. Senator Reverend Raphael Warnock (D-GA) released the following statement on his decision to vote ‘NO’ on the Bipartisan American Affordability and Jobs Act (BAAJA) unles",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "efeb2c3120cf",
+      "title": "Board of Regents Elects New Chair and Vice Chair for 2027",
+      "url": "https://www.usg.edu/news/release/board-of-regents-elects-new-chair-vice-chair-2027/",
+      "source": "University System of Georgia",
+      "publishedAt": "2026-11-20T00:00:00+00:00",
+      "snippet": "The Board of Regents of the University System of Georgia has elected current Vice Chair Deep J. Shah to a one-year term as the Board’s new chair and Regent Mat Swift to a one-year term as the Board’s ",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "education"
+      ]
+    },
+    {
+      "id": "a7860faa43c6",
+      "title": "Georgia’s next secretary of state announces transition team",
+      "url": "https://capitol-beat.org/2026/11/georgias-next-secretary-of-state-announces-transition-team/?utm_source=rss&utm_medium=rss&utm_campaign=georgias-next-secretary-of-state-announces-transition-team",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-19T22:27:33+00:00",
+      "snippet": "ATLANTA — Democrat Penny Brown Reynolds, who will be Georgia’s first Black secretary of state, said her transition team includes U.S. Sens. Raphael Warnock and Jon Ossoff, former U.N. Ambassador Andre",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264",
+        "vg-ga-p-000361"
+      ],
+      "topics": []
+    },
+    {
+      "id": "807c280b7495",
+      "title": "Sen. Ossoff Applauds House Committee Passage of Ocmulgee Mounds National Park Legislation",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-applauds-house-committee-passage-of-ocmulgee-mounds-national-park-legislation/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-19T21:48:58+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff released the following statement applauding passage of H.R. 9416, the Ocmulgee Mounds National Park Redesignation Act, out of the House Committee on Natural ",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "e6f448b21a47",
+      "title": "Incoming Secretary of State Penny Brown Reynolds announces bipartisan transition team",
+      "url": "https://georgiarecorder.com/2026/11/19/incoming-secretary-of-state-penny-brown-reynolds-announces-bipartisan-transition-team/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-19T20:21:20+00:00",
+      "snippet": "Secretary of State-elect Penny Brown Reynolds has named the transition team that will help her step into the role of election chief.  Democrats flip statewide offices up and down the ballot in Georgia",
+      "entityIds": [
+        "vg-ga-p-000361"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "c845dbfa724a",
+      "title": "Carr Secures Major Win for Georgia Law Enforcement with FCC Contraband Cell Phone Jamming Rule",
+      "url": "https://law.georgia.gov/press-releases/2026-11-19/carr-secures-major-win-georgia-law-enforcement-fcc-contraband-cell-phone",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-19T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr has secured a major win in the fight to combat contraband cell phones in correctional facilities. For years, Carr has led a multistate effort to allow",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
+      "id": "29519b4b8606",
+      "title": "Commentary: Bookman: Welcome to Bleorgia",
+      "url": "https://georgiarecorder.com/2026/11/19/bookman-welcome-to-bleorgia/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-19T10:00:30+00:00",
+      "snippet": "Is Georgia now blue? With every statewide office in the hands of Democrats, you’d probably have to say yes. And while the abruptness of the transformation has been stunning, it’s also true that it has",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "40bb1f43c4e7",
+      "title": "With small margins, democratic socialists could have outsized influence in Georgia state House",
+      "url": "https://georgiarecorder.com/2026/11/19/there-are-now-two-democratic-socialists-in-georgias-state-house-that-could-complicate-things/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-19T09:00:46+00:00",
+      "snippet": "For the first time in two decades, Georgia Democrats will control the state House of Representatives when the General Assembly convenes in January. But Democrats will have a razor-thin majority. Not o",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "761005e13500",
+      "title": "Extending the State of Emergency for Severe Flooding",
+      "url": "https://gov.georgia.gov/document/2026-executive-order/11192601/download",
+      "source": "Gov. Brian Kemp (executive orders)",
+      "publishedAt": "2026-11-19T00:00:00+00:00",
+      "snippet": "On November 5, 2026, due to heavy showers and thunderstorms, I issued Executive Order No. 11.05.26.01, declaring a State of Emergency for Severe Flooding in Fannin, Gilmer, Murray, and Union…",
+      "category": "State of Emergency",
+      "orderNumber": "11.19.26.01",
+      "archiveUrl": null,
+      "sha256": "bbacc755ab648816b8d4787e555ec1c216dbb34e039452e860a533055988be9c",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "3846ec5917d7",
+      "title": "Warnock Questions Trump CFTC Nominees on Commitment to Fighting President’s Corruption",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-questions-trump-cftc-nominees-on-commitment-to-fighting-presidents-corruption/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-11-18T22:34:41+00:00",
+      "snippet": "On Tuesday, during a Senate Agriculture Committee hearing, Senator Reverend Warnock questioned President Trump’s nominees to the Commodity Futures Trading Commission on their commitment to protecting ",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "ethics"
+      ]
+    },
+    {
+      "id": "9ce7e33f07e9",
+      "title": "Lawmakers push for forensic audit of DFCS amid budget concerns",
+      "url": "https://thecurrentga.org/2026/11/18/lawmakers-push-for-forensic-audit-of-dfcs-amid-budget-concerns/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-18T21:20:34+00:00",
+      "snippet": "A bipartisan group of Georgia lawmakers is calling for a third-party forensic audit of the Division of Family and Children Services following reports of questionable spending and a significant budget ",
+      "entityIds": [],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "f3ef79e144a6",
+      "title": "Sen. Ossoff Working to Strengthen Maternal Health Care for Georgia Veterans",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-to-strengthen-maternal-health-care-for-georgia-veterans-2/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-18T16:31:27+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working across the aisle to strengthen maternal health care for Georgia’s women veterans. Sen. Ossoff cosponsored the bipartisan DOULA for VA Act of 2026 ",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "e9747e4f1e88",
+      "title": "Georgia Tech’s interim president named sole finalist for permanent role",
+      "url": "https://capitol-beat.org/2026/11/georgia-techs-interim-president-named-sole-finalist-for-permanent-role/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-techs-interim-president-named-sole-finalist-for-permanent-role",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-18T14:41:40+00:00",
+      "snippet": "ATLANTA — The leaders of Georgia’s public college system have settled on the only candidate to lead the Georgia Institute of Technology after the departure last month of former President Ángel Cabrera",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "education"
+      ]
+    },
+    {
+      "id": "997545844284",
+      "title": "Hand count in southwest Georgia legislative race confirms Republican incumbent’s win",
+      "url": "https://georgiarecorder.com/2026/11/17/hand-count-in-southwest-georgia-legislative-race-confirms-republican-incumbents-win/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-18T00:26:22+00:00",
+      "snippet": "Election officials in Seminole County completed a hand count of a southwest Georgia House district’s election results after a review from the secretary of state’s office found a discrepancy between th",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "0d447467445e",
+      "title": "USG Enrollment Surges to Record High, Marking Fourth Year of Growth",
+      "url": "https://www.usg.edu/news/release/usg-enrollment-surges-to-record-high-2026/",
+      "source": "University System of Georgia",
+      "publishedAt": "2026-11-18T00:00:00+00:00",
+      "snippet": null,
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "4ffdae6552b3",
+      "title": "Lawmakers call for forensic audit of Georgia child welfare agency’s spending",
+      "url": "https://georgiarecorder.com/2026/11/17/lawmakers-call-for-forensic-audit-of-georgia-child-welfare-agencys-spending/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-17T23:29:21+00:00",
+      "snippet": "A bipartisan group of Georgia lawmakers is calling for a new third-party audit of the Division of Family and Children Services, the state agency tasked with protecting vulnerable children. “There is s",
+      "entityIds": [],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "d5126ccc0ee3",
+      "title": "Congresswoman Nikema Williams Introduces the Know Your Body Act",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-introduces-the-know-your-body-act-2",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-11-17T17:45:18+00:00",
+      "snippet": "WASHINGTON, D.C. — Today, Congresswoman Nikema Williams (GA-05) introduced the Know Your Body Act that would direct the Department of Health and Human Services to create educational materials for elem",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "education",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "9591900f61fd",
+      "title": "Sens. Ossoff, Husted Introduce Bipartisan Bill to Help Servicemembers Afford Housing",
+      "url": "https://www.ossoff.senate.gov/press-releases/sens-ossoff-husted-introduce-bipartisan-bill-to-help-servicemembers-afford-housing/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-17T16:45:09+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is introducing bipartisan legislation to help lower housing costs for Georgia servicemembers and their families. Today, Sens. Ossoff and Jon Husted (R-OH) in",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "d2900164325f",
+      "title": "Gov. Kemp: HDI America Invests $47 Million in Candler County",
+      "url": "https://gov.georgia.gov/press-releases/2026-11-17/gov-kemp-hdi-america-invests-47-million-candler-county",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-11-17T12:00:00+00:00",
+      "snippet": "MUNICH – Governor Brian P. Kemp today announced that HDI America plans to invest $47 million in a new manufacturing facility in Candler County, creating 185 new jobs over the next several years.",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "7f4c017244ec",
+      "title": "Carr: $12 Million in Restitution and Lease Forgiveness for Georgians Misled by Acima Rental Agreements",
+      "url": "https://law.georgia.gov/press-releases/2026-11-17/carr-12-million-restitution-and-lease-forgiveness-georgians-misled-acima",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-17T12:00:00+00:00",
+      "snippet": "ATLANTA, GA — Georgia Attorney General Chris Carr has secured more than $12 million in restitution and loan forgiveness for over 17,000 Georgia consumers as part of a multistate settlement agreement w",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
+      "id": "9a263b80641c",
+      "title": "Georgia begins construction on new psychiatric hospital for prisoners",
+      "url": "https://georgiarecorder.com/2026/11/17/georgia-begins-construction-on-new-forensic-psychiatric-hospital-for-prisoners/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-17T10:00:21+00:00",
+      "snippet": "Georgia has officially broken ground on a new $409 million forensic psychiatric hospital — the first to be built in more than 50 years — aimed at serving the more than 800 Georgians who are currently ",
+      "entityIds": [],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "2e02323f2870",
+      "title": "Board of Regents Names Dr. Timothy C. Lieuwen Sole Finalist to Lead Georgia Tech",
+      "url": "https://www.usg.edu/news/release/bor-names-lieuwen-sole-finalist-to-lead-tech-2026/",
+      "source": "University System of Georgia",
+      "publishedAt": "2026-11-17T00:00:00+00:00",
+      "snippet": null,
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "4024cc1de9ab",
+      "title": "Georgia House GOP to shuffle leadership after election losses",
+      "url": "https://georgiarecorder.com/2026/11/16/georgia-house-gop-to-shuffle-leadership-after-election-losses/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-16T21:42:12+00:00",
+      "snippet": "House Republicans will be led by a new leader when Democrats take control of the chamber in January. The caucus elected Republican state Rep. Todd Jones from South Forsyth as minority leader Monday in",
+      "entityIds": [
+        "vg-ga-p-000227"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "f2883271cfe2",
+      "title": "Hand count to confirm results for House seat in southwest Georgia",
+      "url": "https://capitol-beat.org/2026/11/hand-count-to-confirm-results-for-house-seat-in-southwest-georgia/?utm_source=rss&utm_medium=rss&utm_campaign=hand-count-to-confirm-results-for-house-seat-in-southwest-georgia",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-16T20:30:10+00:00",
+      "snippet": "ATLANTA — A little over a week ago, Rep. Gerald Greene, R-Cuthbert, was leaving a hospital for a health issue when his phone lit up with news about his Election Day loss to a Democrat. Officials had f",
+      "entityIds": [
+        "vg-ga-p-000088"
+      ],
+      "topics": [
+        "elections",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "51f11293091e",
+      "title": "Republicans pick minority leadership for House for first time in a generation",
+      "url": "https://capitol-beat.org/2026/11/republicans-pick-minority-leadership-for-house-for-first-time-in-a-generation/?utm_source=rss&utm_medium=rss&utm_campaign=republicans-pick-minority-leadership-for-house-for-first-time-in-a-generation",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-16T20:14:25+00:00",
+      "snippet": "ATLANTA — Georgia Republicans elected new leadership in the state House Monday after their losses on Election Day cost them the speakership. Speaker Jon Burns, R-Newington, won in his district but los",
+      "entityIds": [
+        "vg-ga-p-000111"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "566c883a0613",
+      "title": "After Warnock Calls for Delay, Trump Administration Announces Six-Month Pause on New Medicaid Requirements",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/after-warnock-calls-for-delay-trump-administration-announces-six-month-pause-on-new-medicaid-requirements/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-11-16T18:35:16+00:00",
+      "snippet": "Days after Senator Reverend Raphael Warnock called for a delay of Medicaid cuts, the Trump administration announced it would give states who opt-in an additional six months to prepare for the new requ",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "c4d59cd01149",
+      "title": "Sen. Ossoff Working to Make College More Affordable for Georgia Students",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-to-make-college-more-affordable-for-georgia-students/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-16T16:24:17+00:00",
+      "snippet": "Washington, D.C. — U.S Senator Ossoff is working to make college more affordable for Georgia students. Sen. Ossoff is cosponsoring the Pell Grant Preservation and Expansion Act of 2026 to increase the",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "0b12fa9b69f0",
+      "title": "Gov. Kemp Leads Mission to Austria and Germany",
+      "url": "https://gov.georgia.gov/press-releases/2026-11-16/gov-kemp-leads-mission-austria-and-germany",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-11-16T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that he and First Lady Marty Kemp will lead an international economic development mission this week to Austria and Germany. In addition to direct talks",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "9a33e3c2685e",
+      "title": "Rise in Black voter turnout helps drive historic change in Georgia, transforming state government",
+      "url": "https://georgiarecorder.com/2026/11/16/rise-in-black-voter-turnout-helps-drive-historic-change-in-georgia-transforming-state-government/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-16T09:00:38+00:00",
+      "snippet": "Dondell Patterson spent much of Election Day nervously awaiting the results.  Months after launching her own unsuccessful bid for chief magistrate judge in Douglas County, the 47-year-old attorney gat",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "courts"
+      ]
+    },
+    {
+      "id": "06af346c89be",
+      "title": "FAA grounds flights after communications breakdown for controllers",
+      "url": "https://capitol-beat.org/2026/11/faa-grounds-flights-after-communications-breakdown-for-controllers/?utm_source=rss&utm_medium=rss&utm_campaign=faa-grounds-flights-after-communications-breakdown-for-controllers",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-14T01:19:01+00:00",
+      "snippet": "ATLANTA — Problems with the communications system used by air traffic controllers grounded departing flights across the country starting Friday afternoon, including at Georgia’s Hartsfield-Jackson Atl",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "79ca079982b0",
+      "title": "Georgia tax collections nearly flat in October",
+      "url": "https://capitol-beat.org/2026/11/georgia-tax-collections-nearly-flat-in-october/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-tax-collections-nearly-flat-in-october",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-13T23:53:12+00:00",
+      "snippet": "ATLANTA — Georgia’s net tax collections in October rose marginally over the same month last year, up $6.7 million, for an increase of 0.2%, according to Gov. Brian Kemp’s office. Total net collections",
+      "entityIds": [],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "285a30f07bab",
+      "title": "Congresswoman Nikema Williams: I was arrested for speaking up in Georgia. Today, I’m holding my head high.",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-i-was-arrested-for-speaking-up-in-georgia-today-im-holding-my-head-high",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-11-13T19:10:25+00:00",
+      "snippet": "On November 13, 2018, I was led out of the Georgia Capitol, hands zip tied behind my back for demanding that every vote be counted for my friend and democracy warrior, Stacey Abrams.  I now get to wal",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "fbc383038885",
+      "title": "Sen. Ossoff Celebrates Groundbreaking of New Veterans’ Cemetery in Augusta",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-celebrates-groundbreaking-of-new-veterans-cemetery-in-augusta/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-13T15:00:08+00:00",
+      "snippet": "Augusta, Ga. — U.S. Senator Jon Ossoff released the following statement celebrating the groundbreaking of the new veterans’ cemetery in Augusta. “Today, I join all in Augusta and the CSRA in celebrati",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "f6e8feae99bb",
+      "title": "Sens. Ossoff Continuing Push to Ban Health Insurance Companies from Denying or Delaying Needed Health Care",
+      "url": "https://www.ossoff.senate.gov/press-releases/sens-ossoff-continuing-push-to-ban-health-insurance-companies-from-denying-or-delaying-needed-health-care/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-13T14:57:25+00:00",
+      "snippet": "This year, Sen. Ossoff has offered two Senate amendments to ban insurance companies from denying or delaying needed care Washington, D.C. — U.S. Senator Jon Ossoff is continuing his work to ban health",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "2e9865f3878f",
+      "title": "Gov. Kemp Announces Appointments to Cobb State Court",
+      "url": "https://gov.georgia.gov/press-releases/2026-11-13/gov-kemp-announces-appointments-cobb-state-court",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-11-13T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced the following judicial appointments: the Honorable Ashley J. Palmer to the State Court of Cobb County, Division I, filling the vacancy created by the r",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
+      "id": "53a32880a7ee",
+      "title": "Gov. Kemp Announces 182 Appointments and Reappointments to Boards, Authorities, and Commissions",
+      "url": "https://gov.georgia.gov/press-releases/2026-11-13/gov-kemp-announces-182-appointments-and-reappointments-boards-authorities",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-11-13T12:00:00+00:00",
+      "snippet": "Atlanta, GA – Governor Brian P. Kemp today announced 182 appointments and reappointments to various state boards, authorities, and commissions.",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
+    {
+      "id": "046fb7ffada1",
+      "title": "Carr Brings Additional Charges for Carfentanil Trafficking Operation in Chatham County",
+      "url": "https://law.georgia.gov/press-releases/2026-11-13/carr-brings-additional-charges-carfentanil-trafficking-operation-chatham",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-13T12:00:00+00:00",
+      "snippet": "SAVANNAH, GA – Georgia Attorney General Chris Carr today announced that his Gang Prosecution Unit has secured a superseding indictment charging three more defendants in connection with a multistate dr",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "ethics"
+      ]
+    },
+    {
+      "id": "1ac16a8c3e9f",
+      "title": "With a New Congress on the Horizon, McBath and 17 US Lawmakers Arrive at COP31 to Signal America’s Return to Sensible Climate Policy",
+      "url": "https://mcbath.house.gov/2026/11/13/with-a-new-congress-on-the-horizon-mcbath-and-17-us-lawmakers-arrive-at-cop31-to-signal-americas-return-to-sensible-climate-policy/",
+      "source": "Rep. Lucy McBath (GA-06, press)",
+      "publishedAt": "2026-11-13T09:57:00+00:00",
+      "snippet": "On the heels of transformational midterm elections, 18 Members of the U.S. House of Representatives are attending COP31 to strengthen international partnerships and exchange solutions to shared climat",
+      "entityIds": [
+        "vg-ga-p-000262"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "10591ab378dc",
+      "title": "Hugley is officially nominated as Georgia House speaker as Democrats choose their leaders",
+      "url": "https://georgiarecorder.com/2026/11/12/hugley-is-officially-nominated-as-georgia-house-speaker-as-democrats-choose-their-leaders/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-12T22:51:55+00:00",
+      "snippet": "Georgia House Democrats unveiled their picks to lead the chamber Thursday after winning a majority for the first time in two decades, officially naming Rep. Carolyn Hugley as their nominee for House s",
+      "entityIds": [
+        "vg-ga-p-000035"
+      ],
+      "topics": []
+    },
+    {
+      "id": "ec4c19ffe543",
+      "title": "Democrats select new leadership for state House",
+      "url": "https://capitol-beat.org/2026/11/democrats-select-new-leadership-for-state-house/?utm_source=rss&utm_medium=rss&utm_campaign=democrats-select-new-leadership-for-state-house",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-12T21:31:00+00:00",
+      "snippet": "ATLANTA — For the first time in more than two decades, Democrats in the Georgia House of Representatives nominated new leadership as a majority caucus. For the first time in the 238 years since Georgi",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "7d90246b1deb",
+      "title": "Warnock, Ossoff Secure More Than $74 Million in Federal Funding for Railroad Safety, Blocked Crossing Relief Across Georgia",
+      "url": "https://www.ossoff.senate.gov/press-releases/warnock-ossoff-secure-more-than-74-million-in-federal-funding-for-railroad-safety-blocked-crossing-relief-across-georgia/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-12T20:40:59+00:00",
+      "snippet": "Senators Reverend Raphael Warnock and Jon Ossoff secured more than $74.2 million in federal funding to improve safety and help eliminate blocked rail crossings in Georgia The funding will support rail",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "d850331c197a",
+      "title": "Commentary: Will we finally expand Medicaid in Georgia?",
+      "url": "https://georgiarecorder.com/2026/11/12/will-we-finally-expand-medicaid-in-georgia/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-12T20:35:56+00:00",
+      "snippet": "“Medicaid still remains a top priority in this state… It continues to be a priority and will be a day-one priority for me to prepare our state agencies for that expansion.”- Gov.-elect Keisha Lance Bo",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "healthcare"
+      ]
+    },
+    {
+      "id": "b72576120b53",
+      "title": "Congresswoman Nikema Williams Continues Leadership to Protect Access to Sexual and Reproductive Health Care",
+      "url": "https://nikemawilliams.house.gov/posts/congresswoman-nikema-williams-continues-leadership-to-protect-access-to-sexual-and-reproductive-health-care-2",
+      "source": "Rep. Nikema Williams (GA-05, press)",
+      "publishedAt": "2026-11-12T17:39:37+00:00",
+      "snippet": "WASHINGTON, D.C. — Today, Congresswoman Nikema Williams (GA-05) led the introduction of a resolution to condemn attempts to criminalize the full range of sexual and reproductive health care including ",
+      "entityIds": [
+        "vg-ga-p-000254"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "54569608667f",
+      "title": "Gov. Kemp: October Tax Revenues Up 0.2%",
+      "url": "https://gov.georgia.gov/press-releases/2026-11-12/gov-kemp-october-tax-revenues-02",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-11-12T12:00:00+00:00",
+      "snippet": "ATLANTA – The State of Georgia’s net tax collections during the month of October totaled roughly $2.71 billion, for an increase of $6.7 million, or 0.2%, compared to October 2025, when net tax collect",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "924f3326fe92",
+      "title": "Gov. Kemp: SupplyHouse Plans 330 New Jobs in Henry County",
+      "url": "https://gov.georgia.gov/press-releases/2026-11-12/gov-kemp-supplyhouse-plans-330-new-jobs-henry-county",
+      "source": "Gov. Brian Kemp (press)",
+      "publishedAt": "2026-11-12T12:00:00+00:00",
+      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that SupplyHouse, a leading online plumbing, HVAC, and electrical supplies distributor, will invest an estimated $19 million to establish new logistics",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "ac792f5853e7",
+      "title": "CONSUMER ALERT: Carr Warns Georgians About Counterfeit Medicines and Unsafe Online Pharmacies",
+      "url": "https://law.georgia.gov/press-releases/2026-11-12/consumer-alert-carr-warns-georgians-about-counterfeit-medicines-and",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-12T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr is warning consumers about illegal online pharmacies selling counterfeit, expired, or potentially dangerous medications. While buying prescription med",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
+      "id": "24ca45e5496a",
+      "title": "Democratic wins revive Medicaid expansion push in Georgia, but new hurdles await",
+      "url": "https://georgiarecorder.com/2026/11/12/democratic-wins-revive-medicaid-expansion-push-in-georgia-but-new-hurdles-await/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-12T09:00:19+00:00",
+      "snippet": "Three days after Keisha Lance Bottoms won the governor’s seat, Ryan Loke faced a crowd of Georgia health advocates, some giddy at the possibility of the state finally expanding Medicaid. Loke understo",
+      "entityIds": [
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "healthcare"
+      ]
+    },
+    {
+      "id": "eb83dc206b02",
+      "title": "Extending the State of Emergency for Severe Flooding",
+      "url": "https://gov.georgia.gov/document/2026-executive-order/11122603/download",
+      "source": "Gov. Brian Kemp (executive orders)",
+      "publishedAt": "2026-11-12T00:00:00+00:00",
+      "snippet": "WHEREAS: On November 5, 2026, due to heavy showers and thunderstorms, I issued Executive Order No. 11.05.26.01, declaring a State of Emergency for Severe Flooding in Fannin, Gilmer, Murray, and…",
+      "category": "State of Emergency",
+      "orderNumber": "11.12.26.03",
+      "archiveUrl": "https://web.archive.org/web/20261113021208/https://gov.georgia.gov/document/2026-executive-order/11122603/download",
+      "sha256": "36140036fb9cf2ffb0769b9482191696ebd996428264cb374b090920c2e409e1",
+      "entityIds": [
+        "vg-ga-p-000024"
+      ],
+      "topics": []
+    },
     {
       "id": "07da71e0f263",
       "title": "El Niño could mean snow for Georgia this winter, but it’s not a sure thing",
@@ -185,18 +929,6 @@
       "snippet": "This coverage is made possible through a partnership between WABE and Grist, a nonprofit environmental media organization. The Pacific Ocean is heating up — and while it’s a continent away, the impact",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "cc636fe9b462",
-      "title": "Georgia Latino voter turnout surges 78% amid economic, immigration issues",
-      "url": "https://thecurrentga.org/2026/11/11/georgia-latino-voter-turnout-surges-78-amid-economic-immigration-issues/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-11T21:57:36+00:00",
-      "snippet": "Latino voter turnout in Georgia surged by 78% compared to 2022, driven by concerns over the cost of living and immigration enforcement under the Trump administration.\nThe Current is an inclusive nonpr",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "22c9785527cb",
@@ -237,33 +969,15 @@
       ]
     },
     {
-      "id": "64cc0791c3fc",
-      "title": "TSA is here to stay: Atlanta airport study opposes private security screening",
-      "url": "https://www.gpb.org/news/2026/11/11/tsa-here-stay-atlanta-airport-study-opposes-private-security-screening",
-      "source": "GPB News",
-      "publishedAt": "2026-11-11T19:05:00+00:00",
-      "snippet": "The three-month study found that private security was not necessary at Hartsfield-Jackson International Airport.\nTSA is here to stay: Atlanta airport study opposes private security screening",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "e1e2875a62d7",
-      "title": "Money from Georgia's opioid settlement trust is helping mothers find treatment instead of prison",
-      "url": "https://www.gpb.org/news/2026/11/11/money-georgias-opioid-settlement-trust-helping-mothers-find-treatment-instead-of",
-      "source": "GPB News",
-      "publishedAt": "2026-11-11T13:55:59+00:00",
-      "snippet": "A nonprofit that helps pregnant, incarcerated women and their newborns is expanding in Georgia after receiving new funding from the Georgia Opioid Crisis Abatement Trust.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "258d74575987",
-      "title": "Blind Georgia veterans get free AI-powered glasses",
-      "url": "https://www.gpb.org/news/2026/11/11/blind-georgia-veterans-get-free-ai-powered-glasses",
-      "source": "GPB News",
-      "publishedAt": "2026-11-11T13:12:00+00:00",
-      "snippet": "About 50 blind Georgia veterans received free glasses powered by artificial intelligence that can help them move through the world more freely.",
-      "entityIds": [],
+      "id": "b32774426b71",
+      "title": "Sen. Ossoff Honors Georgia’s Veterans & Their Families",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-honors-georgias-veterans-their-families/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-11T15:17:40+00:00",
+      "snippet": "Atlanta, Ga. — U.S. Senator Jon Ossoff released the following statement honoring Georgia’s veterans and their families on Veterans Day. “I express my deep respect and gratitude for every veteran in th",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
       "topics": []
     },
     {
@@ -291,6 +1005,18 @@
       ]
     },
     {
+      "id": "313759c99631",
+      "title": "Warnock Presses Trump Ag Trade Nominee on Future of Global Food Assistance Programs",
+      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-presses-trump-ag-trade-nominee-on-future-of-global-food-assistance-programs/",
+      "source": "Sen. Raphael Warnock (press)",
+      "publishedAt": "2026-11-10T18:15:00+00:00",
+      "snippet": "On Tuesday, during a Senate Agriculture Committee hearing, Senator Reverend Warnock pressed President Trump’s nominee for Under Secretary for Trade and Foreign Agricultural Affairs on his commitment t",
+      "entityIds": [
+        "vg-ga-p-000263"
+      ],
+      "topics": []
+    },
+    {
       "id": "2208db059f80",
       "title": "Sen. Ossoff Cosponsoring Bipartisan Legislation to Protect Georgia Veterans from Addiction",
       "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-cosponsoring-bipartisan-legislation-to-protect-georgia-veterans-from-addiction/",
@@ -301,20 +1027,6 @@
         "vg-ga-p-000264"
       ],
       "topics": []
-    },
-    {
-      "id": "da7138986d9e",
-      "title": "Warnock Leads Broad Coalition of Senators to Push Senate Leadership to Delay Republican Medicaid Cuts Over Concerns About Coverage Loss",
-      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-leads-broad-coalition-of-senators-to-push-senate-leadership-to-delay-republican-medicaid-cuts-over-concerns-about-coverage-loss/",
-      "source": "Sen. Raphael Warnock (press)",
-      "publishedAt": "2026-11-10T14:48:49+00:00",
-      "snippet": "Senators Reverend Raphael Warnock and Luján, along with a broad coalition of Democratic Senators, are calling on Senate leadership to delay new Medicaid cuts enacted in Congressional Republicans’ One ",
-      "entityIds": [
-        "vg-ga-p-000263"
-      ],
-      "topics": [
-        "healthcare"
-      ]
     },
     {
       "id": "3aeff8d85289",
@@ -353,36 +1065,6 @@
       ]
     },
     {
-      "id": "aa84239f0175",
-      "title": "Blue tide sweeps away $200 million-plus in Georgia GOP spending",
-      "url": "https://thecurrentga.org/2026/11/09/blue-tide-sweeps-away-200-million-plus-in-georgia-gop-spending/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-09T20:37:39+00:00",
-      "snippet": "Despite spending over $213 million, Republican Rick Jackson lost the Georgia gubernatorial election to Keisha Lance Bottoms, who secured a 54% majority while spending significantly less.\nThe Current i",
-      "entityIds": [
-        "vg-ga-p-000368",
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections",
-        "budget"
-      ]
-    },
-    {
-      "id": "4c9390ac5eb3",
-      "title": "Chatham delegation set to choose successor for veteran leader Ron Stephens",
-      "url": "https://thecurrentga.org/2026/11/09/chatham-delegation-set-to-choose-successor-for-veteran-leader-ron-stephens/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-09T20:12:45+00:00",
-      "snippet": "Following recent midterm elections, Democrats have secured a majority in Chatham County's legislative delegation, marking a significant shift in the group's leadership and influence over local governa",
-      "entityIds": [
-        "vg-ga-p-000189"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "61016d080181",
       "title": "Sen. Ossoff Working Across the Aisle to Support Georgia’s Rural Hospitals",
       "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-support-georgias-rural-hospitals/",
@@ -395,18 +1077,6 @@
       "topics": [
         "healthcare"
       ]
-    },
-    {
-      "id": "1c3adaa6a6df",
-      "title": "Warnock Introduces Bipartisan Bill to Restore “I Have a Dream” Plaque at Lincoln Memorial",
-      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-introduces-bipartisan-bill-to-restore-i-have-a-dream-plaque-at-lincoln-memorial/",
-      "source": "Sen. Raphael Warnock (press)",
-      "publishedAt": "2026-11-09T16:21:09+00:00",
-      "snippet": "Senator Reverend Warnock introduced legislation to restore the plaque commemorating Dr. Martin Luther King Jr.’s “I Have a Dream” speech at the Lincoln Memorial Despite years of damage, the historic p",
-      "entityIds": [
-        "vg-ga-p-000263"
-      ],
-      "topics": []
     },
     {
       "id": "cd529ed2a330",
@@ -461,58 +1131,6 @@
       ]
     },
     {
-      "id": "27d446877594",
-      "title": "Homeowners fight high HOA fees as Georgia drafts new oversight regulations",
-      "url": "https://thecurrentga.org/2026/11/07/homeowners-fight-high-hoa-fees-as-georgia-drafts-new-oversight-regulations/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-07T18:45:17+00:00",
-      "snippet": "Georgia state officials held public hearings this week to refine implementation details for Senate Bill 406, a new law designed to protect homeowners from excessive HOA fees and predatory foreclosure ",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "3b8e37e734aa",
-      "title": "Found memory card narrows Democrats state House margin",
-      "url": "https://thecurrentga.org/2026/11/07/found-memory-card-narrows-democrats-state-house-margin/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-07T18:06:49+00:00",
-      "snippet": "A missing election machine memory card in Seminole County reversed the apparent outcome of a Georgia state House race, placing Republican Rep. Gerald Greene ahead of Democrat Harry James by 262 votes.",
-      "entityIds": [
-        "vg-ga-p-000459",
-        "vg-ga-p-000088"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "5e8294a945bc",
-      "title": "Missing memory card temporarily changed apparent outcome in state House race",
-      "url": "https://capitol-beat.org/2026/11/missing-memory-card-temporarily-changed-apparent-outcome-in-state-house-race/?utm_source=rss&utm_medium=rss&utm_campaign=missing-memory-card-temporarily-changed-apparent-outcome-in-state-house-race",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-11-07T05:53:32+00:00",
-      "snippet": "ATLANTA — A previously missing election machine memory card in Seminole County has reversed the apparent outcome of a legislative race where early results showed a Republican incumbent losing his seat",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "8d0f28198a46",
-      "title": "Bottoms to focus on healthcare and other affordability issues",
-      "url": "https://capitol-beat.org/2026/11/bottoms-to-focus-on-healthcare-and-other-affordability-issues/?utm_source=rss&utm_medium=rss&utm_campaign=bottoms-to-focus-on-healthcare-and-other-affordability-issues",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-11-06T22:27:20+00:00",
-      "snippet": "ATLANTA — In her first news conference after Election Day, Georgia’s governor-elect, Democrat Keisha Lance Bottoms, said she will be focus on the cost of living, access to healthcare and funding for p",
-      "entityIds": [
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections",
-        "healthcare"
-      ]
-    },
-    {
       "id": "3415f0e9f19d",
       "title": "Bottoms announces transition team as ascendent Georgia Democrats prepare to run state government",
       "url": "https://georgiarecorder.com/2026/11/06/bottoms-announces-transition-team-as-ascendent-georgia-democrats-prepare-to-run-state-government/",
@@ -522,18 +1140,6 @@
       "entityIds": [
         "vg-ga-p-000335"
       ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "253fbd75e4b2",
-      "title": "Women put their stamp on Georgia election",
-      "url": "https://capitol-beat.org/2026/11/women-put-their-stamp-on-georgia-election/?utm_source=rss&utm_medium=rss&utm_campaign=women-put-their-stamp-on-georgia-election",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-11-06T20:51:50+00:00",
-      "snippet": "ATLANTA — Women won big in Georgia on Election Day. Eight women, all of them Black Democrats, expect to be sworn in to statewide office in January after defeating Republicans on Tuesday. The unofficia",
-      "entityIds": [],
       "topics": [
         "elections"
       ]
@@ -573,20 +1179,6 @@
       "snippet": "Within an hour of polls closing Tuesday, it was clear that Democrats had made a strong showing and that U.S. Sen. Jon Ossoff would be re-elected by a large margin. But what unfolded after that far exc",
       "entityIds": [
         "vg-ga-p-000264"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "74b3d2028552",
-      "title": "Georgia Democrats flip every statewide office, but appear to fall short in the Senate",
-      "url": "https://capitol-beat.org/2026/11/georgia-democrats-flip-every-statewide-office-but-appear-to-fall-short-in-the-senate/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-democrats-flip-every-statewide-office-but-appear-to-fall-short-in-the-senate",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-11-05T01:21:12+00:00",
-      "snippet": "ATLANTA — Georgia voters turned so sharply in a new direction Tuesday that the results surprised even some winners and set several historical firsts. Keisha Lance Bottoms is the first Black woman elec",
-      "entityIds": [
-        "vg-ga-p-000335"
       ],
       "topics": [
         "elections"
@@ -657,33 +1249,6 @@
       ]
     },
     {
-      "id": "d3e671201d2c",
-      "title": "Bottoms claims place in history as first Black woman elected to govern state",
-      "url": "https://capitol-beat.org/2026/11/bottoms-claims-place-in-history-as-first-black-woman-elected-to-govern-state/?utm_source=rss&utm_medium=rss&utm_campaign=bottoms-claims-place-in-history-as-first-black-woman-elected-to-govern-state",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-11-04T05:57:25+00:00",
-      "snippet": "ATLANTA — Georgia voters made history Tuesday, electing for the first time in 238 years of statehood a woman — and a Black person — as governor. In January, when she is sworn into office, Democrat Kei",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "96aa55d202d4",
-      "title": "Democrat Ossoff claims victory in U.S. Senate race",
-      "url": "https://capitol-beat.org/2026/11/democrat-ossoff-claims-victory-in-u-s-senate-race/?utm_source=rss&utm_medium=rss&utm_campaign=democrat-ossoff-claims-victory-in-u-s-senate-race",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-11-04T05:54:25+00:00",
-      "snippet": "ATLANTA — Democratic U.S. Sen. Jon Ossoff powered to a second term Tuesday night, defending his seat against Republican U.S. Rep. Mike Collins. Ossoff surged to an early lead after the polls closed an",
-      "entityIds": [
-        "vg-ga-p-000253",
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "f03b057a74f7",
       "title": "Democrats gain control of Georgia board that regulates utilities for first time in decades",
       "url": "https://georgiarecorder.com/2026/11/04/democrats-gain-control-of-georgia-board-that-regulates-utilities-for-first-time-in-decades/",
@@ -732,34 +1297,6 @@
       "publishedAt": "2026-11-03T09:00:41+00:00",
       "snippet": "Who will be Georgia’s next governor? Will Republicans overcome the apparent Democratic lead built up during early voting? Which party will run state government starting next year?  And when can Georgi",
       "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "e59969b16942",
-      "title": "Warnock, Ossoff Secure Over $12 Million in Federal Funding to Repair Roadways Damaged by Natural Disasters",
-      "url": "https://www.ossoff.senate.gov/press-releases/warnock-ossoff-secure-over-12-million-in-federal-funding-to-repair-roadways-damaged-by-natural-disasters/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-11-03T00:31:39+00:00",
-      "snippet": "Senators Reverend Raphael Warnock and Jon Ossoff successfully secured over $12 million in federal funding from the Department of Transportation to repair and reconstruct roads damaged by natural disas",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
-      "id": "99ca8350d8b0",
-      "title": "Race for Georgia governor draws more than $150 million in final three months",
-      "url": "https://capitol-beat.org/2026/11/race-for-georgia-governor-draws-more-than-150-million-in-final-three-months/?utm_source=rss&utm_medium=rss&utm_campaign=race-for-georgia-governor-draws-more-than-150-million-in-final-three-months",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-11-02T20:32:03+00:00",
-      "snippet": "ATLANTA — The price of everything has been rising, including the cost of becoming governor in Georgia. Since Aug. 1, former Atlanta Mayor Keisha Lance Bottoms and businessman Rick Jackson raised more ",
-      "entityIds": [
-        "vg-ga-p-000368",
-        "vg-ga-p-000335"
-      ],
       "topics": [
         "elections"
       ]
@@ -830,18 +1367,6 @@
       ]
     },
     {
-      "id": "38241618f53f",
-      "title": "Obama visits Georgia to boost Democrats ahead of Election Day",
-      "url": "https://capitol-beat.org/2026/10/obama-visits-georgia-to-boost-democrats-ahead-of-election-day/?utm_source=rss&utm_medium=rss&utm_campaign=obama-visits-georgia-to-boost-democrats-ahead-of-election-day",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-10-29T03:10:01+00:00",
-      "snippet": "ATLANTA — Barack Obama traveled to Clayton County Wednesday night to promote the Georgia Democratic ticket less than a week before Election Day. The visit came amid Republican efforts to energize thei",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "459b2faf8d0b",
       "title": "Some Georgia Republicans try to distance themselves from national politics as Election Day nears",
       "url": "https://georgiarecorder.com/2026/10/28/some-georgia-republicans-try-to-distance-themselves-from-national-politics-as-election-day-nears/",
@@ -854,16 +1379,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "44362fd1932c",
-      "title": "Georgia Ponzi schemer gets 15 years for $76 million fraud",
-      "url": "https://capitol-beat.org/2026/10/georgia-ponzi-schemer-gets-15-years-for-76-million-fraud/?utm_source=rss&utm_medium=rss&utm_campaign=georgia-ponzi-schemer-gets-15-years-for-76-million-fraud",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-10-28T18:28:55+00:00",
-      "snippet": "ATLANTA — Edwin Brant Frost IV will spend 15 years in federal prison for operating a Ponzi scheme that bilked more than 300 investors out of more than $76 million, federal prosecutors announced this w",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "a72532d93fa5",
@@ -902,20 +1417,6 @@
         "vg-ga-p-000368",
         "vg-ga-p-000264",
         "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "c119779107c7",
-      "title": "Warnock, Johnson Press EPA to Regulate and Monitor Harmful Pollutants Emitted by Data Centers",
-      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-johnson-press-epa-to-regulate-and-monitor-harmful-pollutants-emitted-by-data-centers/",
-      "source": "Sen. Raphael Warnock (press)",
-      "publishedAt": "2026-10-27T14:05:37+00:00",
-      "snippet": "In a letter to the Environmental Protection Agency, Senator Reverend Raphael Warnock and Representative Hank Johnson pressed the Trump administration to better monitor and regulate diesel-powered gene",
-      "entityIds": [
-        "vg-ga-p-000263"
       ],
       "topics": [
         "elections"
@@ -970,19 +1471,6 @@
       ]
     },
     {
-      "id": "31011f36e528",
-      "title": "Warnock, Ossoff Demand Investigation into Folkston ICE Facility After Hunger Strike, Issues Raised by Detainees",
-      "url": "https://www.warnock.senate.gov/newsroom/press-releases/warnock-ossoff-demand-investigation-into-folkston-ice-facility-after-hunger-strike-issues-raised-by-detainees/",
-      "source": "Sen. Raphael Warnock (press)",
-      "publishedAt": "2026-10-26T14:00:23+00:00",
-      "snippet": "Senators Reverend Raphael Warnock and Jon Ossoff are demanding that the U.S. Department of Homeland Security investigate conditions at Folkston ICE Processing Center According to reports from local ad",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "c1d446e26eed",
       "title": "Georgia draws high-profile boosters to the campaign trail as candidates enter the homestretch",
       "url": "https://georgiarecorder.com/2026/10/24/georgia-draws-high-profile-boosters-to-the-campaign-trail-as-candidates-enter-the-homestretch/",
@@ -1007,22 +1495,6 @@
         "vg-ga-p-000024"
       ],
       "topics": []
-    },
-    {
-      "id": "ec07cc806895",
-      "title": "Gov. Kemp Extends Suspension of State Gas Tax",
-      "url": "https://gov.georgia.gov/press-releases/2026-10-24/gov-kemp-extends-suspension-state-gas-tax",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-10-24T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp, in consultation with Lieutenant Governor Burt Jones and Speaker of the House Jon Burns, today announced he is extending a state of emergency due to global market vola",
-      "entityIds": [
-        "vg-ga-p-000024",
-        "vg-ga-p-000030",
-        "vg-ga-p-000111"
-      ],
-      "topics": [
-        "budget"
-      ]
     },
     {
       "id": "f70207d7178f",
@@ -1053,30 +1525,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "e130bf52e4d4",
-      "title": "ICYMI: Transformational Jobs, Investment Continue Across Georgia",
-      "url": "https://gov.georgia.gov/press-releases/2026-10-23/icymi-transformational-jobs-investment-continue-across-georgia",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-10-23T12:00:00+00:00",
-      "snippet": "ATLANTA - In case you missed it, Governor Brian Kemp and the Georgia Department of Economic Development under the leadership of Commissioner Pat Wilson have announced transformational job and economic",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": []
-    },
-    {
-      "id": "8f4a35a08325",
-      "title": "Gov. Kemp: Mitsubishi Power Doubles Footprint in Chatham County",
-      "url": "https://gov.georgia.gov/press-releases/2026-10-23/gov-kemp-mitsubishi-power-doubles-footprint-chatham-county",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-10-23T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that Mitsubishi Power Americas, Inc. (Mitsubishi Power) is investing $490 million in expanding its existing footprint in Georgia. The company plans to ",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": []
     },
     {
       "id": "49f44819a798",
@@ -1134,32 +1582,6 @@
       ]
     },
     {
-      "id": "a2acbf9d41e7",
-      "title": "Sen. Ossoff’s Bipartisan Bill to Strengthen Emergency Alerts Signed into Law",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoffs-bipartisan-bill-to-strengthen-emergency-alerts-signed-into-law/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-22T15:18:13+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff’’ bipartisan bill to strengthen emergency alerts during natural disasters is now law.  Today the President signed into law Sens. Ossoff and John Cornyn (R-TX",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
-      "id": "f1c3c10ded3e",
-      "title": "Gov. Kemp Announces Appointment to State Court of Forsyth County",
-      "url": "https://gov.georgia.gov/press-releases/2026-10-22/gov-kemp-announces-appointment-state-court-forsyth-county",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-10-22T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced the appointment of Erin H. Fowler to the State Court of Forsyth County, filling the vacancy created by the passage of HB 750 (Act 520) during the 2026 ",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "courts"
-      ]
-    },
-    {
       "id": "7908cc2aa084",
       "title": "Fewer Georgians are planning to vote by mail, with one day left to request an absentee ballot",
       "url": "https://georgiarecorder.com/2026/10/22/fewer-georgians-are-planning-to-vote-by-mail-with-one-day-left-to-request-an-absentee-ballot/",
@@ -1198,20 +1620,6 @@
       ]
     },
     {
-      "id": "c20638b76287",
-      "title": "Gov. Kemp: Blue Bird Invests $300 Million in Peach County",
-      "url": "https://gov.georgia.gov/press-releases/2026-10-21/gov-kemp-blue-bird-invests-300-million-peach-county",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-10-21T12:00:00+00:00",
-      "snippet": "ATLANTA – Governor Brian P. Kemp today announced that Blue Bird Corporation (Blue Bird), a technology leader and innovator of school buses, is expanding its existing footprint in Peach County. The com",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "education"
-      ]
-    },
-    {
       "id": "e90b7a8747f8",
       "title": "Ballot amendment would pave the way for dedicated funding to upgrade Georgia’s 911 system",
       "url": "https://georgiarecorder.com/2026/10/21/ballot-amendment-would-pave-the-way-for-dedicated-funding-to-upgrade-georgias-911-system/",
@@ -1233,33 +1641,6 @@
       "entityIds": [],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "8950928b9dbf",
-      "title": "Warnock, Ossoff Secure Nearly $12.5 Million to Improve Rail Safety Across Southwest Georgia",
-      "url": "https://www.ossoff.senate.gov/press-releases/warnock-ossoff-secure-nearly-12-5-million-to-improve-rail-safety-across-southwest-georgia/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-20T19:12:13+00:00",
-      "snippet": "Senators Reverend Raphael Warnock and Jon Ossoff successfully secured nearly $12.5 million in federal grant funding from the Department of Transportation to improve railway safety in Southwest Georgia",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
-      "id": "d2cbe95bcc32",
-      "title": "NEW: Georgians Report Prolonged Suffering & Untreated Conditions as a Result of Insurance Companies Denying or Delaying Care Doctors Say They Need",
-      "url": "https://www.ossoff.senate.gov/press-releases/new-georgians-report-prolonged-suffering-untreated-conditions-as-a-result-of-insurance-companies-denying-or-delaying-care-doctors-say-they-need/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-20T18:48:01+00:00",
-      "snippet": "Click here to read Sen. Ossoff’s fourth report from his ongoing investigation into health care costs, loss of services, and delays or denials of needed care Washington, D.C. — Georgians say they are s",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
       ]
     },
     {
@@ -1293,19 +1674,6 @@
       ]
     },
     {
-      "id": "4f797993acbe",
-      "title": "NEWS: Sens. Ossoff & Rev. Warnock Delivering Over $25 Million in Federal Funding to Upgrade Commercial Vehicle Infrastructure",
-      "url": "https://www.ossoff.senate.gov/press-releases/news-sens-ossoff-rev-warnock-delivering-over-25-million-in-federal-funding-to-upgrade-commercial-vehicle-infrastructure/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-19T13:51:57+00:00",
-      "snippet": "Garden City, Ga. — U.S. Senators Jon Ossoff and Reverend Raphael Warnock today announced new bipartisan infrastructure law funding to upgrade truck and commercial vehicle infrastructure. Today, Sens. ",
-      "entityIds": [
-        "vg-ga-p-000263",
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "85ffe07018a3",
       "title": "Growth of data centers becomes a defining issue of the midterms, entangling some Georgia candidates",
       "url": "https://georgiarecorder.com/2026/10/19/growth-of-data-centers-becomes-a-defining-issue-of-the-midterms-entangling-some-georgia-candidates/",
@@ -1323,7 +1691,7 @@
       "url": "https://www.usg.edu/news/release/gille-named-interim-ung-president-2026/",
       "source": "University System of Georgia",
       "publishedAt": "2026-10-19T00:00:00+00:00",
-      "snippet": "University System of Georgia Chancellor Sonny Perdue named Dr. Chaudron Gille as interim president of the University of North Georgia, effective Nov. 1, 2026.",
+      "snippet": null,
       "entityIds": [],
       "topics": [
         "education"
@@ -1354,47 +1722,6 @@
       ]
     },
     {
-      "id": "d027d0adae4d",
-      "title": "Will Trump’s Georgia rally be a lifeline or an anchor for the GOP candidates he seeks to boost?",
-      "url": "https://georgiarecorder.com/2026/10/16/will-trumps-georgia-rally-be-a-lifeline-or-an-anchor-for-the-gop-candidates-he-seeks-to-boost/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-16T08:00:33+00:00",
-      "snippet": "President Donald Trump is set to visit Dalton in northwest Georgia Friday to stump for Republican candidates as early voting is underway for the Nov. 3 midterm elections. Trump visited Dalton in early",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "2c202af3abaf",
-      "title": "Lieutenant governor’s race heats up as candidates spar over public safety, healthcare, Trump",
-      "url": "https://georgiarecorder.com/2026/10/15/lieutenant-governors-race-heats-up-as-candidates-spar-over-public-safety-healthcare-trump/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-15T22:38:32+00:00",
-      "snippet": "With early voting already underway across the state, the race to be Georgia’s next lieutenant governor is becoming increasingly contentious as the two candidates strive to appeal to undecided voters —",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "courts",
-        "healthcare"
-      ]
-    },
-    {
-      "id": "040d1f46ba98",
-      "title": "Ossoff reports raising another $33 million for homestretch of U.S. Senate reelection bid",
-      "url": "https://georgiarecorder.com/2026/10/15/ossoff-reports-raising-another-33-million-for-homestretch-of-u-s-senate-reelection-bid/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-15T20:11:10+00:00",
-      "snippet": "Democratic U.S. Sen. Jon Ossoff’s campaign reported raising $33 million from July through September, entering the final stretch of his re-election campaign against Republican Congressman Mike Collins ",
-      "entityIds": [
-        "vg-ga-p-000253",
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "66d886d31452",
       "title": "McBath Leads Colleagues in Urging TSA Administrator to Respect the Dignity of Hard-Working Agents",
       "url": "https://mcbath.house.gov/2026/10/15/mcbath-leads-colleagues-in-urging-tsa-administrator-to-respect-the-dignity-of-hard-working-agents/",
@@ -1419,86 +1746,6 @@
       "topics": []
     },
     {
-      "id": "9dfc7d56e318",
-      "title": "Carr Secures Major Victory in Defense of Georgia’s Social Media Law",
-      "url": "https://law.georgia.gov/press-releases/2026-10-15/carr-secures-major-victory-defense-georgias-social-media-law",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-10-15T12:00:00+00:00",
-      "snippet": "ATLANTA, GA — Georgia Attorney General Chris Carr has secured a major victory in defense of SB 351, Georgia’s law that requires parental consent before social media platforms can enter into account ag",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
-    },
-    {
-      "id": "847ac5f9aee8",
-      "title": "Early voting is underway in Georgia. Here’s where you can cast a ballot in your county.",
-      "url": "https://georgiarecorder.com/2026/10/14/early-voting-is-underway-in-georgia-heres-where-you-can-cast-a-ballot-in-your-county/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-14T23:38:15+00:00",
-      "snippet": "Election Day is still weeks away, but Georgia voters are already starting to cast their ballots. That’s because state law mandates that counties offer three weeks of early voting before every major el",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "5acf00754789",
-      "title": "Gov. Kemp: September Net Tax Revenues Up 2.3%",
-      "url": "https://gov.georgia.gov/press-releases/2026-10-14/gov-kemp-september-net-tax-revenues-23",
-      "source": "Gov. Brian Kemp (press)",
-      "publishedAt": "2026-10-14T12:00:00+00:00",
-      "snippet": "ATLANTA – The State of Georgia’s net tax collections during the month of September totaled $3.34 billion for an increase of roughly $76.7 million, or 2.3 percent, compared to FY 2026 when net tax coll",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": [
-        "budget"
-      ]
-    },
-    {
-      "id": "e7bb92201b1b",
-      "title": "Collins, Ossoff clash in a second heated debate as early voting begins in Georgia",
-      "url": "https://georgiarecorder.com/2026/10/13/collins-ossoff-clash-in-a-second-heated-debate-as-early-voting-begins-in-georgia/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-14T02:49:45+00:00",
-      "snippet": "Democratic U.S. Sen Jon Ossoff and Republican Congressman Mike Collins met face to face on the debate stage Tuesday for their second and likely final confrontation before the Nov. 3 midterm elections.",
-      "entityIds": [
-        "vg-ga-p-000253",
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "1eaebed53bcf",
-      "title": "Georgia voters kick off early voting with nearly 189,000 ballots cast",
-      "url": "https://georgiarecorder.com/2026/10/13/georgia-voters-kick-off-early-voting-with-over-185000-ballots-cast/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-14T00:13:11+00:00",
-      "snippet": "The polls are officially open for the midterm elections, and Georgia voters are ready. Nearly 189,000 people cast their ballots during the first day of early voting, surpassing the first day voter tur",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "6cf0e9a25c37",
-      "title": "Bottoms faces empty podium on debate stage while Jackson campaigns with Kemp",
-      "url": "https://georgiarecorder.com/2026/10/12/bottoms-faces-empty-podium-on-debate-stage-while-jackson-campaigns-with-kemp/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-13T03:00:18+00:00",
-      "snippet": "Keisha Lance Bottoms, the Democratic nominee for governor, debated against an empty podium Monday night after GOP nominee Rick Jackson declined to participate in the Atlanta Press Club’s debates.  The",
-      "entityIds": [
-        "vg-ga-p-000368",
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "42de9ecb8837",
       "title": "Dr. Tim Lieuwen Named Interim President of Georgia Tech",
       "url": "https://www.usg.edu/news/release/lieuwen-named-interim-georgia-tech-president-2026/",
@@ -1507,110 +1754,6 @@
       "snippet": null,
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "913aadff52a8",
-      "title": "Election workers prepare for early voting as talk of DOJ ‘intervention’ leaves advocates unsettled",
-      "url": "https://georgiarecorder.com/2026/10/12/election-workers-prepare-for-early-voting-as-talk-of-doj-intervention-leaves-advocates-unsettled/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-12T08:00:23+00:00",
-      "snippet": "CARTERSVILLE, Ga — In a warehouse in Bartow County, Georgia, election director Joseph Kirk stands in the middle of a long aisle of voting machines and starts performing his checks. It’s Tuesday, with ",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "286c6b47d3b4",
-      "title": "How Trump’s gutting of the Endangered Species Act could hurt three iconic Georgia species",
-      "url": "https://georgiarecorder.com/2026/10/10/how-trumps-gutting-of-the-endangered-species-act-could-hurt-three-iconic-georgia-species/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-10T08:00:32+00:00",
-      "snippet": "This coverage is made possible through a partnership between WABE and Grist, a nonprofit environmental media organization. The Supreme Court once billed the Endangered Species Act “the most comprehens",
-      "entityIds": [],
-      "topics": [
-        "courts"
-      ]
-    },
-    {
-      "id": "6ee499ffe32c",
-      "title": "Carr Warns Georgians of Price Gouging and Scams in Anticipation of Hurricane Isaias",
-      "url": "https://law.georgia.gov/press-releases/2026-10-09/carr-warns-georgians-price-gouging-and-scams-anticipation-hurricane",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-10-09T12:00:00+00:00",
-      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr is warning Georgians to be on the lookout for price gouging and scams related to Hurricane Isaias.",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
-    },
-    {
-      "id": "751938fd872e",
-      "title": "Collins, Ossoff trade personal insults during Georgia’s first U.S. Senate debate",
-      "url": "https://georgiarecorder.com/2026/10/08/collins-ossoff-trade-personal-insults-during-georgias-first-u-s-senate-debate/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-09T02:10:56+00:00",
-      "snippet": "Democratic U.S. Sen. Jon Ossoff and Republican Congressman Mike Collins came out swinging on the debate stage Thursday night, discussing topics like the economy, healthcare and data centers in between",
-      "entityIds": [
-        "vg-ga-p-000253",
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "f6fb7445680c",
-      "title": "Mother of Secoriea Turner urges Jackson to stop using her daughter’s name, image in campaign ads",
-      "url": "https://georgiarecorder.com/2026/10/08/mother-of-secoriea-turner-urges-jackson-to-stop-using-her-daughters-name-image-in-campaign-ads/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-08T20:00:00+00:00",
-      "snippet": "The family of an 8-year-old girl who was killed during a period of civil unrest in Atlanta is urging Republican candidate for governor Rick Jackson to stop using her name and image in campaign materia",
-      "entityIds": [
-        "vg-ga-p-000368"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "5e0c7a1ef24b",
-      "title": "Obama featured in videos boosting Bottoms, Ossoff in Georgia",
-      "url": "https://georgiarecorder.com/2026/10/08/obama-featured-in-videos-boosting-bottoms-ossoff-in-georgia/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-08T19:03:32+00:00",
-      "snippet": "Keisha Lance Bottoms’ campaign for governor got a boost Thursday with a heavyweight endorsement from former President Barack Obama. In a video released Thursday, Obama praised Bottoms’ record as the f",
-      "entityIds": [
-        "vg-ga-p-000264",
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "b0bb88acaa37",
-      "title": "Carr: Clayton County Man Convicted of Trafficking, Rape of 15-Year-Old Female",
-      "url": "https://law.georgia.gov/press-releases/2026-10-08/carr-clayton-county-man-convicted-trafficking-rape-15-year-old-female",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-10-08T12:00:00+00:00",
-      "snippet": "CLAYTON COUNTY, GA – Georgia Attorney General Chris Carr today announced that Christopher Clark, 28, of Riverdale, Georgia, has been convicted of trafficking, rape and false imprisonment involving a 1",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
-    },
-    {
-      "id": "a2a6183c202c",
-      "title": "Woof! Animal welfare advocates want Georgians to know their state lawmaker’s record on pet issues",
-      "url": "https://georgiarecorder.com/2026/10/08/woof-animal-welfare-advocates-want-georgians-to-know-their-state-lawmakers-record-on-pet-issues/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-08T08:00:26+00:00",
-      "snippet": "The dogs and cats in your life don’t get a vote on Nov. 3, so they’re counting on you to get it right. That’s the message from the Georgia Pet Coalition, a nonpartisan group of Georgia humans who advo",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "8a4d7d062edb",
@@ -1627,195 +1770,6 @@
         "vg-ga-p-000024"
       ],
       "topics": []
-    },
-    {
-      "id": "c984bd769518",
-      "title": "Sen. Ossoff Statement on 3rd Anniversary of October 7th",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-statement-on-3rd-anniversary-of-october-7th/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-07T12:17:02+00:00",
-      "snippet": "“Three years ago today, Hamas terrorists massacred over 1,000 civilians; kidnapped innocent men, women, and children; and committed brutal atrocities. Today we remember and honor the lives lost, while",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
-      "id": "bd0df96b4d20",
-      "title": "Bottoms, Jackson debate healthcare, data centers in sole scheduled forum",
-      "url": "https://thecurrentga.org/2026/10/07/bottoms-jackson-debate-healthcare-data-centers-in-sole-scheduled-forum/",
-      "source": "The Current GA",
-      "publishedAt": "2026-10-07T12:00:00+00:00",
-      "snippet": "Democrat Keisha Lance Bottoms and Republican Rick Jackson clashed Tuesday night over healthcare, crime, data centers and election security in a town hall-style debate at the Atlanta News First studio.",
-      "entityIds": [
-        "vg-ga-p-000368",
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections",
-        "healthcare"
-      ]
-    },
-    {
-      "id": "4d06aeed99e0",
-      "title": "University System of Georgia Confers Record 86,660 Degrees in FY2026",
-      "url": "https://www.usg.edu/news/release/usg-confers-record-86,660-degrees-in-fy2026/",
-      "source": "University System of Georgia",
-      "publishedAt": "2026-10-07T00:00:00+00:00",
-      "snippet": null,
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
-    },
-    {
-      "id": "ef6db7721017",
-      "title": "ICYMI: Congresswoman Nikema Williams Urges HUD to Implement Whole Home Repairs Law",
-      "url": "https://nikemawilliams.house.gov/posts/icymi-congresswoman-nikema-williams-urges-hud-to-implement-whole-home-repairs-law",
-      "source": "Rep. Nikema Williams (GA-05, press)",
-      "publishedAt": "2026-10-06T21:23:11+00:00",
-      "snippet": "WASHINGTON, D.C. — Congresswoman Nikema Williams (GA-05) joined U.S. Senator John Fetterman (D-PA) and U.S. Senator Cynthia Lummis (R-WY) in a letter to U.S. Department of Housing and Urban Developmen",
-      "entityIds": [
-        "vg-ga-p-000254"
-      ],
-      "topics": []
-    },
-    {
-      "id": "e14485cea7e7",
-      "title": "Amending the State of Emergency for Petroleum Supply Disruptions",
-      "url": "https://gov.georgia.gov/document/2026-executive-order/10062601/download",
-      "source": "Gov. Brian Kemp (executive orders)",
-      "publishedAt": "2026-10-06T00:00:00+00:00",
-      "snippet": "On September 28, 2026, due to ongoing disruptions to global petroleum supply chains, I issued Executive Order No. 09.28.26.01, declaring a State of Emergency for Petroleum Supply Disruptions and…",
-      "category": "State of Emergency",
-      "orderNumber": "10.06.26.01",
-      "archiveUrl": null,
-      "sha256": "2234e7f5afa773e917283a0cbf1d2031b09fedc97d382ccb5a71531ef74bc7e9",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
-      "topics": []
-    },
-    {
-      "id": "76add0792bae",
-      "title": "McBath Bill to Stop Human Trafficking Passes Senate, Heads to President’s Desk",
-      "url": "https://mcbath.house.gov/2026/10/05/mcbath-bill-to-stop-human-trafficking-passes-senate-heads-to-presidents-desk/",
-      "source": "Rep. Lucy McBath (GA-06, press)",
-      "publishedAt": "2026-10-05T15:23:00+00:00",
-      "snippet": "Washington, DC – Legislation led Rep. Lucy McBath (D-Ga.) and Chairman of the U.S. House Education and Workforce Committee Tim Walberg (R-Mich.) has passed the Senate unanimously and is headed to the ",
-      "entityIds": [
-        "vg-ga-p-000262"
-      ],
-      "topics": [
-        "education"
-      ]
-    },
-    {
-      "id": "d47dc85253e2",
-      "title": "Congresswomen Nikema Williams & Ashley Hinson Call for Technology Improvements to be Utilized to Advance Maternal Health",
-      "url": "https://nikemawilliams.house.gov/posts/congresswomen-nikema-williams-ashley-hinson-call-for-technology-improvements-to-be-utilized-to-advance-maternal-health",
-      "source": "Rep. Nikema Williams (GA-05, press)",
-      "publishedAt": "2026-10-01T15:13:47+00:00",
-      "snippet": "WASHINGTON, D.C. – Congresswoman Nikema Williams (GA-05) and Congresswoman Ashely Hinson (IA-02) led a bipartisan congressional letter to Centers for Medicare & Medicaid Services (CMS) Administrator M",
-      "entityIds": [
-        "vg-ga-p-000254"
-      ],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "f3d7fa8b5cd7",
-      "title": "NEWS: U.S. Senate Passes Sen. Ossoff’s Bipartisan Bill to Strengthen Emergency Alerts; Heads to President’s Desk to Become Law",
-      "url": "https://www.ossoff.senate.gov/press-releases/news-u-s-senate-passes-sen-ossoffs-bipartisan-bill-to-strengthen-emergency-alerts-heads-to-presidents-desk-to-become-law/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-10-01T14:03:45+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff’s bipartisan bill to strengthen emergency alerts during natural disasters has passed the Senate. Last night, the U.S. Senate passed Sens. Ossoff and John Cor",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
-      "id": "0b4bf5a297f1",
-      "title": "Thomas A. Fanning Named Chancellor of the University System of Georgia",
-      "url": "https://www.usg.edu/news/release/regents-name-fanning-usg-chancellor-2026/",
-      "source": "University System of Georgia",
-      "publishedAt": "2026-10-01T00:00:00+00:00",
-      "snippet": null,
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
-    },
-    {
-      "id": "bd3a583abe9d",
-      "title": "Carr Convicts 17 for $500k PPP Fraud in Mitchell County",
-      "url": "https://law.georgia.gov/press-releases/2026-09-30/carr-convicts-17-500k-ppp-fraud-mitchell-county",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-09-30T12:00:00+00:00",
-      "snippet": "CAMILLA, GEORGIA – Georgia Attorney General Chris Carr today announced that his White Collar and Cyber Crime Unit has secured the convictions of 17 individuals who fraudulently obtained nearly $500,00",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
-    },
-    {
-      "id": "d955e5924ea4",
-      "title": "11Alive: “Gwinnett woman highlights struggles with health insurance authorization”",
-      "url": "https://www.ossoff.senate.gov/press-releases/11alive-gwinnett-woman-highlights-struggles-with-health-insurance-authorization/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-09-29T14:50:12+00:00",
-      "snippet": "11Alive: “Ossoff reportedly received dozens of reports from Georgia patients, who have reported that prior authorization issues with their insurance companies have resulted in delays and denials of me",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
-      "id": "7a28a5460c51",
-      "title": "Carr Indicts Caregiver for Neglect of Disabled Adults in Savannah Group Home",
-      "url": "https://law.georgia.gov/press-releases/2026-09-29/carr-indicts-caregiver-neglect-disabled-adults-savannah-group-home",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-09-29T12:00:00+00:00",
-      "snippet": "CHATHAM COUNTY, GEORGIA – Georgia Attorney General Chris Carr today announced that his Medicaid Fraud and Patient Protection Division has obtained a new indictment in Chatham County charging Latisha B",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": [
-        "ethics",
-        "healthcare"
-      ]
-    },
-    {
-      "id": "af6f45b3c894",
-      "title": "Congressional App Challenge, GA 2nd Congressional District Middle and High School Students Can Apply Today!",
-      "url": "http://bishop.house.gov/node/8471",
-      "source": "Rep. Sanford Bishop (GA-02, press)",
-      "publishedAt": "2026-09-28T20:56:13+00:00",
-      "snippet": "Congressional App Challenge, GA 2nd Congressional District Middle and High School Students Can Apply Today!\n\n  \n    \n      Image or Video    \n                  \n\n  \n  \n  \n    \n      Image    \n        ",
-      "entityIds": [
-        "vg-ga-p-000261"
-      ],
-      "topics": [
-        "education"
-      ]
-    },
-    {
-      "id": "2213b2217b03",
-      "title": "McBath, Merkley, Brown Champion Legislation to Improve Educational Outcomes and Experiences",
-      "url": "https://mcbath.house.gov/2026/09/28/mcbath-merkley-brown-champion-legislation-to-improve-educational-outcomes-and-experiences/",
-      "source": "Rep. Lucy McBath (GA-06, press)",
-      "publishedAt": "2026-09-28T16:42:00+00:00",
-      "snippet": "Washington, DC—U.S. Representatives Lucy McBath (GA-06) and Shontel Brown (OH-11) have joined U.S. Senator Jeff Merkley (OR) to introduce H.R. 10631, the Smaller Class Sizes for Students and Educators",
-      "entityIds": [
-        "vg-ga-p-000262"
-      ],
-      "topics": [
-        "education"
-      ]
     }
   ]
 }

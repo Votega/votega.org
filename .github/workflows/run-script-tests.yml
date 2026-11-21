@@ -20,11 +20,17 @@ on:
       - 'scripts/**.py'
       - '_includes/entity/**.html'
       - '.github/workflows/run-script-tests.yml'
+      - 'assets/data/ga-legislator-ledger.json'
+      - 'assets/data/ga-bienniums/**'
+      - 'assets/data/ga-members.json'
   pull_request:
     paths:
       - 'scripts/**.py'
       - '_includes/entity/**.html'
       - '.github/workflows/run-script-tests.yml'
+      - 'assets/data/ga-legislator-ledger.json'
+      - 'assets/data/ga-bienniums/**'
+      - 'assets/data/ga-members.json'
   workflow_dispatch:
 
 jobs:
@@ -62,6 +68,51 @@ jobs:
             exit 1
           fi
           echo "All script test suites passed."
+
+  # The GA legislator page ledger is append-only (a published /ga-legislators/<slug>/ URL
+  # must never 404). update-ga-members enforces that on the bot's own commit; this job
+  # enforces it on every human push and PR that touches the ledger, the frozen tree, the
+  # roster or the scripts behind them. Needs no pip packages.
+  ledger-append-only:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # the base commit must be reachable to read the old ledger
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Validate the GA legislator ledger against the base
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_REF: ${{ github.base_ref }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          base=""
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            git fetch --no-tags --depth=1 origin "$BASE_REF"
+            base="origin/$BASE_REF"
+          elif [ "$EVENT_NAME" = "push" ]; then
+            if [ -n "$BEFORE_SHA" ] && ! echo "$BEFORE_SHA" | grep -qE '^0+$'                && git cat-file -e "$BEFORE_SHA^{commit}" 2>/dev/null; then
+              base="$BEFORE_SHA"
+            elif git rev-parse --verify --quiet HEAD~1 >/dev/null; then
+              echo "::notice::No usable previous push commit; comparing against HEAD~1."
+              base="HEAD~1"
+            fi
+          else
+            base="HEAD"
+          fi
+          if [ -z "$base" ]; then
+            echo "::notice::No base commit to compare against; skipping the append-only check."
+            exit 0
+          fi
+          python scripts/validate_ga_legislator_ledger.py --base-ref "$base"
 
 # No "Check workflow triggers are wired" step here. It used to run
 # scripts/validate_workflow_triggers.py, which needs pyyaml to parse the workflow

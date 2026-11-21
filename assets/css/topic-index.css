@@ -148,3 +148,23 @@
 }
 .ti-weak .ti-list { margin: 0; padding: 0 0.8rem 0.8rem; }
 .ti-count-weak { color: var(--color-text-muted); font-weight: 400; }
+
+/* Follow-through: what the minutes record (follow-through convention, CLAUDE.md).
+   Chip colours match the place page's recorded-votes panel: green only for
+   adopted, amber only for failed, neutral for steps (held, referred ...). */
+.ti-outcome { margin-top: 0.5rem; padding: 0.45rem 0.6rem; border-left: 3px solid var(--color-border); background: var(--color-surface-sunken); border-radius: 4px; }
+.ti-outcome-head { font-size: 0.82rem; font-weight: 600; color: var(--color-text-secondary); }
+.ti-outcome-none { margin: 0.25rem 0 0; font-size: 0.82rem; color: var(--color-text-muted); }
+.ti-oc-list { list-style: none; margin: 0.3rem 0 0; padding: 0; }
+.ti-oc { display: flex; flex-wrap: wrap; gap: 0.2rem 0.5rem; align-items: baseline; padding: 0.25rem 0; font-size: 0.85rem; }
+.ti-oc + .ti-oc { border-top: 1px dashed var(--color-border-subtle); }
+.ti-oc-name { flex: 1 1 100%; color: var(--color-text); overflow-wrap: anywhere; }
+.ti-oc-ref { font-family: var(--font-mono); font-size: 0.78rem; color: var(--color-text-secondary); }
+.ti-oc-motion { display: inline-flex; flex-wrap: wrap; gap: 0.2rem 0.4rem; align-items: baseline; margin-right: 0.6rem; }
+.ti-oc .cmv-action { font-weight: 600; }
+.ti-oc .cmv-result { font-size: 0.75rem; font-weight: 700; border-radius: 4px; padding: 0.05rem 0.4rem; }
+.ti-oc .cmv-passed { background: var(--color-success-tint); color: var(--color-success); border: 1px solid var(--color-success-line); }
+.ti-oc .cmv-failed { background: var(--color-warning-tint); color: var(--color-warning); border: 1px solid var(--color-warning-line); }
+.ti-oc .cmv-step { background: var(--color-neutral-tint); color: var(--color-neutral-text); border: 1px solid var(--color-neutral-line); }
+.ti-oc .cmv-tally, .ti-oc .cmv-next { color: var(--color-text-secondary); font-size: 0.8rem; }
+.ti-oc .cmv-flag { flex: 1 1 100%; font-size: 0.8rem; color: var(--color-warning); }

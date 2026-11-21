@@ -124,7 +124,7 @@ class Env:
         self.saved = {k: getattr(G, k) for k in (
             "MEMBERS_FILE", "OVERRIDES_FILE", "IDENTITY_SIDECAR", "DELAY", "regular_session",
             "get_members_by_session", "get_member", "get_committees_by_session",
-            "load_pin_overrides", "outgoing_archived")}
+            "load_pin_overrides", "fetch_archived_roster")}
         G.MEMBERS_FILE, G.OVERRIDES_FILE = self.members_path, self.overrides_path
         G.IDENTITY_SIDECAR = os.path.join(self.d.name, "none.json")
         G.DELAY = 0
@@ -134,7 +134,13 @@ class Env:
                                               self.special_ids)
         G.get_committees_by_session = lambda sid: []
         G.load_pin_overrides = lambda: {}
-        G.outgoing_archived = lambda slug: archived
+        # What freeze-ga-roster would have published: True = an exact copy of the committed
+        # roster, False = nothing published, a callable = a doctored copy (a stale freeze).
+        with open(self.members_path, encoding="utf-8") as f:
+            frozen = json.load(f)
+        if callable(archived):
+            frozen = archived(frozen)
+        G.fetch_archived_roster = lambda slug: frozen if archived else None
 
     def run(self, *flags):
         # The producer prints a lot; the assertions below are what matter.
@@ -270,6 +276,50 @@ def refusal_cases():
                                                              "--archive-confirmed"), 0)
     finally:
         env.close()
+
+    print("a published but stale freeze is refused")
+
+    def status_changed(doc):
+        m = next(m for m in doc["members"] if m["chamber"] == "House of Representatives")
+        m["status"], m["statusDate"] = "Resigned", "2026-10-01"
+        return doc
+
+    def member_missing(doc):
+        doc["members"] = doc["members"][1:]
+        return doc
+
+    def other_session(doc):
+        doc["metadata"]["session"] = "2023_24"
+        return doc
+
+    for label, doctor in (("a status differs", status_changed),
+                          ("a member is missing", member_missing),
+                          ("the session differs", other_session)):
+        env = Env(archived=doctor, overrides=tagged_overrides())
+        try:
+            check(f"{label} -> exits 1", env.run("--new-biennium"), 1)
+            check(f"{label} -> writes nothing", env.untouched(), True)
+        finally:
+            env.close()
+    env = Env(archived=status_changed, overrides=tagged_overrides())
+    try:
+        check("--archive-confirmed still overrides a stale freeze",
+              env.run("--new-biennium", "--archive-confirmed"), 0)
+    finally:
+        env.close()
+
+    print("frozen_roster_differences names each difference")
+    base = {"metadata": {"session": "2025_26"},
+            "members": [{"id": "a", "name": "A", "status": None, "statusDate": None},
+                        {"id": "b", "name": "B", "status": None, "statusDate": None}]}
+    check("an exact copy has none", G.frozen_roster_differences(base, json.loads(json.dumps(base))), [])
+    changed = json.loads(json.dumps(base))
+    changed["members"][1].update(status="Deceased", statusDate="2026-10-12")
+    changed["members"].append({"id": "c", "name": "C", "status": None, "statusDate": None})
+    diffs = G.frozen_roster_differences(base, changed)
+    check("reports the member missing from the freeze", any("missing from the freeze: C" in d for d in diffs), True)
+    check("reports the status change", any("status of B" in d for d in diffs), True)
+    check("and nothing else", len(diffs), 2)
 
     print("an untagged departure is a decision a human has to make")
     env = Env(overrides={"_inject": [{k: v for k, v in tagged_overrides()["_inject"][0].items()

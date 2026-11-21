@@ -5805,12 +5805,12 @@ jurisdictions:
         title: Chairman
         seat: "At-Large"
         seat_id: at-large
-        party:
+        party: Republican   # Catoosa County elected-officials list (2025)
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
-        last_elected:
-        term_end:
-        next_election:
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list
         voting: true
         photo: "https://www.catoosacountyga.gov/home/showpublishedimage/1106/637456085509370000"
         source: "https://www.catoosacountyga.gov/Home/Components/StaffDirectory/StaffDirectory/214/149?backlist=%2fdepartments%2fview-all-departments%2fboard-of-commissioners"
@@ -5818,12 +5818,12 @@ jurisdictions:
         role: Commissioner
         seat: "District 1"
         seat_id: district-1
-        party:
+        party: Republican   # Catoosa County elected-officials list (2025)
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
-        last_elected:
-        term_end:
-        next_election:
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list
         voting: true
         photo: "https://www.catoosacountyga.gov/home/showpublishedimage/1104/637456085503130000"
         source: "https://www.catoosacountyga.gov/Home/Components/StaffDirectory/StaffDirectory/112/149?backlist=%2fdepartments%2fview-all-departments%2fboard-of-commissioners"
@@ -5831,7 +5831,7 @@ jurisdictions:
         role: Commissioner
         seat: "District 2"
         seat_id: district-2
-        party:
+        party: Republican   # Catoosa County elected-officials list (2025)
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
         last_elected: 2026
@@ -5844,12 +5844,12 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"
         seat_id: district-3
-        party:
+        party: Republican   # Catoosa County elected-officials list (2025)
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
-        last_elected:
-        term_end:
-        next_election:
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list
         voting: true
         photo: "https://www.catoosacountyga.gov/home/showpublishedimage/1356/638721184618200000"
         source: "https://www.catoosacountyga.gov/Home/Components/StaffDirectory/StaffDirectory/114/149?backlist=%2fdepartments%2fview-all-departments%2fboard-of-commissioners"
@@ -5857,7 +5857,7 @@ jurisdictions:
         role: Commissioner
         seat: "District 4"
         seat_id: district-4
-        party:
+        party: Republican   # Catoosa County elected-officials list (2025)
         email: "commissioners@catoosa.com"
         phone: "706-965-2500"
         last_elected: 2026
@@ -5883,7 +5883,7 @@ jurisdictions:
         title: Chairwoman
         seat: "At-Large"
         seat_id: at-large
-        party:
+        party: Republican   # Walker County "Elected Officials 2026" list
         email: "countychair@walkerga.us"
         phone: "706-638-1437"
         last_elected: 2024
@@ -5898,7 +5898,7 @@ jurisdictions:
         seat_id: district-1
         leaves_office: 2027-01-01
         leave_reason: term-ended
-        party:
+        party: Republican   # Walker County "Elected Officials 2026" list
         email: "district1@walkerga.us"
         phone: "423-208-5080"
         last_elected: 2022
@@ -5926,7 +5926,7 @@ jurisdictions:
         seat_id: district-2
         leaves_office: 2027-01-01
         leave_reason: term-ended
-        party:
+        party: Republican   # Walker County "Elected Officials 2026" list
         email: "district2@walkerga.us"
         phone: "423-208-5156"
         last_elected: 2022
@@ -5952,7 +5952,7 @@ jurisdictions:
         role: Commissioner
         seat: "District 3"
         seat_id: district-3
-        party:
+        party: Republican   # Walker County "Elected Officials 2026" list
         email: "district3@walkerga.us"
         phone: "706-996-5070"
         last_elected: 2024
@@ -5965,7 +5965,7 @@ jurisdictions:
         role: Commissioner
         seat: "District 4"
         seat_id: district-4
-        party:
+        party: Republican   # Walker County "Elected Officials 2026" list
         email: "district4@walkerga.us"
         phone: "423-208-5192"
         last_elected: 2024
@@ -5974,4 +5974,1142 @@ jurisdictions:
         voting: true
         photo: "https://www.walkercountyga.gov/Images/Government/Board%20of%20Commissioners/District%204/Gene-Wilson-District-4-Commissioner.jpg?t=202605180235250"
         source: "https://www.walkercountyga.gov/government/board_of_commissioners/district_4.php"
+
+
+  - id: savannah
+    name: City of Savannah
+    type: city
+    county: Chatham
+    body: City Council
+    partisan: false          # charter: no party primaries; city candidates listed without party labels
+    term_years: 4            # all nine seats elected together, 4-year concurrent terms, taking office Jan 1 after a November election (charter); 2023 winners from Chatham County's official 2023-11-07 summary
+    board_size: 9            # mayor + 2 at-large + 6 district aldermen (savannahga.gov/387)
+    official_url: "https://www.savannahga.gov/387/Mayor-City-Council"
+    related_pages:
+    notes: ""
+    members:
+      - name: "Van R. Johnson II"
+        role: Mayor
+        seat: "Mayor"
+        seat_id: mayor
+        party: Nonpartisan
+        email: "mayorjohnson@savannahga.gov"
+        phone: "912-651-6444"
+        last_elected: 2023   # Chatham BOE official summary, 2023-11-07 (won outright)
+        term_end: 2027
+        next_election: 2027   # charter: two consecutive terms (2019, 2023) -> not eligible in 2027; open mayoral seat
+        term_provenance: verified   # charter: elected Tue after 1st Mon of Nov, take office Jan 1, 4-yr terms
+        voting: true   # charter: the Mayor presides and "shall have a voice and vote in all meetings"
+        source: "https://www.savannahga.gov/390/Contact-Your-City-Council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Carol Bell"
+        role: Council Member
+        title: "Alderwoman"
+        seat: "Post 1 At-Large"
+        seat_id: post-1-at-large
+        party: Nonpartisan
+        email: "carolyn.bell@savannahga.gov"
+        phone: "912-433-7548"
+        last_elected: 2023   # Chatham BOE official summary, 2023-11-07 (won outright)
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # charter: elected Tue after 1st Mon of Nov, take office Jan 1, 4-yr terms
+        voting: true
+        source: "https://www.savannahga.gov/390/Contact-Your-City-Council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Alicia Miller Blakely"
+        role: Council Member
+        title: "Alderwoman"
+        seat: "Post 2 At-Large"
+        seat_id: post-2-at-large
+        party: Nonpartisan
+        email: "ABlakely01@savannahga.gov"
+        phone: "912-346-5220"
+        last_elected: 2023   # Chatham BOE official summary, 2023-11-07 (won outright)
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # charter: elected Tue after 1st Mon of Nov, take office Jan 1, 4-yr terms
+        voting: true
+        source: "https://www.savannahga.gov/390/Contact-Your-City-Council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Bernetta B. Lanier"
+        role: Council Member
+        title: "Alderwoman"
+        seat: "District 1"
+        seat_id: district-1
+        party: Nonpartisan
+        email: "BLanier@savannahga.gov"
+        phone: "912-346-6406"
+        last_elected: 2023   # Chatham BOE official summary, 2023-11-07 (won outright)
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # charter: elected Tue after 1st Mon of Nov, take office Jan 1, 4-yr terms
+        voting: true
+        source: "https://www.savannahga.gov/390/Contact-Your-City-Council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Detric Leggett"
+        role: Council Member
+        title: "Alderman"
+        seat: "District 2"
+        seat_id: district-2
+        party: Nonpartisan
+        email: "DLeggett@savannahga.gov"
+        phone: "912-346-8176"
+        last_elected: 2023   # Chatham BOE official summary, 2023-11-07 (won outright)
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # charter: elected Tue after 1st Mon of Nov, take office Jan 1, 4-yr terms
+        voting: true
+        source: "https://www.savannahga.gov/390/Contact-Your-City-Council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Linda Wilder-Bryan"
+        role: Council Member
+        title: "Alderwoman, Vice Chair of Council"
+        seat: "District 3"
+        seat_id: district-3
+        party: Nonpartisan
+        email: "LBryan@savannahga.gov"
+        phone: "912-704-2079"
+        last_elected: 2023   # Chatham BOE official summary, 2023-11-07 (won outright)
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # charter: elected Tue after 1st Mon of Nov, take office Jan 1, 4-yr terms
+        voting: true
+        source: "https://www.savannahga.gov/390/Contact-Your-City-Council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Nick Palumbo"
+        role: Council Member
+        title: "Alderman, Chairman of Council"
+        seat: "District 4"
+        seat_id: district-4
+        party: Nonpartisan
+        email: "NPalumbo@savannahga.gov"
+        phone: "912-346-9841"
+        last_elected: 2023   # Chatham BOE official summary, 2023-11-07 (won outright)
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # charter: elected Tue after 1st Mon of Nov, take office Jan 1, 4-yr terms
+        voting: true
+        source: "https://www.savannahga.gov/390/Contact-Your-City-Council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Dr. Estella Edwards Shabazz"
+        role: Mayor Pro Tem
+        title: "Mayor Pro Tem"
+        seat: "District 5"
+        seat_id: district-5
+        party: Nonpartisan
+        email: "EShabazz@savannahga.gov"
+        phone: "912-675-7531"
+        last_elected: 2023   # Chatham BOE official summary, 2023-11-07 (won outright)
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # charter: elected Tue after 1st Mon of Nov, take office Jan 1, 4-yr terms
+        voting: true
+        source: "https://www.savannahga.gov/390/Contact-Your-City-Council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Kurtis Purtee"
+        role: Council Member
+        title: "Alderman"
+        seat: "District 6"
+        seat_id: district-6
+        party: Nonpartisan
+        email: "KPurtee@savannahga.gov"
+        phone: "912-346-3305"
+        last_elected: 2023   # Chatham BOE official summary, 2023-11-07 (won outright)
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # charter: elected Tue after 1st Mon of Nov, take office Jan 1, 4-yr terms
+        voting: true
+        source: "https://www.savannahga.gov/390/Contact-Your-City-Council"   # drafted 2026-11-19 — CONFIRM before merge
+
+  - id: fort-oglethorpe
+    name: City of Fort Oglethorpe
+    type: city
+    county: Catoosa
+    body: City Council
+    partisan: false
+    term_years: 4            # charter: 4-year terms; mayor + Posts 1,4 elected 1999+4n (2023, 2027); Posts 2,3,5 elected 1997+4n (2025, 2029)
+    board_size: 6            # mayor + 5 council as listed on fortogov.com/mayor-council
+    official_url: "https://fortogov.com/mayor-council/"
+    related_pages:
+    notes: ""
+    members:
+      - name: "Earl Gray"
+        role: Mayor
+        seat: "Mayor"
+        seat_id: mayor
+        party: Nonpartisan
+        email: "egray@fortoglethorpega.gov"
+        phone: "706-866-2544"   # City Hall (no direct lines published)
+        last_elected: 2023   # up for re-election 2027 per county list; charter rotation puts the prior election in 2023
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list: up 2027, 4-yr term
+        voting: false   # charter: mayor presides, "shall not vote ... except in case of a tie"
+        tie_break_only: true
+        source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Paula G. Stinnett"
+        role: Mayor Pro Tem
+        title: "Mayor Pro Tem"
+        seat: "Post 5"
+        seat_id: post-5
+        party: Nonpartisan
+        email: "pstinnett@fortoglethorpega.gov"
+        phone: "706-866-2544"   # City Hall (no direct lines published)
+        last_elected: 2025   # Catoosa Notice of Election Cancellation, published 2025-09-17: qualified unopposed, Nov 4 2025 election cancelled
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified   # charter rotation + county cancellation notice
+        voting: true
+        source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Derek Rogers"
+        role: Council Member
+        title: "Councilman"
+        seat: "Post 4"
+        seat_id: post-4
+        party: Nonpartisan
+        email: "drogers@fortoglethorpega.gov"
+        phone: "706-866-2544"   # City Hall (no direct lines published)
+        last_elected: 2023   # county list: Council Ward 4, up 2027
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list: up 2027, 4-yr term
+        voting: true
+        source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Jim Childs"
+        role: Council Member
+        title: "Councilman"
+        seat: "Post 2"
+        seat_id: post-2
+        party: Nonpartisan
+        email: "jchilds@fortoglethorpega.gov"
+        phone: "706-866-2544"   # City Hall (no direct lines published)
+        last_elected: 2025   # Catoosa Notice of Election Cancellation, published 2025-09-17: qualified unopposed, Nov 4 2025 election cancelled
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified   # charter rotation + county cancellation notice
+        voting: true
+        source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Craig Crawford"
+        full_name: "Craig Andrew Crawford"
+        role: Council Member
+        title: "Councilman"
+        seat: "Post 3"
+        seat_id: post-3
+        party: Nonpartisan
+        email: "ccrawford@fortoglethorpega.gov"
+        phone: "706-866-2544"   # City Hall (no direct lines published)
+        last_elected: 2025   # Catoosa Notice of Election Cancellation, published 2025-09-17: qualified unopposed, Nov 4 2025 election cancelled
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified   # charter rotation + county cancellation notice
+        voting: true
+        source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Rhonda James"
+        role: Council Member
+        title: "Council Lady"
+        seat: "Post 1"
+        seat_id: post-1
+        party: Nonpartisan
+        email: "rjames@fortoglethorpega.gov"
+        phone: "706-866-2544"   # City Hall (no direct lines published)
+        last_elected: 2023   # county list: Council Ward 1, up 2027
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified   # Catoosa County "Elected Officials / Year Up For Re-Election 2025" list: up 2027, 4-yr term
+        voting: true
+        source: "https://fortogov.com/mayor-council/"   # drafted 2026-11-19 — CONFIRM before merge
+
+  - id: lafayette
+    name: City of LaFayette
+    type: city
+    county: Walker
+    body: City Council
+    partisan: false
+    term_years: 4            # staggered: Mayor + Wards 1-2 elected 2025 (SoS); At-Large + Wards 3-4 elected 2023 (Chattanoogan.com 2023-08-25), next 2027.
+                             # The Municode charter (Sec. 2-11, 5-26) still reads 2-year terms with December elections; the 2025 ballot
+                             # carried only 3 of 6 seats, so it appears superseded by an uncodified local act. Confirm.
+    board_size: 6            # mayor + at-large + 4 wards (mycityoflafayettega.org/government/mayor_council.php)
+    official_url: "https://www.mycityoflafayettega.org/government/mayor_council.php"
+    related_pages:
+    notes: ""
+    members:
+      - name: "Andy Arnold"
+        role: Mayor
+        full_name: "Phillip A. Arnold"
+        seat: "Mayor"
+        seat_id: mayor
+        party: Nonpartisan
+        email:
+        phone: "706-639-1500"   # City Hall (no direct lines published)
+        last_elected: 2025   # SoS results, Walker County, Nov 4 2025 municipal general: unopposed (ballot name Phillip A. Arnold)
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
+        voting: false   # charter Sec. 2-42: the Mayor (or presiding Mayor Pro Tem) votes only in the case of a tie
+        tie_break_only: true
+        source: "https://www.mycityoflafayettega.org/business_detail_T7_R64.php"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Wayne Swanson"
+        role: Council Member
+        title: "Councilman"
+        seat: "At-Large"
+        seat_id: at-large
+        party: Nonpartisan
+        email:
+        phone: "706-639-1500"   # City Hall (no direct lines published)
+        last_elected: 2023   # At-Large was on the 2023 ballot (Swanson vs. Mark Lemons): Chattanoogan.com 2023-08-25, quoting the Walker County election director's 2023 qualifying list
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
+        voting: true
+        source: "https://www.mycityoflafayettega.org/business_detail_T7_R14.php"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Tom Langford"
+        role: Council Member
+        title: "Councilman"
+        seat: "Ward 1"
+        seat_id: ward-1
+        party: Nonpartisan
+        email:
+        phone: "706-639-1500"   # City Hall (no direct lines published)
+        last_elected: 2025   # SoS results, Walker County, Nov 4 2025 municipal general: won 356-106 over Glenn Gunnells; serving since March 2025, consistent with a council appointment to the unexpired term (charter: vacancy within 12 months of term end is filled by appointment)
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
+        voting: true
+        source: "https://www.mycityoflafayettega.org/business_detail_T7_R10.php"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Jennifer Ramey Cook"
+        role: Council Member
+        title: "Councilwoman"
+        seat: "Ward 2"
+        seat_id: ward-2
+        party: Nonpartisan
+        email:
+        phone: "706-639-1500"   # City Hall (no direct lines published)
+        last_elected: 2025   # SoS results, Walker County, Nov 4 2025 municipal general: unopposed (ballot name Jennifer Cook)
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
+        voting: true
+        source: "https://www.mycityoflafayettega.org/business_detail_T7_R11.php"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Tim Rayburn"
+        role: Council Member
+        title: "Councilman"
+        seat: "Ward 3"
+        seat_id: ward-3
+        party: Nonpartisan
+        email:
+        phone: "706-639-1500"   # City Hall (no direct lines published)
+        last_elected: 2023   # Ward 3 on the 2023 ballot (Chattanoogan.com 2023-08-25, quoting the Walker County election director's 2023 qualifying list); took office January 2024 per city bio
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
+        voting: true
+        source: "https://www.mycityoflafayettega.org/business_detail_T7_R12.php"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Chris Davis"
+        role: Council Member
+        title: "Councilman"
+        seat: "Ward 4"
+        seat_id: ward-4
+        party: Nonpartisan
+        email:
+        phone: "706-639-1500"   # City Hall (no direct lines published)
+        last_elected: 2023   # Ward 4 on the 2023 ballot (four candidates incl. Davis): Chattanoogan.com 2023-08-25, quoting the Walker County election director's 2023 qualifying list
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
+        voting: true
+        source: "https://www.mycityoflafayettega.org/business_detail_T7_R13.php"   # drafted 2026-11-19 — CONFIRM before merge
+
+  - id: rossville
+    name: City of Rossville
+    type: city
+    county: Walker
+    body: City Council
+    partisan: false
+    term_years: 4            # charter Secs. 2.11, 2.18, 5.10: mayor and councilmen serve 4 years; council staggered, two seats per cycle.
+                             # Charter still says December of even years, but elections now run in November of odd years (2025 on the SoS site).
+    board_size: 5            # charter Sec. 2.10: mayor + four councilmen
+    seat_capacity: {at-large: 4}   # charter Sec. 5.10: elected by the entire city, plurality, no posts (2025: vote for 2)
+    official_url: "https://www.rossvillega.gov/mayor-city-council"
+    related_pages:
+    notes: ""
+    members:
+      - name: "Jonathan Lassetter"
+        role: Mayor
+        seat: "Mayor"
+        seat_id: mayor
+        party: Nonpartisan
+        email:
+        phone: "706-866-1325"   # City Hall (no direct lines published)
+        last_elected: 2025   # SoS results, Walker County, Nov 4 2025: Mayor (Special), unopposed, finishing the term Hal Gray won unopposed in 2023 (Chattanoogan.com 2023-08-25, quoting the Walker County election director's 2023 qualifying list)
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
+        voting: false   # charter: mayor is chief executive (Sec. 2.17); passage needs three COUNCILMEN (Sec. 2.33); no tie-break vote provided
+        source: "https://www.rossvillega.gov/mayor-city-council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Cindy Breeden"
+        role: Mayor Pro Tem
+        title: "Mayor Pro Tem"
+        seat: "At-Large"
+        seat_id: at-large
+        party: Nonpartisan
+        email:
+        phone: "706-866-1325"   # City Hall (no direct lines published)
+        last_elected: 2025   # SoS results, Walker County, Nov 4 2025 municipal general: top vote-getter (171) of a vote-for-2 race; charter 4-year term
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
+        voting: true
+        source: "https://www.rossvillega.gov/mayor-city-council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Jason Rader"
+        role: Council Member
+        seat: "At-Large"
+        seat_id: at-large
+        party: Nonpartisan
+        email:
+        phone: "706-866-1325"   # City Hall (no direct lines published)
+        last_elected: 2025   # SoS results, Walker County, Nov 4 2025 municipal general: second (165) of a vote-for-2 race, unseating incumbent Todd Franklin; charter 4-year term
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
+        voting: true
+        source: "https://www.rossvillega.gov/mayor-city-council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Elaine Alder"
+        role: Council Member
+        seat: "At-Large"
+        seat_id: at-large
+        party: Nonpartisan
+        email:
+        phone: "706-866-1325"   # City Hall (no direct lines published)
+        last_elected:   # holds the 2023-cycle seat Jarret Lassetter won unopposed (Chattanoogan.com 2023-08-25, quoting the Walker County election director's 2023 qualifying list); how she came to it (appointment or special) not yet confirmed
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
+        voting: true
+        source: "https://www.rossvillega.gov/mayor-city-council"   # drafted 2026-11-19 — CONFIRM before merge
+      - name: "Erica Harris"
+        role: Council Member
+        seat: "At-Large"
+        seat_id: at-large
+        party: Nonpartisan
+        email:
+        phone: "706-866-1325"   # City Hall (no direct lines published)
+        last_elected: 2023   # qualified unopposed in 2023, so no election was held: Chattanoogan.com 2023-08-25, quoting the Walker County election director's 2023 qualifying list
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
+        voting: true
+        source: "https://www.rossvillega.gov/mayor-city-council"   # drafted 2026-11-19 — CONFIRM before merge
+
+  - id: chattooga
+    name: Chattooga County
+    type: county
+    county: Chattooga
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4
+    board_size: 1            # sole-commissioner government: a single elected commissioner, no board
+    government_form: sole-commissioner
+    official_url: "https://allongeorgia.com/chattooga-local-government/andy-allen-defeats-blake-elsberry-for-chattooga-county-sole-commissioner"
+    related_pages:
+    members:
+      - name: "Andy Allen"
+        role: Chair   # sole-commissioner form: one elected official is the whole governing authority
+        title: "Sole Commissioner"
+        seat: "At-Large"
+        seat_id: at-large
+        party: Republican
+        email:
+        phone:
+        last_elected: 2024   # SoS results, 2024NovGen: unopposed; took office Jan 2, 2025 (All On Georgia)
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://allongeorgia.com/chattooga-local-government/andy-allen-defeats-blake-elsberry-for-chattooga-county-sole-commissioner"   # drafted 2026-11-19 - CONFIRM before merge
+
+  - id: floyd
+    name: Floyd County
+    type: county
+    county: Floyd
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4
+    board_size: 5
+    government_form: commission
+    official_url: "https://floydcountyga.gov/board_and_committees/board_of_commissioners/index.php"
+    related_pages:
+    members:
+      - name: "Rhonda Wallace"
+        role: Chair
+        title: "Chair"
+        seat: "Post 1"
+        seat_id: post-1
+        party: Republican
+        email:
+        phone:
+        last_elected: 2022   # Post 1 was on the 2026 ballot, so last elected 2022; did not run in 2026
+        term_end: 2026
+        next_election: 2026
+        term_provenance: assumed
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
+        voting: true
+        source: "https://floydcountyga.gov/board_and_committees/board_of_commissioners/index.php"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Shane Cowan"
+        role: Commissioner
+        seat: "Post 1"
+        seat_id: post-1
+        party: Republican
+        email:
+        phone:
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        takes_office: 2027-01-01
+        voting: true
+        source: "https://floydcountyga.gov/board_and_committees/board_of_commissioners/index.php"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Mike Burnes"
+        role: Commissioner
+        seat: "Post 2"
+        seat_id: post-2
+        party: Republican
+        email:
+        phone:
+        last_elected: 2024   # SoS results, 2024NovGen: unopposed
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://floydcountyga.gov/board_and_committees/board_of_commissioners/index.php"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Allison Watters"
+        role: Commissioner
+        seat: "Post 3"
+        seat_id: post-3
+        party: Republican
+        email:
+        phone:
+        last_elected: 2024   # SoS results, 2024NovGen: unopposed incumbent
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://floydcountyga.gov/board_and_committees/board_of_commissioners/index.php"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "David Thornton"
+        role: Commissioner
+        seat: "Post 4"
+        seat_id: post-4
+        party: Republican
+        email:
+        phone:
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed incumbent
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        voting: true
+        source: "https://floydcountyga.gov/board_and_committees/board_of_commissioners/index.php"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Scotty Hancock"
+        role: Vice Chair
+        title: "Vice Chair"
+        seat: "Post 5"
+        seat_id: post-5
+        party:
+        email:
+        phone:
+        last_elected: 2022   # Post 5 was on the 2026 ballot, so last elected 2022; did not run in 2026
+        term_end: 2026
+        next_election: 2026
+        term_provenance: assumed
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
+        voting: true
+        source: "https://floydcountyga.gov/board_and_committees/board_of_commissioners/index.php"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Cleve Jackson"
+        role: Commissioner
+        seat: "Post 5"
+        seat_id: post-5
+        party: Republican
+        email:
+        phone:
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): won 66-34 over Shonna N. Bailey (D)
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        takes_office: 2027-01-01
+        voting: true
+        source: "https://floydcountyga.gov/board_and_committees/board_of_commissioners/index.php"   # drafted 2026-11-19 - CONFIRM before merge
+
+  - id: haralson
+    name: Haralson County
+    type: county
+    county: Haralson
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4
+    board_size: 5
+    government_form: commission-chair
+    official_url: "https://www.haralsoncountyga.gov/board-of-commissioners"
+    related_pages:
+    members:
+      - name: "Brian L. Walker"
+        role: Chair
+        title: "Chairman and CEO"
+        seat: "At-Large"
+        seat_id: at-large
+        party: Republican
+        email:
+        phone: "770-646-2002"   # county office
+        last_elected: 2024   # SoS results, 2024NovGen: unopposed
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://www.haralsoncountyga.gov/board-of-commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "David Tarpley"
+        role: Commissioner
+        full_name: 'David W. Tarpley'
+        seat: "District 1"
+        seat_id: district-1
+        party: Republican
+        email:
+        phone: "770-646-2002"   # county office
+        last_elected: 2024   # SoS results, 2024NovGen: unopposed incumbent
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://www.haralsoncountyga.gov/board-of-commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Danny Elsberry"
+        role: Commissioner
+        seat: "District 2"
+        seat_id: district-2
+        party: Republican
+        email:
+        phone: "770-646-2002"   # county office
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed incumbent
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        voting: true
+        source: "https://www.haralsoncountyga.gov/board-of-commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Eddie Ivey"
+        role: Commissioner
+        seat: "District 3"
+        seat_id: district-3
+        party: Republican
+        email:
+        phone: "770-646-2002"   # county office
+        last_elected: 2024   # SoS results, 2024NovGen: unopposed
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://www.haralsoncountyga.gov/board-of-commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Ryan Farmer"
+        role: Commissioner
+        seat: "District 4"
+        seat_id: district-4
+        party: Republican
+        email:
+        phone: "770-646-2002"   # county office
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed incumbent
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        voting: true
+        source: "https://www.haralsoncountyga.gov/board-of-commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+
+  - id: jackson
+    name: Jackson County
+    type: county
+    county: Jackson
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4
+    board_size: 6
+    government_form: commission-chair
+    official_url: "https://www.jacksoncountygov.com/373/Board-of-Commissioners"
+    related_pages:
+    members:
+      - name: "Marty Clark"
+        role: Chair
+        title: "Chairman"
+        seat: "At-Large"
+        seat_id: at-large
+        party: Republican
+        email:
+        phone:
+        last_elected: 2024   # SoS results, 2024NovGen
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://www.jacksoncountygov.com/373/Board-of-Commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Jim Hix"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        party: Republican
+        email:
+        phone:
+        last_elected: 2024   # SoS results, 2024NovGen
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://www.jacksoncountygov.com/373/Board-of-Commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Chas Hardy"
+        role: Commissioner
+        seat: "District 2"
+        seat_id: district-2
+        party: Republican
+        email:
+        phone:
+        last_elected: 2024   # SoS results, 2024NovGen
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://www.jacksoncountygov.com/373/Board-of-Commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Ty Clack"
+        role: Commissioner
+        seat: "District 3"
+        seat_id: district-3
+        party: Republican
+        email:
+        phone:
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): re-elected 68-32 (also on the 2024 ballot, apparently for an unexpired term)
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        voting: true
+        source: "https://www.jacksoncountygov.com/373/Board-of-Commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Marty Seagraves"
+        role: Commissioner
+        seat: "District 4"
+        seat_id: district-4
+        party: Republican
+        email:
+        phone:
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed incumbent
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        voting: true
+        source: "https://www.jacksoncountygov.com/373/Board-of-Commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Cole Elrod"
+        role: Commissioner
+        seat: "District 5"
+        seat_id: district-5
+        party: Republican
+        email:
+        phone:
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): re-elected 76-24
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        voting: true
+        source: "https://www.jacksoncountygov.com/373/Board-of-Commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+
+  - id: laurens
+    name: Laurens County
+    type: county
+    county: Laurens
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4
+    board_size: 5
+    government_form: commission
+    official_url: "https://www.laurenscoga.org/AgendaCenter/ViewFile/Minutes/_01062026-384"
+    related_pages:
+    members:
+      - name: "Brenda Chain"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        party: Democratic
+        email:
+        phone:
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed incumbent
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        voting: true
+        source: "https://www.laurenscoga.org/AgendaCenter/ViewFile/Minutes/_01062026-384"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Trae Kemp"
+        role: Commissioner
+        full_name: 'Lawton Trae Kemp'
+        seat: "District 2"
+        seat_id: district-2
+        party: Republican
+        email:
+        phone:
+        last_elected: 2024   # SoS results, 2024NovGen: unopposed incumbent
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://www.laurenscoga.org/AgendaCenter/ViewFile/Minutes/_01062026-384"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Gerad Mathis"
+        role: Commissioner
+        full_name: 'Gerad F. Mathis'
+        seat: "District 3"
+        seat_id: district-3
+        party: Republican
+        email:
+        phone:
+        last_elected: 2024   # SoS results, 2024NovGen: unopposed
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://www.laurenscoga.org/AgendaCenter/ViewFile/Minutes/_01062026-384"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Jimmy Rogers"
+        role: Chair
+        title: "Chairman"
+        full_name: 'Jimmy R. Rogers'
+        seat: "District 4"
+        seat_id: district-4
+        party: Republican
+        email:
+        phone:
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed incumbent; Chairman per the Jan 6 2026 minutes
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        voting: true
+        source: "https://www.laurenscoga.org/AgendaCenter/ViewFile/Minutes/_01062026-384"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Kevin Tanner"
+        role: Commissioner
+        full_name: 'Kevin L. Tanner'
+        seat: "District 5"
+        seat_id: district-5
+        party: Republican
+        email:
+        phone:
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed incumbent
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        voting: true
+        source: "https://www.laurenscoga.org/AgendaCenter/ViewFile/Minutes/_01062026-384"   # drafted 2026-11-19 - CONFIRM before merge
+
+  - id: mitchell
+    name: Mitchell County
+    type: county
+    county: Mitchell
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4
+    board_size: 5
+    government_form: commission
+    official_url: "https://mitchellcountyga.net/commissioners"
+    related_pages:
+    members:
+      - name: "Benjamin Hayward"
+        role: Chair
+        title: "Chairman"
+        seat: "District 1"
+        seat_id: district-1
+        party: Democratic
+        email:
+        phone:
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed incumbent; county page lists his prior term 1/1/2023-12/31/2026
+        term_end: 2030
+        next_election: 2030
+        term_provenance: verified
+        voting: true
+        source: "https://mitchellcountyga.net/commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "B. Keith Jones"
+        role: Commissioner
+        seat: "District 2"
+        seat_id: district-2
+        party: Democratic
+        email:
+        phone:
+        last_elected: 2024   # SoS results, 2024NovGen: unopposed incumbent; county page: term 1/1/2025-12/31/2028
+        term_end: 2028
+        next_election: 2028
+        term_provenance: verified
+        voting: true
+        source: "https://mitchellcountyga.net/commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Reggie Bostick"
+        role: Vice Chair
+        title: "Vice Chairman"
+        full_name: 'Reggie C. Bostick'
+        seat: "District 3"
+        seat_id: district-3
+        party: Republican
+        email:
+        phone:
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed incumbent
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        voting: true
+        source: "https://mitchellcountyga.net/commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Julius Hatcher"
+        role: Commissioner
+        full_name: 'Julius C. Hatcher'
+        seat: "District 4"
+        seat_id: district-4
+        party: Republican
+        email:
+        phone:
+        last_elected: 2024   # SoS results, 2024NovGen: unopposed incumbent
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://mitchellcountyga.net/commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "David Griner"
+        role: Commissioner
+        seat: "District 5"
+        seat_id: district-5
+        party: Republican
+        email:
+        phone:
+        last_elected: 2024   # SoS results, 2024NovGen: unopposed
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://mitchellcountyga.net/commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+
+  - id: toombs
+    name: Toombs County
+    type: county
+    county: Toombs
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4
+    board_size: 5
+    government_form: commission-chair
+    official_url: "https://toombscountyga.gov/county-commission-2/"
+    related_pages:
+    members:
+      - name: "Tommy Rollins"
+        role: Chair
+        title: "Chairman"
+        seat: "At-Large"
+        seat_id: at-large
+        party:
+        email:
+        phone: "912-526-3311"   # county office
+        last_elected:    # sworn in as Chairman June 18 2026 (county minutes), finishing the term David Sikes won in 2024; how he was chosen not yet confirmed
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://toombscountyga.gov/county-commission-2/"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Alfred Cason"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: district-1
+        party: Democratic
+        email:
+        phone: "912-526-3311"   # county office
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed incumbent
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        voting: true
+        source: "https://toombscountyga.gov/county-commission-2/"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Buck Moon"
+        role: Commissioner
+        seat: "District 2"
+        seat_id: district-2
+        party: Republican
+        email:
+        phone: "912-526-3311"   # county office
+        last_elected: 2024   # SoS results, 2024NovGen (office misspelled "County Commisson - District 2" on the ballot): unopposed; sworn in Dec 23 2024 succeeding Wendell Dixon
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://toombscountyga.gov/county-commission-2/"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Darriel Nobles"
+        role: Commissioner
+        full_name: 'D. Darriel Nobles'
+        seat: "District 3"
+        seat_id: district-3
+        party: Republican
+        email:
+        phone: "912-526-3311"   # county office
+        last_elected: 2024   # SoS results, 2024NovGen (office misspelled "County Commisson - District 3"): unopposed incumbent; ballot spells Nobles, the county page's "Nobels" is a typo
+        term_end: 2028
+        next_election: 2028
+        term_provenance: assumed
+        voting: true
+        source: "https://toombscountyga.gov/county-commission-2/"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "David Beasley"
+        role: Commissioner
+        full_name: 'David M. Beasley'
+        seat: "District 4"
+        seat_id: district-4
+        party: Republican
+        email:
+        phone: "912-526-3311"   # county office
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed (not marked incumbent on the ballot, but already listed as District 4 commissioner on the county page)
+        term_end: 2030
+        next_election: 2030
+        term_provenance: assumed
+        voting: true
+        source: "https://toombscountyga.gov/county-commission-2/"   # drafted 2026-11-19 - CONFIRM before merge
+
+  - id: montgomery
+    name: Montgomery County
+    type: county
+    county: Montgomery
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4
+    board_size: 5
+    government_form: commission
+    official_url: "https://www.montcoga.gov/board-commissioners"
+    related_pages:
+    members:
+      - name: "Jimmy Sharpe"
+        role: Commissioner
+        full_name: 'Jimmy "Pedro" Sharpe'
+        seat: "District 1"
+        seat_id: district-1
+        party: Republican
+        email:
+        phone: "912-583-2363"   # county office
+        last_elected: 2024   # SoS results, 2024NovGen: unopposed; county page: term ends 01/01/29
+        term_end: 2028
+        next_election: 2028
+        term_provenance: verified
+        voting: true
+        source: "https://www.montcoga.gov/board-commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Amie Vassey"
+        role: Commissioner
+        seat: "District 2"
+        seat_id: district-2
+        party: Republican
+        email:
+        phone: "912-583-2363"   # county office
+        last_elected: 2024   # SoS results, 2024NovGen: won 83-17; county page: term ends 01/01/29
+        term_end: 2028
+        next_election: 2028
+        term_provenance: verified
+        voting: true
+        source: "https://www.montcoga.gov/board-commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Ginger Byrd Morris"
+        role: Chair
+        title: "Chairman"
+        seat: "District 3"
+        seat_id: district-3
+        party: Republican
+        email:
+        phone: "912-583-2363"   # county office
+        last_elected: 2024   # SoS results, 2024NovGen: won 75-25; county page: term ends 01/01/29; members pick the chair yearly
+        term_end: 2028
+        next_election: 2028
+        term_provenance: verified
+        voting: true
+        source: "https://www.montcoga.gov/board-commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Clarence Thomas"
+        role: Vice Chair
+        title: "Vice-Chairman"
+        full_name: 'Clarence E. Thomas'
+        seat: "District 4"
+        seat_id: district-4
+        party: Democratic
+        email:
+        phone: "912-583-2363"   # county office
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): re-elected 66-34; county page: term ends 01/01/31
+        term_end: 2030
+        next_election: 2030
+        term_provenance: verified
+        voting: true
+        source: "https://www.montcoga.gov/board-commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+      - name: "Leland Adams"
+        role: Commissioner
+        full_name: 'LeLand G. Adams'
+        seat: "District 5"
+        seat_id: district-5
+        party: Republican
+        email:
+        phone: "912-583-2363"   # county office
+        last_elected: 2026   # SoS results, Nov 3 2026 general (unofficial at drafting): unopposed incumbent; county page: term ends 01/01/31
+        term_end: 2030
+        next_election: 2030
+        term_provenance: verified
+        voting: true
+        source: "https://www.montcoga.gov/board-commissioners"   # drafted 2026-11-19 - CONFIRM before merge
+
+  - id: dalton                      # MUST equal the places.yml slug (join key)
+    name: City of Dalton
+    type: city
+    county: Whitfield
+    body: Mayor and Council
+    partisan: false
+    official_url: https://www.daltonga.gov/164/City-Council
+    notes: "STUB drafted 2026-11-20. Roster (names, wards, emails) is from the city council page. Structure from Charter Sec. 2.10: a mayor and four councilmembers; four wards that are RESIDENCY wards only (a candidate must live in the ward) while the mayor and all councilmembers are elected at large by the whole city. Terms are four years, staggered for councilmembers (Charter Sec. 2.11); Mayor and Wards 1 and 3 were elected Nov 2023 (county results), Ward 4 in Nov 2025 (SoS); Ward 2: Nicolas \"Nicky\" Lama won a 2023 special and was re-elected in Nov 2025, stepped down in January 2026 to run for Congress, and Julie Locke won the Mar 10 2026 special election (1,808 of 3,431 votes, 52.7%, no runoff) and was sworn in Mar 16 2026 for the term ending Dec 31 2029 (city announcement). Lama has no row here yet because his exact departure date is not sourced. Mayor presides and votes only to break a tie (Charter Sec. 2.31)."
+    term_years: 4                   # Charter Sec. 2.11, staggered
+    board_size: 5                   # mayor + 4 councilmembers (Charter Sec. 2.10)
+    # ---- PHASE 1 - ROSTER --------------------------------------------------
+    members:
+      - name: "Annalee Sams"
+        role: Mayor
+        seat: "At-Large"
+        seat_id: mayor
+        party: Nonpartisan
+        email: "asams@daltonga.gov"
+        phone: "706-278-9500"   # city main line, as listed on the council page
+        last_elected: 2023      # Whitfield County Elections Nov 7 2023 general (official, complete): Mayor - Dalton, 1,906 of 2,790 (68.3%) over Tom Causby and Jason Burgin
+        term_end: 2027          # derived: 2023 + 4-year term (Charter Sec. 2.11)
+        next_election: 2027
+        term_provenance: assumed
+        voting: false           # Charter Sec. 2.31(4): mayor is the deciding vote only on a tie of the councilmembers
+        tie_break_only: true
+        source: "https://www.daltonga.gov/164/City-Council"   # drafted 2026-11-20 - names/wards/emails from the city council page; CONFIRM terms before merge
+      - name: "Dennis Mock"
+        role: Council Member
+        seat: "Ward 1"
+        seat_id: ward-1
+        party: Nonpartisan
+        email: "dmock@daltonga.gov"
+        phone: "706-278-9500"   # city main line, as listed on the council page
+        last_elected: 2023      # Whitfield County Elections Nov 7 2023 general (official, complete): Alderman Ward 1 - Dalton, unopposed, 2,350 votes
+        term_end: 2027          # derived: 2023 + 4-year term (Charter Sec. 2.11)
+        next_election: 2027
+        term_provenance: assumed
+        voting:                 # not confirmed: charter voting/tie-break rule not read
+        source: "https://www.daltonga.gov/164/City-Council"   # drafted 2026-11-20 - names/wards/emails from the city council page; CONFIRM terms before merge
+      - name: "Julie Locke"
+        role: Council Member
+        seat: "Ward 2"
+        seat_id: ward-2
+        party: Nonpartisan
+        email: "jlocke@daltonga.gov"
+        phone: "706-278-9500"   # city main line, as listed on the council page
+        takes_office: 2026-03-16   # sworn in at the Mar 16 2026 Mayor and Council meeting (city announcement)
+        last_elected: 2026      # won the Mar 10 2026 Ward 2 special election outright: 1,808 of 3,431 (52.7%) over Rojelio Alvarran 1,096 and Zeucis Martinez 527 (Whitfield County Elections, official and complete)
+        term_end: 2029          # unexpired term of Nicky Lama, expiring Dec 31 2029 (city announcement)
+        next_election: 2029
+        term_provenance: verified
+        voting:                 # not confirmed: charter voting/tie-break rule not read
+        source: "https://www.daltonga.gov/164/City-Council"   # drafted 2026-11-20 - names/wards/emails from the city council page; CONFIRM terms before merge
+      - name: "Tyree Goodlett"
+        role: Mayor Pro Tem
+        seat: "Ward 3"
+        seat_id: ward-3
+        party: Nonpartisan
+        email: "tgoodlett@daltonga.gov"
+        phone: "706-278-9500"   # city main line, as listed on the council page
+        last_elected: 2023      # Whitfield County Elections Nov 7 2023 general (official, complete): Alderman Ward 3 - Dalton, unopposed, 2,327 votes
+        term_end: 2027          # derived: 2023 + 4-year term (Charter Sec. 2.11)
+        next_election: 2027
+        term_provenance: assumed
+        voting:                 # not confirmed: charter voting/tie-break rule not read
+        source: "https://www.daltonga.gov/164/City-Council"   # drafted 2026-11-20 - names/wards/emails from the city council page; CONFIRM terms before merge
+      - name: "Steve Farrow"
+        role: Council Member
+        seat: "Ward 4"
+        seat_id: ward-4
+        party: Nonpartisan
+        email: "sfarrow@daltonga.gov"
+        phone: "706-278-9500"   # city main line, as listed on the council page
+        last_elected: 2025      # SoS results, Nov 4 2025 municipal general: Alderman - Ward 4 - Dalton, unopposed, 1,777 votes
+        term_end: 2029          # derived: 2025 + 4-year term (Charter Sec. 2.11)
+        next_election: 2029
+        term_provenance: assumed
+        voting:                 # not confirmed: charter voting/tie-break rule not read
+        source: "https://www.daltonga.gov/164/City-Council"   # drafted 2026-11-20 - names/wards/emails from the city council page; CONFIRM terms before merge
 

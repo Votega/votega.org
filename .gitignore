@@ -89,6 +89,7 @@ _data/rendered/
 _entities/
 _data/entity_urls.json
 _data/featured_races.json
+_data/former_legislators.json
 
 # Per-entity lastmod state (content-hash → date), persisted via Actions cache
 _data/entity_lastmod.json
@@ -138,3 +139,22 @@ assets/data/ga-millage.csv
 draft_school_boards.txt
 docs/audits/2026-11-local-races-on-ballot.csv
 docs/audits/2026-11-school-board-draft.txt
+docs/FOLLOW-THROUGH-SCOPE.md
+docs/georgia-civic-data-collaboration.md
+docs/georgia-civic-data-collaboration.md
+
+# Large third-party source files read by build scripts (redistricting block-equivalency
+# workbooks, plan packets, Census PL). Kept in the repo folder so they survive a
+# downloads clean-out, but never committed; data-inputs/README.md lists each with its
+# source and checksum so a lost file can be re-fetched and verified.
+/data-inputs/*
+!/data-inputs/README.md
+docs/HANDOFF-2026-12-01-general-runoff.md
+
+# MCP server (mcp/): dependencies, Wrangler state and the local bundle
+mcp/node_modules/
+mcp/.wrangler/
+mcp/dist/
+mcp/bench-data/
+# MCP index files: built at deploy by scripts/build_mcp_index.py, never committed
+assets/data/mcp/

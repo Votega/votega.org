@@ -182,6 +182,9 @@ def parse_listing(html, district_id=None, body=DEFAULT_BODY):
     """
     meetings, seen = [], set()
     for row in _ROW_RE.findall(html or ''):
+        # A page captured from a live DOM (a saved browser page) re-serialises the
+        # onclick arguments with &quot; where the served HTML has literal quotes.
+        row = row.replace('&quot;', '"').replace('&#39;', "'")
         when = _WHEN_RE.search(row)
         vm = _VIEW_MEETING_RE.search(row)
         if not when or not vm:

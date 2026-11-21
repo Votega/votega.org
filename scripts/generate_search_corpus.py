@@ -31,6 +31,8 @@ from urllib.parse import quote
 # legislator" lives in one place -- ga-members.json used to carry statewide
 # executives, and every consumer excluded them the same way (kept as a defence).
 from lib.ga_voters import VOTING_CHAMBERS
+from lib.ga_legislator_pages import DEPARTED_STATUSES
+from lib.ga_former import load_frozen, former_records
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "assets" / "data"
@@ -125,9 +127,10 @@ def build_ga_legislators(records, seen):
             # synthetic in that sense: it is the real handle of a sitting member Open States
             # has not catalogued, and `id` is opaque, so it must not be filtered on its shape.
             continue
-        if m.get("status") in ("Resigned", "Removed", "Deceased"):
+        if m.get("status") in DEPARTED_STATUSES:
             # Same filter as ga.js and ga-majority-tracker.html -- don't index
-            # former members as if they were sitting legislators.
+            # former members as if they were sitting legislators. They are added below,
+            # labelled "former", from former_records().
             continue
         chamber = clean(m.get("chamber"))
         if chamber not in VOTING_CHAMBERS:
@@ -159,6 +162,24 @@ def build_ga_legislators(records, seen):
             category="GA Legislator",
             url=f"ga-member.html?id={quote(oid, safe='')}",
         )
+
+    # Former members: departed in the live roster, or only in a frozen biennium.
+    for rec, tag in former_records(data.get("members", []), load_frozen()):
+        oid = clean(rec.get("id"))
+        if not oid or clean(rec.get("chamber")) not in VOTING_CHAMBERS:
+            continue
+        chamber = clean(rec.get("chamber"))
+        word = "Senator" if chamber == "Senate" else "Representative"
+        bits = [f"Former {word}"]
+        if rec.get("district") is not None:
+            bits.append(f"District {rec['district']}")
+        if clean(rec.get("party")):
+            bits.append(clean(rec.get("party")))
+        before = len(records)
+        add(records, seen, title=rec.get("name"), desc=", ".join(bits),
+            category="GA Legislator", url=f"ga-member.html?id={quote(oid, safe='')}")
+        if len(records) > before:
+            records[-1]["former"] = tag
 
 
 def build_ga_federal_delegation(records, seen):

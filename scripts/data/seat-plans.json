@@ -1,0 +1,62 @@
+{
+  "_comment": "Hand-maintained: the district maps the seat registry is built from. Facts only a person can supply live here (dates, sources); which districts a new map carried over is GENERATED from the block-equivalency files into seat-plan-comparison.json, never typed. Add a plan only when Georgia redraws. See docs/seat-history-design.md, 'The identity rule'.",
+  "bodies": {
+    "us-house-ga": {"districts": 14, "label": "U.S. House, Georgia District"},
+    "ga-senate": {"districts": 56, "label": "Georgia Senate District"},
+    "ga-house": {"districts": 180, "label": "Georgia House District"}
+  },
+  "plans": [
+    {
+      "id": "us-house-ga-2021", "body": "us-house-ga", "suffix": "2021",
+      "firstElection": "2022-11-08", "effective": "2023-01-03", "effectiveBasis": "convening",
+      "effectiveNote": "The 118th Congress convened 2023-01-03.",
+      "supersededBy": "us-house-ga-2023",
+      "source": "data-inputs/redistricting/2021/congress-prop1-2021-block-equiv.xlsx",
+      "adoptedNote": "Congress plan as passed in the November 2021 special session."
+    },
+    {
+      "id": "us-house-ga-2023", "body": "us-house-ga", "suffix": "2023",
+      "firstElection": "2024-11-05", "effective": "2025-01-03", "effectiveBasis": "convening",
+      "effectiveNote": "The 119th Congress convened 2025-01-03.",
+      "supersededBy": null,
+      "source": "data-inputs/redistricting/2023/congress-2023-block-equiv.xlsx",
+      "adoptedNote": "Congress plan from the December 2023 special session."
+    },
+    {
+      "id": "ga-senate-2021", "body": "ga-senate", "suffix": "2021",
+      "firstElection": "2022-11-08", "effective": "2023-01-09", "effectiveBasis": "convening",
+      "effectiveNote": "The 2023-24 General Assembly convened 2023-01-09.",
+      "supersededBy": "ga-senate-2023",
+      "source": "data-inputs/redistricting/2021/senate-prop1-2021-block-equiv.xlsx",
+      "adoptedNote": "Senate plan as passed in the November 2021 special session."
+    },
+    {
+      "id": "ga-senate-2023", "body": "ga-senate", "suffix": "2023",
+      "firstElection": "2024-11-05", "effective": "2025-01-13", "effectiveBasis": "convening",
+      "effectiveNote": "The 2025-26 General Assembly convened 2025-01-13.",
+      "supersededBy": null,
+      "source": "data-inputs/redistricting/2023/senate-2023-block-equivalency.xlsx",
+      "adoptedNote": "Senate plan from the December 2023 special session."
+    },
+    {
+      "id": "ga-house-2021", "body": "ga-house", "suffix": "2021",
+      "firstElection": "2022-11-08", "effective": "2023-01-09", "effectiveBasis": "convening",
+      "effectiveNote": "The 2023-24 General Assembly convened 2023-01-09.",
+      "supersededBy": "ga-house-2023",
+      "source": "data-inputs/redistricting/2021/house-prop1-2021-block-equiv.xlsx",
+      "adoptedNote": "House plan as passed in the November 2021 special session."
+    },
+    {
+      "id": "ga-house-2023", "body": "ga-house", "suffix": "2023",
+      "firstElection": "2024-11-05", "effective": "2025-01-13", "effectiveBasis": "convening",
+      "effectiveNote": "The 2025-26 General Assembly convened 2025-01-13.",
+      "supersededBy": null,
+      "source": "data-inputs/redistricting/2023/house-2023-block-equiv.xlsx",
+      "adoptedNote": "House plan from the December 2023 special session."
+    }
+  ],
+  "unmappedSeats": [
+    {"id": "us-senate-ga-class-2", "body": "us-senate-ga", "title": "U.S. Senate, Georgia (Class 2)", "facts": {"class": 2}},
+    {"id": "us-senate-ga-class-3", "body": "us-senate-ga", "title": "U.S. Senate, Georgia (Class 3)", "facts": {"class": 3}}
+  ]
+}

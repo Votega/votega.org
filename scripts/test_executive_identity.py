@@ -97,16 +97,43 @@ seat_by_id = {s["id"]: s for s in seats}
 check("13 seats with unique ids", (len(seats), len(seat_by_id)), (13, 13))
 check("every official points at a seat, one official per seat",
       sorted(o["officeId"] for o in officials), sorted(seat_by_id))
+def current_holder(seat):
+    # Incoming winners are staged ahead of the swearing-in as provisional holders
+    # (newest first); the current holder is the first one that is not provisional.
+    return next(h for h in seat["holders"] if not h.get("provisional"))
 check("each seat's current holder is the official pointing at it",
-      all(seat_by_id[o["officeId"]]["holders"][0]["execId"] == o["id"] for o in officials), True)
+      all(current_holder(seat_by_id[o["officeId"]])["execId"] == o["id"] for o in officials), True)
+staged = [(s, h) for s in seats for h in s["holders"] if h.get("provisional")]
+check("provisional holders come before the current holder, and only one per seat",
+      all(s["holders"][0] is h and sum(1 for x in s["holders"] if x.get("provisional")) == 1
+          for s, h in staged), True)
+check("a provisional holder starts the day the current holder ends",
+      all(h["start"] and h["start"] == current_holder(s)["end"] for s, h in staged), True)
+check("a provisional holder reserves a new exec id, a name and a basis",
+      all(re.fullmatch(r"exec:[a-z0-9-]+", h["execId"]) and h["execId"] not in ids
+          and h.get("name") and h.get("startBasis") and h.get("source") for s, h in staged),
+      True)
+check("reserved exec ids are unique across seats",
+      len({h["execId"] for s, h in staged}), len(staged))
 check("presidesOver lives on the Lt. Governor seat only, never on a person",
       ({s["id"]: s["presidesOver"] for s in seats if s.get("presidesOver")},
        any("presidesOver" in o for o in officials)),
       ({"ga-lt-governor": "Senate"}, False))
-check("history is declared not backfilled, so empty start/end dates are not a claim",
+check("history is declared not backfilled, so empty start dates are not a claim",
       (load("assets/data/ga-executive-seats.json")["metadata"]["historyStatus"],
-       all(h["start"] is None and h["end"] is None for s in seats for h in s["holders"])),
+       all(h["start"] is None for s in seats for h in s["holders"] if not h.get("provisional"))),
       ("not-backfilled", True))
+# docs/seat-history-design.md "Date semantics": why THIS hold ended; outcomes elsewhere are
+# derived from later holds, never stored. (redistricted is omitted: no executive seat has a map.)
+ENDED_BY = {"term-limited", "did-not-run", "lost", "resigned", "removed", "deceased",
+            "term-ended"}
+ended = [h for s in seats for h in s["holders"] if h["end"] is not None]
+check("a recorded end carries a reason, a basis and a source",
+      all(h.get("endedBy") in ENDED_BY and h.get("endBasis") and h.get("source")
+          and re.fullmatch(r"\d{4}-\d{2}-\d{2}", h["end"]) for h in ended), True)
+check("a holder with no end has no reason either",
+      all(h.get("endedBy") is None for s in seats for h in s["holders"] if h["end"] is None),
+      True)
 check("the roster's executive rows are each claimed by an official",
       set(roster) <= {o.get("legacyRosterId") for o in officials}, True)
 

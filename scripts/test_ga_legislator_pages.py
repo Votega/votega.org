@@ -38,18 +38,22 @@ def check(label, got, want):
         failures.append(label)
 
 
-def builder_urls(members_doc):
+def builder_urls(members_doc, empty_ledger=False):
     """Run the real corpus filter and the real page builder over `members_doc`; return
     {roster id: permalink}. Nothing is written: page/card output is stubbed."""
     records, seen = [], set()
-    real_load = C.load
+    real_load, real_frozen = C.load, C.load_frozen
     C.load = lambda name, *a, **k: members_doc if name == "ga-members.json" else real_load(name, *a, **k)
+    if empty_ledger:  # the committed frozen tree must not leak into a doctored roster
+        C.load_frozen = lambda *a, **k: {}
     try:
         C.build_ga_legislators(records, seen)
     finally:
-        C.load = real_load
+        C.load, C.load_frozen = real_load, real_frozen
     saved = (B.load, B.write_page, B.add_card, B.resolve_lastmod)
-    real_b_load = B.load
+    real_b_load, real_ledger = B.load, B.load_ledger
+    if empty_ledger:  # a doctored roster does not match the committed page ledger
+        B.load_ledger = lambda *a, **k: {"metadata": {}, "people": {}}
     B.load = lambda name: members_doc if name == "ga-members.json" else real_b_load(name)
     B.write_page = lambda *a, **k: None
     B.add_card = lambda *a, **k: None
@@ -59,6 +63,7 @@ def builder_urls(members_doc):
         B.build_ga_legislators(records, urls, {}, {})
     finally:
         B.load, B.write_page, B.add_card, B.resolve_lastmod = saved
+        B.load_ledger = real_ledger
     return urls.get("ga-legislator", {})
 
 
@@ -76,25 +81,38 @@ def main():
     check("derived urls equal the page builder's permalinks", got, want)
     check("members without a page get null",
           all(m["votegaUrl"] is None for m in derived if m["id"] not in want), True)
+    check("departed members get a url",
+          all(m["votegaUrl"] for m in derived
+              if m.get("status") in P.DEPARTED_STATUSES and m.get("legisGaGovId")), True)
     check("some members have pages", len(want) > 200, True)
 
     # 2. Collision rule, on a doctored roster (two members, same name/chamber/district).
     a = {"id": "ocd-person/aaaaaaaa-1111", "name": "Pat Doe", "chamber": "House of Representatives",
-         "district": 5, "party": "Democratic", "status": None}
-    b = dict(a, id="ocd-person/bbbbbbbb-2222")
+         "district": 5, "party": "Democratic", "status": None, "legisGaGovId": 1001}
+    b = dict(a, id="ocd-person/bbbbbbbb-2222", legisGaGovId=1002)
     synth = {"metadata": doc.get("metadata", {}), "members": [a, b]}
     sd = copy.deepcopy(synth["members"])
     P.assign_votega_urls(sd)
     check("collision resolves like the builder",
           {m["id"]: m["votegaUrl"] for m in sd},
-          {k: B.SITE_URL + v for k, v in builder_urls(synth).items()})
+          {k: B.SITE_URL + v for k, v in builder_urls(synth, empty_ledger=True).items()})
 
     # 3. The committed field, once the roster producer has written it, must agree.
     # (The field lands on the next update-ga-members run; absent until then.)
     if any("votegaUrl" in m for m in members):
+        # A committed null where the rule now derives a URL is the transitional state
+        # after a has_page change (departed members gained pages 2026-11): the committed
+        # roster gets the URL on the next update-ga-members run, and the PR data-sync bot
+        # copies main's roster onto every PR meanwhile. Any committed non-null URL must
+        # still match exactly, and a committed URL the rule no longer derives fails.
+        derived_by_id = {m["id"]: m["votegaUrl"] for m in derived}
+        pending = sorted(m["id"] for m in members
+                         if m.get("votegaUrl") is None and derived_by_id.get(m["id"]))
         check("committed votegaUrl matches derived",
-              {m["id"]: m.get("votegaUrl") for m in members},
-              {m["id"]: m["votegaUrl"] for m in derived})
+              {m["id"]: m.get("votegaUrl") for m in members if m["id"] not in pending},
+              {k: v for k, v in derived_by_id.items() if k not in pending})
+        if pending:
+            print(f"  note: {len(pending)} member(s) gain a votegaUrl on the next roster run")
     else:
         print("  skip committed votegaUrl check: field not yet written by the roster producer")
 

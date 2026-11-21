@@ -157,7 +157,7 @@ def flatten_office(race_row: dict) -> tuple[list[dict], int]:
     return cands, total
 
 
-def decide(cands: list[dict], total: int, ballot: list[dict]) -> dict:
+def decide(cands: list[dict], total: int, ballot: list[dict], accept_near: bool = False) -> dict:
     """Classify one office's result against the race's ballot.
 
     kind: "winner" | "runoff" | "no-votes" | "flag". `flag` carries a `reason` for a person.
@@ -174,7 +174,9 @@ def decide(cands: list[dict], total: int, ballot: list[dict]) -> dict:
         return {"kind": "flag", "reason": f"tie for first at {tv} votes"}
     share = tv / total
     out = {"votes": tv, "total": total, "share": round(share, 4)}
-    if len(ranked) > 1 and abs(share - 0.5) < NEAR_MAJORITY:
+    # `accept_near` is a person's explicit go-ahead for ONE race on CERTIFIED counts: a share over 50%
+    # is a majority, and the half-point flag exists to stop a recount-range race being decided silently.
+    if len(ranked) > 1 and abs(share - 0.5) < NEAR_MAJORITY and not (accept_near and share > 0.5):
         return {**out, "kind": "flag", "reason": f"within half a point of a majority ({share:.2%})"}
     if len(ranked) > 1 and share <= 0.5:
         return {**out, "kind": "runoff", "leader": top["name"]}
@@ -189,7 +191,8 @@ def decide(cands: list[dict], total: int, ballot: list[dict]) -> dict:
 # --------------------------------------------------------------------------- #
 # the whole proposal
 # --------------------------------------------------------------------------- #
-def propose(result_sets: list[dict], races: list[dict], members: dict | None = None) -> dict:
+def propose(result_sets: list[dict], races: list[dict], members: dict | None = None,
+            accept_near_majority: frozenset = frozenset()) -> dict:
     """Walk the results sets in date order and return {proposals, flagged, runoffs, skipped}.
 
     A result set is {"data_key", "election_date", "status", "sections": [...]}. Only `certified`
@@ -216,7 +219,7 @@ def propose(result_sets: list[dict], races: list[dict], members: dict | None = N
                 seen.add(race["id"])
                 cands, total = flatten_office(row)
                 ballot = phase_candidates(race["phases"][phase_key], members)
-                d = decide(cands, total, ballot)
+                d = decide(cands, total, ballot, race["id"] in accept_near_majority)
                 if d["kind"] == "winner":
                     c = d["candidate"]
                     winner = winner_record(c, phase_key)

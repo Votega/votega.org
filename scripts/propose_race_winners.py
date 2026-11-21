@@ -77,7 +77,9 @@ def load_result_sets():
     sets = []
     for path in sorted(glob.glob(os.path.join(ROOT, "*.html"))):
         with open(path, encoding="utf-8") as fh:
-            head = fh.read(4000)
+            # The whole file: front matter can run past any fixed prefix (race_notes alone pushed
+            # the general page's to ~4.5 KB, which silently dropped it from this tool).
+            head = fh.read()
         fm = parse_front_matter(head)
         key = fm.get("results_data")
         if fm.get("layout") != "election_results" or not key or "primary" in key:
@@ -127,6 +129,9 @@ def main() -> int:
     ap.add_argument("--preview-unofficial", action="store_true",
                     help="REPORT ONLY: treat unofficial counts as final, to check name matching and "
                          "structure against election night's real file before certification")
+    ap.add_argument("--accept-near-majority", metavar="RACE_ID", action="append", default=[],
+                    help="decide this race even though the leader is within half a point of 50%% (still needs "
+                         "MORE than 50%% on certified counts); repeat for several races")
     args = ap.parse_args()
     if args.preview_unofficial and args.apply:
         ap.error("--preview-unofficial can never be combined with --apply: unofficial counts can still move")
@@ -141,7 +146,7 @@ def main() -> int:
         sets = [{**s, "status": "certified"} for s in sets]
         print("PREVIEW: unofficial counts are being treated as final. Nothing here is a result; "
               "use it to check names and structure only.\n")
-    result = propose(sets, doc["races"], load_members())
+    result = propose(sets, doc["races"], load_members(), frozenset(args.accept_near_majority))
     changes, conflicts = plan_changes(result["proposals"], doc["races"])
     print(report(result, changes, conflicts))
     if args.json:

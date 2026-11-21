@@ -127,6 +127,16 @@ sink = Sink()
 w, f = G.run(DATA, dry_run=True, write=sink, fetch=serving(LISTING), attempts=1)
 check(w == ['707', '776'] and not sink.files, '--dry-run writes nothing')
 
+print('\n--from-file (a listing saved from a browser)')
+import tempfile
+with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8') as tf:
+    tf.write(LISTING)
+sink = Sink()
+w, f = G.run(DATA, write=sink, from_files={'707': tf.name}, now=NOW)
+check(w == ['707'] and not f and list(sink.files) == ['school-707-meetings.json'],
+      'only the named district runs, parsed from its file with no network')
+os.unlink(tf.name)
+
 if failures:
     print('\n%d check(s) FAILED' % len(failures))
     sys.exit(1)

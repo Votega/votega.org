@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-10T22:20:35Z",
+  "generatedAt": "2026-11-20T12:13:20Z",
   "source": "Gwinnett County (gwinnett agenda/minutes PDFs, poppler+OCR)",
   "place": "Gwinnett County",
-  "count": 23
+  "count": 25
  },
  "summary": {
   "flags": [
@@ -13,19 +13,30 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-03",
+  "lastActivity": "2026-11-17",
   "topicTotals": {
-   "appointment": 11,
-   "contract": 15,
-   "local-taxes": 13,
+   "development": 1,
+   "local-taxes": 15,
+   "rezoning": 4,
+   "variance": 4,
+   "appointment": 12,
+   "contract": 16,
    "millage-budget": 7,
    "budget": 1,
-   "rezoning": 3,
-   "variance": 3,
    "alpr": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Public Hearing",
+    "date": "2026-11-17",
+    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261117/a_80124_2026.11.17___AMENDED_Public_Hearing_Agenda.pdf",
+    "tags": [
+     "development",
+     "rezoning",
+     "variance"
+    ]
+   },
    {
     "title": "Public Hearing",
     "date": "2026-10-27",
@@ -54,7 +65,7 @@
     ]
    }
   ],
-  "landUseMeetings": 3,
+  "landUseMeetings": 4,
   "alprItems": [
    {
     "title": "Business Session",
@@ -75,6 +86,14 @@
   ],
   "alprMeetings": 2,
   "localTaxItems": [
+   {
+    "title": "Public Hearing",
+    "date": "2026-11-17",
+    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261117/a_80124_2026.11.17___AMENDED_Public_Hearing_Agenda.pdf",
+    "terms": [
+     "splost"
+    ]
+   },
    {
     "title": "Work Session",
     "date": "2026-11-03",
@@ -180,9 +199,18 @@
      "ad valorem",
      "splost"
     ]
+   },
+   {
+    "title": "Work Session",
+    "date": "2026-08-04",
+    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260804/a_73554_2026.08.04_Work_Session_Agenda.pdf",
+    "terms": [
+     "millage",
+     "splost"
+    ]
    }
   ],
-  "localTaxCitations": 13,
+  "localTaxCitations": 15,
   "budgetItems": [
    {
     "title": "Business Session",
@@ -195,11 +223,69 @@
    }
   ],
   "budgetCitations": 1,
-  "landUseCitations": 3,
+  "landUseCitations": 4,
   "alprCitations": 2,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "80124",
+   "date": "2026-11-17",
+   "body": "Board of Commissioners",
+   "title": "Public Hearing",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261117/a_80124_2026.11.17___AMENDED_Public_Hearing_Agenda.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261117/a_80124_2026.11.17___AMENDED_Public_Hearing_Agenda.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 5888,
+   "pdfSha256": "0d1c5954b90c8cf540e86e7cfd2760cc6569a69648d9fe99a16b20dae4bb2dbf",
+   "topics": {
+    "development": 1,
+    "local-taxes": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "development",
+    "local-taxes",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "multifamily",
+    "rezon",
+    "splost",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… Road, 927 Billy McGee Road, and 955 Winder Highway; R-75 to R-IF for a Townhouse and Single-Family Detached Subdivision; 13.40 acres; District 3/Watkins [Planning Department Recommendation: Approve with Conditions][Pl …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… he Chairwoman, or designee, to sign any and all related documents. The local match will be funded by the 2023 SPLOST Program. IX. Comments from Audience X. Adjournment",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… 26-1372 REZ2026-00028, Applicant: Hasnain Lakhani c/o Mahaffey Pickens Tucker, LLP; Owner: Hasnain Lakhani; Rezoning with Concurrent Variances of Tax Parcel Nos. R7074 013, 087, and 098; 1587, 1694, and 1702 Herrington Ro …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… plicant: Hasnain Lakhani c/o Mahaffey Pickens Tucker, LLP; Owner: Hasnain Lakhani; Rezoning with Concurrent Variances of Tax Parcel Nos. R7074 013, 087, and 098; 1587, 1694, and 1702 Herrington Road; R- 100 to R- …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "97677",
    "date": "2026-11-03",
@@ -1159,6 +1245,55 @@
    },
    "flags": [
     "millage-budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "73554",
+   "date": "2026-08-04",
+   "body": "Board of Commissioners",
+   "title": "Work Session",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260804/a_73554_2026.08.04_Work_Session_Agenda.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260804/a_73554_2026.08.04_Work_Session_Agenda.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 11555,
+   "pdfSha256": "cb84358a3c7e70aaf33424c1762de5aabe36f268b1076caf21194f8cd51b0a8e",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "millage",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… s 1. Commissioners 2026-1013 Approval to accept the resignation of Incumbent Om Duggal and appoint Milan Patel to the Sugarloaf Community Improvement District Board. Member serves at the pleasure of the Board …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Tuesday, August 4, 2026 - 10:00 AM I. Call To Order II. Approval of Agenda III. New Business - Contract Renewals 1. Multiple Departments 2026-0953 Approval to renew BL066-23, provision of speed limit fe …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… with Radarsign, LLC, amount not to exceed $136,540.00. This contract is funded 99.6% by the 2017 SPLOST Program. (Recommendation: Approval) 2026-0962 Approval to renew BL103-23, provision of sidewalk repair and …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
     "local-taxes"
    ],
    "dataCenterItems": []

@@ -1,30 +1,41 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-10T22:20:38Z",
+  "generatedAt": "2026-11-20T12:13:20Z",
   "source": "City of Carrollton (gdrive agenda/minutes PDFs, poppler+OCR)",
   "place": "City of Carrollton",
-  "count": 22
+  "count": 23
  },
  "summary": {
   "flags": [
    "alpr",
+   "budget",
    "land-use",
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-02",
+  "lastActivity": "2026-11-19",
   "topicTotals": {
-   "appointment": 11,
-   "rezoning": 16,
+   "appointment": 12,
+   "budget": 1,
+   "development": 6,
+   "rezoning": 17,
    "annexation": 6,
    "local-taxes": 2,
    "millage-budget": 6,
-   "development": 5,
    "alpr": 1,
    "contract": 1
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "City Council Work Session 2026-11-19",
+    "date": "2026-11-19",
+    "sourceUrl": "https://drive.google.com/file/d/1y5qdGuWeVGMXDjHpN4CTe6Gi_po_KL9C/view",
+    "tags": [
+     "development",
+     "rezoning"
+    ]
+   },
    {
     "title": "City Council 2026-11-02",
     "date": "2026-11-02",
@@ -165,7 +176,7 @@
     ]
    }
   ],
-  "landUseMeetings": 16,
+  "landUseMeetings": 17,
   "alprItems": [
    {
     "title": "City Council Work Session 2026-03-19",
@@ -197,13 +208,84 @@
    }
   ],
   "localTaxCitations": 2,
-  "budgetItems": [],
-  "budgetCitations": 0,
-  "landUseCitations": 16,
+  "budgetItems": [
+   {
+    "title": "City Council Work Session 2026-11-19",
+    "date": "2026-11-19",
+    "sourceUrl": "https://drive.google.com/file/d/1y5qdGuWeVGMXDjHpN4CTe6Gi_po_KL9C/view",
+    "terms": [
+     "budget amendment",
+     "budget retreat",
+     "budget-then-decision"
+    ]
+   }
+  ],
+  "budgetCitations": 1,
+  "landUseCitations": 17,
   "alprCitations": 1,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "2026-11-19",
+   "date": "2026-11-19",
+   "body": "City Council",
+   "title": "City Council Work Session 2026-11-19",
+   "sourceUrl": "https://drive.google.com/file/d/1y5qdGuWeVGMXDjHpN4CTe6Gi_po_KL9C/view",
+   "textSource": "agenda",
+   "textSourceUrl": "https://drive.google.com/file/d/1y5qdGuWeVGMXDjHpN4CTe6Gi_po_KL9C/view",
+   "textMethod": "pdftotext",
+   "textChars": 3085,
+   "pdfSha256": "b5f1e461cb61f51cadaa9440ab458419cf983bf68695c000d7b492188c4a09e4",
+   "topics": {
+    "appointment": 1,
+    "budget": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "budget",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget amendment",
+    "budget retreat",
+    "budget-then-decision",
+    "mixed use",
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… - 11. Board Appointments: Downtown Advisory Board (2) …",
+     "context": "unknown"
+    },
+    "budget": {
+     "term": "budget amendment",
+     "excerpt": "… - 2. Budget Amendments FY26-04, 05, 06 & 07 & FY27-01 ,02 & 03 – VOTING ITEM …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "mixed use",
+     "excerpt": "… Rezoning 4. Request From M-1 (Light Industry) to Mixed Use PD 13 – 46 App …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… 9 – 12 502 Bradley Street & 116 Lucille Avenue Rezoning 4. Request From M-1 (Light Industry) to Mixed Use PD …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget"
+   ],
+   "dataCenterItems": [],
+   "agendaPacketTrimmed": true
+  },
   {
    "id": "2026-11-02",
    "date": "2026-11-02",

@@ -964,6 +964,17 @@ places:
           - { match: "Mayor and Council", label: "City Council" }
           - { match: "Planning Commission", label: "Planning Commission" }
           - { match: "Historic Preservation", label: "Historic Preservation Commission" }
+        # The portal itself lists the Development Authority's 2026-07-09 agenda and
+        # minutes under the 2026-07-02 Mayor and Council work session (checked
+        # 2026-11-20: both PDFs are headed "Social Circle Development Authority",
+        # JULY 9, 2026). See drop_misfiled in generate_place_meetings.py.
+        misfiled:
+          - meeting: "2674"
+            url: "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2136&Inline=True"
+            note: "Development Authority 2026-07-09 agenda, filed under the Council work session"
+          - meeting: "2674"
+            url: "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=2321&Inline=True"
+            note: "Development Authority 2026-07-09 minutes, filed under the Council work session"
         schedule:
           - body: City Council
             when: "1st Thursday of every month, 6:30 p.m."
@@ -1442,7 +1453,7 @@ places:
           - { match: "Planning Advisory Board", label: "Planning Advisory Board" }
         schedule:
           - body: City Council
-            when: "2nd and 4th Monday of every month, 6:00 p.m."
+            when: "2nd and 4th Monday of every month, 6:00 p.m."   # matches the city charter (regular meetings)
             location: "Fort Oglethorpe City Hall, 500 City Hall Drive, Fort Oglethorpe, GA 30742"
   - slug: walker
     name: Walker County
@@ -1826,6 +1837,41 @@ places:
           - body: Board of Commissioners
             when: "2nd Monday of every month, 6:00 p.m."
             location: "Whitfield County Courthouse, 205 N. Selvidge St., Dalton, GA"
+  
+  - slug: dalton
+    name: City of Dalton
+    type: city
+    fips: null
+    parentCounty: whitfield
+    parentCountyName: Whitfield
+    region: Northwest Georgia
+    domains:
+      meetings:
+        # The city's Agendas and Minutes page (daltonga.gov/545) embeds a Municode
+        # Meetings (teammunicode) table; the CivicPlus Agenda Center on the same site is
+        # empty. Section codes come from the detail links: `citycouncil` is the Mayor
+        # and Council, `bc-pzc` Planning and Zoning, `bc-hpc` Historic Preservation,
+        # `bc-zab` Zoning Appeals. The other ~15 boards (authorities, utilities,
+        # recreation, tree board) are dropped.
+        platform: teammunicode
+        base_url: https://legacydaltonga.teammunicode.com
+        meetings_path: "/meetings"
+        agendas_url: "https://www.daltonga.gov/545/Agendas-and-Minutes"
+        body_map:
+          - { match: "citycouncil", label: "Mayor and Council" }
+          - { match: "bc-pzc", label: "Planning and Zoning Commission" }
+          - { match: "bc-hpc", label: "Historic Preservation Commission" }
+          - { match: "bc-zab", label: "Board of Zoning Appeals" }
+        # The city's pages state no schedule. Read off the posted meetings (checked
+        # 2026-11-20): council on the 1st and 3rd Monday at 6:00 p.m. (10/5, 10/19,
+        # 11/2, 11/16, 12/7; December's second meeting is 12/14); Planning and Zoning
+        # on the 4th Monday at 6:00 p.m. Council location is from the city's Mar 16 2026 announcement.
+        schedule:
+          - body: Mayor and Council
+            when: "1st and 3rd Monday of each month, 6:00 p.m., unless otherwise posted"
+            location: "Raymond A. Elrod Council Chambers, City Hall"
+          - body: Planning and Zoning Commission
+            when: "4th Monday of each month, 6:00 p.m., unless otherwise posted"
 
   - slug: thomasville
     name: City of Thomasville
@@ -1891,10 +1937,13 @@ places:
   # ──────────────────────────────────────────────────────────────────────────
   # HIDDEN FOUNDATION — counties registered for their SCHOOL DISTRICT only
   # ──────────────────────────────────────────────────────────────────────────
-  # These seven counties each contain an independent CITY school system (see
-  # _data/school_districts.yml), so the school-board work needs their slugs to
-  # exist. Nothing else about them has been researched yet — no commission
-  # roster, no sheriff, no meetings adapter — so each is `hidden: true`: it
+  # These counties were registered because each contains an independent CITY
+  # school system (see _data/school_districts.yml), so the school-board work
+  # needed their slugs to exist. As of 2026-11-19 all eight have a commission
+  # roster and sheriff, and Laurens, Jackson, Floyd, Haralson and Toombs have
+  # meetings and are LIVE. Still hidden, by choice: Montgomery (meetings need a
+  # saved-page feed, Cloudflare), Mitchell (no agendas online) and Chattooga
+  # (empty Agenda Center). A place marked `hidden: true`: it
   # stays in this registry and satisfies the officials/district cross-checks,
   # but is omitted everywhere public (no hub card, no /local/<slug>/ page, no
   # search entry, and the enrichers and the ga-local-government publisher all
@@ -1925,6 +1974,12 @@ places:
     parentCounty: null
     region: Northwest Georgia
     hidden: true
+    domains:
+      meetings:
+        # No agendas or minutes exist. Chattooga has a sole commissioner, and the county
+        # posts recorded "public sessions" (Zoom links + summaries) on one hand-typed
+        # page, which no adapter reads. So: no platform, no schedule, link only.
+        agendas_url: "https://chattoogacounty.gov/244/Public-Administrative-Meeting-Informatio"
 
   - slug: floyd
     name: Floyd County
@@ -1932,7 +1987,26 @@ places:
     fips: "13115"
     parentCounty: null
     region: Northwest Georgia
-    hidden: true
+    domains:
+      meetings:
+        # CivicClerk portal (BOC only since Feb 2026; the older Granicus archive is
+        # added separately). Two one-off "General" events are scoped out by body_map.
+        platform: civicclerk
+        subdomain: floydcountyga
+        agendas_url: "https://floydcountyga.gov/board_and_committees/board_of_commissioners/boc_agendas_minutes.php"
+        body_map:
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        # Pre-Feb-2026 history: the county's Granicus ViewPublisher (Sept 2022 - Jan
+        # 2026, with video). Primary wins any same-day overlap (lib/archive_merge.py).
+        archive:
+          platform: granicus
+          agendas_url: "https://floydcountyga.granicus.com/ViewPublisher.php?view_id=1"
+          body_map:
+            - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: "2nd and 4th Tuesday of every month, 6:00 p.m."
+            location: "Administration Building, 12 East 4th Avenue, Suite 206 (Commissioners Meeting Room), Rome"
 
   - slug: haralson
     name: Haralson County
@@ -1940,7 +2014,20 @@ places:
     fips: "13143"
     parentCounty: null
     region: West Georgia
-    hidden: true
+    domains:
+      meetings:
+        # ColdFusion Agenda Center (lib/cfmagenda.py): one section per meeting type,
+        # older years loaded by POST. Every type (regular, work session, special
+        # called, retreat) is the same Board of Commissioners, so it is folded to one
+        # body; the meeting type stays in each record's title.
+        platform: cfmagenda
+        base_url: https://www.haralsoncountyga.gov
+        agendas_url: "https://www.haralsoncountyga.gov/agenda-center.cfm"
+        body_label: "Board of Commissioners"
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 6:00 p.m. (work session 3rd Tuesday, 6:00 p.m.)"
+            location: "155 Van Wert Street, Buchanan"
 
   - slug: jackson
     name: Jackson County
@@ -1948,7 +2035,22 @@ places:
     fips: "13157"
     parentCounty: null
     region: Northeast Georgia
-    hidden: true
+    domains:
+      meetings:
+        # CivicPlus Agenda Center. Keep the legislative + land-use bodies; drop Board of
+        # Elections & Registration, Keep Jackson County Beautiful and the SPLOST
+        # Citizen's Committee (administrative / advisory).
+        platform: civicplus
+        base_url: https://www.jacksoncountygov.com
+        agendas_url: "https://www.jacksoncountygov.com/AgendaCenter"
+        body_map:
+          - { match: "Planning Commission", label: "Planning Commission" }
+          - { match: "Board of Adjustments", label: "Board of Adjustments" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: "1st and 3rd Monday of every month, 6:00 p.m."
+            location: "Jackson County Courthouse, 5000 Jackson Parkway, Jefferson"
 
   - slug: laurens
     name: Laurens County
@@ -1956,7 +2058,20 @@ places:
     fips: "13175"
     parentCounty: null
     region: Middle Georgia
-    hidden: true
+    domains:
+      meetings:
+        # CivicPlus Agenda Center, single "Board of Commissioners" category. The
+        # schedule is not on laurenscoga.org: times from the project owner, place
+        # from Sec. 2-19 of the County Code (cited on the location line).
+        platform: civicplus
+        base_url: https://www.laurenscoga.org
+        agendas_url: "https://www.laurenscoga.org/AgendaCenter"
+        body_map:
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 5:30 p.m., and 3rd Tuesday, 6:30 p.m."
+            location: "Laurens County Courthouse Annex, Dublin, Georgia" #-Sec 2-19 of County Code - https://library.municode.com/ga/laurens_county/codes/code_of_ordinances?nodeId=PTIICOOR_CH2AD_ARTIIBOCO_S2-19ME 
 
   - slug: mitchell
     name: Mitchell County
@@ -1972,7 +2087,24 @@ places:
     fips: "13279"
     parentCounty: null
     region: South Georgia
-    hidden: true
+    domains:
+      meetings:
+        # WordPress: the current page lists a date HEADING then bare "Agenda | Minutes"
+        # links (heading_dates takes the date from the heading when the file name has
+        # none); the yearly archive pages list minutes only (kind: minutes). The 2026
+        # archive titles are month + year with no day ("01_2026 REGULAR BOARD MEETING
+        # MINUTES"), which pdflinks will not guess, so those months have no row until
+        # the county dates them. No recurring schedule is stated on toombscountyga.gov
+        # (meetings fall on the 3rd Tuesday in practice), so none is recorded.
+        platform: pdflinks
+        base_url: https://toombscountyga.gov
+        agendas_url: "https://toombscountyga.gov/agendas-minutes/"
+        heading_dates: true
+        extra_urls:
+          - { url: "https://toombscountyga.gov/commission-meetings-jan-dec-2026/", kind: minutes }
+          - { url: "https://toombscountyga.gov/commission-meetings-jan-dec-2025/", kind: minutes }
+          - { url: "https://toombscountyga.gov/commission-meetings-jan-dec-2024/", kind: minutes }
+        body_label: "Board of Commissioners"
 
   # Added 2026-11-02 for the same reason as the seven above: the phase-1a millage
   # audit found Vidalia City Schools levying in MONTGOMERY as well as Toombs, so
@@ -1984,3 +2116,20 @@ places:
     parentCounty: null
     region: South Georgia
     hidden: true
+    domains:
+      meetings:
+        # Same Drupal "Upcoming Meetings" view as Palmetto (lib/drupalviews.py), body
+        # path `board-commissioners`; past agendas/minutes are /media/<id> links.
+        # ⚠ montcoga.gov sits behind a Cloudflare challenge (403 to every scripted
+        # request, 2026-11-19), so there is no committed data yet and the scheduled run
+        # reports it as bot-blocked. Feed it from a real browser: save /meetings (and
+        # /meetings/recent) with Ctrl+S, then
+        #   python scripts/generate_place_meetings.py --slug montgomery --from-file "<page>.htm" [--from-file "<recent>.htm"]
+        # No recurring schedule is recorded: the site could not be read to confirm one.
+        platform: drupalviews
+        bot_protected: true
+        body_label: Board of Commissioners
+        body_paths:
+          board-commissioners: Board of Commissioners
+        recent_url: "https://montcoga.gov/meetings/recent"
+        agendas_url: "https://montcoga.gov/meetings"

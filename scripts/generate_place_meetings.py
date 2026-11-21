@@ -31,7 +31,6 @@ import os
 import sys
 from datetime import datetime, timezone
 
-import yaml
 
 sys.path.insert(0, os.path.dirname(__file__))
 from lib.civicplus import fetch_agenda_center  # noqa: E402
@@ -60,6 +59,8 @@ from lib.http import fetch_bytes  # noqa: E402
 from lib.wpdatatables import fetch_wpdatatables_meetings  # noqa: E402
 from lib.gdrive import fetch_gdrive_meetings  # noqa: E402
 from lib.atomic_io import write_json_atomic  # noqa: E402
+from lib.cfmagenda import fetch_cfmagenda_meetings  # noqa: E402
+from lib.archive_merge import merge_archive, carry_forward_history  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_REGISTRY = os.path.join(ROOT, '_data', 'places.yml')
@@ -69,7 +70,7 @@ OUT_DIR = os.path.join(ROOT, 'assets', 'data')
 ADAPTER_PLATFORMS = {'civicplus', 'corecode', 'civicclerk', 'legistar', 'teammunicode',
                      'primegov', 'granicus', 'gwinnett', 'iqm2', 'municode', 'agendapub',
                      'agendaplus', 'revize', 'gdrive', 'wpdatatables', 'pdflinks', 'wpmedia',
-                     'wixtable', 'htmltable', 'sharepoint', 'nimblecal', 'packetarchive', 'drupalviews'}
+                     'wixtable', 'htmltable', 'sharepoint', 'nimblecal', 'packetarchive', 'drupalviews', 'cfmagenda'}
 # Platforms/markers we RECOGNIZE but have no scraper for — recorded on the place for
 # provenance and skipped silently (the schedule / agendas_url still render, nothing
 # is scraped): `unknown` (platform not yet identified) plus real but adapter-less
@@ -93,6 +94,7 @@ NO_SCRAPER_PLATFORMS = {'unknown', 'custom', 'wix', 'wordpress',
 
 
 def load_registry(path):
+    import yaml  # lazy: the offline test job installs no packages
     with open(path, encoding='utf-8') as f:
         data = yaml.safe_load(f)
     return data.get('places', []) if data else []
@@ -154,7 +156,8 @@ def fetch_meetings(cfg, previous=None):
         return fetch_pdflinks_meetings(cfg['agendas_url'],
                                        extra_urls=cfg.get('extra_urls'),
                                        body=cfg.get('body_label', 'Board of Commissioners'),
-                                       year_from_order=bool(cfg.get('year_from_order')))
+                                       year_from_order=bool(cfg.get('year_from_order')),
+                                       heading_dates=bool(cfg.get('heading_dates')))
     if platform == 'wixtable':
         return fetch_wixtable_meetings(cfg['agendas_url'],
                                        body=cfg.get('body_label', 'Board of Commissioners'))
@@ -189,6 +192,8 @@ def fetch_meetings(cfg, previous=None):
         return fetch_wpdatatables_meetings(cfg['agendas_url'],
                                            table_ids=cfg.get('table_ids'),
                                            body_label=cfg.get('body_label'))
+    if platform == 'cfmagenda':
+        return fetch_cfmagenda_meetings(cfg['agendas_url'])
     if platform == 'gdrive':
         return fetch_gdrive_meetings(cfg['folder_id'],
                                      body=cfg.get('body_label', 'City Council'))
@@ -229,7 +234,7 @@ def source_url(cfg):
         return cfg['agendas_url']
     if platform == 'wixtable':
         return cfg['agendas_url']
-    if platform == 'htmltable':
+    if platform in ('htmltable', 'cfmagenda'):
         return cfg['agendas_url']
     if platform in ('packetarchive', 'drupalviews'):
         return cfg['agendas_url']
@@ -324,6 +329,48 @@ def scope_bodies(cfg, meetings, slug):
     return meetings, bodies_seen
 
 
+def drop_misfiled(cfg, meetings, slug):
+    """Remove documents the SOURCE filed under the wrong meeting.
+
+    A clerk can attach one body's agenda or minutes to another body's meeting row
+    (Social Circle's portal lists the Development Authority's 2026-07-09 agenda and
+    minutes under the 2026-07-02 Mayor and Council work session). Nothing in the
+    listing says so, and every downstream reader would otherwise credit that body's
+    actions to the wrong one, so a person records the case under
+    domains.meetings.misfiled:
+
+      misfiled:
+        - meeting: "2674"           # the source's own meeting id
+          url: "https://...ID=2136..."   # the exact document URL to drop
+          note: "what the document really is, and how that was checked"
+
+    Only an exact URL match on that meeting is removed, so the entry goes inert once
+    the source fixes its link (reported, so it can be deleted). A past meeting left
+    with no document is dropped, the same rule the adapters apply to a bare row."""
+    rules = cfg.get('misfiled') or []
+    if not rules:
+        return meetings
+    today = datetime.now(timezone.utc).date().isoformat()
+    by_id = {str(m.get('id')): m for m in meetings}
+    for r in rules:
+        m = by_id.get(str(r.get('meeting')))
+        hit = False
+        for key in ('agendaUrl', 'minutesUrl', 'videoUrl'):
+            if m and m.get(key) and m[key] == r.get('url'):
+                m[key] = None
+                hit = True
+        print('  misfiled %s on meeting %s: %s' % (
+            'document removed' if hit else 'rule no longer matches (delete it?)',
+            r.get('meeting'), r.get('url')))
+    kept = [m for m in meetings
+            if m.get('agendaUrl') or m.get('minutesUrl') or m.get('videoUrl')
+            or (m.get('date') or '') >= today]
+    if len(kept) < len(meetings):
+        print('  %d meeting(s) left with no document after misfiled removal, dropped'
+              % (len(meetings) - len(kept)))
+    return kept
+
+
 def _merge_type_grouped(meetings):
     """Collapse rows for one meeting that a document-type-grouped Agenda Center
     split across "Agendas"/"Minutes" panels into a single record, routing each
@@ -399,6 +446,35 @@ def rss_topup(place, cfg):
     return payload
 
 
+def add_archive(cfg, meetings, slug):
+    """Merge `domains.meetings.archive` (a second platform config) under the primary
+    meetings. Its own body rules scope it; the primary wins any (date, body) overlap
+    (lib/archive_merge.py). An archive that cannot be fetched carries the previous
+    file's older history forward instead of dropping it."""
+    acfg = cfg['archive']
+    try:
+        got, _ = fetch_meetings(acfg, previous=None)
+    except (ValueError, KeyError) as e:
+        print('  ERROR: bad archive config for %s: %s' % (slug, e))
+        got = None
+    if got:
+        got, _ = scope_bodies(acfg, got, slug)
+        # Two systems number meetings independently (both have a "58"); the enrichers
+        # key sidecars by id, so namespace the archive's by its platform.
+        for g_ in got:
+            if g_.get('id'):
+                g_['id'] = '%s:%s' % (acfg.get('platform'), g_['id'])
+    if got:
+        merged = merge_archive(meetings, got)
+        print('  archive (%s): +%d meeting(s)' % (acfg.get('platform'), len(merged) - len(meetings)))
+    else:
+        old = carry_forward_history(meetings, load_previous(slug))
+        print('  WARNING: archive source for %s unavailable; carrying %d earlier '
+              'meeting(s) forward' % (slug, len(old)))
+        merged = merge_archive(meetings, old)
+    return merged, sorted({m['body'] for m in merged})
+
+
 def build_place(place, saved_pages=None):
     """Fetch + normalize one place's meetings. Returns the output dict, or None."""
     slug = place['slug']
@@ -439,6 +515,10 @@ def build_place(place, saved_pages=None):
         return None
 
     meetings, bodies_seen = scope_bodies(cfg, meetings, slug)
+    meetings = drop_misfiled(cfg, meetings, slug)
+    bodies_seen = sorted({m['body'] for m in meetings})
+    if meetings and cfg.get('archive'):
+        meetings, bodies_seen = add_archive(cfg, meetings, slug)
     if not meetings:
         print('  ERROR: body filter for %s matched zero meetings — check '
               'include_bodies/exclude_bodies against the source' % slug)

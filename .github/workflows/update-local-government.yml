@@ -152,12 +152,15 @@ jobs:
             ${{ (inputs.reclassify == true || inputs.reclassify == 'true') && '--reclassify' || '' }}
 
       # Per-topic mention feeds for the /local/topics/<topic>/ index pages.
-      # Recorded motions and named votes (CivicClerk + Legistar places) ->
+      # Recorded motions and named votes (CivicClerk + Legistar + IQM2 places) ->
       # assets/data/local-<slug>-votes.json. Incremental: a meeting already read and
       # older than 60 days is carried forward from the committed file, so a normal
       # run re-reads only recent meetings. continue-on-error like the enrichers: one
-      # portal being down must not discard the other places' data.
-      - name: Generate recorded votes (CivicClerk + Legistar)
+      # portal being down must not discard the other places' data. IQM2 (Atlanta,
+      # Social Circle) is read from the RESULT blocks of the minutes PDFs with
+      # pdftotext -raw (installed above); see lib/iqm2_votes.py. The topic feeds
+      # below join these records to tagged meetings, so this step must run first.
+      - name: Generate recorded votes (CivicClerk + Legistar + IQM2)
         id: votes
         continue-on-error: true
         run: python scripts/generate_meeting_votes.py

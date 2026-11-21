@@ -109,6 +109,12 @@
    "region": "Middle Georgia"
   },
   {
+   "placeId": "laurens",
+   "placeName": "Laurens County",
+   "placeType": "county",
+   "region": "Middle Georgia"
+  },
+  {
    "placeId": "lumpkin",
    "placeName": "Lumpkin County",
    "placeType": "county",
@@ -165,6 +171,48 @@
  ],
  "mentions": [
   {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "… 0.17% monumental acceleration of data center 1.5 …",
+   "excerptTerm": "data center",
+   "fips": "13211",
+   "placeId": "morgan",
+   "placeName": "Morgan County",
+   "placeType": "county",
+   "region": "Northeast Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.morgancountyga.gov/AgendaCenter/ViewFile/Agenda/_11172026-889",
+   "tags": [],
+   "terms": [
+    "data center"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "… use amendments, rezoning or special and conditional use permit applications, and all public hearings for data center development 9. [2026-511 Site Plan] Akela Wright Consideration to approve an application by Octa …",
+   "excerptTerm": "data center",
+   "fips": "13103",
+   "placeId": "effingham",
+   "placeName": "Effingham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/effingham-pubu/MEET-Agenda-4a737d59a401417fbd7fd597e964fdba.pdf",
+   "tags": [],
+   "terms": [
+    "data center"
+   ],
+   "vendors": []
+  },
+  {
    "body": "Planning & Zoning",
    "confidence": "high",
    "context": "agenda-action",
@@ -173,12 +221,107 @@
    "excerpt": "… ing for the Proposed Amendments to the Zoning Ordinance to regulate solar farms, battery energy storage facilities, and data centers. 6. Business Session 7. Adjournment",
    "excerptTerm": "data center",
    "fips": "13045",
+   "followThrough": "no-results",
+   "meetingId": "903",
+   "outcomes": [],
    "placeId": "carroll",
    "placeName": "Carroll County",
    "placeType": "county",
    "region": "West Georgia",
    "sourceType": "ocr",
    "sourceUrl": "https://carrollcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3042,plainText=false)",
+   "tags": [],
+   "terms": [
+    "data center"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of County Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "… s independent third-party information, residents who attended described presentations they felt were overwhelmingly pro-data center and one-sided. At those sessions, a large picture was shown of a list of schools and how shockingly close they were to …",
+   "excerptTerm": "data center",
+   "fips": "13039",
+   "placeId": "camden",
+   "placeName": "Camden County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_11172026-677",
+   "tags": [],
+   "terms": [
+    "data center"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Mayor and Council",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-16",
+   "docType": "agenda",
+   "excerpt": "… th Tri-State Roofing on Hangar Roof Rehab Project at Airport 7. Resolution 26-23 Creating a Temporary Moratorium on Data Centers 8. Appointment of Kevin Wright to the WL&SF Commission for a 5-year term to expire December 31, 2031. Appoin …",
+   "excerptTerm": "data center",
+   "fips": null,
+   "placeId": "dalton",
+   "placeName": "City of Dalton",
+   "placeType": "city",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/daltga-pubu/MEET-Agenda-562c0a26f25246af9e8adcb54c5eed00.pdf",
+   "tags": [],
+   "terms": [
+    "data center"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "City Council",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-16",
+   "docType": "agenda",
+   "excerpt": "… MARTIN, LILIANA BAKHTIARI, MATT WESTMORELAND, BYRON D. AMOS, AND MICHAEL JULIAN BOND REQUIRING DATA CENTERS LOCATED WITHIN THE CITY OF ATLANTA, AND DATA CENTERS SERVED BY THE CITY OF A …",
+   "excerptTerm": "data center",
+   "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4421",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4175&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "next": "City Utilities Committee (11/24/2026 10:00 AM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS ANTONIO LEWIS, WAYNE MARTIN, LILIANA BAKHTIARI, MATT WESTMORELAND, BYRON D. AMOS, AND MICHAEL JULIAN BOND REQUIRING DATA CENTERS LOCATED WITHIN THE CITY OF ATLANTA, AND DATA CENTERS SERVED BY THE CITY OF ATLANTA'S MUNICIPAL WATER SYSTEM THROUGH WHOLESALE OR…",
+     "outline": null,
+     "reference": "26-O-1474"
+    },
+    {
+     "motions": [
+      {
+       "next": "City Utilities Committee (11/24/2026 10:00 AM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "A RESOLUTION BY COUNCILMEMBERS KELSEA BOND, JASON DOZIER, JASON H. WINSTON, LILIANA BAKHTIARI, ANDREA L. BOONE, ANTONIO LEWIS, MICHAEL JULIAN BOND, MATT WESTMORELAND, AND ESHÉ COLLINS AS SUBSTITUTED AND AMENDED BY CITY UTILITIES COMMITTEE AND AS SUBSTITUTED BY THE ATLANTA CITY COUNCIL TO ESTABLISH…",
+     "outline": null,
+     "reference": "26-R-3853"
+    }
+   ],
+   "placeId": "atlanta",
+   "placeName": "City of Atlanta",
+   "placeType": "city",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=3966&Inline=True",
    "tags": [],
    "terms": [
     "data center"
@@ -278,6 +421,11 @@
    "excerpt": "… AND OPERATORS, INCLUDING BUT NOT LIMITED TO THOSE RELATED TO DATA CENTERS, SEEKING, RECEIVING, OR RENEWING ANY TAX CREDIT, TAX ABATEMENT, TAX INCENTIVE, GRANT, SU …",
    "excerptTerm": "data center",
    "fips": null,
+   "followThrough": "not-in-minutes",
+   "meetingId": "4300",
+   "minutesDraft": true,
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4173&Inline=True",
+   "outcomes": [],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -299,6 +447,34 @@
    "excerpt": "… LILIANA BAKHTIARI, MATT WESTMORELAND, BYRON D. AMOS, AND MICHAEL JULIAN BOND REQUIRING DATA CENTERS LOCATED WITHIN THE CITY OF ATLANTA, AND DATA CENTERS SERVED BY THE CITY OF ATLANTA'S …",
    "excerptTerm": "data center",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4362",
+   "minutesDraft": true,
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4172&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "resultClass": "held",
+       "resultText": "Held in committee"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS ANTONIO LEWIS, WAYNE MARTIN, LILIANA BAKHTIARI, MATT WESTMORELAND, BYRON D. AMOS, AND MICHAEL JULIAN BOND REQUIRING DATA CENTERS LOCATED WITHIN THE CITY OF ATLANTA, AND DATA CENTERS SERVED BY THE CITY OF ATLANTA'S MUNICIPAL WATER SYSTEM THROUGH WHOLESALE OR…",
+     "outline": null,
+     "reference": "26-O-1474"
+    },
+    {
+     "motions": [
+      {
+       "resultClass": "held",
+       "resultText": "Held in committee"
+      }
+     ],
+     "name": "A RESOLUTION BY COUNCILMEMBERS KELSEA BOND, JASON DOZIER, JASON H. WINSTON, LILIANA BAKHTIARI, ANDREA L. BOONE, ANTONIO LEWIS, MICHAEL JULIAN BOND, MATT WESTMORELAND, AND ESHÉ COLLINS AS SUBSTITUTED AND AMENDED BY CITY UTILITIES COMMITTEE AND AS SUBSTITUTED BY THE ATLANTA CITY COUNCIL TO ESTABLISH…",
+     "outline": null,
+     "reference": "26-R-3853"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -488,6 +664,35 @@
    "excerpt": "… MARTIN, LILIANA BAKHTIARI, MATT WESTMORELAND, BYRON D. AMOS, AND MICHAEL JULIAN BOND REQUIRING DATA CENTERS LOCATED WITHIN THE CITY OF ATLANTA, AND DATA CENTERS SERVED BY THE CITY …",
    "excerptTerm": "data center",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4420",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4157&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "next": "City Utilities Committee (11/10/2026 10:00 AM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS ANTONIO LEWIS, WAYNE MARTIN, LILIANA BAKHTIARI, MATT WESTMORELAND, BYRON D. AMOS, AND MICHAEL JULIAN BOND REQUIRING DATA CENTERS LOCATED WITHIN THE CITY OF ATLANTA, AND DATA CENTERS SERVED BY THE CITY OF ATLANTA'S MUNICIPAL WATER SYSTEM THROUGH WHOLESALE OR…",
+     "outline": null,
+     "reference": "26-O-1474"
+    },
+    {
+     "motions": [
+      {
+       "next": "City Utilities Committee (11/10/2026 10:00 AM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "A RESOLUTION BY COUNCILMEMBERS KELSEA BOND, JASON DOZIER, JASON H. WINSTON, LILIANA BAKHTIARI, ANDREA L. BOONE, ANTONIO LEWIS, MICHAEL JULIAN BOND, MATT WESTMORELAND, AND ESHÉ COLLINS AS SUBSTITUTED AND AMENDED BY CITY UTILITIES COMMITTEE AND AS SUBSTITUTED BY THE ATLANTA CITY COUNCIL TO ESTABLISH…",
+     "outline": null,
+     "reference": "26-R-3853"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -509,6 +714,10 @@
    "excerpt": "… AND OPERATORS, INCLUDING BUT NOT LIMITED TO THOSE RELATED TO DATA CENTERS, SEEKING, RECEIVING, OR RENEWING ANY TAX CREDIT, TAX ABATEMENT, TAX INCENTIVE, GRANT, SU …",
    "excerptTerm": "data center",
    "fips": null,
+   "followThrough": "not-in-minutes",
+   "meetingId": "4299",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4155&Inline=True",
+   "outcomes": [],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -656,6 +865,35 @@
    "excerpt": "… MARTIN, LILIANA BAKHTIARI, MATT WESTMORELAND, BYRON D. AMOS, AND MICHAEL JULIAN BOND REQUIRING DATA CENTERS LOCATED WITHIN THE CITY OF ATLANTA, AND DATA CENTERS SERVED BY THE CITY OF ATLANTA …",
    "excerptTerm": "data center",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4419",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4149&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "next": "City Utilities Committee (10/27/2026 10:00 AM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS ANTONIO LEWIS, WAYNE MARTIN, LILIANA BAKHTIARI, MATT WESTMORELAND, BYRON D. AMOS, AND MICHAEL JULIAN BOND REQUIRING DATA CENTERS LOCATED WITHIN THE CITY OF ATLANTA, AND DATA CENTERS SERVED BY THE CITY OF ATLANTA'S MUNICIPAL WATER SYSTEM THROUGH WHOLESALE OR…",
+     "outline": null,
+     "reference": "26-O-1474"
+    },
+    {
+     "motions": [
+      {
+       "next": "City Utilities Committee (10/27/2026 10:00 AM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "A RESOLUTION BY COUNCILMEMBERS KELSEA BOND, JASON DOZIER, JASON H. WINSTON, LILIANA BAKHTIARI, ANDREA L. BOONE, ANTONIO LEWIS, MICHAEL JULIAN BOND, MATT WESTMORELAND, AND ESHÉ COLLINS AS SUBSTITUTED AND AMENDED BY CITY UTILITIES COMMITTEE AND AS SUBSTITUTED BY THE ATLANTA CITY COUNCIL TO ESTABLISH…",
+     "outline": null,
+     "reference": "26-R-3853"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -719,6 +957,10 @@
    "excerpt": "… AND OPERATORS, INCLUDING BUT NOT LIMITED TO THOSE RELATED TO DATA CENTERS, SEEKING, RECEIVING, OR RENEWING ANY TAX CREDIT, TAX ABATEMENT, TAX INCENTIVE, GRANT, SU …",
    "excerptTerm": "data center",
    "fips": null,
+   "followThrough": "not-in-minutes",
+   "meetingId": "4298",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4147&Inline=True",
+   "outcomes": [],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -803,6 +1045,9 @@
    "excerpt": "… Meeting Called to Order Pledge of Allegiance Invocation Regular Session 1. Discussion Regarding the Coweta County Data Center Ordinance 2. Presentation of Quality Development Corridor District (QDCD) Materials 3. Discussion Regarding the …",
    "excerptTerm": "data center",
    "fips": "13077",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1096",
+   "outcomes": [],
    "placeId": "coweta",
    "placeName": "Coweta County",
    "placeType": "county",
@@ -1013,6 +1258,35 @@
    "excerpt": "… ENSURE THAT ENTITIES, DEVELOPMENTS, AND OPERATORS, INCLUDING BUT NOT LIMITED TO THOSE RELATED TO DATA CENTERS, SEEKING, RECEIVING, OR RENEWING ANY TAX CREDIT, TAX ABATEMENT, TAX INCENTIVE, GRANT, SUBSIDY, OR O …",
    "excerptTerm": "data center",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4418",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4140&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "next": "City Utilities Committee (10/13/2026 10:00 AM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "AN ORDINANCE BY COUNCILMEMBERS ANTONIO LEWIS, WAYNE MARTIN, LILIANA BAKHTIARI, MATT WESTMORELAND, BYRON D. AMOS, AND MICHAEL JULIAN BOND REQUIRING DATA CENTERS LOCATED WITHIN THE CITY OF ATLANTA, AND DATA CENTERS SERVED BY THE CITY OF ATLANTA'S MUNICIPAL WATER SYSTEM THROUGH WHOLESALE OR…",
+     "outline": null,
+     "reference": "26-O-1474"
+    },
+    {
+     "motions": [
+      {
+       "next": "City Utilities Committee (10/13/2026 10:00 AM)",
+       "resultClass": "held",
+       "resultText": "Returned as held"
+      }
+     ],
+     "name": "A RESOLUTION BY COUNCILMEMBERS KELSEA BOND, JASON DOZIER, JASON H. WINSTON, LILIANA BAKHTIARI, ANDREA L. BOONE, ANTONIO LEWIS, MICHAEL JULIAN BOND, MATT WESTMORELAND, AND ESHÉ COLLINS AS SUBSTITUTED AND AMENDED BY CITY UTILITIES COMMITTEE AND AS SUBSTITUTED BY THE ATLANTA CITY COUNCIL TO ESTABLISH…",
+     "outline": null,
+     "reference": "26-R-3853"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -1034,6 +1308,24 @@
    "excerpt": "… .2. Resolution R-067-26 toCorrect the Effective Date in Resolution R-055-26 and Ratifying and Confirming the Data Center Moratorium 10.3. Resolution R-068-26 to Abandon a County Right-of-Way TPN: 03273 030A and TPN 03271 038 …",
    "excerptTerm": "data center",
    "fips": "13295",
+   "followThrough": "recorded",
+   "meetingId": "3213",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "abstain": 1,
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Resolution R-067-26 toCorrect the Effective Date in Resolution R-055-26 and Ratifying and Confirming the Data Center Moratorium",
+     "outline": "2.",
+     "reference": null
+    }
+   ],
    "placeId": "walker",
    "placeName": "Walker County",
    "placeType": "county",
@@ -1076,6 +1368,10 @@
    "excerpt": "… AND OPERATORS, INCLUDING BUT NOT LIMITED TO THOSE RELATED TO DATA CENTERS, SEEKING, RECEIVING, OR RENEWING ANY TAX CREDIT, TAX ABATEMENT, TAX INCENTIVE, GRANT, SU …",
    "excerptTerm": "data center",
    "fips": null,
+   "followThrough": "not-in-minutes",
+   "meetingId": "4297",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4139&Inline=True",
+   "outcomes": [],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -1258,20 +1554,20 @@
    "vendors": []
   },
   {
-   "body": "City Council",
+   "body": "Board of Commissioners",
    "confidence": "high",
-   "context": "unknown",
-   "date": "2026-09-21",
+   "context": null,
+   "date": "2026-09-15",
    "docType": "agenda",
-   "excerpt": "… ENSURE THAT ENTITIES, DEVELOPMENTS, AND OPERATORS, INCLUDING BUT NOT LIMITED TO THOSE RELATED TO DATA CENTERS, SEEKING, RECEIVING, OR RENEWING ANY TAX CREDIT, TAX ABATEMENT, TAX INCENTIVE, GRANT, SUBSIDY, OR O …",
-   "excerptTerm": "data center",
-   "fips": null,
-   "placeId": "atlanta",
-   "placeName": "City of Atlanta",
-   "placeType": "city",
-   "region": "Metro Atlanta",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13279",
+   "placeId": "toombs",
+   "placeName": "Toombs County",
+   "placeType": "county",
+   "region": "South Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=3934&Inline=True",
+   "sourceUrl": "https://toombscountyga.gov/wp-content/uploads/2026/09/20260911193836.pdf",
    "tags": [],
    "terms": [
     "data center"
@@ -1308,6 +1604,9 @@
    "excerpt": "… 0.1918 $ 0.0110 $ 0.0592 $ 0.0526 $ 0.0409 $ 0.0105 $ 0.3661 per square foot Data Center $ - $ - $ - $ 0.1633 $ 0.0094 $ 0 …",
    "excerptTerm": "data center",
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1178",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -1377,6 +1676,48 @@
    "region": "Northwest Georgia",
    "sourceType": "ocr",
    "sourceUrl": "https://www.whitfieldcountyga.com/Documents/Government/BOC%20Meeting%20Minutes/BOC%20Meetings%202026/BOC%20September%2014,%202026%20Regular%20Business%20Meeting.pdf",
+   "tags": [],
+   "terms": [
+    "data center"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-09-11",
+   "docType": "agenda",
+   "excerpt": "… §3-102, of the Chatham County Code imposing a temporary moratorium on development related to large scale data centers with an electrical capacity of 10 Megawatts or greater and prohibiting the conversion of warehouses …",
+   "excerptTerm": "data center",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1748&Inline=True",
+   "tags": [],
+   "terms": [
+    "data center"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-09-10",
+   "docType": "minutes",
+   "excerpt": "… onded by Commissioner Darriel Nobles. Motion carried unanimously. Business  Cryptocurrency, Data Mining, and Data Centers Ordinance: County Manager John Jones addressed the Board regarding proposed changes to the Cryptocurrency, Data …",
+   "excerptTerm": "data center",
+   "fips": "13279",
+   "placeId": "toombs",
+   "placeName": "Toombs County",
+   "placeType": "county",
+   "region": "South Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://toombscountyga.gov/wp-content/uploads/2026/09/09_10_2026_PUBLIC_HEARING.pdf",
    "tags": [],
    "terms": [
     "data center"
@@ -1524,27 +1865,6 @@
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_0901_Minutes.pdf",
-   "tags": [],
-   "terms": [
-    "data center"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-08-28",
-   "docType": "agenda",
-   "excerpt": "… §3-102, of the Chatham County Code imposing a temporary moratorium on development related to large scale data centers with an electrical capacity of 10 Megawatts or greater and prohibiting the conversion of warehouses …",
-   "excerptTerm": "data center",
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1746&Inline=True",
    "tags": [],
    "terms": [
     "data center"
@@ -1704,6 +2024,27 @@
    "context": "agenda-action",
    "date": "2026-08-25",
    "docType": "agenda",
+   "excerpt": "… the Agenda VIII. First Reading IX. Second Reading/Public Hearing 1. ULDC ordinance amendment related to Data Centers. Planning Commission voted to approve with proposed changes and notes from Planning Commission by a vote …",
+   "excerptTerm": "data center",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5220,plainText=false)",
+   "tags": [],
+   "terms": [
+    "data center"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-08-25",
+   "docType": "agenda",
    "excerpt": "… trict(s): All Commission Districts A Resolution Requiring an Independent, Third-Party Health and Environmental Study of Data Centers and Their Possible Impact on DeKalb County and Board of Commissioners Review of the Study Before DeKalb County’s Data …",
    "excerptTerm": "data center",
    "fips": "13089",
@@ -1770,6 +2111,9 @@
    "excerpt": "… create a legacy of awareness, prevention, and hope for future generations. Commissioner Henry Mitchell III will host “Data Centers and Douglas County: Separating Fact from Fiction” on Wednesday, August 26, from 6 p.m. to 8 p.m. in Citizens Hall. The …",
    "excerptTerm": "data center",
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1315",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -1914,15 +2258,15 @@
    "context": "agenda-action",
    "date": "2026-08-11",
    "docType": "agenda",
-   "excerpt": "… 27. To adopt a resolution extending a temporary moratorium on rezoning applications and permits for new data centers in unincorporated Cobb County. Internal Audit 28. To approve an updated Internal Audit Department Charter in …",
+   "excerpt": "… ic Participation Regarding Matters on the Agenda VIII. First Reading 1. ULDC ordinance amendment related to Data Centers. Planning Commission voted to approve with proposed changes and notes from Planning Commission by a vote …",
    "excerptTerm": "data center",
-   "fips": "13067",
-   "placeId": "cobb",
-   "placeName": "Cobb County",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
    "placeType": "county",
-   "region": "Metro Atlanta",
+   "region": "Northwest Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10156,plainText=false)",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4206,plainText=false)",
    "tags": [],
    "terms": [
     "data center"
@@ -1959,6 +2303,36 @@
    "excerpt": "… for Month ending May 31, 2026. 8. Public Hearing - 2027 Fiscal Year Budget 9. Public Hearing - To Extend Data Center Moratorium to 180 Days 10. Planning and Zoning 10.1. Planning & Zoning Meeting Minutes June 19, 2026 Meeting …",
    "excerptTerm": "data center",
    "fips": "13295",
+   "followThrough": "recorded",
+   "meetingId": "12",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Resolution R-055-26 to Establishing a Temporary Moratorium (180 Days) on Data Centers",
+     "outline": "3.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Resolution R-056-26 to Establishing a Data Center Study Group",
+     "outline": "4.",
+     "reference": null
+    }
+   ],
    "placeId": "walker",
    "placeName": "Walker County",
    "placeType": "county",
@@ -2043,6 +2417,23 @@
    "excerpt": "… s, the issuance of Land Disturbance Permits, and the Issuance of Other Permits for Development of Any Data Center, Batter Energy Storage System, and Solar Power Farms; and for Other Lawful Purposes (ADDED) - …",
    "excerptTerm": "data center",
    "fips": "13045",
+   "followThrough": "recorded",
+   "meetingId": "835",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 7
+      }
+     ],
+     "name": "Resolution Extending a Moratorium for an Additional One Hundred Days of the Establishment of Acceptance of Applications, the issuance of Land Disturbance Permits, and the Issuance of Other Permits for Development of Any Data Center, Batter Energy Storage System, and Solar Power Farms; and for Other…",
+     "outline": "IV.",
+     "reference": null
+    }
+   ],
    "placeId": "carroll",
    "placeName": "Carroll County",
    "placeType": "county",
@@ -2337,6 +2728,9 @@
    "excerpt": "… Discussion Regarding the Fiscal Year 2027 Budget and 2026 Millage Rate 2. Discussion Regarding the Coweta County Data Center Ordinance 3. Discussion Regarding the Georgia Cottage Food Law and Local Ordinances Adjournment As set forth in t …",
    "excerptTerm": "data center",
    "fips": "13077",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1077",
+   "outcomes": [],
    "placeId": "coweta",
    "placeName": "Coweta County",
    "placeType": "county",
@@ -2400,6 +2794,24 @@
    "excerpt": "… urrently being prepared by County Counsel) 16.4. Resolution R-053-26 Establishing a Temporary Moratorium on Data Centers 16.5. Resolution R-054-26 to Direct the Sale of Certain County Owned Real Property. Tax Map and Parcel Num …",
    "excerptTerm": "data center",
    "fips": "13295",
+   "followThrough": "recorded",
+   "meetingId": "11",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "abstain": 1,
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 4
+      }
+     ],
+     "name": "Resolution R-053-26 Establishing a Temporary Moratorium on Data Centers",
+     "outline": "4.",
+     "reference": null
+    }
+   ],
    "placeId": "walker",
    "placeName": "Walker County",
    "placeType": "county",
@@ -2652,6 +3064,23 @@
    "excerpt": "… County Accountability Courts 15. Request Approval/Execution of a Resolution to Enact a Moratorium Associated with Data Centers 16. Request Approval/Execution of a Right-of-Entry Associated with Storm Drain Pipe Repair at 110 Hazelridge Lane …",
    "excerptTerm": "data center",
    "fips": "13077",
+   "followThrough": "recorded",
+   "meetingId": "1075",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Execute",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "Request Approval/Execution of a Resolution to Enact a Moratorium Associated with Data Centers",
+     "outline": "15.",
+     "reference": null
+    }
+   ],
    "placeId": "coweta",
    "placeName": "Coweta County",
    "placeType": "county",
@@ -2694,6 +3123,9 @@
    "excerpt": "… n of Rules Regular Session 1. Discussion Regarding the Fiscal Year 2027 Budget 2. Discussion Regarding Proposed Data Center Ordinance and Authority 3. Discussion Regarding Potential Data Center Moratorium 4. Discussion Regarding an Int …",
    "excerptTerm": "data center",
    "fips": "13077",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1116",
+   "outcomes": [],
    "placeId": "coweta",
    "placeName": "Coweta County",
    "placeType": "county",
@@ -2772,27 +3204,6 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-06-09",
-   "docType": "agenda",
-   "excerpt": "… DeKalb County Board of Commissioners to hold a public hearing to consider and review whether to extend a moratorium on Data Centers in DeKalb County. Resolution",
-   "excerptTerm": "data center",
-   "fips": "13089",
-   "placeId": "dekalb",
-   "placeName": "DeKalb County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "legistar",
-   "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4478&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-   "tags": [],
-   "terms": [
-    "data center"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
    "context": "unknown",
    "date": "2026-06-09",
    "docType": "agenda",
@@ -2854,27 +3265,6 @@
    "vendors": []
   },
   {
-   "body": "Committee of the Whole",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-06-02",
-   "docType": "agenda",
-   "excerpt": "Data Center Discussion",
-   "excerptTerm": "data center",
-   "fips": "13089",
-   "placeId": "dekalb",
-   "placeName": "DeKalb County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "legistar",
-   "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4476&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-   "tags": [],
-   "terms": [
-    "data center"
-   ],
-   "vendors": []
-  },
-  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "public-comment",
@@ -2883,6 +3273,23 @@
    "excerpt": "… lications, the Issuance of Land Disturbance Permits, and the Issuance of Other Permits for Development of Any Data Center, Battery Energy Storage System, and Solar Power Farms; and for Other Lawful Purposes …",
    "excerptTerm": "data center",
    "fips": "13045",
+   "followThrough": "recorded",
+   "meetingId": "833",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 7
+      }
+     ],
+     "name": "Resolution Extending a Moratorium for an Additional One Hundred Days of the Establishment of Acceptance of Applications, the Issuance of Land Disturbance Permits, and the Issuance of Other Permits for Development of Any Data Center, Battery Energy Storage System, and Solar Power Farms; and for…",
+     "outline": "II.",
+     "reference": null
+    }
+   ],
    "placeId": "carroll",
    "placeName": "Carroll County",
    "placeType": "county",
@@ -3180,6 +3587,78 @@
    "excerpt": "… r Annexation of Tax Parcel C1480001 +/- 123.36 Acres into the City of Social Circle, as Part of a Proposed Data Center Development, Under Light Industrial (LI) Zoning. Application is Being Made Under the Provisions of the Off …",
    "excerptTerm": "data center",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "2668",
+   "minutesDraft": true,
+   "minutesUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=2291&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "resultClass": "completed",
+       "resultText": "Completed"
+      }
+     ],
+     "name": "ANX-2026-001 - Request for Annexation of Tax Parcel C1480001 +/- 123.36 Acres into the City of Social Circle, as Part of a Proposed Data Center Development, Under Light Industrial (LI) Zoning. Application is Being Made Under the Provisions of the Official Code of Georgia Section 36-36-20 ET SEQ,…",
+     "outline": "VIII. 1.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "resultClass": "completed",
+       "resultText": "Completed"
+      }
+     ],
+     "name": "REZ-2026-003 - Request to Rezone from Rural Estate with Watershed Protection Overlay (A1 WP2), as Currently Zoned by Walton County, to Light Industrial (LI) to Allow for a Data Center at 1402 Roy Malcom Road; C1480001.",
+     "outline": "VIII. 3.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "resultClass": "completed",
+       "resultText": "Completed"
+      },
+      {
+       "absent": 1,
+       "result": "passed",
+       "resultClass": "adopted",
+       "resultText": "Adopted",
+       "yes": 3
+      },
+      {
+       "absent": 1,
+       "result": "passed",
+       "resultClass": "adopted",
+       "resultText": "Adopted",
+       "yes": 3
+      },
+      {
+       "absent": 1,
+       "result": "passed",
+       "resultClass": "adopted",
+       "resultText": "Adopted",
+       "yes": 3
+      },
+      {
+       "absent": 1,
+       "abstain": 1,
+       "result": "passed",
+       "resultClass": "adopted",
+       "resultText": "Adopted",
+       "tally": [
+        3,
+        0
+       ],
+       "yes": 3
+      }
+     ],
+     "name": "SU-2026-001 - Request for Special Use to Allow a Data Center Under Light Industrial (LI) Zoning at 1402 Roy Malcom Road; C1480001.",
+     "outline": "VIII. 4.",
+     "reference": null
+    }
+   ],
    "placeId": "socialcircle",
    "placeName": "City of Social Circle",
    "placeType": "city",
@@ -3243,6 +3722,48 @@
    "excerpt": "… for Annexation of Tax Parcel C1480001 +/- 123.36 Acres into the City of Social Circle, as Part of a Proposed Data Center Development, Under Light Industrial (LI) Zoning. Application is Being Made Under the Provisions of the Offici …",
    "excerptTerm": "data center",
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "2726",
+   "minutesDraft": true,
+   "minutesUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=2287&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "next": "4/21/2026 6:30 PM",
+       "resultClass": "scheduled",
+       "resultText": "Scheduled for"
+      }
+     ],
+     "name": "ANX-2026-001 - Request for Annexation of Tax Parcel C1480001 +/- 123.36 Acres into the City of Social Circle, as Part of a Proposed Data Center Development, Under Light Industrial (LI) Zoning. Application is Being Made Under the Provisions of the Official Code of Georgia Section 36-36-20 ET SEQ,…",
+     "outline": "II. 1.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "next": "4/21/2026 6:30 PM",
+       "resultClass": "scheduled",
+       "resultText": "Scheduled for"
+      }
+     ],
+     "name": "REZ-2026-003 - Request to Rezone from Rural Estate with Watershed Protection Overlay (A1 WP2), as Currently Zoned by Walton County, to Light Industrial (LI) to Allow for a Data Center at 1402 Roy Malcom Road; C1480001.",
+     "outline": "II. 3.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "next": "4/21/2026 6:30 PM",
+       "resultClass": "scheduled",
+       "resultText": "Scheduled for"
+      }
+     ],
+     "name": "SU-2026-001 - Request for Special Use to Allow a Data Center Under Light Industrial (LI) Zoning at 1402 Roy Malcom Road; C1480001.",
+     "outline": "II. 4.",
+     "reference": null
+    }
+   ],
    "placeId": "socialcircle",
    "placeName": "City of Social Circle",
    "placeType": "city",
@@ -3277,6 +3798,75 @@
    "vendors": []
   },
   {
+   "body": "Planning Commission",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-03-24",
+   "docType": "agenda",
+   "excerpt": "… Annexation of Tax Parcel C1480001 +/- 123.36 Acres into the City of Social Circle, as Part of a Proposed Data Center Development, Under Light Industrial (LI) Zoning. Application is Being Made Under the Provisions of the O …",
+   "excerptTerm": "data center",
+   "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "2705",
+   "minutesDraft": true,
+   "minutesUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=2285&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "absent": 2,
+       "next": "4/6/2026 6:00 PM",
+       "resultClass": "tabled",
+       "resultText": "Tabled",
+       "yes": 5
+      }
+     ],
+     "name": "ANX-2026-001 - Request for Annexation of Tax Parcel C1480001 +/- 123.36 Acres into the City of Social Circle, as Part of a Proposed Data Center Development, Under Light Industrial (LI) Zoning. Application is Being Made Under the Provisions of the Official Code of Georgia Section 36-36-20 ET SEQ,…",
+     "outline": "IV. a.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "absent": 2,
+       "next": "4/6/2026 6:00 PM",
+       "resultClass": "tabled",
+       "resultText": "Tabled",
+       "yes": 5
+      }
+     ],
+     "name": "REZ-2026-003 - Request to Rezone from Rural Estate with Watershed Protection Overlay (A1 WP2), as Currently Zoned by Walton County, to Light Industrial (LI) to Allow for a Data Center at 1402 Roy Malcom Road; C1480001.",
+     "outline": "IV. c.",
+     "reference": null
+    },
+    {
+     "motions": [
+      {
+       "absent": 2,
+       "next": "4/6/2026 6:00 PM",
+       "resultClass": "tabled",
+       "resultText": "Tabled",
+       "yes": 5
+      }
+     ],
+     "name": "SU-2026-001 - Request for Special Use to Allow a Data Center Under Light Industrial (LI) Zoning at 1402 Roy Malcom Road; C1480001.",
+     "outline": "IV. d.",
+     "reference": null
+    }
+   ],
+   "placeId": "socialcircle",
+   "placeName": "City of Social Circle",
+   "placeType": "city",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2126&Inline=True",
+   "tags": [],
+   "terms": [
+    "data center"
+   ],
+   "vendors": []
+  },
+  {
    "body": "City Council",
    "confidence": "high",
    "context": "unknown",
@@ -3299,27 +3889,6 @@
    "vendors": []
   },
   {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-03-18",
-   "docType": "agenda",
-   "excerpt": "… range a speaking date, contact the Clerk’s Office. (CONDUCTED) 14 Speakers: LA Pink (Fulton Corruption); Merlon Pierce (Data Centers/Chem Trails); Joyce Farmer (Fulton County Jail/Sheriff); Dr. Valerie Montgomery Rice (#26-0156); Jeromey Beaman (#26-0 …",
-   "excerptTerm": "data center",
-   "fips": "13121",
-   "placeId": "fulton",
-   "placeName": "Fulton County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "legistar",
-   "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6380&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
-   "tags": [],
-   "terms": [
-    "data center"
-   ],
-   "vendors": []
-  },
-  {
    "body": "City Council",
    "confidence": "high",
    "context": "unknown",
@@ -3334,27 +3903,6 @@
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://cityofcovington.org/ckeditorfiles/files/2026_CityCouncil_0316_Minutes.pdf",
-   "tags": [],
-   "terms": [
-    "data center"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "City Council",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-03-10",
-   "docType": "agenda",
-   "excerpt": "… y Downs, Re: Chattahoochee Dam Alarm Notification on Riverwalk 5. Mrs. Darlene Laird, Re: Requesting a Moratorium on Data Centers. 6. Mrs. Leslie Landi, Re: Project Ruby / Overlay Rezoning Proposal 7. Mr. Gregory Foster, Re: Expressing Suppor …",
-   "excerptTerm": "data center",
-   "fips": "13215",
-   "placeId": "muscogee",
-   "placeName": "Columbus-Muscogee County",
-   "placeType": "consolidated",
-   "region": "West Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/columga-pubu/MEET-Agenda-88bb014cddb7417f9ddeb255d11f9f6d.pdf",
    "tags": [],
    "terms": [
     "data center"
@@ -3400,49 +3948,6 @@
    "tags": [],
    "terms": [
     "data center"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "City Council",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-02-24",
-   "docType": "agenda",
-   "excerpt": "… for other purposes. (Councilor Crabb) PUBLIC AGENDA 1. Ms. Kayce Burdett, Re: Environmental and Community Impacts of Data Centers 2. Mr. David Gibbs, Re: Mismanagement 3. Mrs. Alyssa Nia Williams, Re: Public Agenda Process 4. Ms. Marietta …",
-   "excerptTerm": "data center",
-   "fips": "13215",
-   "placeId": "muscogee",
-   "placeName": "Columbus-Muscogee County",
-   "placeType": "consolidated",
-   "region": "West Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/columga-pubu/MEET-Agenda-19c256d9d4654206be5a840a65c9d462.pdf",
-   "tags": [],
-   "terms": [
-    "data center"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Planning Commission",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-02-12",
-   "docType": "agenda",
-   "excerpt": "… sferred and/or stored. The following describe the subcategories of Data Management and Processing Center uses: A. Data Center. A facility or portion of a facility housing networked computer systems and telecommunications equipment used …",
-   "excerptTerm": "data center",
-   "fips": "13247",
-   "placeId": "rockdale",
-   "placeName": "Rockdale County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.rockdalecountyga.gov/wp-content/uploads/2026/02/2.12.26-PC-Packet-2.pdf",
-   "tags": [],
-   "terms": [
-    "data center",
-    "hyperscale"
    ],
    "vendors": []
   },
@@ -3574,14 +4079,15 @@
   }
  ],
  "metadata": {
-  "citiesScanned": 9,
+  "citiesScanned": 10,
   "consolidatedScanned": 4,
-  "countiesScanned": 46,
+  "countiesScanned": 49,
   "emoji": "🏭",
-  "generatedAt": "2026-11-10T22:35:22Z",
+  "generatedAt": "2026-11-20T12:31:46Z",
   "label": "Data centers",
-  "placesScanned": 59,
-  "placesWithMentions": 32,
+  "mentionsWithOutcomes": 14,
+  "placesScanned": 63,
+  "placesWithMentions": 35,
   "topic": "data-center",
   "universeCities": 537,
   "universeConsolidated": 9,

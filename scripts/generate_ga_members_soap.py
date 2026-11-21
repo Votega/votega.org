@@ -41,6 +41,7 @@ from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.ga_identity import apply_identity_slots, load_pin_overrides
+from lib import ga_ledger as LEDGER
 from lib.ga_legislator_pages import assign_votega_urls, base_slug
 from lib.ga_leadership import committee_index, normalize_title
 from lib.ga_roster import (EXECUTIVE_CHAMBER, apply_member_overrides, biennium_slug, convening_date,
@@ -139,14 +140,45 @@ def first_term_start(term_session, building_description):
     return convening_date(int(m.group(1))).isoformat()
 
 
-def outgoing_archived(slug):
-    """Is sessions/<slug>/members.json published in the sibling repo? Any failure is False."""
+def fetch_archived_roster(slug):
+    """The published sessions/<slug>/members.json, parsed; None if absent or unreadable."""
     try:
-        req = urllib.request.Request(ARCHIVE_URL.format(slug=slug), method="HEAD")
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            return resp.status == 200
-    except (urllib.error.URLError, OSError):
-        return False
+        with urllib.request.urlopen(ARCHIVE_URL.format(slug=slug), timeout=60) as resp:
+            if resp.status != 200:
+                return None
+            return json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.URLError, OSError, ValueError):
+        return None
+
+
+def frozen_roster_differences(frozen, committed):
+    """Why the frozen roster is not a faithful copy of the committed one; [] if it is.
+
+    Existence alone proved nothing: the first 2025-26 freeze was a 2026-08-22 Open States
+    snapshot that predated the 11th resignation, a death recorded as a resignation, and
+    every special-election successor, yet it would have let the rollover through. Once the
+    rollover writes, the outgoing roster exists nowhere else, so the frozen copy must say
+    who served and how each member stands: the same session, the same members (by roster
+    id, which also covers injected vacancies with no legisGaGovId), and the same
+    status/statusDate for each. Contact details and other fields that change daily are
+    deliberately not compared.
+    """
+    diffs = []
+    f_meta, c_meta = frozen.get("metadata") or {}, committed.get("metadata") or {}
+    if f_meta.get("session") != c_meta.get("session"):
+        diffs.append(f"session: frozen {f_meta.get('session')!r}, committed {c_meta.get('session')!r}")
+    f_by = {m.get("id"): m for m in frozen.get("members") or []}
+    c_by = {m.get("id"): m for m in committed.get("members") or []}
+    for mid in sorted(set(c_by) - set(f_by), key=str):
+        diffs.append(f"missing from the freeze: {c_by[mid].get('name')} ({mid})")
+    for mid in sorted(set(f_by) - set(c_by), key=str):
+        diffs.append(f"in the freeze but not the roster: {f_by[mid].get('name')} ({mid})")
+    for mid in sorted(set(f_by) & set(c_by), key=str):
+        f_st = (f_by[mid].get("status"), f_by[mid].get("statusDate"))
+        c_st = (c_by[mid].get("status"), c_by[mid].get("statusDate"))
+        if f_st != c_st:
+            diffs.append(f"status of {c_by[mid].get('name')} ({mid}): frozen {f_st}, committed {c_st}")
+    return diffs
 
 
 def build_record(listing, detail, legis_session, committees, prior, rollover=False):
@@ -260,8 +292,8 @@ def parse_args(argv):
     ap.add_argument("--new-biennium", action="store_true",
                     help="acknowledge and perform a biennium rollover; refused otherwise")
     ap.add_argument("--archive-confirmed", action="store_true",
-                    help="assert the outgoing roster was frozen (skips the published-"
-                         "archive check)")
+                    help="assert the outgoing roster was frozen and is current (skips "
+                         "fetching and comparing the published archive)")
     return ap.parse_args(argv)
 
 
@@ -278,6 +310,11 @@ def refuse_rollover(rollover):
           f"  1. freeze-ga-roster for {biennium_slug(was['session']) or was['session']}\n"
           f"  2. python scripts/generate_ga_members_soap.py --new-biennium\n"
           f"See RECURRING-TASKS.md §3.", file=sys.stderr)
+
+
+def ledger_path_for(output_file):
+    """The page ledger lives beside the roster it describes."""
+    return os.path.join(os.path.dirname(os.path.abspath(output_file)), "ga-legislator-ledger.json")
 
 
 def main(argv=None):
@@ -312,13 +349,26 @@ def main(argv=None):
         return 1
     if rollover:
         was_slug = biennium_slug(rollover["from"]["session"])
-        if not args.archive_confirmed and not (was_slug and outgoing_archived(was_slug)):
-            print(f"Error: sessions/{was_slug}/members.json is not published in the "
-                  f"ga-legislators repo. Run freeze-ga-roster for {was_slug} FIRST — once "
-                  f"this writes, the outgoing roster is gone from the repo. (Pass "
-                  f"--archive-confirmed if you froze it and this check cannot see it.)",
-                  file=sys.stderr)
-            return 1
+        if not args.archive_confirmed:
+            frozen = fetch_archived_roster(was_slug) if was_slug else None
+            if frozen is None:
+                print(f"Error: sessions/{was_slug}/members.json is not published in the "
+                      f"ga-legislators repo. Run freeze-ga-roster for {was_slug} FIRST — once "
+                      f"this writes, the outgoing roster is gone from the repo. (Pass "
+                      f"--archive-confirmed if you froze it and this check cannot see it.)",
+                      file=sys.stderr)
+                return 1
+            stale = frozen_roster_differences(frozen, committed)
+            if stale:
+                print(f"Error: the published sessions/{was_slug}/members.json does not match "
+                      f"the committed roster ({len(stale)} difference"
+                      f"{'' if len(stale) == 1 else 's'}), so the freeze is stale and the "
+                      f"outgoing roster would be lost as it stands now. Re-run "
+                      f"freeze-ga-roster for {was_slug}, then retry. Differences:\n  "
+                      + "\n  ".join(stale[:20])
+                      + (f"\n  ... and {len(stale) - 20} more" if len(stale) > 20 else ""),
+                      file=sys.stderr)
+                return 1
         loose = untagged_departures(OVERRIDES_FILE)
         if loose:
             print(f"Error: {len(loose)} override entr{'y' if len(loose) == 1 else 'ies'} "
@@ -451,6 +501,16 @@ def main(argv=None):
     # district (after overrides), so a rename moves it in the same run.
     assign_votega_urls(members)
 
+    # The page ledger: every URL ever published, append-only. Refuse before writing the
+    # roster if a URL would change owner.
+    try:
+        ledger_path = ledger_path_for(output_file)
+        ledger = LEDGER.load_ledger(ledger_path)
+        LEDGER.update_ledger(ledger, members, tag)  # in memory only; saved just before the roster write
+    except LEDGER.LedgerError as e:
+        print(f"Error: page ledger: {e}. Refusing to write.", file=sys.stderr)
+        return 1
+
     # SOAP proposes, a human disposes (spec §8.4): surface a departure, never write a
     # status. Computed AFTER the overrides so these describe the file they ship in — read
     # against the PREVIOUS file instead, a departure characterised in this very run still
@@ -542,6 +602,7 @@ def main(argv=None):
                 for m in preserved],
             "overridesOutOfScope": skipped,
         })
+    LEDGER.save_ledger(ledger, ledger_path)
     write_json_atomic(output_file, output, indent=2)
 
     print(f"\nWrote {len(members)} records to {output_file}")

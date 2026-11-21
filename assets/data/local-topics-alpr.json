@@ -61,6 +61,12 @@
    "region": "Northwest Georgia"
   },
   {
+   "placeId": "dalton",
+   "placeName": "City of Dalton",
+   "placeType": "city",
+   "region": "Northwest Georgia"
+  },
+  {
    "placeId": "lafayette",
    "placeName": "City of LaFayette",
    "placeType": "city",
@@ -109,8 +115,20 @@
    "region": "Northwest Georgia"
   },
   {
+   "placeId": "hall",
+   "placeName": "Hall County",
+   "placeType": "county",
+   "region": "Northeast Georgia"
+  },
+  {
    "placeId": "houston",
    "placeName": "Houston County",
+   "placeType": "county",
+   "region": "Middle Georgia"
+  },
+  {
+   "placeId": "laurens",
+   "placeName": "Laurens County",
    "placeType": "county",
    "region": "Middle Georgia"
   },
@@ -163,6 +181,12 @@
    "region": "South Georgia"
   },
   {
+   "placeId": "toombs",
+   "placeName": "Toombs County",
+   "placeType": "county",
+   "region": "South Georgia"
+  },
+  {
    "placeId": "walker",
    "placeName": "Walker County",
    "placeType": "county",
@@ -182,6 +206,128 @@
   }
  ],
  "mentions": [
+  {
+   "body": "Board of Commissioners",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13089",
+   "placeId": "dekalb",
+   "placeName": "DeKalb County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "legistar",
+   "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4498&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+   "tags": [],
+   "terms": [
+    "crime center"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "… hods. The BOC approved the award of the above-referenced contract with American Traffic Solutions, Inc., dba Verra Mobility, located in Tempe, Arizona on November 6, 2018. This recommendation is to amend the current contract to reduce Ver …",
+   "excerptTerm": "verra mobility",
+   "fips": "13063",
+   "placeId": "clayton",
+   "placeName": "Clayton County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5447&compileOutputType=1",
+   "tags": [],
+   "terms": [
+    "verra mobility"
+   ],
+   "vendors": [
+    "Verra Mobility"
+   ]
+  },
+  {
+   "body": "Board of County Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-11-17",
+   "docType": "agenda",
+   "excerpt": "… Activity 231-5-0000-542600 OTHER EQUIP >$10,000 12/13/2023 Reissue PO 08004747 Body Cameras and Car Cameras MOTOROLA SOLUTIONS INC 1162387958 123,100.91 231-5-0000-542600 …",
+   "excerptTerm": "body cam",
+   "fips": "13039",
+   "placeId": "camden",
+   "placeName": "Camden County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_11172026-677",
+   "tags": [],
+   "terms": [
+    "axon enterprise",
+    "body cam"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "City Council",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-11-16",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4421",
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4175&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "absent": 4,
+       "result": "passed",
+       "resultClass": "adopted-substitute",
+       "resultText": "Adopted substitute",
+       "tally": [
+        11,
+        0
+       ],
+       "yes": 11
+      }
+     ],
+     "name": "A SUBSTITUTE RESOLUTION BY CITY UTILITIES COMMITTEE AUTHORIZING THE MAYOR OR HIS DESIGNEE, TO EXERCISE THE FIRST RENEWAL OPTION FOR SPECIAL PROCUREMENT AGREEMENT DPW/2302/1230212(B) MOBILE SURVEILLANCE CAMERAS WITH FMP INNOVATIONS, LLC, ON BEHALF OF THE DEPARTMENT OF PUBLIC WORKS, FOR A TERM OF ONE…",
+     "outline": null,
+     "reference": "26-R-4352"
+    },
+    {
+     "motions": [
+      {
+       "next": "Public Safety & Legal Administration Committee (11/23/2026 1:00 PM)",
+       "resultClass": "referred",
+       "resultText": "Referred without objection"
+      }
+     ],
+     "name": "A RESOLUTION BY COUNCILMEMBER ANDREA L. BOONE AUTHORIZING THE MAYOR OR HIS DESIGNEE, TO EXECUTE AN AGREEMENT FOR IFB/PS/APD/2603-1260154/E911 CLOUD BASED CUSTOMER CONTACT CENTER SOLUTION WITH AXON ENTERPRISE, INC., ON BEHALF OF THE ATLANTA POLICE DEPARTMENT, FOR A TERM OF THREE (3) YEARS WITH TWO…",
+     "outline": null,
+     "reference": "26-R-4423"
+    }
+   ],
+   "placeId": "atlanta",
+   "placeName": "City of Atlanta",
+   "placeType": "city",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=3966&Inline=True",
+   "tags": [],
+   "terms": [
+    "surveillance camera"
+   ],
+   "vendors": []
+  },
   {
    "body": "City Council",
    "confidence": "high",
@@ -236,6 +382,35 @@
    "excerpt": null,
    "excerptTerm": null,
    "fips": null,
+   "followThrough": "recorded",
+   "meetingId": "4362",
+   "minutesDraft": true,
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4172&Inline=True",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "next": "11/16/2026 1:00 PM",
+       "no": 1,
+       "resultClass": "recommended",
+       "resultText": "Favorable on substitute",
+       "tally": [
+        6,
+        1
+       ],
+       "yes": 6
+      },
+      {
+       "resultClass": "amended",
+       "resultText": "Bring forth substitute",
+       "yes": 7
+      }
+     ],
+     "name": "A RESOLUTION BY CITY UTILITIES COMMITTEE AUTHORIZING THE MAYOR OR HIS DESIGNEE, TO EXERCISE THE FIRST RENEWAL OPTION FOR SPECIAL PROCUREMENT AGREEMENT DPW/2302/1230212(B) MOBILE SURVEILLANCE CAMERAS WITH FMP INNOVATIONS, LLC, ON BEHALF OF THE DEPARTMENT OF PUBLIC WORKS, FOR A TERM OF ONE (1) YEAR,…",
+     "outline": null,
+     "reference": "26-R-4352"
+    }
+   ],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -271,6 +446,28 @@
   },
   {
    "body": "Board of Commissioners",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-11-06",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1750&Inline=True",
+   "tags": [],
+   "terms": [
+    "axon enterprise",
+    "surveillance camera"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
    "date": "2026-11-05",
@@ -278,6 +475,9 @@
    "excerpt": "… Subscription Service agreement with Ford Motor Company for a no-charge trial of on-board vehicle dashcams - Director, Department of Fleet and Environmental Services (B) Board approval …",
    "excerptTerm": "dashcam",
    "fips": "13117",
+   "followThrough": "not-in-minutes",
+   "meetingId": "461",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -314,12 +514,39 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": null,
+   "date": "2026-10-27",
+   "docType": "minutes",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13247",
+   "placeId": "rockdale",
+   "placeName": "Rockdale County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.rockdalecountyga.gov/wp-content/uploads/2026/11/BOC-minutes-10.27.26.pdf",
+   "tags": [],
+   "terms": [
+    "axon enterprise",
+    "flock"
+   ],
+   "vendors": [
+    "Flock Safety"
+   ]
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "unknown",
    "date": "2026-10-20",
    "docType": "agenda",
    "excerpt": "… val of a Subscription Service agreement with Ford Motor Company for a no-charge trial of on-board vehicle dashcams - Director, Department of Fleet and Environmental Services (3) Board consideration and approv …",
    "excerptTerm": "dashcam",
    "fips": "13117",
+   "followThrough": "not-in-minutes",
+   "meetingId": "439",
+   "outcomes": [],
    "placeId": "forsyth",
    "placeName": "Forsyth County",
    "placeType": "county",
@@ -714,30 +941,6 @@
    ]
   },
   {
-   "body": "City Council",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-09-21",
-   "docType": "agenda",
-   "excerpt": "… E, TO ENTER INTO AMENDMENT NUMBER SIX FOR AGREEMENT SP-APD- 2212-1230170, BODY CAMERA/POLICE EQUIPMENT & SERVICES WITH AXON ENTERPRISE, INC., ON BEHALF OF THE ATLANTA POLICE …",
-   "excerptTerm": "body cam",
-   "fips": null,
-   "placeId": "atlanta",
-   "placeName": "City of Atlanta",
-   "placeType": "city",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=3934&Inline=True",
-   "tags": [],
-   "terms": [
-    "axon enterprise",
-    "body cam",
-    "body worn",
-    "fleet camera"
-   ],
-   "vendors": []
-  },
-  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "agenda-action",
@@ -833,6 +1036,23 @@
    "excerpt": null,
    "excerptTerm": null,
    "fips": "13097",
+   "followThrough": "recorded",
+   "meetingId": "1152",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 5
+      }
+     ],
+     "name": "Approval for DCSO to enter into a one‑year agreement, with automatic annual renewals for a total term of five (5) years (Dec. 1, 2026 – Nov. 30, 2031), with Axon Enterprise, Inc. for tasers, at a cost of $80,860 for the first year and $149,078.28 per year for each subsequent year, and to authorize…",
+     "outline": "8.",
+     "reference": null
+    }
+   ],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
@@ -854,33 +1074,15 @@
    "excerpt": null,
    "excerptTerm": null,
    "fips": "13097",
+   "followThrough": "not-in-minutes",
+   "meetingId": "1209",
+   "outcomes": [],
    "placeId": "douglas",
    "placeName": "Douglas County",
    "placeType": "county",
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7517,plainText=false)",
-   "tags": [],
-   "terms": [
-    "axon enterprise"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "medium",
-   "context": null,
-   "date": "2026-08-27",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13139",
-   "placeId": "hall",
-   "placeName": "Hall County",
-   "placeType": "county",
-   "region": "Northeast Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-329-vm-20260827200611174072.pdf",
    "tags": [],
    "terms": [
     "axon enterprise"
@@ -970,27 +1172,6 @@
    "region": "Metro Atlanta",
    "sourceType": "ocr",
    "sourceUrl": "https://barrowga.granicus.com/AgendaViewer.php?view_id=1&clip_id=1154",
-   "tags": [],
-   "terms": [
-    "axon enterprise"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "medium",
-   "context": null,
-   "date": "2026-08-24",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13139",
-   "placeId": "hall",
-   "placeName": "Hall County",
-   "placeType": "county",
-   "region": "Northeast Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://nyc3.digitaloceanspaces.com/hall-county-agenda-pub/media/pdfs/agenda-list-MG-329-ws-20260821194034801533.pdf",
    "tags": [],
    "terms": [
     "axon enterprise"
@@ -1162,6 +1343,9 @@
    "excerpt": "… Agenda Items The following citizens addressed the Commission: • The following citizens are opposed to the Flock Cameras o Anthony Harris o Lee McCombs July 21, 2026 …",
    "excerptTerm": "flock",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2393",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -1269,27 +1453,6 @@
    ]
   },
   {
-   "body": "Board of County Commissioners",
-   "confidence": "medium",
-   "context": null,
-   "date": "2026-07-21",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13039",
-   "placeId": "camden",
-   "placeName": "Camden County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_07212026-648",
-   "tags": [],
-   "terms": [
-    "plate reader"
-   ],
-   "vendors": []
-  },
-  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
@@ -1298,6 +1461,9 @@
    "excerpt": "… on-Bibb County and how it is being run by the Mayor and Commissioners. He supports the use of Flock Cameras. • Rhiannon Wimer spoke against Flock Cameras. 5. Approval of Minutes a. Approval of …",
    "excerptTerm": "flock",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2405",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -1360,6 +1526,27 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
+   "context": "unknown",
+   "date": "2026-07-14",
+   "docType": "agenda",
+   "excerpt": "… Redaction subscription software for use in responding to Open Records Requests of Police In-car and Body Worn Camera footage. The first year cost of the subscription is $3,303.00 with subsequent year renewals (years 2- …",
+   "excerptTerm": "body worn",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3187,plainText=false)",
+   "tags": [],
+   "terms": [
+    "body worn"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
    "context": "agenda-action",
    "date": "2026-07-14",
    "docType": "agenda",
@@ -1376,29 +1563,6 @@
    "terms": [
     "dash cam",
     "dashcam"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of County Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-07-07",
-   "docType": "agenda",
-   "excerpt": "… : 7/7/26 PURPOSE: To request that the Board of Commissioners: a. Consider the approval to purchase of two (2) License Plate Readers FACTS & ISSUES: 1. Vendor is GSA (state contract pricing) approved Contract Holder. 2. Vendor has …",
-   "excerptTerm": "license plate reader",
-   "fips": "13039",
-   "placeId": "camden",
-   "placeName": "Camden County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_07072026-646",
-   "tags": [],
-   "terms": [
-    "license plate reader",
-    "lpr",
-    "plate reader"
    ],
    "vendors": []
   },
@@ -1424,6 +1588,27 @@
    "vendors": [
     "Flock Safety"
    ]
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-06-23",
+   "docType": "agenda",
+   "excerpt": "… 54-53700) of $85,935 for the Safe Fleet Cloud Subscription. This is a multi-year contract for the in-car and body cameras, which started in 2025. This was not included in the original budget. 4. Consider request to ap …",
+   "excerptTerm": "body cam",
+   "fips": "13115",
+   "placeId": "floyd",
+   "placeName": "Floyd County",
+   "placeType": "county",
+   "region": "Northwest Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3178,plainText=false)",
+   "tags": [],
+   "terms": [
+    "body cam"
+   ],
+   "vendors": []
   },
   {
    "body": "Board of Commissioners",
@@ -1501,6 +1686,9 @@
    "excerpt": "… (Sponsored by: Lester M. Miller, Mayor) The following citizens spoke in favor of removing the Flock cameras from the FY27 Budget: • Angelia Hoomes • Rhiannon Wimer …",
    "excerptTerm": "flock",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2358",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -1592,6 +1780,9 @@
    "excerpt": "… A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Shotspotter, Inc. For The Provision Of Gunshot Detection, Location, And Forensic Analysis Services, In The Amount Of …",
    "excerptTerm": "shotspotter",
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2391",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -1616,6 +1807,23 @@
    "excerpt": "… A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Shotspotter, Inc. For The Provision Of Gunshot Detection, Location, And Forensic Analysis Services, In The Amount Of …",
    "excerptTerm": "shotspotter",
    "fips": "13021",
+   "followThrough": "recorded",
+   "meetingId": "2132",
+   "outcomes": [
+    {
+     "motions": [
+      {
+       "motion": "Approve",
+       "result": "passed",
+       "resultText": "Passed",
+       "yes": 9
+      }
+     ],
+     "name": "A Resolution Of The Macon-Bibb County Commission Authorizing The Mayor To Execute An Agreement With Shotspotter, Inc. For The Provision Of Gunshot Detection, Location, And Forensic Analysis Services, In The Amount Of $524,000.00 Per Year For A Term Of Three Years, To Be Paid From Public Safety Fund",
+     "outline": "e.",
+     "reference": null
+    }
+   ],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -1630,52 +1838,6 @@
    "vendors": [
     "ShotSpotter (SoundThinking)"
    ]
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-05-19",
-   "docType": "agenda",
-   "excerpt": "… gh Resolution 2023-080 to create a video and data collection system, and to update the vendor’s name change, from FUSUS to Axon Enterprise Video and Data Collection Renewal Package. 24. Resolution 2026-107: A resolution authorizin …",
-   "excerptTerm": "fusus",
-   "fips": "13063",
-   "placeId": "clayton",
-   "placeName": "Clayton County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://claytoncountyga.primegov.com/Public/CompiledDocument?meetingTemplateId=5351&compileOutputType=1",
-   "tags": [],
-   "terms": [
-    "axon enterprise",
-    "axon enterprise video",
-    "fusus"
-   ],
-   "vendors": [
-    "Fusus (Axon)"
-   ]
-  },
-  {
-   "body": "City Council",
-   "confidence": "medium",
-   "context": null,
-   "date": "2026-05-14",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": null,
-   "placeId": "savannah",
-   "placeName": "City of Savannah",
-   "placeType": "city",
-   "region": "Coastal Georgia",
-   "sourceType": "granicus",
-   "sourceUrl": "https://agenda.savannahga.gov/publishing/may-14-2026-city-council-regular-meeting/agenda.html",
-   "tags": [],
-   "terms": [
-    "axon enterprise"
-   ],
-   "vendors": []
   },
   {
    "body": "Board of Commissioners",
@@ -1774,6 +1936,9 @@
    "excerpt": null,
    "excerptTerm": null,
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2401",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -1795,6 +1960,9 @@
    "excerpt": null,
    "excerptTerm": null,
    "fips": "13021",
+   "followThrough": "not-in-minutes",
+   "meetingId": "2355",
+   "outcomes": [],
    "placeId": "bibb",
    "placeName": "Macon-Bibb County",
    "placeType": "consolidated",
@@ -1804,6 +1972,27 @@
    "tags": [],
    "terms": [
     "surveillance equipment"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-03-13",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1732&Inline=True",
+   "tags": [],
+   "terms": [
+    "axon enterprise"
    ],
    "vendors": []
   },
@@ -1853,18 +2042,18 @@
   {
    "body": "Board of Commissioners",
    "confidence": "high",
-   "context": null,
-   "date": "2026-02-17",
-   "docType": "minutes",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13247",
-   "placeId": "rockdale",
-   "placeName": "Rockdale County",
+   "context": "unknown",
+   "date": "2026-01-09",
+   "docType": "agenda",
+   "excerpt": "… p, unserviceable equipment and vehicles that cannot be economically repaired H. Annual renewal Police Flock Group, Inc. $60,000 Restricted Court of the lease DBA Flock Safety, …",
+   "excerptTerm": "flock",
+   "fips": "13051",
+   "placeId": "chatham",
+   "placeName": "Chatham County",
    "placeType": "county",
-   "region": "Metro Atlanta",
+   "region": "Coastal Georgia",
    "sourceType": "ocr",
-   "sourceUrl": "https://www.rockdalecountyga.gov/wp-content/uploads/2026/03/BOC-minutes-2.17.26.pdf",
+   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1727&Inline=True",
    "tags": [],
    "terms": [
     "flock"
@@ -1897,27 +2086,6 @@
    ]
   },
   {
-   "body": "Board of Commissioners",
-   "confidence": "medium",
-   "context": null,
-   "date": "2025-12-19",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13051",
-   "placeId": "chatham",
-   "placeName": "Chatham County",
-   "placeType": "county",
-   "region": "Coastal Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://chathamcountyga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=1725&Inline=True",
-   "tags": [],
-   "terms": [
-    "axon enterprise"
-   ],
-   "vendors": []
-  },
-  {
    "body": "City Council",
    "confidence": "high",
    "context": "agenda-action",
@@ -1942,13 +2110,14 @@
   }
  ],
  "metadata": {
-  "citiesScanned": 9,
+  "citiesScanned": 10,
   "consolidatedScanned": 4,
-  "countiesScanned": 46,
+  "countiesScanned": 49,
   "emoji": "📷",
-  "generatedAt": "2026-11-10T22:35:22Z",
+  "generatedAt": "2026-11-20T12:31:46Z",
   "label": "ALPR / surveillance",
-  "placesScanned": 59,
+  "mentionsWithOutcomes": 4,
+  "placesScanned": 63,
   "placesWithMentions": 29,
   "topic": "alpr",
   "universeCities": 537,
@@ -1960,7 +2129,8 @@
    "Fusus (Axon)",
    "Genetec",
    "ShotSpotter (SoundThinking)",
-   "Skydio"
+   "Skydio",
+   "Verra Mobility"
   ]
  }
 }
