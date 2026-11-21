@@ -15,7 +15,10 @@ const ORIGIN = "https://www.votega.org";
 
 // Module scope survives between requests only while this isolate stays warm, which is
 // exactly what the spike needs to measure (spec §12.9: does a parse cache pay off?).
-const isolate = { startedAt: new Date().toISOString(), requests: 0 };
+// `id` tells isolates apart. Both it and `startedAt` are set on the first request:
+// Workers forbid random values at module scope, and freeze the clock there (Date reads
+// 1970-01-01).
+const isolate = { id: "", startedAt: "", requests: 0 };
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body, null, 2), {
@@ -82,6 +85,10 @@ const mcp = createMcpHandler(createServer, {
 export default {
   async fetch(request: Request, env: unknown, ctx: ExecutionContext): Promise<Response> {
     isolate.requests += 1;
+    if (!isolate.id) {
+      isolate.id = crypto.randomUUID().slice(0, 8);
+      isolate.startedAt = new Date().toISOString();
+    }
     const { pathname } = new URL(request.url);
     if (pathname === "/mcp") return mcp(request, env, ctx);
     if (pathname === "/health") {
