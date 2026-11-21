@@ -35,7 +35,7 @@ Sources: the roster (`ga-members.json`, `status` and `statusDate`), the certifie
 
 | legisGaGovId | Member | Seat | Draft label | Evidence |
 |---|---|---|---|---|
-| 863 | Bill Werkheiser (R) | House 157 | Lost the 2026 Republican primary. | 2,618 votes, 33.8%, second of 2 |
+| 863 | Bill Werkheiser (R) | House 157 | Lost the Republican primary on May 19, 2026. | 2,618 votes, 33.8%, second of 2 |
 | 5078 | Mary Ann Santos (D) | House 117 | Lost the Democratic primary runoff on June 16, 2026. | Primary 2,490 votes (26.5%, second of 5); runoff 531 votes, 12.2% |
 | 5096 | Alvin Payton Jr. (D) | House 177 | Lost the Democratic primary runoff on June 16, 2026. | Primary 1,025 votes (25.7%, second of 5); runoff 611 votes, 41.6% |
 
@@ -43,16 +43,16 @@ Sources: the roster (`ga-members.json`, `status` and `statusDate`), the certifie
 
 | legisGaGovId | Member | Seat | Draft label | Evidence |
 |---|---|---|---|---|
-| 867 | David Clark (R) | House 100 | Ran for Lieutenant Governor in 2026 (lost the Republican primary). | 140,416 votes, 15.8%, fourth of 7 |
-| 4908 | Blake Tillery (R) | Senate 19 | Ran for Lieutenant Governor in 2026 (lost the Republican primary). | 169,710 votes, 19.1%, third of 7 |
-| 752 | Steve Gooch (R) | Senate 51 | Ran for Lieutenant Governor in 2026 (lost the Republican primary). | 103,623 votes, 11.7%, fifth of 7 |
-| 9 | Bill Cowsert (R) | Senate 46 | Ran for Attorney General in 2026 (lost the Republican primary). | 241,391 votes, 28.4%, second of 2 |
-| 28 | Emanuel Jones (D) | Senate 10 | Ran for U.S. House District 13 in 2026 (lost the Democratic primary). | 8,204 votes, 7.5%, fourth of 6 |
-| 4891 | Derrick Jackson (D) | House 68 | Ran for Governor in 2026 (lost the Democratic primary). | 25,050 votes, 2.3%, fifth of 7 |
+| 867 | David Clark (R) | House 100 | Ran for Lieutenant Governor in 2026 (lost the Republican primary on May 19, 2026). | 140,416 votes, 15.8%, fourth of 7 |
+| 4908 | Blake Tillery (R) | Senate 19 | Ran for Lieutenant Governor in 2026 (lost the Republican primary on May 19, 2026). | 169,710 votes, 19.1%, third of 7 |
+| 752 | Steve Gooch (R) | Senate 51 | Ran for Lieutenant Governor in 2026 (lost the Republican primary on May 19, 2026). | 103,623 votes, 11.7%, fifth of 7 |
+| 9 | Bill Cowsert (R) | Senate 46 | Ran for Attorney General in 2026 (lost the Republican primary on May 19, 2026). | 241,391 votes, 28.4%, second of 2 |
+| 28 | Emanuel Jones (D) | Senate 10 | Ran for U.S. House District 13 in 2026 (lost the Democratic primary on May 19, 2026). | 8,204 votes, 7.5%, fourth of 6 |
+| 4891 | Derrick Jackson (D) | House 68 | Ran for Governor in 2026 (lost the Democratic primary on May 19, 2026). | 25,050 votes, 2.3%, fifth of 7 |
 
 ## E. Did not run for re-election (8 never qualified)
 
-Label for each: **Did not run for re-election in 2026.**
+Label for each: **Did not run for re-election in 2026 (qualifying closed March 6, 2026).**
 
 | legisGaGovId | Member | Seat |
 |---|---|---|
@@ -94,4 +94,6 @@ Batch 1 was approved on 2026-10-30 and recorded as data in `assets/data/ga-depar
 - **2026-11-21:** three labels reworded so each states only the fact and a date.
   - Harbison: "would retire" replaced with "would not seek re-election" (WTVM, 2026-03-04), plus his qualifying date (03/06/2026, qualifying export) and his primary loss (Reese 58.8% of the Democratic vote, a majority, so no runoff). The vote figure was dropped like everyone else's. The test's carve-out for "retire" is removed.
   - Payton and Santos: the runoff date (2026-06-16) added.
+  - Werkheiser and the six who ran for another office: the primary date (2026-05-19) added. All seven were eliminated that day; none was in a runoff.
+  - The eight "did not run" labels: the close of qualifying (2026-03-06) added, sourced to the Secretary of State's 2026 qualifying FAQ (March 2-6). None of the eight is in HD 94 or 130, where qualifying was delayed by weather. The noon closing hour is left out: only a county copy of the state calendar gives it.
   - Edna Jackson: her qualifying date (03/04/2026) added. No source we hold gives her withdrawal date, so none is stated.
