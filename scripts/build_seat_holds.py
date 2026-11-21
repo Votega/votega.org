@@ -26,7 +26,10 @@ import sys
 from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import copy
+
 from lib.atomic_io import write_json_atomic  # noqa: E402
+from lib.ga_roster import EDITORIAL_STATUS_FIELDS, apply_member_overrides  # noqa: E402
 from lib.ga_identity import ledger_keys  # noqa: E402
 from lib.seat_holds import bienniums, derive_holds, holds_errors, overrides_errors, report  # noqa: E402
 
@@ -35,6 +38,7 @@ P = lambda *a: os.path.join(REPO_ROOT, *a)  # noqa: E731
 SNAPSHOT_FILE = P("scripts", "data", "ga-members-by-session.json")
 SEATS_FILE = P("assets", "data", "seats.json")
 ROSTER_FILE = P("assets", "data", "ga-members.json")
+MEMBER_OVERRIDES_FILE = P("assets", "data", "ga-members-overrides.json")
 OVERRIDES_FILE = P("assets", "data", "seat-hold-overrides.json")
 LEDGER_FILE = P("assets", "data", "id-crosswalk-ledger.json")
 OUTPUT_FILE = P("assets", "data", "seat-holds.json")
@@ -61,6 +65,28 @@ def vgid_resolver(ledger):
                 return resolve(assign[k])
         return None
     return vgid_for
+
+
+def roster_members(roster_doc=None, overrides_file=MEMBER_OVERRIDES_FILE):
+    """The roster with the editorial layer applied HERE, not trusted from ga-members.json.
+
+    ga-members.json is a generated file: main owns it, the daily update-ga-members run
+    rebuilds it from ga-members-overrides.json, and the PR sync workflow copies main's
+    copy onto every PR branch. A departure fix made in the overrides would otherwise
+    reach the holds only after the next daily run (and a PR could never carry one).
+    Applying the overrides with the same single implementation the producer uses makes
+    the holds depend on the editorial source, which is the truth."""
+    doc = roster_doc or load(ROSTER_FILE)
+    members = copy.deepcopy(doc["members"])
+    # The producer never writes status (only the overrides do), and the overrides fill a
+    # status only where the record has none. So clear it first: that reproduces the
+    # fresh source records the producer applies the overrides to, and a corrected status
+    # in the overrides then wins over a stale one in the generated file.
+    for m in members:
+        for k in EDITORIAL_STATUS_FIELDS:
+            m[k] = None
+    apply_member_overrides(members, overrides_file, session=(doc.get("metadata") or {}).get("session"))
+    return members
 
 
 def build(snapshot, seats_doc, roster_members, overrides_doc, ledger):
@@ -112,7 +138,7 @@ def main():
         print("Refusing to build: seat-hold-overrides.json", *bad, sep="\n  ", file=sys.stderr)
         return 1
     try:
-        doc = build(load(SNAPSHOT_FILE), seats_doc, load(ROSTER_FILE)["members"],
+        doc = build(load(SNAPSHOT_FILE), seats_doc, roster_members(),
                     load(OVERRIDES_FILE, {"holds": []}), ledger)
     except ValueError as e:
         print(f"Error: {e}", file=sys.stderr)

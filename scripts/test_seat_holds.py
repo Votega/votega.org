@@ -194,6 +194,24 @@ def override_cases():
     check("a correction to an unknown field", len(overrides_errors([], [{**corr, "field": "party"}])), 1)
 
 
+def roster_layer_cases():
+    print("roster_members (the editorial layer is applied here, not trusted from the generated roster)")
+    import json as _json
+    import tempfile
+    stale = {"metadata": {"session": "2025_26"}, "members": [
+        {"id": "ocd-person/a", "name": "A", "legisGaGovId": 1, "status": "Resigned", "statusDate": "2025-10-12"},
+        {"id": "ocd-person/b", "name": "B", "legisGaGovId": 2, "status": None}]}
+    ov = {"_inject": [{"id": "ocd-person/a", "name": "A", "_session": "2025_26",
+                       "status": "Deceased", "statusDate": "2025-10-12"}]}
+    with tempfile.TemporaryDirectory() as d:
+        path = os.path.join(d, "ov.json")
+        with open(path, "w", encoding="utf-8") as f:
+            _json.dump(ov, f)
+        got = {m["legisGaGovId"]: m["status"] for m in B.roster_members(stale, path)}
+    check("a corrected override wins over a stale status in the generated roster",
+          got, {1: "Deceased", 2: None})
+
+
 def committed_cases():
     print("committed artifacts")
     check("the committed overrides are all sourced and noted",
@@ -209,7 +227,7 @@ def committed_cases():
     seats = B.load(B.SEATS_FILE)
     ledger = B.load(B.LEDGER_FILE)
     check("seat-holds.json validates", holds_errors(doc, seats, ledger.get("merged")), [])
-    rebuilt = B.build(B.load(B.SNAPSHOT_FILE), seats, B.load(B.ROSTER_FILE)["members"],
+    rebuilt = B.build(B.load(B.SNAPSHOT_FILE), seats, B.roster_members(),
                       B.load(B.OVERRIDES_FILE), ledger)
     check("seat-holds.json matches a rebuild (run build_seat_holds.py if this fails)",
           B.same_content(rebuilt, doc), True)
@@ -235,6 +253,7 @@ def main():
     derivation_cases()
     validation_cases()
     override_cases()
+    roster_layer_cases()
     committed_cases()
     if failures:
         print(f"\n{len(failures)} failure(s): {failures}")
