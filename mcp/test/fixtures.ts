@@ -2,6 +2,7 @@
  * Small index documents in the shapes scripts/lib/mcp_index.py writes. Invented people and a
  * made-up map, so nothing here is a claim about a real member.
  */
+import type { ResourcesDoc } from "../src/resources";
 import type { CountiesIndex, Member, MembersIndex, Meta, OfficialsIndex, ZipShard } from "../src/types";
 
 const GEN = "2026-11-21T18:00:00+00:00";
@@ -115,7 +116,32 @@ export const META: Meta = {
   },
 };
 
+export const RESOURCES_DOC: ResourcesDoc = {
+  metadata: { generatedAt: GEN },
+  about: {
+    summary: "VoteGA is a nonpartisan record.",
+    principles: ["Nonpartisan.", "Primary sources."],
+    covers: ["Who represents a ZIP."],
+    not_yet: ["Bills."],
+    license: "CC BY-SA 4.0.",
+    corrections: "Email admin@votega.org.",
+    page_url: "https://www.votega.org/ai-assistants/",
+  },
+  glossary: [
+    { term: "District", definition: "The area one legislator represents." },
+    { term: "Share", definition: "A fraction of residents.\u0007" },
+  ],
+  datasets: {
+    intro: "Reusable data.",
+    page_url: "https://www.votega.org/open-data",
+    license: "CC BY-SA 4.0",
+    datasets: [{ id: "ga-legislators", title: "GA Legislators", summary: "x".repeat(700), source: "legis.ga.gov",
+      scope: null, cadence: "Daily", repo_url: null, docs_url: null, files: [] }],
+  },
+};
+
 export const FILES: Record<string, unknown> = {
+  "resources.json": RESOURCES_DOC,
   "meta.json": META,
   "members-index.json": MEMBERS,
   "counties-index.json": COUNTIES,

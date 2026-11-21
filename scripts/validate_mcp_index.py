@@ -59,6 +59,7 @@ def main():
         "jurisdiction_ids": {j["id"] for j in officials.get("jurisdictions") or []},
         "officer_ids": {c["id"] for c in officers.get("counties") or []},
         "slices": B.existing_slices(),
+        "open_data_ids": {d["id"] for d in (B.load_yaml(B.ROOT, "_data", "open_data.yml") or {}).get("datasets") or []},
         "retired_vgids": set((B.load_json(B.DATA, "id-crosswalk.json").get("metadata") or {})
                              .get("mergedVgIds") or {}),
     }

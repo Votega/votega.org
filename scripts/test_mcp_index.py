@@ -94,6 +94,17 @@ OFFICERS = {"counties": [
     {"id": "ben-hill", "name": "Ben Hill County", "officers": [
         {"name": "Sheriff B", "role": "Sheriff", "seat": "Countywide", "source": "https://example.gov/6"}]},
 ]}
+MCP_TEXT = {"about": {"summary": "VoteGA is nonpartisan.", "principles": ["Nonpartisan."],
+                      "covers": ["Who represents a ZIP."], "not_yet": ["Bills."],
+                      "license": "CC BY-SA 4.0.", "corrections": "Email us."},
+            "glossary": [{"term": "District", "definition": "An area.\n  It has a member."},
+                         {"term": "Share", "definition": "A fraction."}]}
+OPEN_DATA = {"meta": {"intro": "Reusable data."}, "datasets": [
+    {"id": "ga-legislators", "title": "GA Legislators", "summary": "Roster &amp; votes",
+     "cadence": "Daily &amp; weekly", "docs": "/about-the-data#ga-legislators",
+     "files": [{"name": "data/all.json", "desc": "Roster", "url": "https://github.com/x/y/blob/main/data/all.json"}]},
+]}
+
 PLACES = {"places": [
     {"slug": "newton", "name": "Newton County", "type": "county", "fips": "13217", "parentCounty": None},
     {"slug": "covington", "name": "Covington", "type": "city", "fips": None, "parentCounty": "newton"},
@@ -108,6 +119,7 @@ def build_all():
         "counties-index.json": M.build_counties(county, GEN),
         "local-officials-index.json": M.build_local_officials(OFFICIALS, OFFICERS, PLACES,
                                                               GA_COUNTY_FIPS, TODAY, GEN),
+        "resources.json": M.build_resources(MCP_TEXT, OPEN_DATA, GEN),
     }
     for p, shard in M.build_zip_shards(ZIPDOC, GEN).items():
         docs[f"zip/{p}.json"] = shard
@@ -127,7 +139,8 @@ def file_meta(docs):
 
 SRC = {"ga": GA, "federal": FED, "zipdoc": ZIPDOC, "county_fips": set(GA_COUNTY_FIPS.values()),
        "place_slugs": {"newton", "covington", "ben-hill"}, "jurisdiction_ids": {"newton", "covington"},
-       "officer_ids": {"newton", "ben-hill"}, "slices": SLICES, "retired_vgids": {"vg-ga-p-000009"}}
+       "officer_ids": {"newton", "ben-hill"}, "slices": SLICES, "retired_vgids": {"vg-ga-p-000009"},
+       "open_data_ids": {"ga-legislators"}}
 
 
 def errors_after(mutate):
@@ -178,6 +191,19 @@ check("hidden place has no page URL", lo["places"]["ben-hill"]["votegaUrl"], Non
 check("byCounty", lo["byCounty"], {"13017": ["ben-hill"], "13217": ["covington", "newton"]})
 check("lastReviewed carried", lo["metadata"]["lastReviewed"], "2026-09-05")
 
+print("resources")
+res = docs["resources.json"]
+check("HTML entities unescaped for plain text", res["datasets"]["datasets"][0]["summary"], "Roster & votes")
+check("docs path made absolute, exactly as written",
+      res["datasets"]["datasets"][0]["docs_url"], "https://www.votega.org/about-the-data#ga-legislators")
+check("open-data page URL has no trailing slash (/open-data/ is a 404)", res["datasets"]["page_url"],
+      "https://www.votega.org/open-data")
+check("absolute file URLs pass through", res["datasets"]["datasets"][0]["files"][0]["url"],
+      "https://github.com/x/y/blob/main/data/all.json")
+check("whitespace collapsed", res["glossary"][0]["definition"], "An area. It has a member.")
+check("about carries the page URL", res["about"]["page_url"], "https://www.votega.org/ai-assistants/")
+check("site_url leaves a file path alone", M.site_url("/assets/data/x.json"), "https://www.votega.org/assets/data/x.json")
+
 print("index_errors")
 check("clean build has no errors", errors_after(lambda d, m: None), [])
 
@@ -210,6 +236,15 @@ neg("an official without a source", lambda d, m: d["local-officials-index.json"]
     .update(source=None), "has no source")
 neg("a place with no county", lambda d, m: d["local-officials-index.json"]["places"]["covington"]
     .update(countyFips=None), "no valid county FIPS")
+
+neg("HTML in a resource", lambda d, m: d["resources.json"]["glossary"][0].update(definition="ga:<number>"), "HTML at")
+neg("a dataset missing from resources", lambda d, m: d["resources.json"]["datasets"]["datasets"].clear(),
+    "do not match _data/open_data.yml")
+neg("a duplicate glossary term", lambda d, m: d["resources.json"]["glossary"].append(
+    dict(d["resources.json"]["glossary"][0])), "duplicate term")
+neg("an empty about summary", lambda d, m: d["resources.json"]["about"].update(summary=None), "about.summary")
+neg("a missing resources file", lambda d, m: (d.pop("resources.json"), m["__claimed__"].pop("resources.json"),
+                                             m.pop("resources.json")), "resources.json is missing")
 
 if failures:
     print(f"\n{len(failures)} failure(s): {failures}")

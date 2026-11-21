@@ -9,9 +9,10 @@ import { getDataFreshness } from "./tools/freshness";
 import { getLegislator, MAX_LIMIT, searchLegislators } from "./tools/legislators";
 import { findLocalOfficials } from "./tools/officials";
 import { findMyRepresentatives } from "./tools/representatives";
+import { readResource, RESOURCES } from "./resources";
 import { fail, type ToolResult } from "./util";
 
-export const VERSION = "0.1.0";
+export const VERSION = "0.2.0";
 
 const READ_ONLY = { readOnlyHint: true, openWorldHint: false } as const;
 
@@ -126,6 +127,21 @@ export function createServer(loader: Loader, nowMs: number) {
     },
     async () => guarded(() => getDataFreshness(loader, nowMs)),
   );
+
+  for (const r of RESOURCES) {
+    server.registerResource(
+      r.name,
+      r.uri,
+      { title: r.title, description: r.description, mimeType: r.mimeType },
+      async (uri) => {
+        try {
+          return await readResource(loader, r.name, uri.href);
+        } catch {
+          return { contents: [{ uri: uri.href, mimeType: "text/plain", text: "VoteGA's resources are unavailable right now." }] };
+        }
+      },
+    );
+  }
 
   return server;
 }
