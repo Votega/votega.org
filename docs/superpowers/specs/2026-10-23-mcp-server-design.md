@@ -456,13 +456,51 @@ move to the start of Phase 3, which is the first phase that reads them.
   deploy (`_config.yml` does not exclude the path, so Jekyll should copy them). Check
   `/assets/data/mcp/meta.json` after the first deploy from `main`.
 
+### 12.13 Phase 2 (core tools, built 2026-11-21)
+
+Decided by the site owner: the tools go **live but unannounced** on `mcp.votega.org` (launch is
+still after the rollover); the Worker deploys from **CI with a scoped token**; the vote
+**scorecard moves to Phase 3** with `get_legislator_votes`; tests run in the **Workers runtime**
+(Vitest with `@cloudflare/vitest-plugin`, the renamed `vitest-pool-workers`).
+
+- **Tools:** `find_my_representatives`, `find_local_officials`, `search_legislators`,
+  `get_legislator`, `get_data_freshness`. Code: `mcp/src/tools/*.ts` (one module per tool
+  family, each taking a `Loader`), `mcp/src/server.ts` (registration, zod inputs),
+  `mcp/src/worker.ts` (routes), `mcp/src/index.ts` (entry: exports only the handler, because
+  workerd rejects any other named export from the entry module, found when `wrangler dev`
+  refused to start).
+- **Data:** `mcp/src/data.ts` fetches only the index paths it allows (a fixed list plus
+  `zip/<3 digits>.json`) from `www.votega.org/assets/data/mcp/`, with `cf.cacheTtl` per §5.3 and a
+  module memo; on an upstream failure it serves the last parsed copy and the result carries
+  `stale: true`. `get_legislator` accepts `ga:<n>`, `us:<bioguideId>`, a vgId or a bare
+  legisGaGovId. `session` is not an input yet: frozen bienniums come with Phase 3.
+- **Rules enforced in code and tests:** a split ZIP lists every district with its share and one
+  sentence saying only a street address decides; a seat whose member left is `vacant`, never
+  filled with them; members who left office appear only with `include_former` or by id, and never
+  with contact details; an uncovered place names nobody; local rosters turn over on January 1 by
+  the request date; every string is stripped of control characters and capped at 500 characters.
+- **Tests:** 31 in `mcp/test/` (tool logic over invented fixtures, the loader's path allowlist,
+  memo and stale fallback, and the Worker end to end over HTTP). Run locally with `wrangler dev`
+  against the live indexes: every tool answered on real data (e.g. ZIP 30014 touches 4 Senate,
+  6 House and 2 U.S. House districts; 13059 returns Athens-Clarke; "Gotham" is not covered).
+- **Bundle:** 1,259 KB raw, 220 KB gzipped (Phase 0: 688 / 137 KB; zod is most of the growth),
+  inside the free plan's 3 MB. Startup time is re-checked on the first deploy.
+- **Deploy:** `.github/workflows/deploy-mcp.yml` runs typecheck and tests on PRs touching `mcp/`,
+  and on `main` deploys with `wrangler deploy` and checks that `/health` reports the new
+  version. It needs `CLOUDFLARE_API_TOKEN` (Workers edit on this account, plus the zone for the
+  custom-domain route) and `CLOUDFLARE_ACCOUNT_ID`; without them the deploy job skips with a
+  notice.
+- **Origin check:** browser requests are limited to the library's default Origins (localhost
+  and the server's own host). Non-browser MCP clients send no Origin and are unaffected. Whether
+  to allow any Origin, as §9 suggests for browser-based clients, is a launch decision.
+
 ## 13. Rollout
 
 | Phase | Scope | Exit criteria |
 |---|---|---|
 | 0. Spike | Hello-world `createMcpHandler` Worker on `mcp.votega.org`; pinned SDK versions; Worker CPU time for a bills shard, a ZIP shard and the federal votes index; the bot-protection and isolate-reuse checks (§12.9) | Each §12 measurement confirmed on a Worker, or the named fallback chosen |
 | 1. Indexes (core: done 2026-11-21, §12.12) | `build_mcp_index.py` + validator in `deploy-pages.yml`: members, ZIP shards, county index, local officials, meta. Bills shards + token table, races, candidates, EOs, local mentions and former members moved to Phase 3 | Index files built at deploy, within budgets |
-| 2. Core tools (what a voter asks first) | `find_my_representatives`, `find_local_officials`, `search_legislators` / `get_legislator` (state and federal), `get_data_freshness` | Passes Inspector + unit tests |
+| 2. Core tools (what a voter asks first; built 2026-11-21, §12.13) | `find_my_representatives`, `find_local_officials`, `search_legislators` / `get_legislator` (state and federal), `get_data_freshness` | Passes Inspector + unit tests |
 | 3. Remaining tools | The remaining indexes (bills shards + word → bill-id table, races, candidates, EOs, local mentions, former members); `search_races` / `get_candidate`, `get_legislator_votes` (GA and federal), bills, EOs, local government, former members and `session`, resources/prompts | Full v1 tool set |
 | 4. Launch | Docs page on votega.org (an addition to `/open-data`), README entry, client config snippets (Claude, Cursor, etc.), rate-limit rule; proposed for after the 2027-01-11 rollover (§7) | Public, announced |
 | 5. v2 | Street-address lookup (needs a geocoding and privacy decision), federal bills and sponsorship, seat history, optional KV/D1 search, Georgia Commons text if their license allows it | Separate spec |
