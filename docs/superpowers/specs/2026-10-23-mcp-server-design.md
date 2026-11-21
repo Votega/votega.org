@@ -247,10 +247,31 @@ present last session's data as current, or a former member as sitting.
   full request headers and the URL. They were on only for the Phase 0 measurements, and were
   turned off on 2026-11-21 (`observability.enabled: false`; aggregate Workers analytics
   remain). Turn them on only briefly, for a measurement.
-- CORS: allow `*` for `POST /mcp` (browser-based MCP clients); no credentials.
-- Validate the `Origin` header per the MCP Streamable HTTP guidance; reject oversized bodies (>16 KB).
-- A Cloudflare **rate limiting rule** per IP on `/mcp` (WAF, free plan: 1 rule), plus hard result caps
-  in the Worker.
+- **Origin check: the library default, decided 2026-11-21.** `createMcpHandler` rejects a
+  browser `Origin` other than localhost-class origins and the server's own host; requests with
+  no `Origin` are accepted. The clients that matter (Claude Desktop, Claude.ai and ChatGPT
+  connectors, Cursor, Claude Code) run natively or server-side and send no `Origin`, so they are
+  unaffected. Allowing any origin would buy nothing (the data is public, and there are no cookies
+  or auth to protect) and would let any web page spend the server's quota through its visitors'
+  browsers. If a real browser-based client asks, allow that one origin
+  (`allowedOriginHostnames` in `mcp/src/worker.ts`). This replaces the earlier "CORS `*`" line.
+  No credentials either way. Bodies over 16 KB are rejected with 413.
+- **Rate limit: one WAF rule, set up 2026-11-21.** "VoteGA MCP Rate Limiting" in the zone's
+  `http_ratelimit` phase: `(http.request.uri.path eq "/mcp")`, **100 requests per 10 s**,
+  counted per IP per data center, block for 10 s. The zone is on Cloudflare's free plan
+  (Workers Paid does not change it), which allows one rule, a 10 s window and timeout, and only
+  the Path and Verified Bot fields, so the rule cannot match on the hostname; `www.votega.org`
+  has no `/mcp` page, so in practice it counts only MCP calls. It replaced Cloudflare's default
+  "Leaked credential check" rule, which never matches on a static site with no login forms.
+  - **Why so generous:** hosted clients (Claude.ai, ChatGPT) call from their own servers, so one
+    IP carries many users; a tight per-IP limit would throttle them all together. One abusive IP
+    is held to about 10 requests a second, each capped at 100 ms of CPU (§10). Tighten it on
+    real traffic after launch.
+  - **Tested** with 130 `tools/list` calls in 1.5 s: 103 passed, 27 got HTTP 429 (counters lag
+    a moment), and a call 12 s later returned 200. The 429 body was `application/json`, so the
+    no-HTML rule (§12.11, point 4) holds for blocked requests too.
+  - `/` and `/health` are not covered; both are cheap, and `/health` reads a cached file.
+- Hard caps in the Worker: at most 25 results per search, strings capped at 500 characters.
 - Upstream allowlist: the Worker fetches only from `www.votega.org` (SSRF-safe; no user-supplied URLs).
 - Treat all dataset text as untrusted. Strip control characters and bound field lengths in
   responses (prompt-injection hygiene for strings that come from third-party agendas and minutes).
@@ -529,8 +550,8 @@ still after the rollover); the Worker deploys from **CI with a scoped token**; t
   **Done 2026-11-21:** the account is on Workers Paid, with a 100 ms per-request CPU cap (§10).
 
 - **Origin check:** browser requests are limited to the library's default Origins (localhost
-  and the server's own host). Non-browser MCP clients send no Origin and are unaffected. Whether
-  to allow any Origin, as §9 suggests for browser-based clients, is a launch decision.
+  and the server's own host). Non-browser MCP clients send no Origin and are unaffected.
+  Decided 2026-11-21: keep the default (§9).
 
 ## 13. Rollout
 
@@ -540,7 +561,7 @@ still after the rollover); the Worker deploys from **CI with a scoped token**; t
 | 1. Indexes (core: done 2026-11-21, §12.12) | `build_mcp_index.py` + validator in `deploy-pages.yml`: members, ZIP shards, county index, local officials, meta. Bills shards + token table, races, candidates, EOs, local mentions and former members moved to Phase 3 | Index files built at deploy, within budgets |
 | 2. Core tools (what a voter asks first; built 2026-11-21, §12.13) | `find_my_representatives`, `find_local_officials`, `search_legislators` / `get_legislator` (state and federal), `get_data_freshness` | Passes Inspector + unit tests |
 | 3. Remaining tools | The remaining indexes (bills shards + word → bill-id table, races, candidates, EOs, local mentions, former members); `search_races` / `get_candidate`, `get_legislator_votes` (GA and federal), bills, EOs, local government, former members and `session`, resources/prompts | Full v1 tool set |
-| 4. Launch | Docs page on votega.org (an addition to `/open-data`), README entry, client config snippets (Claude, Cursor, etc.), rate-limit rule; proposed for after the 2027-01-11 rollover (§7) | Public, announced |
+| 4. Launch | Docs page on votega.org (an addition to `/open-data`), README entry, client config snippets (Claude, Cursor, etc.); the rate-limit rule, CPU cap and Workers Paid are already in place (§9, §10); proposed for after the 2027-01-11 rollover (§7) | Public, announced |
 | 5. v2 | Street-address lookup (needs a geocoding and privacy decision), federal bills and sponsorship, seat history, optional KV/D1 search, Georgia Commons text if their license allows it | Separate spec |
 
 ## 14. Effort estimate
