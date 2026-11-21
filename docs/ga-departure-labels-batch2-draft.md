@@ -1,6 +1,6 @@
-# Departure labels, batch 2 (draft for approval)
+# Departure labels, batch 2 (approved 2026-11-21)
 
-Drafted 2026-11-21 for the approval step in D6 of `ga-biennium-rollover-decisions.md`. Nothing here is built or published, and `assets/data/ga-departure-labels.json` is unchanged until these are approved. Approval cutoff: 4 January 2027. The rules are batch 1's: only the fact and a date; "lost", never "ousted" or "unseated"; no label names the winner of a contest; vote figures stay in the evidence column.
+Drafted 2026-11-21 for the approval step in D6 of `ga-biennium-rollover-decisions.md`. Approved on 2026-11-21 and recorded in `assets/data/ga-departure-labels.json` (`"batch": 2`); no page reads it yet. Approval cutoff: 4 January 2027. The rules are batch 1's: only the fact and a date; "lost", never "ousted" or "unseated"; no label names the winner of a contest; vote figures stay in the evidence column.
 
 Sources:
 - the roster (`ga-members.json`);
@@ -97,3 +97,13 @@ These four move from the House to the Senate on January 11, so they are **not fo
 3. **Where the section D labels appear.** On 2026-10-30, D6 decided that labels appear only on the former-members index and on former members' pages. Its proposed refinement says a mover's label appears on their own page. The four in section D are sitting members, so under the decided rule their labels would never be shown. Decide whether to show them on their pages or only record them.
 4. **House 103 (Soo Hong).** She lost by 35 votes (50.1% to 49.9%), inside Georgia's 0.5% margin for requesting a recount. I have not checked whether a recount was requested or completed. Confirm that before approving her label.
 5. **When the leavers' labels show.** The 24 members in sections A to C leave the General Assembly on January 11. Until then they are sitting members, so under the placement rule nothing shows for them before the rollover.
+
+## Decisions (answered 2026-11-21)
+
+1. **Wording:** approved as written.
+2. **Data shape:** `ran-for-other-office` keeps its type and gains `office` and `result` (`won`, `lost-primary`, `lost-primary-runoff`, `lost-general`, `lost-general-runoff`), as the D6 table describes. Batch 1's six `ran-for-other-office` labels were backfilled with `office` and `result: lost-primary`. `scripts/test_ga_departure_labels.py` checks that the text agrees with `result` and names the office.
+3. **Section D (movers): shown on their own page.** Romman, Reese, Draper and Wade carry the label on their member page even though they are not former members. This amends the 2026-10-30 placement decision in D6.
+4. **House 103 (Hong): approved now**, on the certified result. Revise it if a recount reverses the result. On 2026-11-17, the Daily Signal reported Luchey saying Gwinnett and Hall counties had certified; I found no report of a recount request.
+5. **Timing:** noted. The leavers' labels show from the rollover.
+
+Still pending: Cheokas (House 151), after the December 1 runoff is certified.

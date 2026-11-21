@@ -100,11 +100,13 @@ Hide phone, address and email. Today the legacy shell for a resigned member stil
 
 **Decided 2026-10-30, placement:** labels appear only on the former-members index and former members' pages, not on sitting members' pages (note that a mover who wins is not in the index, per the refinement above).
 
+**Amended 2026-11-21, placement:** a member who wins another General Assembly seat and stays (Romman, Reese, Draper and Wade, House to Senate) shows their label on their own member page. They are still not in the former-members index. All other labels keep the rule above.
+
 **Decided 2026-10-30, hard gate:** the rollover refuses to run while any departing member is unresolved.
 
 **Qualifying export:** the site owner downloads it from the Secretary of State when needed. The May 19 primary report's candidate list closed with that primary, and the 2026-10-30 re-download matched the committed file, so no further pull is expected for the primary-based labels. The November report is the one that may need pulling, after certification, for any label that depends on it.
 
-**Still undecided:** nothing in the D6 process; the remaining D6 work is writing the labels (batch 1 now, batch 2 after November certification).
+**Still undecided:** nothing in the D6 process. Batch 1 (33 labels) was approved 2026-10-30, and batch 2 (28 labels, from the certified November results; `docs/ga-departure-labels-batch2-draft.md`) on 2026-11-21. One label is still to write: Cheokas (House 151), after the December 1 runoff is certified.
 
 **Sources for the cases above.**
 - Sims: notarized Affidavit for Withdrawal of Candidacy dated 2026-03-23 (a scanned PDF; per the user it came from the WALB article below, which is the citable source); WALB, 2026-03-23, https://www.walb.com/2026/03/23/state-sen-freddie-powell-sims-announces-resignation-due-husbands-illness/ (announced she would leave at the end of her current term).
