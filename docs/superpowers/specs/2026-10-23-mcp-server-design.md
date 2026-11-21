@@ -256,11 +256,23 @@ present last session's data as current, or a former member as sitting.
   responses (prompt-injection hygiene for strings that come from third-party agendas and minutes).
 - Nonpartisan guardrails: tool descriptions forbid endorsements or ratings, and responses omit them.
 
-## 10. Quotas and capacity (free tier)
+## 10. Quotas and capacity
 
-Estimate: 1 tool call ≈ 1 Worker request plus 1–3 cache lookups (the free subrequest limit is 50).
-100k requests/day ≈ 70/min sustained, which is enough for a v1 public launch. Monitor with Workers
-analytics. Move to the paid plan ($5/mo) at a sustained >60% of the daily quota, or on CPU-limit errors.
+**The account moved to Workers Paid ($5/month) on 2026-11-21**, after the Phase 2 measurements
+showed cold requests routinely over the free plan's 10 ms (§12.13). Paid has no daily request cap
+and allows up to 30 s of CPU per request; usage over the monthly allowance is billed.
+
+- **CPU cap:** `limits.cpu_ms: 100` in `mcp/wrangler.jsonc`. The worst measured request was
+  41 ms, so the cap leaves room for cold isolates while stopping a runaway or abusive request
+  early (it fails with `exceededCpu`). Raise it only on evidence: an `exceededCpu` outcome on a
+  real tool call in Workers analytics.
+- Estimate: 1 tool call ≈ 1 Worker request plus 1–3 cache lookups. Monitor requests, errors and
+  CPU quantiles in Workers analytics; the per-IP rate-limit rule (§9) is still the abuse control
+  for request volume.
+
+The free-tier history is kept below for context: 100k requests/day (≈ 70/min sustained) and
+~10 ms CPU per request, with the rule "move to paid at a sustained >60% of the daily quota, or on
+CPU-limit errors" (superseded).
 
 ## 11. Testing and observability
 
@@ -514,6 +526,7 @@ still after the rollover); the Worker deploys from **CI with a scoped token**; t
   data layout keeps the free plan's 10 ms reliably. Cloudflare has not enforced the limit
   (0 `exceededCpu`), but §12.11 says not to rely on that. **Decision rule updated:** move to
   Workers Paid before launch (§13, phase 4), or at the first `exceededCpu`, whichever is first.
+  **Done 2026-11-21:** the account is on Workers Paid, with a 100 ms per-request CPU cap (§10).
 
 - **Origin check:** browser requests are limited to the library's default Origins (localhost
   and the server's own host). Non-browser MCP clients send no Origin and are unaffected. Whether
