@@ -242,7 +242,10 @@ present last session's data as current, or a former member as sitting.
 ## 9. Security, abuse, and limits
 
 - No auth, no cookies, no PII stored; **no request logging beyond Cloudflare's aggregate analytics**.
-  A ZIP entered by a user is personal-ish data and is not logged.
+  A ZIP entered by a user is personal-ish data and is not logged. **Workers Observability
+  invocation logs break this rule:** found in Phase 0, each event stores the client IP, the
+  full request headers and the URL. The spike has them on for measurement. Before launch, turn
+  them off (`observability.enabled: false`), or keep only metrics with no request detail.
 - CORS: allow `*` for `POST /mcp` (browser-based MCP clients); no credentials.
 - Validate the `Origin` header per the MCP Streamable HTTP guidance; reject oversized bodies (>16 KB).
 - A Cloudflare **rate limiting rule** per IP on `/mcp` (WAF, free plan: 1 rule), plus hard result caps
@@ -339,6 +342,63 @@ measured differently, so Phase 0 confirms each one on a real Worker.
       covered" with no names.
     - **Sheriffs:** they come from `county_officers.yml` and are kept apart from the commission,
       as on the site.
+
+### 12.11 Phase 0 results (measured 2026-11-21 on the deployed Worker)
+
+**Setup.** The Worker `votega-mcp` serves the custom domain `mcp.votega.org`; the `workers.dev`
+URL is disabled (it returns 404). It uses `agents` 0.33.0 and `@modelcontextprotocol/server`
+2.4.0, and runs on the free plan. Startup time is 34–44 ms (the limit is 1 s), and the bundle is
+688 KB, or 137 KB gzipped.
+
+**How CPU was measured.** The benchmark routes under `/bench/` read files built by
+`mcp/bench/make_bench_data.py` from the committed data, served privately through the Worker's
+assets binding. Each request logs its isolate's request count, so cold and warm requests can be
+told apart. CPU time per request comes from Workers Observability: 481 requests in 6 parallel
+streams, all `ok`, no errors. Observability reports CPU time in whole milliseconds.
+
+| Scenario | p50 ms | p90 ms | max ms |
+|---|---|---|---|
+| Empty route (runtime baseline) | 0 | 0 | 0 |
+| MCP `tools/call ping` | 2 | 9 | 18 |
+| MCP `tools/list` | 1 | 3 | 19 |
+| One bills shard (`2025_26-HR`, 308 KB): parse + title scan | 2 | 4 | 6 |
+| Keyword search over the four current-session shards, no cache | 6 | 11 | 12 |
+| The same with the parse-once cache (`memo`) | 1 | 9 | 15 |
+| All bills in one file (882 KB) | 6 | 8 | 15 |
+| `federal-votes-index.json` (301 KB) | 2 | 3 | 4 |
+| `ga-members.json` (697 KB) | 3 | 5 | 7 |
+| Largest ZIP shard (prefix 300, 87 ZIPs, 33 KB) | 0 | 1 | 1 |
+
+Cold isolates were rare in this run (9 of 481), so these figures are mostly warm. Cold MCP
+requests measured 8–9 ms.
+
+**What it shows.**
+1. **The data reads fit, except bills keyword search.** The ZIP lookup, the federal votes
+   index, the roster and a single bills shard all stay under 10 ms on their own. Adding the SDK's
+   own cost, a bills keyword search (about 6 ms + about 2 ms) is over 10 ms often enough at p90.
+   So keyword search gets the token index fallback named in §12.3: a precomputed
+   word → bill-id table, built at deploy, so a search reads a small table instead of scanning
+   every title.
+2. **The SDK's own cost has a long tail.** Even warm, `ping` and `tools/list` occasionally take
+   18–19 ms with no data read at all. That's outside our code (most likely garbage collection),
+   and no data layout can fix it.
+3. **The free plan's 10 ms limit was not enforced on these overruns:** 0 errors in 481
+   requests, including several over 10 ms. Cloudflare documents 10 ms as the limit, so this
+   leniency shouldn't be relied on. The decision rule from §10 stands: move to the Workers Paid
+   plan ($5/month, 30 s of CPU) at the first `exceededCpu` outcome in production, or sooner if
+   the tool set grows.
+4. **Bot protection doesn't block the Worker (§12.9):** in production, its subrequest to
+   `www.votega.org` returned 200 and the roster parsed. The zone's crawler protection (AI
+   Labyrinth) labelled the benchmark responses `link_maze_injected`. It only adds hidden links
+   to HTML, and nothing this server returns is HTML, but before launch add a rule exempting
+   `mcp.votega.org` so no response to an AI client is ever altered.
+5. **Isolates are reused (§12.9):** 40 rapid pings spread over 10 isolates, an average of 4
+   requests each and up to 9. The parse-once cache therefore helps under steady traffic. Under
+   light traffic most requests will be cold, so shard sizes, not the cache, are what keep the
+   CPU budget.
+6. **New public hostnames are probed immediately.** Within minutes of the certificate being
+   issued, scanners asked for `/.env`, `/.ssh/id_rsa`, `/docker-compose.yml` and similar, and
+   got 404s. That's expected, and is one more reason for the rate-limit rule in §9.
 
 ## 13. Rollout
 

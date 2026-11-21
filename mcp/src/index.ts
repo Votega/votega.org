@@ -77,19 +77,72 @@ function createServer() {
   return server;
 }
 
+// ---- Phase 0 benchmarks (spec §12.3, §12.9). Removed before launch. ----------------
+// Each route does one thing, so Workers Observability's per-request cpuTimeMs can be
+// read per scenario. `memo=1` keeps the parsed file in module scope (the planned
+// parse-once-per-isolate cache); the log line says whether the isolate was warm.
+type Env = { ASSETS: { fetch: (req: Request | string) => Promise<Response> } };
+const BENCH_FILES = new Set([
+  "bills-2025_26-HB.json", "bills-2025_26-HR.json", "bills-2025_26-SB.json", "bills-2025_26-SR.json",
+  "bills-all.json", "zip-largest.json", "federal-votes-index.json", "ga-members.json",
+]);
+const CURRENT_BILL_SHARDS = ["bills-2025_26-HB.json", "bills-2025_26-HR.json",
+                             "bills-2025_26-SB.json", "bills-2025_26-SR.json"];
+const parsed = new Map<string, unknown>();
+
+async function loadJson(env: Env, file: string, memo: boolean) {
+  if (memo && parsed.has(file)) return parsed.get(file);
+  const res = await env.ASSETS.fetch(`https://assets.local/${file}`);
+  const value = JSON.parse(await res.text());
+  if (memo) parsed.set(file, value);
+  return value;
+}
+
+function scanTitles(doc: unknown, q: string) {
+  const rows = (doc as { rows?: unknown[][] }).rows || [];
+  let hits = 0;
+  for (const r of rows) if (String(r[2]).toLowerCase().includes(q)) hits++;
+  return hits;
+}
+
+async function bench(url: URL, env: Env): Promise<Response> {
+  const memo = url.searchParams.get("memo") === "1";
+  const q = (url.searchParams.get("q") || "school").toLowerCase();
+  const name = url.pathname.slice("/bench/".length);
+  let result: unknown = "ok";
+  if (name === "parse") {
+    const f = url.searchParams.get("f") || "";
+    if (!BENCH_FILES.has(f)) return new Response("unknown file", { status: 400 });
+    const doc = await loadJson(env, f, memo);
+    result = { f, hits: scanTitles(doc, q) };
+  } else if (name === "bills-search") {
+    let hits = 0;
+    for (const f of CURRENT_BILL_SHARDS) hits += scanTitles(await loadJson(env, f, memo), q);
+    result = { shards: CURRENT_BILL_SHARDS.length, hits };
+  } else if (name !== "noop") {
+    return new Response("unknown bench", { status: 404 });
+  }
+  return json({ bench: name, memo, warm: isolate.requests > 1, isolate, result });
+}
+
 const mcp = createMcpHandler(createServer, {
   route: "/mcp",
   allowedHostnames: ["mcp.votega.org", "localhost", "127.0.0.1"],
 });
 
 export default {
-  async fetch(request: Request, env: unknown, ctx: ExecutionContext): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     isolate.requests += 1;
     if (!isolate.id) {
       isolate.id = crypto.randomUUID().slice(0, 8);
       isolate.startedAt = new Date().toISOString();
     }
-    const { pathname } = new URL(request.url);
+    const url = new URL(request.url);
+    const { pathname } = url;
+    // One line per request, joined to its cpuTimeMs by requestId in Observability.
+    console.log(JSON.stringify({ spike: 1, path: pathname, query: url.search,
+                                 iso: isolate.id, n: isolate.requests }));
+    if (pathname.startsWith("/bench/")) return bench(url, env);
     if (pathname === "/mcp") return mcp(request, env, ctx);
     if (pathname === "/health") {
       return json({ ok: true, version: VERSION, isolate, origin: await originCheck() });
@@ -104,4 +157,4 @@ export default {
     }
     return new Response("Not found", { status: 404 });
   },
-} satisfies ExportedHandler;
+} satisfies ExportedHandler<Env>;
