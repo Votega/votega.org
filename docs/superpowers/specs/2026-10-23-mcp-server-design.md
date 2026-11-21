@@ -490,6 +490,31 @@ still after the rollover); the Worker deploys from **CI with a scoped token**; t
   version. It needs `CLOUDFLARE_API_TOKEN` (Workers edit on this account, plus the zone for the
   custom-domain route) and `CLOUDFLARE_ACCOUNT_ID`; without them the deploy job skips with a
   notice.
+- **CPU, measured 2026-11-21 on the live Worker** (observability on for about two minutes,
+  then off again; 103 labelled requests, all `ok`):
+
+  | Call | n | p50 ms | p90 ms | max ms | over 10 ms |
+  |---|---|---|---|---|---|
+  | `tools/list` (no data read) | 11 | 6 | 12 | 14 | 3 |
+  | `find_my_representatives`, ZIP | 14 | 6 | 16 | 25 | 3 |
+  | `find_my_representatives`, county | 13 | 7 | 12 | 33 | 4 |
+  | `find_local_officials` | 14 | 4 | 13 | 25 | 2 |
+  | `search_legislators` | 11 | 4 | 7 | 25 | 1 |
+  | `search_legislators`, county | 15 | 4 | 10 | 41 | 1 |
+  | `get_legislator` | 11 | 2 | 8 | 16 | 1 |
+  | `get_data_freshness` | 14 | 3 | 4 | 6 | 0 |
+  | all | 103 | 4 | 12 | 41 (p99 33) | 15 |
+
+  **The tail is cold isolates, not the data.** The worst calls are each stream's first request,
+  and `tools/list`, which reads no data, also exceeds 10 ms. In `workerd` locally, with tiny
+  fixtures, the first `tools/list` and the first tool call each take about 8 ms, then 1–2 ms
+  warm (0.6 ms averaged over 300 warm calls). That is code warm-up in the SDK and zod; the
+  Phase 0 placeholder showed the same pattern at 8–9 ms cold. Parsing the real indexes adds a
+  few milliseconds on top. Under light traffic most requests are cold (§12.11, point 5), so no
+  data layout keeps the free plan's 10 ms reliably. Cloudflare has not enforced the limit
+  (0 `exceededCpu`), but §12.11 says not to rely on that. **Decision rule updated:** move to
+  Workers Paid before launch (§13, phase 4), or at the first `exceededCpu`, whichever is first.
+
 - **Origin check:** browser requests are limited to the library's default Origins (localhost
   and the server's own host). Non-browser MCP clients send no Origin and are unaffected. Whether
   to allow any Origin, as §9 suggests for browser-based clients, is a launch decision.
