@@ -66,6 +66,37 @@ describe("worker", () => {
     expect(ds.license).toBe("CC BY-SA 4.0");
   });
 
+  it("lists the two prompts and fills them", async () => {
+    const list = (await rpc("prompts/list")).msg.result.prompts as { name: string; arguments: { name: string; required: boolean }[] }[];
+    expect(list.map((p) => p.name).sort()).toEqual(["local_officials", "who_represents_area"]);
+    expect(list.find((p) => p.name === "who_represents_area")!.arguments[0]).toMatchObject({ name: "area", required: true });
+
+    const get = async (name: string, args: Record<string, string>) =>
+      (await rpc("prompts/get", { name, arguments: args })).msg.result.messages[0].content.text as string;
+
+    const zip = await get("who_represents_area", { area: " 30001 " });
+    expect(zip).toContain('find_my_representatives with zip "30001"');
+    expect(zip).toContain("never pick one as mine");
+    expect(zip).toContain("cite each source_url");
+
+    // A county name is resolved to its FIPS from the counties index.
+    expect(await get("who_represents_area", { area: "newton county" })).toContain('county_fips "13217"');
+    expect(await get("who_represents_area", { area: "13013" })).toContain('county_fips "13013"');
+    // Unknown text: the model asks rather than guesses.
+    expect(await get("who_represents_area", { area: "Atlantis" })).toContain("Ask me for my ZIP");
+
+    const local = await get("local_officials", { place: "Covington\u0007" });
+    expect(local).toContain('find_local_officials with place "Covington"');
+    expect(local).not.toContain("\u0007");
+    expect(local).toContain("name nobody");
+    expect(await get("local_officials", { place: "13217" })).toContain('county_fips "13217"');
+  });
+
+  it("rejects an oversized prompt argument", async () => {
+    const { msg } = await rpc("prompts/get", { name: "local_officials", arguments: { place: "x".repeat(81) } });
+    expect(msg.error).toBeTruthy();
+  });
+
   it("rejects an oversized body", async () => {
     const res = await worker.fetch(
       new Request("http://localhost/mcp", {

@@ -254,10 +254,15 @@ present last session's data as current, or a former member as sitting.
   "In testing" note while `launched: false`. **Launch steps:** remove those three front-matter
   lines, set `launched: true` in `_data/mcp.yml`, and add `- AI Assistants: "ai-assistants/"`
   under `About:` in `_config.yml`.
-- **Prompts: deferred** (decided 2026-11-21, to keep this step small). `who_represents_area`
-  and `find_local_officials` could ship any time; `explain_bill` needs the Phase 3 bill tools.
-  They are templates that tell the model to cite `source_url`, label any AI-written summary as
-  AI-written, and stay neutral.
+- **Prompts (built 2026-11-21, server 0.3.0; `mcp/src/prompts.ts`):** `who_represents_area`
+  (`area`: a ZIP, a county FIPS code or a county name, which the prompt resolves to its FIPS
+  from the counties index; anything else tells the model to ask instead of guessing) and
+  `local_officials` (`place`; named apart from the `find_local_officials` tool for clarity).
+  Each tells the model which tool to call, to list every district and never pick one, to
+  show incoming officials separately, to cite `source_url` and `as_of`, and to stay neutral.
+  Arguments are control-stripped and capped at 80 characters. A 5-digit `13xxx` value is read
+  as a county FIPS code, never a ZIP: no Georgia ZIP starts with 13. `explain_bill` waits for
+  the Phase 3 bill tools and must label any AI-written summary as AI-written.
 
 ## 9. Security, abuse, and limits
 
@@ -580,7 +585,7 @@ still after the rollover); the Worker deploys from **CI with a scoped token**; t
 | 0. Spike | Hello-world `createMcpHandler` Worker on `mcp.votega.org`; pinned SDK versions; Worker CPU time for a bills shard, a ZIP shard and the federal votes index; the bot-protection and isolate-reuse checks (§12.9) | Each §12 measurement confirmed on a Worker, or the named fallback chosen |
 | 1. Indexes (core: done 2026-11-21, §12.12) | `build_mcp_index.py` + validator in `deploy-pages.yml`: members, ZIP shards, county index, local officials, meta. Bills shards + token table, races, candidates, EOs, local mentions and former members moved to Phase 3 | Index files built at deploy, within budgets |
 | 2. Core tools (what a voter asks first; built 2026-11-21, §12.13) | `find_my_representatives`, `find_local_officials`, `search_legislators` / `get_legislator` (state and federal), `get_data_freshness` | Passes Inspector + unit tests |
-| 3. Remaining tools | The remaining indexes (bills shards + word → bill-id table, races, candidates, EOs, local mentions, former members); `search_races` / `get_candidate`, `get_legislator_votes` (GA and federal), bills, EOs, local government, former members and `session`, resources/prompts | Full v1 tool set |
+| 3. Remaining tools | The remaining indexes (bills shards + word → bill-id table, races, candidates, EOs, local mentions, former members); `search_races` / `get_candidate`, `get_legislator_votes` (GA and federal), bills, EOs, local government, former members and `session`, the `explain_bill` prompt (resources and the two area prompts shipped 2026-11-21, §8) | Full v1 tool set |
 | 4. Launch | Unstage the `/ai-assistants/` page (built 2026-11-21, §8: client config snippets included) and link it from `/open-data`, README entry; the rate-limit rule, CPU cap and Workers Paid are already in place (§9, §10); proposed for after the 2027-01-11 rollover (§7) | Public, announced |
 | 5. v2 | Street-address lookup (needs a geocoding and privacy decision), federal bills and sponsorship, seat history, optional KV/D1 search, Georgia Commons text if their license allows it | Separate spec |
 
