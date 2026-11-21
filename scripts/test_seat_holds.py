@@ -13,7 +13,8 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.seat_holds import derive_holds, holds_errors, overrides_errors, second_monday_of_january  # noqa: E402
+from lib.seat_holds import (derive_holds, derive_vacancy_notes, holds_errors, overrides_errors,  # noqa: E402
+                             second_monday_of_january, vacancy_gaps, vacancy_note_errors)
 import build_seat_holds as B  # noqa: E402
 
 failures = []
@@ -73,8 +74,59 @@ def vg(gid, rec):
     return f"vg-{gid}"
 
 
-def derive(a=A, b=Bs, roster=ROSTER, overrides=(), vgid=vg):
-    return derive_holds(snapshot(a, b), SEATS, roster, list(overrides), vgid)
+def derive(a=A, b=Bs, roster=ROSTER, overrides=(), vgid=vg, specials=()):
+    return derive_holds(snapshot(a, b), SEATS, roster, list(overrides), vgid, specials=list(specials))
+
+
+SP_40 = {"chamber": "House", "district": 3, "election": "2025-11-04", "runoff": "2025-11-25",
+         "runoffHeld": True, "source": "2025"}
+
+
+def vacancy_cases():
+    print("vacancies: computed from holds, with writs and specials as notes")
+    hs = derive(specials=[SP_40])
+    doc = {"metadata": {"count": len(hs)}, "holds": hs}
+    check("a mid-term departure is a vacancy until the joiner starts",
+          vacancy_gaps(hs, SEATS), [("ga-house-3@2023", "2025-10-01", "2025-12-01")])
+    early = {**ROSTER, 50: {"id": "r50", "termStart": "2025-11-20"}}
+    h50 = {(x["vgId"], x["seatId"]): x for x in derive(roster=early, specials=[SP_40])}[("vg-50", "ga-house-3@2023")]
+    check("a joiner is never seated before the runoff that decided the seat",
+          (h50["start"], h50["startBasis"]), (None, "unknown"))
+    # Seat 1 vacant at the 2025 convening: a special decided after it, and no member vacated.
+    pre = {"chamber": "House", "district": 1, "election": "2025-01-07", "runoff": "2025-02-04",
+           "runoffHeld": True, "source": "2025"}
+    late_b = [row(11, 1), row(20, 2), row(40, 3, vacated="2025-10-01T00:00:00"), row(50, 3)]
+    roster = {**ROSTER, 11: {"id": "r11", "termStart": "2025-02-10"}}
+    gone = [{"legisGaGovId": 10, "seatId": "ga-house-1@2021", "endedBy": "did-not-run"}]
+    hs2 = derive(b=late_b, roster=roster, overrides=gone, specials=[pre, SP_40])
+    h11 = {(x["vgId"], x["seatId"]): x for x in hs2}[("vg-11", "ga-house-1@2021")]
+    check("a seat vacant at the convening seats its first member late, not at the convening",
+          (h11["start"], h11["startBasis"]), ("2025-02-10", "roster-termStart"))
+    check("and that is a vacancy from the convening",
+          ("ga-house-1@2021", "2025-01-13", "2025-02-10") in vacancy_gaps(hs2, SEATS), True)
+    writs = [{"date": "2025-09-25", "number": "09.25.25.01", "url": "u",
+              "title": "Issuing a Writ of Election to fill the District 3 seat in the Georgia House of Representatives"},
+             {"date": "2025-09-25", "number": "x", "url": "u",
+              "title": "Issuing a Writ of Election to fill the District 3 seat in the Georgia State Senate"},
+             {"date": "2025-09-25", "number": "y", "url": "u",
+              "title": "Issuing a Writ of Election to fill the vacancy in Georgia's 3rd Congressional District"}]
+    notes = derive_vacancy_notes(hs, SEATS, writs, [SP_40], {"2025": "https://example"}, today="9999-12-31")
+    check("a writ issued BEFORE the vacancy still belongs to it; other chambers and Congress do not",
+          [(n["kind"], n["date"]) for n in notes],
+          [("writ", "2025-09-25"), ("special-election", "2025-11-04"), ("special-runoff", "2025-11-25")])
+    no_runoff = derive_vacancy_notes(hs, SEATS, [], [{**SP_40, "runoffHeld": False}], {}, today="9999-12-31")
+    check("a runoff that was not held is not recorded", [n["kind"] for n in no_runoff], ["special-election"])
+    doc["vacancyNotes"] = notes
+    check("derived notes pass", vacancy_note_errors(doc, SEATS), [])
+
+    def bad(mutate):
+        d = copy.deepcopy(doc)
+        mutate(d["vacancyNotes"])
+        return vacancy_note_errors(d, SEATS)
+    check("a note on no vacancy", any("matches no vacancy" in e for e in bad(lambda n: n[0].update(**{"from": "2025-06-01"}))), True)
+    check("a note dated after the vacancy ended", any("outside" in e for e in bad(lambda n: n[1].update(date="2026-01-01"))), True)
+    check("an unknown kind", any("unknown kind" in e for e in bad(lambda n: n[0].update(kind="rumor"))), True)
+    check("a runoff with no earlier special", any("runoff" in e for e in bad(lambda n: n.pop(1))), True)
 
 
 def derivation_cases():
@@ -214,6 +266,19 @@ def roster_layer_cases():
 
 def committed_cases():
     print("committed artifacts")
+    doc0 = B.load(B.OUTPUT_FILE)
+    seats0 = B.load(B.SEATS_FILE)
+    check("vacancy notes on the committed file validate", vacancy_note_errors(doc0, seats0), [])
+    gaps = vacancy_gaps(doc0["holds"], seats0)
+    kinds = {}
+    for n in doc0["vacancyNotes"]:
+        kinds.setdefault((n["seatId"], n["from"]), set()).add(n["kind"])
+    check("20 vacancies since 2023, each with a writ and a special election",
+          (len(gaps), all({"writ", "special-election"} <= kinds.get((g[0], g[1]), set()) for g in gaps)), (20, True))
+    by0 = {(h["ids"]["legisGaGovId"], h["seatId"]): h for h in doc0["holds"]}
+    check("four seats were vacant at the 2023 convening (HD 7, 119, 172, SD 11)",
+          sorted(g[0] for g in gaps if g[1] == "2023-01-09"),
+          ["ga-house-119@2021", "ga-house-172@2021", "ga-house-7@2021", "ga-senate-11@2021"])
     check("the committed overrides are all sourced and noted",
           overrides_errors(B.load(B.OVERRIDES_FILE)["holds"]), [])
     import json as _json
@@ -254,6 +319,7 @@ def main():
     validation_cases()
     override_cases()
     roster_layer_cases()
+    vacancy_cases()
     committed_cases()
     if failures:
         print(f"\n{len(failures)} failure(s): {failures}")

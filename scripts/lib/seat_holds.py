@@ -19,6 +19,7 @@ and the offline tests. Rules (docs/seat-history-design.md):
 """
 import calendar
 import datetime as dt
+import re
 
 ENDED_BY = ("term-limited", "did-not-run", "lost", "resigned", "removed", "deceased",
             "redistricted", "term-ended")
@@ -26,6 +27,10 @@ STATUS_ENDED_BY = {"Resigned": "resigned", "Deceased": "deceased", "Removed": "r
 SOAP_BODY = {"House": "ga-house", "Senate": "ga-senate"}
 SOAP_PARTY = {"Democrat": "Democratic"}
 SOAP_SOURCE = "legis.ga.gov Members/GetMembersBySession"
+
+
+def _shift(iso, n):
+    return (dt.date.fromisoformat(iso) + dt.timedelta(days=n)).isoformat()
 
 
 def second_monday_of_january(year):
@@ -67,11 +72,15 @@ def seat_in_force(seats_by_key, plan_effective, body, district, on):
     return hits[0]
 
 
-def derive_holds(snapshot, seats_doc, roster, overrides, vgid_for):
+def derive_holds(snapshot, seats_doc, roster, overrides, vgid_for, specials=()):
     """Build the hold list. Raises ValueError on anything it cannot decide.
 
     roster: {legisGaGovId: ga-members.json record}; overrides: seat-hold-overrides.json
-    "holds" list; vgid_for(gid, roster_record_or_None) -> vgId or None.
+    "holds" list; vgid_for(gid, roster_record_or_None) -> vgId or None; specials:
+    ga-legislative-specials.json "specials". A seat with more special elections in a
+    biennium than members who vacated it that biennium was VACANT AT THE CONVENING (the
+    member-elect died or resigned before being seated, so the session listing never
+    shows them): its first member is a joiner, not seated at the convening.
     """
     seats = seats_doc["seats"]
     plan_effective = {p["id"]: p["effective"] for p in seats_doc["metadata"]["plans"]}
@@ -126,6 +135,16 @@ def derive_holds(snapshot, seats_doc, roster, overrides, vgid_for):
                 del open_[gid]
 
         # 2. Seat by seat, in the order members held it this biennium.
+        next_convening = second_monday_of_january(start_year + 2)
+        specials_here = {}
+        for sp in specials:
+            # Counted by the day the special DECIDED the seat (the runoff, when held): HD 7's
+            # special ran 2023-01-03, before the convening, but its runoff on 2023-01-31 left
+            # the seat empty when the 2023-24 General Assembly convened.
+            decided_on = sp["runoff"] if sp.get("runoffHeld") else sp["election"]
+            if convening <= decided_on and sp["election"] < next_convening:
+                key = seat_in_force(by_key, plan_effective, SOAP_BODY[sp["chamber"]], sp["district"], convening)
+                specials_here[key] = specials_here.get(key, 0) + 1
         by_seat = {}
         for gid, seat_id in placed.items():
             by_seat.setdefault(seat_id, []).append(rows[gid])
@@ -133,18 +152,30 @@ def derive_holds(snapshot, seats_doc, roster, overrides, vgid_for):
             members.sort(key=lambda r: (r["dateVacated"] is None, r["dateVacated"] or ""))
             if sum(1 for r in members if not r["dateVacated"]) > 1:
                 raise ValueError(f"{seat_id}: more than one member without a vacancy in {start_year}")
-            prev_end = None
+            vacated = sum(1 for r in members if r["dateVacated"])
+            vacant_at_convening = specials_here.get(seat_id, 0) > vacated
+            prev_end = convening if vacant_at_convening else None
             for i, r in enumerate(members):
                 gid = r["id"]
                 rec = roster.get(gid)
                 party = SOAP_PARTY.get(r["party"], r["party"])
                 h = open_.get(gid)
                 if h is None:
-                    if i == 0:
+                    if i == 0 and not vacant_at_convening:
                         start, basis = convening, "convening"
                     else:
                         ts = (rec or {}).get("termStart")
-                        if ts and prev_end and prev_end <= ts and ts[:4] in (str(start_year), str(start_year + 1)):
+                        # A joiner cannot be seated before the special election that decided the
+                        # seat (the runoff, when one was held). HD 130: the roster said 2026-03-15,
+                        # the runoff was 2026-04-07, so that termStart is rejected.
+                        decided = [sp["runoff"] if sp.get("runoffHeld") else sp["election"]
+                                   for sp in specials
+                                   if SOAP_BODY[sp["chamber"]] == seat_by_id[seat_id]["body"]
+                                   and sp["district"] == seat_by_id[seat_id]["district"]
+                                   and prev_end and sp["election"] >= _shift(prev_end, -90)
+                                   and sp["election"] < next_convening]
+                        floor = max(decided) if decided else prev_end
+                        if ts and prev_end and prev_end <= ts and (floor is None or floor <= ts)                                 and ts[:4] in (str(start_year), str(start_year + 1)):
                             start, basis = ts, "roster-termStart"
                         else:
                             start, basis = None, "unknown"
@@ -199,6 +230,117 @@ def overrides_errors(overrides, corrections=()):
         if not srcs or not all(isinstance(u, str) and u.startswith(("https://", "http://")) for u in srcs):
             errs.append(f"{who}: needs _sources with at least one URL")
     return errs
+
+
+VACANCY_KINDS = ("writ", "special-election", "special-runoff", "appointment-pending", "note")
+WRIT_LEAD_DAYS = 90   # a writ can precede the vacancy (Fleming's: 2024-01-03 for a seat he left 01-10)
+_WRIT = re.compile(r"writ of election.*?district (\d+)\b.*?georgia (?:state )?(senate|house)", re.I)
+
+
+def _days(iso, n):
+    return (dt.date.fromisoformat(iso) + dt.timedelta(days=n)).isoformat()
+
+
+def convening_on_or_before(iso):
+    """The convening that opened the biennium containing date `iso`."""
+    year = int(iso[:4])
+    start = year if year % 2 == 1 else year - 1
+    conv = second_monday_of_january(start)
+    return conv if conv <= iso else second_monday_of_january(start - 2)
+
+
+def vacancy_gaps(holds, seats_doc):
+    """[(seatId, from, to)] for every time a seat had fewer holders than its capacity.
+
+    Read off the holds, which are in the order held: the time between a hold ending (not
+    'redistricted': that seat ceased to exist) and the next one starting; a seat vacant at a
+    convening (its first holder of the biennium was not seated then); and a seat vacant now.
+    `to` is the next holder's start, or None when that is unknown or the seat is still empty."""
+    seats = {s["id"]: s for s in seats_doc["seats"]}
+    by_seat = {}
+    for h in holds:
+        by_seat.setdefault(h["seatId"], []).append(h)
+    gaps = []
+    for seat_id, hs in by_seat.items():
+        for i, b in enumerate(hs):
+            a = hs[i - 1] if i else None
+            if a and a["end"] and a["endedBy"] != "redistricted" and (b["start"] is None or b["start"] > a["end"]):
+                gaps.append((seat_id, a["end"], b["start"]))
+            elif b["startBasis"] != "convening" and b["start"]:
+                conv = convening_on_or_before(b["start"])
+                if b["start"] > conv and (a is None or (a["end"] and a["end"] <= conv)):
+                    gaps.append((seat_id, conv, b["start"]))
+        last = hs[-1]
+        if last["end"] and last["endedBy"] != "redistricted" and seats[seat_id].get("redrawnBy") is None:
+            gaps.append((seat_id, last["end"], None))
+    return sorted(set(gaps), key=lambda g: (g[1], g[0]))
+
+
+def derive_vacancy_notes(holds, seats_doc, writs, specials, special_sources, today):
+    """vacancyNotes for every gap: the governor's writ (from the committed executive orders)
+    and the special election and runoff (from ga-legislative-specials.json). A note never
+    opens or closes a gap; only holds do."""
+    seats = {s["id"]: s for s in seats_doc["seats"]}
+    body = {"House": "ga-house", "Senate": "ga-senate"}
+    notes = []
+    for seat_id, frm, to in vacancy_gaps(holds, seats_doc):
+        s = seats[seat_id]
+        lo, hi = _days(frm, -WRIT_LEAD_DAYS), to or today
+        for o in writs:
+            m = _WRIT.search(o.get("title") or "")
+            if not m or body["Senate" if m.group(2).lower() == "senate" else "House"] != s["body"]:
+                continue
+            if int(m.group(1)) == s["district"] and lo <= o["date"] <= hi:
+                notes.append({"seatId": seat_id, "from": frm, "kind": "writ", "date": o["date"],
+                              "ref": o.get("number"), "url": o.get("url"),
+                              "source": f"ga-executive-orders-{o['date'][:4]}.json", "note": o.get("title")})
+        for sp in specials:
+            if body[sp["chamber"]] != s["body"] or sp["district"] != s["district"]:
+                continue
+            if not (lo <= sp["election"] <= hi):
+                continue
+            url = special_sources.get(sp["source"])
+            notes.append({"seatId": seat_id, "from": frm, "kind": "special-election", "date": sp["election"],
+                          "ref": None, "url": url, "source": "ga-legislative-specials.json", "note": None})
+            if sp.get("runoffHeld") and sp.get("runoff"):
+                notes.append({"seatId": seat_id, "from": frm, "kind": "special-runoff", "date": sp["runoff"],
+                              "ref": None, "url": url, "source": "ga-legislative-specials.json", "note": None})
+    return sorted(notes, key=lambda n: (n["from"], n["seatId"], n["date"], n["kind"]))
+
+
+def vacancy_note_errors(doc, seats_doc):
+    """Tier 1: every note sits on a computed gap, with a known kind and a date in range."""
+    errs = []
+    gaps = {(g[0], g[1]): g[2] for g in vacancy_gaps(doc.get("holds", []), seats_doc)}
+    by_gap = {}
+    for n in doc.get("vacancyNotes", []):
+        who = f"vacancy note {n.get('kind')} on {n.get('seatId')} from {n.get('from')}"
+        key = (n.get("seatId"), n.get("from"))
+        if key not in gaps:
+            errs.append(f"{who}: matches no vacancy in the holds")
+            continue
+        if n.get("kind") not in VACANCY_KINDS:
+            errs.append(f"{who}: unknown kind")
+        if n.get("kind") == "note" and not n.get("note"):
+            errs.append(f"{who}: a 'note' needs text")
+        to = gaps[key]
+        if not n.get("date") or n["date"] < _days(n["from"], -WRIT_LEAD_DAYS) or (to and n["date"] > to):
+            errs.append(f"{who}: date {n.get('date')} is outside the vacancy")
+        by_gap.setdefault(key, {})[n.get("kind")] = n.get("date")
+    for key, kinds in by_gap.items():
+        if "special-runoff" in kinds and ("special-election" not in kinds or kinds["special-runoff"] <= kinds["special-election"]):
+            errs.append(f"{key}: a runoff needs an earlier special election")
+    return errs
+
+
+def vacancy_report(doc, seats_doc):
+    lines = []
+    noted = {(n["seatId"], n["from"], n["kind"]) for n in doc.get("vacancyNotes", [])}
+    for seat_id, frm, to in vacancy_gaps(doc["holds"], seats_doc):
+        missing = [k for k in ("writ", "special-election") if (seat_id, frm, k) not in noted]
+        if missing:
+            lines.append(f"vacancy {seat_id} from {frm}{'' if to else ' (still open)'}: no {' or '.join(missing)} recorded")
+    return lines
 
 
 def _sequence_errors(label, hs):
