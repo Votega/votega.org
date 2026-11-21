@@ -1,0 +1,31 @@
+{
+  "_comment": "Hand-kept: every General Assembly special election in seat-history scope (from January 2023), read by scripts/build_seat_holds.py for vacancyNotes and to recognize a seat that was vacant at a convening. One entry per vacancy filled: the special general election date, and the runoff date only when a runoff was actually held (runoffHeld false = scheduled but canceled or not needed). Dates are from Ballotpedia's yearly Georgia state legislative special elections pages (the Secretary of State's 'Call for Special Election' notices 403 non-browser clients). A writ of election for each vacancy is derived separately from the committed executive orders. Add an entry when a new special is called.",
+  "sources": {
+    "2023": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+    "2024": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2024",
+    "2025": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+    "2026": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026"
+  },
+  "specials": [
+    {"chamber": "House", "district": 7, "election": "2023-01-03", "runoff": "2023-01-31", "runoffHeld": true, "winner": "Johnny Chastain", "source": "2023"},
+    {"chamber": "House", "district": 119, "election": "2023-01-31", "runoff": "2023-02-28", "runoffHeld": true, "winner": "Holt Persinger", "source": "2023"},
+    {"chamber": "House", "district": 172, "election": "2023-01-31", "runoff": null, "runoffHeld": false, "winner": "Chas Cannon", "source": "2023"},
+    {"chamber": "Senate", "district": 11, "election": "2023-01-31", "runoff": null, "runoffHeld": false, "winner": "Sam Watson", "source": "2023"},
+    {"chamber": "House", "district": 75, "election": "2023-03-21", "runoff": null, "runoffHeld": false, "winner": "Eric Bell II", "source": "2023"},
+    {"chamber": "House", "district": 68, "election": "2023-05-16", "runoff": "2023-06-13", "runoffHeld": true, "winner": "Derrick Jackson", "source": "2023"},
+    {"chamber": "House", "district": 125, "election": "2024-02-13", "runoff": "2024-03-12", "runoffHeld": true, "winner": "Gary Richardson", "source": "2024"},
+    {"chamber": "Senate", "district": 30, "election": "2024-02-13", "runoff": "2024-03-12", "runoffHeld": false, "winner": "Tim Bearden", "source": "2024"},
+    {"chamber": "House", "district": 139, "election": "2024-04-09", "runoff": "2024-05-07", "runoffHeld": true, "winner": "Carmen Rice", "source": "2024"},
+    {"chamber": "Senate", "district": 21, "election": "2025-08-26", "runoff": "2025-09-23", "runoffHeld": true, "winner": "Jason Dickerson", "source": "2025"},
+    {"chamber": "House", "district": 106, "election": "2025-11-04", "runoff": "2025-12-02", "runoffHeld": true, "winner": "Muhammad Akbar Ali", "source": "2025"},
+    {"chamber": "Senate", "district": 35, "election": "2025-11-18", "runoff": "2025-12-16", "runoffHeld": true, "winner": "Jaha Howard", "source": "2025"},
+    {"chamber": "House", "district": 23, "election": "2025-12-09", "runoff": "2026-01-06", "runoffHeld": true, "winner": "Bill Fincher", "source": "2025"},
+    {"chamber": "House", "district": 121, "election": "2025-12-09", "runoff": "2026-01-06", "runoffHeld": false, "winner": "Eric Gisler", "source": "2025"},
+    {"chamber": "Senate", "district": 18, "election": "2026-01-20", "runoff": "2026-02-17", "runoffHeld": true, "winner": "Steven McNeel", "source": "2026"},
+    {"chamber": "House", "district": 94, "election": "2026-03-10", "runoff": "2026-04-07", "runoffHeld": true, "winner": "Venola Mason", "source": "2026"},
+    {"chamber": "House", "district": 130, "election": "2026-03-10", "runoff": "2026-04-07", "runoffHeld": true, "winner": "Sheila Clark Nelson", "source": "2026"},
+    {"chamber": "Senate", "district": 53, "election": "2026-03-10", "runoff": "2026-04-07", "runoffHeld": true, "winner": "Lanny Thomas", "source": "2026"},
+    {"chamber": "House", "district": 177, "election": "2026-05-12", "runoff": "2026-06-09", "runoffHeld": true, "winner": "Alvin Payton Jr.", "source": "2026"},
+    {"chamber": "Senate", "district": 7, "election": "2026-05-19", "runoff": "2026-06-16", "runoffHeld": true, "winner": "Adrienne White", "source": "2026"}
+  ]
+}

@@ -31,7 +31,9 @@ import copy
 from lib.atomic_io import write_json_atomic  # noqa: E402
 from lib.ga_roster import EDITORIAL_STATUS_FIELDS, apply_member_overrides  # noqa: E402
 from lib.ga_identity import ledger_keys  # noqa: E402
-from lib.seat_holds import bienniums, derive_holds, holds_errors, overrides_errors, report  # noqa: E402
+from lib.seat_holds import (bienniums, derive_holds, derive_vacancy_notes, holds_errors,  # noqa: E402
+                             overrides_errors, report, vacancy_note_errors, vacancy_report)
+import glob  # noqa: E402
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 P = lambda *a: os.path.join(REPO_ROOT, *a)  # noqa: E731
@@ -42,6 +44,8 @@ MEMBER_OVERRIDES_FILE = P("assets", "data", "ga-members-overrides.json")
 OVERRIDES_FILE = P("assets", "data", "seat-hold-overrides.json")
 LEDGER_FILE = P("assets", "data", "id-crosswalk-ledger.json")
 OUTPUT_FILE = P("assets", "data", "seat-holds.json")
+SPECIALS_FILE = P("assets", "data", "ga-legislative-specials.json")
+EXEC_ORDERS_GLOB = P("assets", "data", "ga-executive-orders-*.json")
 
 
 def load(path, default=None):
@@ -89,11 +93,26 @@ def roster_members(roster_doc=None, overrides_file=MEMBER_OVERRIDES_FILE):
     return members
 
 
-def build(snapshot, seats_doc, roster_members, overrides_doc, ledger):
+def load_writs(first_convening):
+    """Every executive order from the year before the history starts (a writ can be issued
+    before the convening, for a member-elect who was never seated)."""
+    orders = []
+    for path in sorted(glob.glob(EXEC_ORDERS_GLOB)):
+        year = os.path.basename(path)[len("ga-executive-orders-"):-len(".json")]
+        if year.isdigit() and int(year) >= int(first_convening[:4]) - 1:
+            orders += load(path).get("orders", [])
+    return orders
+
+
+def build(snapshot, seats_doc, roster_members, overrides_doc, ledger, specials_doc=None, writs=None):
     roster = {m["legisGaGovId"]: m for m in roster_members if m.get("legisGaGovId") is not None}
-    holds = derive_holds(snapshot, seats_doc, roster, overrides_doc.get("holds", []),
-                         vgid_resolver(ledger))
+    specials_doc = specials_doc if specials_doc is not None else load(SPECIALS_FILE, {"specials": [], "sources": {}})
     first = bienniums(snapshot)[0][1]
+    writs = writs if writs is not None else load_writs(first)
+    holds = derive_holds(snapshot, seats_doc, roster, overrides_doc.get("holds", []),
+                         vgid_resolver(ledger), specials=specials_doc.get("specials", []))
+    notes = derive_vacancy_notes(holds, seats_doc, writs, specials_doc.get("specials", []),
+                                 specials_doc.get("sources", {}), today="9999-12-31")
     return {
         "metadata": {
             "generatedAt": None,
@@ -111,10 +130,12 @@ def build(snapshot, seats_doc, roster_members, overrides_doc, ledger):
                 "assets/data/seats.json", "assets/data/ga-members.json (status, termStart)",
                 "assets/data/seat-hold-overrides.json (hand-reviewed end reasons, with sources)",
                 "assets/data/id-crosswalk-ledger.json (vgIds)",
+                "assets/data/ga-executive-orders-*.json (writs of election, for vacancyNotes)",
+                "assets/data/ga-legislative-specials.json (special elections, for vacancyNotes)",
             ],
         },
         "holds": holds,
-        "vacancyNotes": [],
+        "vacancyNotes": notes,
     }
 
 
@@ -145,11 +166,11 @@ def main():
         return 1
     committed = load(OUTPUT_FILE)
     errs = holds_errors(doc, seats_doc, ledger.get("merged"), previous=committed,
-                        corrections=corrections)
+                        corrections=corrections) + vacancy_note_errors(doc, seats_doc)
     if errs:
         print("Refusing to write seat-holds.json:", *errs, sep="\n  ", file=sys.stderr)
         return 1
-    for line in report(doc, seats_doc):
+    for line in report(doc, seats_doc) + vacancy_report(doc, seats_doc):
         print(f"note: {line}")
     if args.check:
         if same_content(doc, committed):
