@@ -290,7 +290,11 @@ measured differently, so Phase 0 confirms each one on a real Worker.
    `deploy-pages.yml` after `build_entity_pages.py`, and writes `assets/data/mcp/*`
    (gitignored), the same way the share cards are built. The indexes therefore always describe
    the exact data the site deploys, can't drift from it, and add no git history. The validator
-   runs in the same step and fails the deploy if a budget or a check fails.
+   runs in the same step. **Amended in Phase 1:** a failed build or check does not stop the site
+   deploy. The step removes `assets/data/mcp/`, so the server finds no index and says so rather
+   than serving a bad one, and the `report-degraded` job flags the run (the same pattern as the
+   entity pages and share cards). Stopping every site deploy for a server not yet in service
+   would put the wrong thing at risk.
 3. **Bills: shard by session and bill type, and parse once per isolate.**
    - **Measured:** all 5,656 bills as compact positional rows (interned subjects and statuses)
      come to 938 KB raw, 262 KB gzipped. That's over the 150 KB target. Parsing them plus a
@@ -410,14 +414,56 @@ requests measured 8–9 ms.
    `workers.dev` is disabled. The benchmarks can be re-run from `mcp/bench/make_bench_data.py`
    and the assets setting noted in `mcp/wrangler.jsonc`.
 
+### 12.12 Phase 1 results (core indexes, built 2026-11-21)
+
+Phase 1 was split: the **core indexes** the Phase 2 tools read are built, and the rest (bills
+shards and the word → bill-id table, races, candidates, EOs, local mentions, former members)
+move to the start of Phase 3, which is the first phase that reads them.
+
+- **Code:** `scripts/lib/mcp_index.py` (the rules, pure functions), `scripts/build_mcp_index.py`
+  (loads the inputs, writes `assets/data/mcp/` through a temp directory that is swapped in whole),
+  `scripts/validate_mcp_index.py` (tier 1), `scripts/test_mcp_index.py` (offline, stdlib only,
+  with a negative control for every check). The deploy step is "Generate MCP indexes" in
+  `deploy-pages.yml`, between share cards and Jekyll.
+- **Sizes on the committed data:**
+
+| File | Rows | Raw | Gzip |
+|---|---|---|---|
+| `members-index.json` | 263 (247 GA + 16 federal) | 194 KB | 27.6 KB |
+| `local-officials-index.json` | 71 places | 203 KB | 19.6 KB |
+| `counties-index.json` | 159 | 53 KB | 8.6 KB |
+| `zip/<zip3>.json` | 22 shards, 922 ZIPs | ≤ 33 KB | ≤ 5.0 KB |
+| all 25 files | | | 104 KB |
+
+  Every file is well under the 150 KB budget; the largest raw file (local officials, 203 KB) is
+  below the roster file Phase 0 parsed in 3–5 ms.
+- **Shapes worth knowing for Phase 2:**
+  - Members keep departed members (`serving: false`, with `status`), because their pages exist
+    and `find_my_representatives` needs to see that a seat's member left. Suspended members are
+    `serving: true` with `status: "Suspended"`.
+  - `slices` holds the vote and sponsorship file paths, or null when no file exists (2 members
+    today: one has no sponsorship slice, a newly seated member has neither).
+  - Local officials keep the sitting board **and** staged incoming rows (`takesOffice` in the
+    future), with history dropped. The Worker filters on the request date, so the January 1
+    turnover is right between deploys.
+  - `meta.json` carries each file's bytes, gzip bytes, sha256 and count, every
+    `data_freshness.yml` dataset with its own stamp and check date (for `get_data_freshness`),
+    and the local rosters' last-reviewed date.
+- **Found for Phase 3:** `_config.yml` excludes `assets/data/eo-text/` from the served site, so
+  the EO text slices named in §5.2 are not reachable from the Worker. Phase 3 either publishes
+  them or leaves EO text out of v1.
+- **Not yet verified:** that the files are served at `www.votega.org/assets/data/mcp/` after a
+  deploy (`_config.yml` does not exclude the path, so Jekyll should copy them). Check
+  `/assets/data/mcp/meta.json` after the first deploy from `main`.
+
 ## 13. Rollout
 
 | Phase | Scope | Exit criteria |
 |---|---|---|
 | 0. Spike | Hello-world `createMcpHandler` Worker on `mcp.votega.org`; pinned SDK versions; Worker CPU time for a bills shard, a ZIP shard and the federal votes index; the bot-protection and isolate-reuse checks (§12.9) | Each §12 measurement confirmed on a Worker, or the named fallback chosen |
-| 1. Indexes | `build_mcp_index.py` + validator in `deploy-pages.yml`: members, ZIP shards, county index, local officials, bills shards, races, candidates, EOs, local mentions, meta | Index files built at deploy, within budgets |
+| 1. Indexes (core: done 2026-11-21, §12.12) | `build_mcp_index.py` + validator in `deploy-pages.yml`: members, ZIP shards, county index, local officials, meta. Bills shards + token table, races, candidates, EOs, local mentions and former members moved to Phase 3 | Index files built at deploy, within budgets |
 | 2. Core tools (what a voter asks first) | `find_my_representatives`, `find_local_officials`, `search_legislators` / `get_legislator` (state and federal), `get_data_freshness` | Passes Inspector + unit tests |
-| 3. Remaining tools | `search_races` / `get_candidate`, `get_legislator_votes` (GA and federal), bills, EOs, local government, former members and `session`, resources/prompts | Full v1 tool set |
+| 3. Remaining tools | The remaining indexes (bills shards + word → bill-id table, races, candidates, EOs, local mentions, former members); `search_races` / `get_candidate`, `get_legislator_votes` (GA and federal), bills, EOs, local government, former members and `session`, resources/prompts | Full v1 tool set |
 | 4. Launch | Docs page on votega.org (an addition to `/open-data`), README entry, client config snippets (Claude, Cursor, etc.), rate-limit rule; proposed for after the 2027-01-11 rollover (§7) | Public, announced |
 | 5. v2 | Street-address lookup (needs a geocoding and privacy decision), federal bills and sponsorship, seat history, optional KV/D1 search, Georgia Commons text if their license allows it | Separate spec |
 
