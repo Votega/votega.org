@@ -48,6 +48,7 @@ jobs:
     outputs:
       render_degraded: ${{ steps.render.outputs.degraded }}
       entities_degraded: ${{ steps.entities.outputs.degraded }}
+      mcp_degraded: ${{ steps.mcp.outputs.degraded }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -137,6 +138,27 @@ jobs:
         run: |
           CHROME_CHANNEL=chrome python3 scripts/build_share_cards.py || echo "share card generation failed; pages use the default card"
 
+      # The MCP server's index files (assets/data/mcp/, gitignored), built from the same data
+      # this deploy publishes (spec: docs/superpowers/specs/2026-10-23-mcp-server-design.md §5.1,
+      # §12.2), then checked by validate_mcp_index.py. Non-fatal to the site: on any failure the
+      # directory is removed, so the MCP server sees no index (and says so) rather than a bad one,
+      # and the report-degraded job flags the run.
+      - name: Generate MCP indexes
+        id: mcp
+        run: |
+          set +e
+          python3 scripts/build_mcp_index.py && python3 scripts/validate_mcp_index.py
+          code=$?
+          if [ "$code" -ne 0 ]; then
+            rm -rf assets/data/mcp
+            echo "degraded=true" >> "$GITHUB_OUTPUT"
+            echo "::error title=MCP indexes failed::build or validation exited $code; assets/data/mcp/ was removed, so the MCP server has no index this deploy"
+            echo ":warning: **MCP indexes failed** (exit $code) and were not published. The site still deployed." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "degraded=false" >> "$GITHUB_OUTPUT"
+          fi
+          exit 0
+
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
@@ -165,9 +187,9 @@ jobs:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
     timeout-minutes: 5
     needs: [build, deploy]
-    if: ${{ always() && (needs.build.outputs.render_degraded == 'true' || needs.build.outputs.entities_degraded == 'true') }}
+    if: ${{ always() && (needs.build.outputs.render_degraded == 'true' || needs.build.outputs.entities_degraded == 'true' || needs.build.outputs.mcp_degraded == 'true') }}
     steps:
       - name: Fail the run so the failure notifier fires
         run: |
-          echo "::error::Deployed, but a non-fatal generator degraded (server-render data: ${{ needs.build.outputs.render_degraded }}, entity pages: ${{ needs.build.outputs.entities_degraded }}). See the build job's step summary."
+          echo "::error::Deployed, but a non-fatal generator degraded (server-render data: ${{ needs.build.outputs.render_degraded }}, entity pages: ${{ needs.build.outputs.entities_degraded }}, MCP indexes: ${{ needs.build.outputs.mcp_degraded }}). See the build job's step summary."
           exit 1
