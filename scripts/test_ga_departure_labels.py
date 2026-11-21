@@ -9,8 +9,8 @@ rollover; no page reads them yet. What must hold:
     failure this guards);
   * metadata.count is the number of labels;
   * every label has a known type, text and at least one source;
-  * the wording rules hold: "lost" and "did not run", never "ousted" or "unseated",
-    and "retire" only in Harbison's, which quotes his own announced word;
+  * the wording rules hold: "lost" and "did not run", never "retire", "ousted" or
+    "unseated" (Harbison's carve-out for his own word was dropped 2026-11-21);
   * a label never names the winner of a contest the member lost.
 
 Run: python scripts/test_ga_departure_labels.py        (no network, no repo writes)
@@ -23,7 +23,6 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "..", "assets", "data")
 TYPES = {"resigned", "suspended", "withdrew", "announced-departure", "lost-primary",
          "ran-for-other-office", "did-not-run", "special-election", "lost-general", "deceased"}
-HARBISON = "17"
 
 failures = []
 
@@ -56,8 +55,8 @@ check("types are known", all(v["type"] in TYPES for v in labels.values()))
 check("every label has text and a source", all(v["label"].strip() and v["sources"] for v in labels.values()))
 check("no empty strings in sources", all(s.strip() for v in labels.values() for s in v["sources"]))
 check("no 'ousted' or 'unseated'", not any(re.search(r"ousted|unseated", v["label"], re.I) for v in labels.values()))
-check("'retire' only in Harbison's own-word label",
-      all(HARBISON == k or not re.search(r"retire", v["label"], re.I) for k, v in labels.items()))
+check("no 'retire' in any label",
+      not any(re.search(r"retire", v["label"], re.I) for v in labels.values()))
 check("a did-not-run label says 'did not run'",
       all("Did not run" in v["label"] for v in labels.values() if v["type"] == "did-not-run"))
 
