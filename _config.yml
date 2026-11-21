@@ -388,6 +388,8 @@ exclude:
   # Build-time data generation; has no place in the served site
   - scripts/
   - tools/
+  # The MCP server (a Cloudflare Worker): deployed separately, never part of the Jekyll site.
+  - mcp/
   # Unit tests for the shared front-end modules (node --test); build-time only.
   - tests/
   # Executive-order source text: ~3,400 .txt files (~17MB) read only by the EO

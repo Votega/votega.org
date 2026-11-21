@@ -1,0 +1,11 @@
+{
+  // VoteGA MCP server. Deployed to the custom domain mcp.votega.org; the account's
+  // workers.dev URL is disabled so the server has exactly one public address.
+  "name": "votega-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-04",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "routes": [{ "pattern": "mcp.votega.org", "custom_domain": true }],
+  "observability": { "enabled": true }
+}
