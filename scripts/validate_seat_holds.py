@@ -17,7 +17,7 @@ import subprocess
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from lib.seat_holds import holds_errors, report  # noqa: E402
+from lib.seat_holds import holds_errors, report, vacancy_note_errors, vacancy_report  # noqa: E402
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HOLDS = "assets/data/seat-holds.json"
@@ -42,13 +42,13 @@ def main():
     merged = load("assets/data/id-crosswalk-ledger.json").get("merged", {})
     previous = committed(HOLDS)
     corrections = load("assets/data/seat-hold-overrides.json").get("corrections", [])
-    errs = holds_errors(doc, seats, merged, previous=previous, corrections=corrections)
+    errs = holds_errors(doc, seats, merged, previous=previous, corrections=corrections) + vacancy_note_errors(doc, seats)
     if errs:
         print(f"{len(errs)} error(s) in {HOLDS}:", *errs, sep="\n  ")
         return 1
     if previous is None:
         print(f"note: no committed {HOLDS} to compare with; append-only check skipped")
-    for line in report(doc, seats):
+    for line in report(doc, seats) + vacancy_report(doc, seats):
         print(f"note: {line}")
     print(f"{HOLDS} is valid: {doc['metadata']['count']} holds")
     return 0

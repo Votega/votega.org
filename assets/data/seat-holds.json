@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-21T00:25:34+00:00",
+  "generatedAt": "2026-11-21T01:32:19+00:00",
   "count": 336,
   "schemaVersion": 1,
   "historyFrom": {
@@ -13,7 +13,9 @@
    "assets/data/seats.json",
    "assets/data/ga-members.json (status, termStart)",
    "assets/data/seat-hold-overrides.json (hand-reviewed end reasons, with sources)",
-   "assets/data/id-crosswalk-ledger.json (vgIds)"
+   "assets/data/id-crosswalk-ledger.json (vgIds)",
+   "assets/data/ga-executive-orders-*.json (writs of election, for vacancyNotes)",
+   "assets/data/ga-legislative-specials.json (special elections, for vacancyNotes)"
   ]
  },
  "holds": [
@@ -319,8 +321,8 @@
    "ids": {
     "legisGaGovId": 5060
    },
-   "start": "2023-01-09",
-   "startBasis": "convening",
+   "start": "2023-03-06",
+   "startBasis": "roster-termStart",
    "end": null,
    "endBasis": null,
    "endedBy": null,
@@ -1190,8 +1192,8 @@
    "ids": {
     "legisGaGovId": 5058
    },
-   "start": "2023-01-09",
-   "startBasis": "convening",
+   "start": "2023-02-06",
+   "startBasis": "roster-termStart",
    "end": null,
    "endBasis": null,
    "endedBy": null,
@@ -2336,8 +2338,8 @@
    "ids": {
     "legisGaGovId": 5057
    },
-   "start": "2023-01-09",
-   "startBasis": "convening",
+   "start": "2023-02-06",
+   "startBasis": "roster-termStart",
    "end": null,
    "endBasis": null,
    "endedBy": null,
@@ -2689,8 +2691,8 @@
    "ids": {
     "legisGaGovId": 837
    },
-   "start": "2023-01-09",
-   "startBasis": "convening",
+   "start": "2023-02-06",
+   "startBasis": "roster-termStart",
    "end": null,
    "endBasis": null,
    "endedBy": null,
@@ -3772,8 +3774,8 @@
    "ids": {
     "legisGaGovId": 4903
    },
-   "start": "2026-03-15",
-   "startBasis": "roster-termStart",
+   "start": null,
+   "startBasis": "unknown",
    "end": null,
    "endBasis": null,
    "endedBy": null,
@@ -4833,5 +4835,556 @@
    "source": "legis.ga.gov Members/GetMembersBySession"
   }
  ],
- "vacancyNotes": []
+ "vacancyNotes": [
+  {
+   "seatId": "ga-house-119@2021",
+   "from": "2023-01-09",
+   "kind": "writ",
+   "date": "2022-12-31",
+   "ref": "12.31.22.01",
+   "url": "https://gov.georgia.gov/document/2022-executive-orders/12312201/download",
+   "source": "ga-executive-orders-2022.json",
+   "note": "Issuing a writ of election to fill the District 119 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-119@2021",
+   "from": "2023-01-09",
+   "kind": "special-election",
+   "date": "2023-01-31",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-119@2021",
+   "from": "2023-01-09",
+   "kind": "special-runoff",
+   "date": "2023-02-28",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-172@2021",
+   "from": "2023-01-09",
+   "kind": "writ",
+   "date": "2022-12-22",
+   "ref": "12.22.22.01",
+   "url": "https://gov.georgia.gov/document/2022-executive-orders/12222201/download",
+   "source": "ga-executive-orders-2022.json",
+   "note": "Issuing a writ of election to fill the District 172 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-172@2021",
+   "from": "2023-01-09",
+   "kind": "special-election",
+   "date": "2023-01-31",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-7@2021",
+   "from": "2023-01-09",
+   "kind": "writ",
+   "date": "2022-11-26",
+   "ref": "11.26.22.01",
+   "url": "https://gov.georgia.gov/document/2022-executive-orders/11262201/download",
+   "source": "ga-executive-orders-2022.json",
+   "note": "Issuing a writ of election to fill the District 7 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-7@2021",
+   "from": "2023-01-09",
+   "kind": "special-election",
+   "date": "2023-01-03",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-7@2021",
+   "from": "2023-01-09",
+   "kind": "special-runoff",
+   "date": "2023-01-31",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-11@2021",
+   "from": "2023-01-09",
+   "kind": "writ",
+   "date": "2022-12-21",
+   "ref": "12.21.22.02",
+   "url": "https://gov.georgia.gov/document/2022-executive-orders/12212202/download",
+   "source": "ga-executive-orders-2022.json",
+   "note": "Issuing a writ of election to fill the District 11 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-11@2021",
+   "from": "2023-01-09",
+   "kind": "special-election",
+   "date": "2023-01-31",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-75@2021",
+   "from": "2023-01-18",
+   "kind": "writ",
+   "date": "2023-01-23",
+   "ref": "01.23.23.01",
+   "url": "https://gov.georgia.gov/document/2023-executive-order/01232301/download",
+   "source": "ga-executive-orders-2023.json",
+   "note": "Issuing a writ of election to fill the District 75 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-75@2021",
+   "from": "2023-01-18",
+   "kind": "special-election",
+   "date": "2023-03-21",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-68@2021",
+   "from": "2023-03-08",
+   "kind": "writ",
+   "date": "2023-03-17",
+   "ref": "03.17.23.02",
+   "url": "https://gov.georgia.gov/document/2023-executive-order/03172302/download",
+   "source": "ga-executive-orders-2023.json",
+   "note": "Issuing a writ of election to fill the District 68 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-68@2021",
+   "from": "2023-03-08",
+   "kind": "special-election",
+   "date": "2023-05-16",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-68@2021",
+   "from": "2023-03-08",
+   "kind": "special-runoff",
+   "date": "2023-06-13",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2023",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-30@2021",
+   "from": "2024-01-04",
+   "kind": "writ",
+   "date": "2024-01-04",
+   "ref": "01.04.24.01",
+   "url": "https://gov.georgia.gov/document/2024-executive-order/01042401/download",
+   "source": "ga-executive-orders-2024.json",
+   "note": "Issuing a Writ of Election to fill the District 30 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-30@2021",
+   "from": "2024-01-04",
+   "kind": "special-election",
+   "date": "2024-02-13",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2024",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-125@2021",
+   "from": "2024-01-10",
+   "kind": "writ",
+   "date": "2024-01-03",
+   "ref": "01.03.24.01",
+   "url": "https://gov.georgia.gov/document/2024-executive-order/01032401/download",
+   "source": "ga-executive-orders-2024.json",
+   "note": "Issuing a Writ of Election to fill the District 125 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-125@2021",
+   "from": "2024-01-10",
+   "kind": "special-election",
+   "date": "2024-02-13",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2024",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-125@2021",
+   "from": "2024-01-10",
+   "kind": "special-runoff",
+   "date": "2024-03-12",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2024",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-139@2021",
+   "from": "2024-01-30",
+   "kind": "writ",
+   "date": "2024-02-09",
+   "ref": "02.09.24.01",
+   "url": "https://gov.georgia.gov/document/2024-executive-order/02092401/download",
+   "source": "ga-executive-orders-2024.json",
+   "note": "Issuing a writ of election to fill the vacancy in the District 139 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-139@2021",
+   "from": "2024-01-30",
+   "kind": "special-election",
+   "date": "2024-04-09",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2024",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-139@2021",
+   "from": "2024-01-30",
+   "kind": "special-runoff",
+   "date": "2024-05-07",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2024",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-21@2021",
+   "from": "2025-05-05",
+   "kind": "writ",
+   "date": "2025-05-22",
+   "ref": "05.22.25.02",
+   "url": "https://gov.georgia.gov/document/2025-executive-order/05222502/download",
+   "source": "ga-executive-orders-2025.json",
+   "note": "Issuing a Writ of Election to fill the District 21 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-21@2021",
+   "from": "2025-05-05",
+   "kind": "special-election",
+   "date": "2025-08-26",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-21@2021",
+   "from": "2025-05-05",
+   "kind": "special-runoff",
+   "date": "2025-09-23",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-106@2023",
+   "from": "2025-09-05",
+   "kind": "writ",
+   "date": "2025-09-08",
+   "ref": "09.08.25.01",
+   "url": "https://gov.georgia.gov/document/2025-executive-order/09082501/download",
+   "source": "ga-executive-orders-2025.json",
+   "note": "Issuing a Writ of Election to fill the District 106 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-106@2023",
+   "from": "2025-09-05",
+   "kind": "special-election",
+   "date": "2025-11-04",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-106@2023",
+   "from": "2025-09-05",
+   "kind": "special-runoff",
+   "date": "2025-12-02",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-35@2023",
+   "from": "2025-09-10",
+   "kind": "writ",
+   "date": "2025-09-19",
+   "ref": "09.19.25.01",
+   "url": "https://gov.georgia.gov/document/2025-executive-order/09192501/download",
+   "source": "ga-executive-orders-2025.json",
+   "note": "Issuing a Writ of Election to fill the District 35 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-35@2023",
+   "from": "2025-09-10",
+   "kind": "special-election",
+   "date": "2025-11-18",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-35@2023",
+   "from": "2025-09-10",
+   "kind": "special-runoff",
+   "date": "2025-12-16",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-23@2021",
+   "from": "2025-10-12",
+   "kind": "writ",
+   "date": "2025-10-22",
+   "ref": "10.22.25.01",
+   "url": "https://gov.georgia.gov/document/2025-executive-order/10222501/download",
+   "source": "ga-executive-orders-2025.json",
+   "note": "Issuing a Writ of Election to fill the District 23 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-23@2021",
+   "from": "2025-10-12",
+   "kind": "special-election",
+   "date": "2025-12-09",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-23@2021",
+   "from": "2025-10-12",
+   "kind": "special-runoff",
+   "date": "2026-01-06",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-121@2021",
+   "from": "2025-10-28",
+   "kind": "writ",
+   "date": "2025-10-30",
+   "ref": "10.30.25.01",
+   "url": "https://gov.georgia.gov/document/2025-executive-order/10302501/download",
+   "source": "ga-executive-orders-2025.json",
+   "note": "Issuing a Writ of Election to fill the District 121 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-121@2021",
+   "from": "2025-10-28",
+   "kind": "special-election",
+   "date": "2025-12-09",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2025",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-18@2021",
+   "from": "2025-12-09",
+   "kind": "writ",
+   "date": "2025-12-10",
+   "ref": "12.10.25.01",
+   "url": "https://gov.georgia.gov/document/2025-executive-order/12102501/download",
+   "source": "ga-executive-orders-2025.json",
+   "note": "Issuing a Writ of Election to fill the District 18 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-18@2021",
+   "from": "2025-12-09",
+   "kind": "special-election",
+   "date": "2026-01-20",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-18@2021",
+   "from": "2025-12-09",
+   "kind": "special-runoff",
+   "date": "2026-02-17",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-94@2023",
+   "from": "2026-01-01",
+   "kind": "writ",
+   "date": "2026-01-16",
+   "ref": "01.16.26.02",
+   "url": "https://gov.georgia.gov/document/2026-executive-order/01162602/download",
+   "source": "ga-executive-orders-2026.json",
+   "note": "Issuing a Writ of Election to fill the District 94 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-94@2023",
+   "from": "2026-01-01",
+   "kind": "special-election",
+   "date": "2026-03-10",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-94@2023",
+   "from": "2026-01-01",
+   "kind": "special-runoff",
+   "date": "2026-04-07",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-130@2021",
+   "from": "2026-01-05",
+   "kind": "writ",
+   "date": "2026-01-16",
+   "ref": "01.16.26.03",
+   "url": "https://gov.georgia.gov/document/2026-executive-order/01162603/download",
+   "source": "ga-executive-orders-2026.json",
+   "note": "Issuing a Writ of Election to fill the District 130 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-130@2021",
+   "from": "2026-01-05",
+   "kind": "special-election",
+   "date": "2026-03-10",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-130@2021",
+   "from": "2026-01-05",
+   "kind": "special-runoff",
+   "date": "2026-04-07",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-53@2021",
+   "from": "2026-01-13",
+   "kind": "writ",
+   "date": "2026-01-20",
+   "ref": "01.20.26.01",
+   "url": "https://gov.georgia.gov/document/2026-executive-order/01202601/download",
+   "source": "ga-executive-orders-2026.json",
+   "note": "Issuing a Writ of Election to fill the District 53 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-53@2021",
+   "from": "2026-01-13",
+   "kind": "special-election",
+   "date": "2026-03-10",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-53@2021",
+   "from": "2026-01-13",
+   "kind": "special-runoff",
+   "date": "2026-04-07",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-177@2021",
+   "from": "2026-03-09",
+   "kind": "writ",
+   "date": "2026-03-23",
+   "ref": "03.23.26.01",
+   "url": "https://gov.georgia.gov/document/2026-executive-order/03232601/download",
+   "source": "ga-executive-orders-2026.json",
+   "note": "Issuing a Writ of Election to fill the District 177 seat in the Georgia House of Representatives"
+  },
+  {
+   "seatId": "ga-house-177@2021",
+   "from": "2026-03-09",
+   "kind": "special-election",
+   "date": "2026-05-12",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-house-177@2021",
+   "from": "2026-03-09",
+   "kind": "special-runoff",
+   "date": "2026-06-09",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-7@2021",
+   "from": "2026-03-13",
+   "kind": "writ",
+   "date": "2026-03-23",
+   "ref": "03.23.26.02",
+   "url": "https://gov.georgia.gov/document/2026-executive-order/03232602/download",
+   "source": "ga-executive-orders-2026.json",
+   "note": "Issuing a Writ of Election to fill the District 7 seat in the Georgia State Senate"
+  },
+  {
+   "seatId": "ga-senate-7@2021",
+   "from": "2026-03-13",
+   "kind": "special-election",
+   "date": "2026-05-19",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  },
+  {
+   "seatId": "ga-senate-7@2021",
+   "from": "2026-03-13",
+   "kind": "special-runoff",
+   "date": "2026-06-16",
+   "ref": null,
+   "url": "https://ballotpedia.org/Georgia_state_legislative_special_elections,_2026",
+   "source": "ga-legislative-specials.json",
+   "note": null
+  }
+ ]
 }
