@@ -36,7 +36,7 @@ Sources: the roster (`ga-members.json`, `status` and `statusDate`), the certifie
 | legisGaGovId | Member | Seat | Draft label | Evidence |
 |---|---|---|---|---|
 | 863 | Bill Werkheiser (R) | House 157 | Lost the 2026 Republican primary. | 2,618 votes, 33.8%, second of 2 |
-| 5078 | Mary Ann Santos (D) | House 117 | Lost the 2026 Democratic primary runoff. | Primary 2,490 votes (26.5%, second of 5); runoff 531 votes, 12.2% |
+| 5078 | Mary Ann Santos (D) | House 117 | Lost the Democratic primary runoff on June 16, 2026. | Primary 2,490 votes (26.5%, second of 5); runoff 531 votes, 12.2% |
 | 5096 | Alvin Payton Jr. (D) | House 177 | Lost the Democratic primary runoff on June 16, 2026. | Primary 1,025 votes (25.7%, second of 5); runoff 611 votes, 41.6% |
 
 ## D. Ran for a different office and lost the primary
@@ -93,5 +93,5 @@ Batch 1 was approved on 2026-10-30 and recorded as data in `assets/data/ga-depar
 
 - **2026-11-21:** three labels reworded so each states only the fact and a date.
   - Harbison: "would retire" replaced with "would not seek re-election" (WTVM, 2026-03-04), plus his qualifying date (03/06/2026, qualifying export) and his primary loss (Reese 58.8% of the Democratic vote, a majority, so no runoff). The vote figure was dropped like everyone else's. The test's carve-out for "retire" is removed.
-  - Payton: the runoff date (2026-06-16) added.
+  - Payton and Santos: the runoff date (2026-06-16) added.
   - Edna Jackson: her qualifying date (03/04/2026) added. No source we hold gives her withdrawal date, so none is stated.
