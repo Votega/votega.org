@@ -52,7 +52,7 @@ Sources: the roster (`ga-members.json`, `status` and `statusDate`), the certifie
 
 ## E. Did not run for re-election (8 never qualified)
 
-Label for each: **Did not run for re-election in 2026.**
+Label for each: **Did not run for re-election in 2026 (qualifying closed March 6, 2026).**
 
 | legisGaGovId | Member | Seat |
 |---|---|---|
@@ -95,4 +95,5 @@ Batch 1 was approved on 2026-10-30 and recorded as data in `assets/data/ga-depar
   - Harbison: "would retire" replaced with "would not seek re-election" (WTVM, 2026-03-04), plus his qualifying date (03/06/2026, qualifying export) and his primary loss (Reese 58.8% of the Democratic vote, a majority, so no runoff). The vote figure was dropped like everyone else's. The test's carve-out for "retire" is removed.
   - Payton and Santos: the runoff date (2026-06-16) added.
   - Werkheiser and the six who ran for another office: the primary date (2026-05-19) added. All seven were eliminated that day; none was in a runoff.
+  - The eight "did not run" labels: the close of qualifying (2026-03-06) added, sourced to the Secretary of State's 2026 qualifying FAQ (March 2-6). None of the eight is in HD 94 or 130, where qualifying was delayed by weather. The noon closing hour is left out: only a county copy of the state calendar gives it.
   - Edna Jackson: her qualifying date (03/04/2026) added. No source we hold gives her withdrawal date, so none is stated.
