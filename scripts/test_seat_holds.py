@@ -169,6 +169,13 @@ def validation_cases():
     first(changed["holds"], "ga-house-2@2021")["endedBy"] = "lost"
     check("append-only: a closed hold changed",
           any("append-only" in e for e in holds_errors(changed, SEATS, previous=doc)), True)
+    fix = [{"legisGaGovId": 20, "seatId": "ga-house-2@2021", "field": "endedBy",
+            "from": "redistricted", "to": "lost"}]
+    check("append-only: a matching correction lets exactly that change through",
+          holds_errors(changed, SEATS, previous=doc, corrections=fix), [])
+    wrong_from = [{**fix[0], "from": "resigned"}]
+    check("append-only: a correction expecting a different old value does not",
+          any("append-only" in e for e in holds_errors(changed, SEATS, previous=doc, corrections=wrong_from)), True)
     check("append-only: an open hold may close later",
           holds_errors(doc, SEATS, previous={"holds": [{**first(hs, "ga-house-1@2021")}]}), [])
 
@@ -180,12 +187,24 @@ def override_cases():
     check("no _note", len(overrides_errors([{**good, "_note": " "}])), 1)
     check("no source URL", len(overrides_errors([{**good, "_sources": ["ballotpedia"]}])), 1)
     check("a reason outside the list", len(overrides_errors([{**good, "endedBy": "sought-other-office"}])), 1)
+    corr = {"legisGaGovId": 1, "seatId": "s", "field": "endedBy", "from": "resigned", "to": "deceased",
+            "_note": "n", "_sources": ["https://x"]}
+    check("a sourced correction passes", overrides_errors([], [corr]), [])
+    check("a correction with no source", len(overrides_errors([], [{**corr, "_sources": []}])), 1)
+    check("a correction to an unknown field", len(overrides_errors([], [{**corr, "field": "party"}])), 1)
 
 
 def committed_cases():
     print("committed artifacts")
     check("the committed overrides are all sourced and noted",
           overrides_errors(B.load(B.OVERRIDES_FILE)["holds"]), [])
+    import json as _json
+    with open(os.path.join(B.REPO_ROOT, "assets", "data", "ga-members-overrides.json"), encoding="utf-8") as f:
+        mo = _json.load(f)
+    departures = [e for e in mo.get("_inject", []) if e.get("status") in ("Resigned", "Deceased", "Removed")]
+    check("every editorial departure that ends a hold cites a source for its reason",
+          [e.get("name") for e in departures
+           if not (e.get("_reasonNote") and any(str(u).startswith("https://") for u in e.get("_reasonSources") or []))], [])
     doc = B.load(B.OUTPUT_FILE)
     seats = B.load(B.SEATS_FILE)
     ledger = B.load(B.LEDGER_FILE)
@@ -208,6 +227,8 @@ def committed_cases():
           [("ga-house-105@2021", "redistricted", "vg-ga-p-000395")])
     check("Tish Naghise died in office on 2023-03-08",
           [(h["end"], h["endedBy"]) for h in by[5032]], [("2023-03-08", "deceased")])
+    check("Mandi Ballinger died in office on 2025-10-12 (corrected from 'resigned')",
+          [(h["end"], h["endedBy"]) for h in by[808]], [("2025-10-12", "deceased")])
 
 
 def main():

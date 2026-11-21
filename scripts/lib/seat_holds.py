@@ -178,9 +178,17 @@ def derive_holds(snapshot, seats_doc, roster, overrides, vgid_for):
     return holds
 
 
-def overrides_errors(overrides):
+def overrides_errors(overrides, corrections=()):
     """Every hand-reviewed entry must say how it was confirmed and where."""
     errs = []
+    for c in corrections:
+        who = f"correction {c.get('legisGaGovId')} on {c.get('seatId')}"
+        if c.get("field") not in ("end", "endBasis", "endedBy") or "from" not in c or "to" not in c:
+            errs.append(f"{who}: needs field (end, endBasis or endedBy), from and to")
+        if c.get("field") == "endedBy" and c.get("to") not in ENDED_BY:
+            errs.append(f"{who}: 'to' must be one of {', '.join(ENDED_BY)}")
+        if not (c.get("_note") or "").strip() or not any(str(u).startswith("https://") for u in c.get("_sources") or []):
+            errs.append(f"{who}: needs a _note and _sources")
     for o in overrides:
         who = f"override {o.get('legisGaGovId')} on {o.get('seatId')}"
         if o.get("endedBy") not in ENDED_BY:
@@ -206,8 +214,12 @@ def _sequence_errors(label, hs):
     return errs
 
 
-def holds_errors(doc, seats_doc, merged=None, previous=None):
-    """Tier 1 for seat-holds.json. Returns strings."""
+def holds_errors(doc, seats_doc, merged=None, previous=None, corrections=()):
+    """Tier 1 for seat-holds.json. Returns strings.
+
+    `corrections` (seat-hold-overrides.json "corrections") is the only way a closed hold
+    may change: each names the hold by legisGaGovId + seatId, the field, and the value it
+    expects to find (`from`) and to set (`to`), so it applies to exactly that change."""
     errs = []
     holds = doc.get("holds", [])
     if doc.get("metadata", {}).get("count") != len(holds):
@@ -261,12 +273,23 @@ def holds_errors(doc, seats_doc, merged=None, previous=None):
         errs += _sequence_errors(f"person {vg}", hs)
     if previous:
         now = {(h["vgId"], h["seatId"], h["start"]): h for h in holds}
+        allowed = {(c["legisGaGovId"], c["seatId"], c["field"]): (c["from"], c["to"]) for c in corrections}
         for old in previous.get("holds", []):
             if old.get("end") is None:
                 continue
             new = now.get((old["vgId"], old["seatId"], old["start"]))
-            if new is None or any(new.get(k) != old.get(k) for k in ("end", "endBasis", "endedBy")):
-                errs.append(f"closed hold {old['vgId']} on {old['seatId']} was removed or changed "
+            if new is None:
+                errs.append(f"closed hold {old['vgId']} on {old['seatId']} was removed "
+                            "(closed holds are append-only)")
+                continue
+            for k in ("end", "endBasis", "endedBy"):
+                if new.get(k) == old.get(k):
+                    continue
+                gid = (old.get("ids") or {}).get("legisGaGovId")
+                if allowed.get((gid, old["seatId"], k)) == (old.get(k), new.get(k)):
+                    continue
+                errs.append(f"closed hold {old['vgId']} on {old['seatId']} changed {k} "
+                            f"{old.get(k)!r} -> {new.get(k)!r} without a matching correction "
                             "(closed holds are append-only)")
     return errs
 

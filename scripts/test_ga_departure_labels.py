@@ -22,7 +22,7 @@ import re
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA = os.path.join(HERE, "..", "assets", "data")
 TYPES = {"resigned", "suspended", "withdrew", "announced-departure", "lost-primary",
-         "ran-for-other-office", "did-not-run", "special-election", "lost-general"}
+         "ran-for-other-office", "did-not-run", "special-election", "lost-general", "deceased"}
 HARBISON = "17"
 
 failures = []

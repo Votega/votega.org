@@ -1,5 +1,11 @@
 {
   "_comment": "Hand-reviewed facts about seat holds that no feed provides, read by scripts/build_seat_holds.py. Each entry names one hold by legisGaGovId + seatId and supplies only what is missing (today: why a hold ended). Every entry needs a _note saying how it was confirmed and _sources with at least one URL; the build refuses an entry without them, or one that matches no hold. endedBy records only why THIS hold ended (docs/seat-history-design.md, Date semantics). Holds on a seat a later map redrew end 'redistricted' automatically and need no entry; 2025-26 departures come from ga-members-overrides.json.",
+  "_corrections": "corrections is the ONLY way a closed hold may change once committed (closed holds are append-only). Each names one hold (legisGaGovId + seatId), the field, the value it expects to find (from) and the value it sets (to), with a _note and _sources. Fix the upstream fact first (here, ga-members-overrides.json); the correction only lets the rebuilt hold differ from the committed one.",
+  "corrections": [
+    {"legisGaGovId": 808, "seatId": "ga-house-23@2021", "_name": "Mandi Ballinger", "field": "endedBy", "from": "resigned", "to": "deceased",
+     "_note": "Died in office of cancer on 2025-10-12, announced by Speaker Jon Burns; the roster had recorded her departure as a resignation. Corrected 2026-11-20 in ga-members-overrides.json (status Deceased).",
+     "_sources": ["https://www.ajc.com/politics/2025/10/state-rep-mandi-ballinger-advocate-for-children-dies-after-cancer-fight", "https://ballotpedia.org/Mandi_Ballinger"]}
+  ],
   "holds": [
     {"legisGaGovId": 4892, "seatId": "ga-house-71@2021", "_name": "J Collins", "endedBy": "did-not-run",
      "_note": "Did not file for re-election in 2024; Justin Howard won the open seat.",

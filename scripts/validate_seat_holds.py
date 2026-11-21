@@ -41,7 +41,8 @@ def main():
     doc, seats = load(HOLDS), load("assets/data/seats.json")
     merged = load("assets/data/id-crosswalk-ledger.json").get("merged", {})
     previous = committed(HOLDS)
-    errs = holds_errors(doc, seats, merged, previous=previous)
+    corrections = load("assets/data/seat-hold-overrides.json").get("corrections", [])
+    errs = holds_errors(doc, seats, merged, previous=previous, corrections=corrections)
     if errs:
         print(f"{len(errs)} error(s) in {HOLDS}:", *errs, sep="\n  ")
         return 1

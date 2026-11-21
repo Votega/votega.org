@@ -105,7 +105,9 @@ def main():
     args = ap.parse_args()
     seats_doc = load(SEATS_FILE)
     ledger = load(LEDGER_FILE)
-    bad = overrides_errors(load(OVERRIDES_FILE, {"holds": []}).get("holds", []))
+    ov_doc = load(OVERRIDES_FILE, {"holds": []})
+    corrections = ov_doc.get("corrections", [])
+    bad = overrides_errors(ov_doc.get("holds", []), corrections)
     if bad:
         print("Refusing to build: seat-hold-overrides.json", *bad, sep="\n  ", file=sys.stderr)
         return 1
@@ -116,7 +118,8 @@ def main():
         print(f"Error: {e}", file=sys.stderr)
         return 1
     committed = load(OUTPUT_FILE)
-    errs = holds_errors(doc, seats_doc, ledger.get("merged"), previous=committed)
+    errs = holds_errors(doc, seats_doc, ledger.get("merged"), previous=committed,
+                        corrections=corrections)
     if errs:
         print("Refusing to write seat-holds.json:", *errs, sep="\n  ", file=sys.stderr)
         return 1
