@@ -82,9 +82,9 @@ AI client ──MCP (Streamable HTTP)──▶ mcp.votega.org  (Cloudflare Worke
                                                   └▶ www.votega.org/assets/data/<slice>   (per-entity slices)
 ```
 
-- **Runtime:** TypeScript, `@modelcontextprotocol/sdk`, plus either Cloudflare `agents`/`McpAgent`
-  or the SDK's Web-standard Streamable HTTP transport in **stateless** mode
-  (no Durable Objects needed, which avoids the DO free-tier limits). Decided: `createMcpHandler`, stateless (§12.1).
+- **Runtime:** TypeScript, the MCP TypeScript SDK, and Cloudflare's `agents` package, using
+  `createMcpHandler` in **stateless** mode (§12.1). It needs no Durable Objects, which avoids
+  their free-tier limits. `McpAgent` is not used.
 - **Stateless:** every request is self-contained; no sessions.
 - **Routing:** `POST /mcp` (MCP), `GET /` (a human landing page with the tool list), `GET /health`.
 - **Repo location:** a new top-level `mcp/` directory (its own `package.json` and `wrangler.toml`),
