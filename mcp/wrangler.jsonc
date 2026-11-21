@@ -7,10 +7,11 @@
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": false,
   "routes": [{ "pattern": "mcp.votega.org", "custom_domain": true }],
-  // Phase 0 only: benchmark inputs from `python mcp/bench/make_bench_data.py`. Every request
-  // runs the Worker first, so these files are reachable only through /bench routes.
-  "assets": { "directory": "./bench-data", "binding": "ASSETS", "run_worker_first": true },
-  // Spike only. Invocation logs record client IPs and headers, which spec §9 rules out for
-  // the public server: turn them off (or sample with no request detail) before launch.
-  "observability": { "enabled": true }
+  // Off: invocation logs record client IPs, headers and URLs, which spec §9 rules out.
+  // Aggregate metrics (requests, errors, CPU quantiles) are still available in Workers
+  // analytics. For a measurement, turn this on briefly in a spike and off again.
+  "observability": { "enabled": false }
+  // Phase 0 benchmarks served data from an assets binding ("assets": { "directory":
+  // "./bench-data", "binding": "ASSETS", "run_worker_first": true }); see
+  // mcp/bench/make_bench_data.py and spec §12.11 to re-run them.
 }
