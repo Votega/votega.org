@@ -19083,7 +19083,7 @@
       "chamber": "Georgia House of Representatives",
       "district": 151,
       "cycle": 2026,
-      "activePhase": "general",
+      "activePhase": "runoff",
       "phases": {
         "primary": {
           "electionDate": "2026-05-19",
@@ -19153,6 +19153,38 @@
                 "type": "challenger",
                 "name": "Travis Lockhart",
                 "party": "Independent"
+              }
+            ]
+          }
+        },
+        "runoff": {
+          "electionDate": "2026-12-01",
+          "ballots": {
+            "Republican": [
+              {
+                "id": "ga-house-151-2026-r-1",
+                "type": "incumbent",
+                "name": "Mike Cheokas",
+                "party": "Republican",
+                "occupation": "Investor",
+                "county": "Sumter",
+                "isIncumbent": true,
+                "website": "https://votemikecheokas.com",
+                "imageUrl": "https://www.legis.ga.gov/api/images/default-source/portraits/cheokas-mike-81.jpg",
+                "existingMemberId": "ocd-person/1831cc73-e694-4cea-83a4-b55c3495f76a",
+                "existingMemberSource": "state"
+              }
+            ],
+            "Democrat": [
+              {
+                "id": "ga-house-151-2026-d-1",
+                "type": "challenger",
+                "name": "Ethan Wolfe",
+                "party": "Democrat",
+                "occupation": "Retired (military Officer)",
+                "county": "Sumter",
+                "email": "jameswolfe4hd151@gmail.com",
+                "legalName": "James E. Wolfe"
               }
             ]
           }
@@ -26407,5 +26439,5 @@
       }
     }
   ],
-  "updatedAt": "2026-11-21T01:54:54Z"
+  "updatedAt": "2026-11-21T01:59:20Z"
 }
