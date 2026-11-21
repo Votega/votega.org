@@ -244,8 +244,9 @@ present last session's data as current, or a former member as sitting.
 - No auth, no cookies, no PII stored; **no request logging beyond Cloudflare's aggregate analytics**.
   A ZIP entered by a user is personal-ish data and is not logged. **Workers Observability
   invocation logs break this rule:** found in Phase 0, each event stores the client IP, the
-  full request headers and the URL. The spike has them on for measurement. Before launch, turn
-  them off (`observability.enabled: false`), or keep only metrics with no request detail.
+  full request headers and the URL. They were on only for the Phase 0 measurements, and were
+  turned off on 2026-11-21 (`observability.enabled: false`; aggregate Workers analytics
+  remain). Turn them on only briefly, for a measurement.
 - CORS: allow `*` for `POST /mcp` (browser-based MCP clients); no credentials.
 - Validate the `Origin` header per the MCP Streamable HTTP guidance; reject oversized bodies (>16 KB).
 - A Cloudflare **rate limiting rule** per IP on `/mcp` (WAF, free plan: 1 rule), plus hard result caps
@@ -390,8 +391,11 @@ requests measured 8–9 ms.
 4. **Bot protection doesn't block the Worker (§12.9):** in production, its subrequest to
    `www.votega.org` returned 200 and the roster parsed. The zone's crawler protection (AI
    Labyrinth) labelled the benchmark responses `link_maze_injected`. It only adds hidden links
-   to HTML, and nothing this server returns is HTML, but before launch add a rule exempting
-   `mcp.votega.org` so no response to an AI client is ever altered.
+   to HTML responses. There is no per-hostname exemption: it is a zone-wide toggle
+   (`crawler_protection`), the Rulesets API exposes no phase for its HTML transform, and the
+   skip action covers only security products (checked 2026-11-21). **Design rule instead: the
+   server never returns HTML.** `/` is plain text and `/mcp` returns JSON or SSE. A future
+   HTML landing page goes on www.votega.org (`/open-data`), not on this host.
 5. **Isolates are reused (§12.9):** 40 rapid pings spread over 10 isolates, an average of 4
    requests each and up to 9. The parse-once cache therefore helps under steady traffic. Under
    light traffic most requests will be cold, so shard sizes, not the cache, are what keep the
@@ -399,6 +403,12 @@ requests measured 8–9 ms.
 6. **New public hostnames are probed immediately.** Within minutes of the certificate being
    issued, scanners asked for `/.env`, `/.ssh/id_rsa`, `/docker-compose.yml` and similar, and
    got 404s. That's expected, and is one more reason for the rate-limit rule in §9.
+7. **Locked down after the measurements (2026-11-21).** The live Worker is a placeholder
+   (`0.0.2-placeholder`) whose only tool is `ping`. The benchmark routes and data files are
+   removed (they return 404), Observability logging is off, no route fetches
+   www.votega.org (so nothing a stranger calls costs subrequests or a large parse), and
+   `workers.dev` is disabled. The benchmarks can be re-run from `mcp/bench/make_bench_data.py`
+   and the assets setting noted in `mcp/wrangler.jsonc`.
 
 ## 13. Rollout
 
