@@ -167,6 +167,21 @@ def test_validate_finds_the_races_in_every_folder():
         raise AssertionError("validate must fail on an empty or missing races.json")
 
 
+def test_active_phase_follows_phase_dates_for_a_general_runoff():
+    cand = {"id": "c", "name": "A", "party": "Republican"}
+    def race(phases):
+        return {"phases": {k: {"electionDate": d, "candidates": [cand]} for k, d in phases.items()}}
+    # a general runoff (HD 151, Dec 1) comes AFTER the general ...
+    assert pr.derive_active_phase(race({"primary": "2026-05-19", "general": "2026-11-03",
+                                        "runoff": "2026-12-01"})) == "runoff"
+    # ... a primary runoff comes BEFORE it
+    assert pr.derive_active_phase(race({"primary": "2026-05-19", "runoff": "2026-06-16",
+                                        "general": "2026-11-03"})) == "general"
+    # undated phases keep the canonical name order
+    assert pr.derive_active_phase({"phases": {"runoff": {"candidates": [cand]},
+                                              "general": {"candidates": [cand]}}}) == "general"
+
+
 if __name__ == "__main__":
     failed = 0
     tests = [(n, f) for n, f in sorted(globals().items()) if n.startswith("test_") and callable(f)]

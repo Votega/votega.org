@@ -114,6 +114,12 @@ def derive_active_phase(race):
     populated = [name for name, ph in phases.items() if phase_candidates(ph)]
     if not populated:
         return None
+    # A phase's own election date is the truer order: a runoff follows the general when it is a
+    # GENERAL runoff (HD 151, 2026-12-01) but precedes it when it is a primary runoff. Fall back
+    # to the canonical name order for a phase with no date.
+    dates = {n: (phases[n] or {}).get("electionDate") for n in populated}
+    if all(dates.values()):
+        return sorted(populated, key=lambda n: (dates[n], PHASE_ORDER.get(n, 99)))[-1]
     return sorted(populated, key=lambda n: PHASE_ORDER.get(n, 99))[-1]
 
 
