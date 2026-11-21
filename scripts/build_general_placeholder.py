@@ -223,7 +223,7 @@ def measure_races():
     do not have. Once the CSV lands, build_results_json.py rebuilds this section
     under the SoS's own names, which is the right label at that point.
 
-    `status: certified` is what puts a measure on the ballot; "potential" and
+    `status: certified` (or passed/failed, once the vote is recorded) puts a measure on the ballot; "potential" and
     "not-on-ballot" are the other lifecycle values and are deliberately skipped.
     """
     path = os.path.join(ROOT, 'assets', 'data', 'ga-ballot-measures.json')
@@ -234,7 +234,7 @@ def measure_races():
         return []
     out = []
     for m in data.get('measures') or []:
-        if m.get('status') != 'certified':
+        if m.get('status') not in ('certified', 'passed', 'failed'):  # on the ballot, before or after the vote
             continue
         if (m.get('electionDate') or '')[:4] != str(CYCLE):
             continue
