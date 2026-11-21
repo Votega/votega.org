@@ -1,0 +1,92 @@
+---
+layout: default
+title: VoteGA for AI assistants
+permalink: /ai-assistants/
+share-description: "Connect an AI assistant to VoteGA's nonpartisan Georgia civic data: who represents a ZIP code or county, legislators and local officials, with sources."
+breadcrumb:
+  - name: Home
+    url: /
+  - name: AI assistants
+# Staged until launch (spec §13, phase 4). At launch remove these three lines, set
+# `launched: true` in _data/mcp.yml and add the About menu entry it describes.
+noindex: true
+sitemap: false
+search: false
+---
+
+{%- comment -%}
+  Rendered from _data/mcp.yml, the same text the MCP server serves as votega://about and
+  votega://glossary (scripts/build_mcp_index.py -> assets/data/mcp/resources.json). Edit the
+  YAML, never this page's copy, so the two cannot drift.
+{%- endcomment -%}
+{% assign m = site.data.mcp %}
+
+<style>
+  .ai-note { font-size:0.9rem; color:var(--color-text); background:var(--color-warning-tint); border-left:3px solid var(--color-warning-line); padding:0.6rem 0.85rem; border-radius:0 6px 6px 0; margin:1rem 0 1.5rem; }
+  .ai-note i { color:var(--color-warning); margin-right:0.35rem; }
+  .ai-endpoint { display:flex; flex-wrap:wrap; align-items:center; gap:0.5rem 0.75rem; border:1px solid var(--color-border); border-radius:10px; background:var(--color-surface-raised); padding:0.9rem 1.1rem; margin:1rem 0 1.75rem; }
+  .ai-endpoint .label { font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.03em; color:var(--color-text-secondary); }
+  .ai-endpoint code { font-family:var(--font-mono); font-size:0.95rem; color:var(--color-text); overflow-wrap:anywhere; }
+  .ai-clients { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:1rem; margin:0.75rem 0 2rem; }
+  .ai-client { border:1px solid var(--color-border); border-radius:10px; padding:1rem 1.1rem; background:var(--color-surface-raised); min-width:0; }
+  .ai-client h3 { font-size:1rem; margin:0 0 0.4rem; }
+  .ai-client p { font-size:0.9rem; margin:0 0 0.5rem; }
+  .ai-client pre { margin:0; padding:0.6rem 0.75rem; background:var(--color-surface-sunken); border-radius:6px; font-family:var(--font-mono); font-size:0.8rem; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .ai-list { padding-left:1.2rem; }
+  .ai-list li { margin:0.35rem 0; }
+  .ai-glossary dt { font-weight:700; margin-top:1rem; }
+  .ai-glossary dd { margin:0.2rem 0 0; color:var(--color-text); }
+</style>
+
+<h1>VoteGA for AI assistants</h1>
+<p>{{ m.about.summary }}</p>
+
+{% unless m.launched %}
+<p class="ai-note"><i class="fa-solid fa-flask" aria-hidden="true"></i><strong>In testing.</strong> The server is live but not yet announced, and its tools may still change.</p>
+{% endunless %}
+
+<div class="ai-endpoint">
+  <span class="label">Server URL</span>
+  <code>{{ m.endpoint }}</code>
+</div>
+
+<h2>Connect your assistant</h2>
+<div class="ai-clients">
+  {% for c in m.clients %}
+  <div class="ai-client">
+    <h3>{{ c.name }}</h3>
+    {% if c.steps %}<p>{{ c.steps }}</p>{% endif %}
+    {% if c.code %}<pre><code>{{ c.code | escape }}</code></pre>{% endif %}
+  </div>
+  {% endfor %}
+</div>
+
+<h2>What you can ask</h2>
+<ul class="ai-list">
+  {% for x in m.about.covers %}<li>{{ x }}</li>{% endfor %}
+</ul>
+{% if m.about.not_yet.size > 0 %}
+<h3>Not yet available</h3>
+<ul class="ai-list">
+  {% for x in m.about.not_yet %}<li>{{ x }}</li>{% endfor %}
+</ul>
+{% endif %}
+
+<h2>How it works</h2>
+<ul class="ai-list">
+  {% for x in m.about.principles %}<li>{{ x }}</li>{% endfor %}
+</ul>
+
+<h2>Glossary</h2>
+<p>Assistants connected to the server can read this same glossary as <code>votega://glossary</code>.</p>
+<dl class="ai-glossary">
+  {% for g in m.glossary %}
+  <dt>{{ g.term }}</dt>
+  <dd>{{ g.definition }}</dd>
+  {% endfor %}
+</dl>
+
+<h2>Data and license</h2>
+<p>{{ m.about.license }} The datasets behind the server are on our <a href="{{ '/open-data' | relative_url }}">Open Data</a> page, and <a href="{{ '/about-the-data/' | relative_url }}">About the Data</a> explains where each figure comes from.</p>
+{% capture mail_link %}<a href="mailto:{{ m.contact }}">{{ m.contact }}</a>{% endcapture %}
+<p>{{ m.about.corrections | escape | replace: m.contact, mail_link }}</p>

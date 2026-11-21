@@ -311,6 +311,106 @@ def build_local_officials(officials, officers, places, fips_by_slug, today, gene
     }
 
 
+# ---------------------------------------------------------------- MCP resources (spec §8)
+
+def _text(v):
+    """Catalog strings may carry HTML entities (`&amp;`) for the Jekyll page; resources are plain
+    text, so unescape and collapse whitespace. None stays None."""
+    import html
+    v = blank(v)
+    if v is None:
+        return None
+    return re.sub(r"\s+", " ", html.unescape(str(v))).strip()
+
+
+def site_url(path):
+    """A site path from the catalog -> an absolute votega.org URL, kept exactly as written.
+    Paths are not normalized: some pages are served only without a trailing slash
+    (/open-data; /open-data/ is a 404) and others redirect to one, so guessing breaks links.
+    Absolute URLs pass through."""
+    if not path:
+        return None
+    if path.startswith("http"):
+        return path
+    return SITE + path
+
+
+def build_resources(mcp, open_data, generated_at):
+    """The votega:// resources. `mcp` = _data/mcp.yml, `open_data` = _data/open_data.yml (parsed).
+    The /ai-assistants/ page renders the same mcp.yml, so the two cannot drift."""
+    about = mcp.get("about") or {}
+    datasets = []
+    for d in open_data.get("datasets") or []:
+        datasets.append({
+            "id": d["id"],
+            "title": _text(d.get("title")),
+            "summary": _text(d.get("summary")),
+            "source": _text(d.get("source")),
+            "scope": _text(d.get("scope")),
+            "cadence": _text(d.get("cadence")),
+            "repo_url": blank(d.get("repo_url")),
+            "docs_url": site_url(d.get("docs")),
+            "files": [{"name": _text(f.get("name")), "description": _text(f.get("desc")),
+                       "url": site_url(f.get("url"))} for f in d.get("files") or []],
+        })
+    return {
+        "metadata": {"generatedAt": generated_at, "count": 3,
+                     "sources": ["_data/mcp.yml", "_data/open_data.yml"]},
+        "about": {
+            "summary": _text(about.get("summary")),
+            "principles": [_text(x) for x in about.get("principles") or []],
+            "covers": [_text(x) for x in about.get("covers") or []],
+            "not_yet": [_text(x) for x in about.get("not_yet") or []],
+            "license": _text(about.get("license")),
+            "corrections": _text(about.get("corrections")),
+            "page_url": f"{SITE}/ai-assistants/",
+        },
+        "glossary": [{"term": _text(g["term"]), "definition": _text(g["definition"])}
+                     for g in mcp.get("glossary") or []],
+        "datasets": {
+            "intro": _text((open_data.get("meta") or {}).get("intro")),
+            "page_url": f"{SITE}/open-data",
+            "license": "CC BY-SA 4.0",
+            "datasets": datasets,
+        },
+    }
+
+
+def resources_errors(doc, open_data_ids):
+    errs = []
+    about = doc.get("about") or {}
+    for k in ("summary", "license", "corrections"):
+        if not about.get(k):
+            errs.append(f"resources.json: about.{k} is empty")
+    for k in ("principles", "covers"):
+        if not about.get(k):
+            errs.append(f"resources.json: about.{k} is empty")
+    terms = [g.get("term") for g in doc.get("glossary") or []]
+    if not terms:
+        errs.append("resources.json: glossary is empty")
+    if len(terms) != len(set(terms)):
+        errs.append("resources.json: glossary has a duplicate term")
+    for g in doc.get("glossary") or []:
+        if not g.get("term") or not g.get("definition"):
+            errs.append(f"resources.json: glossary entry {g.get('term')!r} is incomplete")
+    ids = [d["id"] for d in (doc.get("datasets") or {}).get("datasets") or []]
+    if set(ids) != set(open_data_ids) or len(ids) != len(set(ids)):
+        errs.append("resources.json: datasets do not match _data/open_data.yml")
+
+    def walk(o, path):
+        if isinstance(o, str):
+            if re.search(r"&[a-z#0-9]+;|<[a-z/!][^>]*>", o):
+                errs.append(f"resources.json: HTML at {path} (resources are plain text)")
+        elif isinstance(o, dict):
+            for k, v in o.items():
+                walk(v, f"{path}.{k}")
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                walk(v, f"{path}[{i}]")
+    walk(doc, "$")
+    return errs
+
+
 # ---------------------------------------------------------------- checks (validate_mcp_index.py)
 
 GZIP_BUDGET = 150_000  # bytes per index file (spec §5.1)
@@ -468,4 +568,11 @@ def index_errors(docs, file_meta, src):
         with_fips = {s for s, p in places.items() if p.get("countyFips")}
         if listed != with_fips:
             errs.append("local officials: byCounty does not list exactly the places with a county")
+
+    # resources (votega://about, glossary, datasets)
+    r = docs.get("resources.json")
+    if r is None:
+        errs.append("resources.json is missing")
+    elif "open_data_ids" in src:
+        errs += resources_errors(r, src["open_data_ids"])
     return errs

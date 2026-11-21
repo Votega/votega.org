@@ -2,7 +2,8 @@
 """Build the MCP server's index files into assets/data/mcp/ (gitignored, built at deploy).
 
 Spec: docs/superpowers/specs/2026-10-23-mcp-server-design.md §5.1, §12.2. Phase 1 builds the core
-indexes the Phase 2 tools read (members, ZIP shards, counties, local officials) plus meta.json;
+indexes the Phase 2 tools read (members, ZIP shards, counties, local officials), the MCP
+resources (resources.json, from _data/mcp.yml and _data/open_data.yml) and meta.json;
 the rules live in scripts/lib/mcp_index.py. Run scripts/validate_mcp_index.py afterwards.
 
 The output directory is replaced as a whole (built in a temp dir, then swapped in), so a failed
@@ -37,6 +38,7 @@ SOURCES = {
     "zip/": ["ga-zip-districts"],
     "counties-index.json": ["ga-tract-districts"],
     "local-officials-index.json": ["local-officials", "county-officers"],
+    "resources.json": ["_data/mcp.yml", "_data/open_data.yml"],
 }
 
 
@@ -114,6 +116,8 @@ def build(out_dir, today):
     officials = load_yaml(ROOT, "_data", "local_officials.yml")
     officers = load_yaml(ROOT, "_data", "county_officers.yml")
     places = load_yaml(ROOT, "_data", "places.yml")
+    mcp_text = load_yaml(ROOT, "_data", "mcp.yml")
+    open_data = load_yaml(ROOT, "_data", "open_data.yml")
 
     docs = {
         "members-index.json": M.build_members(ga, federal, crosswalk, entity_urls, existing_slices(),
@@ -121,6 +125,7 @@ def build(out_dir, today):
         "counties-index.json": M.build_counties(counties_doc(tracts), generated_at),
         "local-officials-index.json": M.build_local_officials(officials, officers, places,
                                                               GA_COUNTY_FIPS, today, generated_at),
+        "resources.json": M.build_resources(mcp_text, open_data, generated_at),
     }
     for prefix, shard in M.build_zip_shards(zipdoc, generated_at).items():
         docs[f"zip/{prefix}.json"] = shard

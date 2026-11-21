@@ -6,10 +6,15 @@ export const MAX_STRING = 500;
 // C0 controls except tab and newline, DEL, and the Unicode line/paragraph separators.
 const CONTROL_CHARS = new RegExp("[\u0000-\u0008\u000b-\u001f\u007f\u2028\u2029]", "g");
 
+/** Remove control characters (keeping tab and newline), with no length cap. */
+export function stripControls(s: string): string {
+  return s.replace(CONTROL_CHARS, "");
+}
+
 /** Strip control characters and bound every string (spec §9: dataset text is untrusted). */
 export function clean<T>(value: T): T {
   if (typeof value === "string") {
-    const s = value.replace(CONTROL_CHARS, "");
+    const s = stripControls(value);
     return (s.length > MAX_STRING ? s.slice(0, MAX_STRING - 1) + "…" : s) as T;
   }
   if (Array.isArray(value)) return value.map(clean) as T;

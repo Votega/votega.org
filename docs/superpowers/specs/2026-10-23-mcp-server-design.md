@@ -233,11 +233,31 @@ present last session's data as current, or a former member as sitting.
 
 ## 8. Resources and prompts
 
-- **Resources** (static, cacheable): `votega://about` (mission, nonpartisan policy, licensing),
-  `votega://datasets` (the catalog from `_data/open_data.yml`), `votega://glossary` (office and
-  district terms, including "a ZIP or county is not a district").
-- **Prompts** (optional, small): `explain_bill`, `who_represents_area`. These are templates that
-  tell the model to cite `source_url`, label any AI-written summary as AI-written, and stay neutral.
+- **Resources (built 2026-11-21, server 0.2.0):** `votega://about` (mission, nonpartisan policy,
+  sources, what the server covers and does not, license, corrections; plain text),
+  `votega://glossary` (13 terms, including "a ZIP or county is not a district", vacant vs.
+  suspended, and our ids; plain text) and `votega://datasets` (the `_data/open_data.yml`
+  catalog; JSON).
+  - **One source for the text:** `_data/mcp.yml` (about, glossary, client connection steps).
+    `build_mcp_index.py` writes `assets/data/mcp/resources.json` from it and from
+    `open_data.yml` at deploy; the Worker serves that file (`mcp/src/resources.ts`), and the
+    `/ai-assistants/` page renders the same YAML. Edit the YAML, never a copy.
+  - Resources are plain text: the validator fails on HTML tags or entities (it caught
+    `ga:<number>` in the first draft, which would also have broken the page), so catalog
+    entities such as `&amp;` are unescaped at build. Control characters are stripped when served,
+    with no 500-character cap (a dataset summary can be longer).
+  - Catalog paths are made absolute exactly as written, never normalized: `/open-data` is
+    served only without a trailing slash (`/open-data/` is a 404).
+- **The page `/ai-assistants/`** explains the server, how to connect (Claude, Claude Code,
+  Cursor, any Streamable HTTP client), what it covers, its principles and the glossary. It is
+  staged until launch: `noindex`, `sitemap: false`, `search: false`, no navbar entry, and an
+  "In testing" note while `launched: false`. **Launch steps:** remove those three front-matter
+  lines, set `launched: true` in `_data/mcp.yml`, and add `- AI Assistants: "ai-assistants/"`
+  under `About:` in `_config.yml`.
+- **Prompts: deferred** (decided 2026-11-21, to keep this step small). `who_represents_area`
+  and `find_local_officials` could ship any time; `explain_bill` needs the Phase 3 bill tools.
+  They are templates that tell the model to cite `source_url`, label any AI-written summary as
+  AI-written, and stay neutral.
 
 ## 9. Security, abuse, and limits
 
@@ -561,7 +581,7 @@ still after the rollover); the Worker deploys from **CI with a scoped token**; t
 | 1. Indexes (core: done 2026-11-21, §12.12) | `build_mcp_index.py` + validator in `deploy-pages.yml`: members, ZIP shards, county index, local officials, meta. Bills shards + token table, races, candidates, EOs, local mentions and former members moved to Phase 3 | Index files built at deploy, within budgets |
 | 2. Core tools (what a voter asks first; built 2026-11-21, §12.13) | `find_my_representatives`, `find_local_officials`, `search_legislators` / `get_legislator` (state and federal), `get_data_freshness` | Passes Inspector + unit tests |
 | 3. Remaining tools | The remaining indexes (bills shards + word → bill-id table, races, candidates, EOs, local mentions, former members); `search_races` / `get_candidate`, `get_legislator_votes` (GA and federal), bills, EOs, local government, former members and `session`, resources/prompts | Full v1 tool set |
-| 4. Launch | Docs page on votega.org (an addition to `/open-data`), README entry, client config snippets (Claude, Cursor, etc.); the rate-limit rule, CPU cap and Workers Paid are already in place (§9, §10); proposed for after the 2027-01-11 rollover (§7) | Public, announced |
+| 4. Launch | Unstage the `/ai-assistants/` page (built 2026-11-21, §8: client config snippets included) and link it from `/open-data`, README entry; the rate-limit rule, CPU cap and Workers Paid are already in place (§9, §10); proposed for after the 2027-01-11 rollover (§7) | Public, announced |
 | 5. v2 | Street-address lookup (needs a geocoding and privacy decision), federal bills and sponsorship, seat history, optional KV/D1 search, Georgia Commons text if their license allows it | Separate spec |
 
 ## 14. Effort estimate

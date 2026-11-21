@@ -50,6 +50,22 @@ describe("worker", () => {
     expect(msg.error ?? msg.result?.isError).toBeTruthy();
   });
 
+  it("lists and reads the votega:// resources", async () => {
+    const list = (await rpc("resources/list")).msg.result.resources as { uri: string; mimeType: string }[];
+    expect(list.map((r) => r.uri).sort()).toEqual(["votega://about", "votega://datasets", "votega://glossary"]);
+    const about = (await rpc("resources/read", { uri: "votega://about" })).msg.result.contents[0];
+    expect(about.mimeType).toBe("text/plain");
+    expect(about.text).toContain("VoteGA is a nonpartisan record.");
+    expect(about.text).toContain("NOT YET AVAILABLE THROUGH THE SERVER");
+    const glossary = (await rpc("resources/read", { uri: "votega://glossary" })).msg.result.contents[0].text as string;
+    expect(glossary).toContain("District\nThe area one legislator represents.");
+    expect(glossary).toContain("A fraction of residents.");
+    expect(glossary).not.toContain("\u0007"); // control characters stripped
+    const ds = JSON.parse((await rpc("resources/read", { uri: "votega://datasets" })).msg.result.contents[0].text);
+    expect(ds.datasets[0].summary).toHaveLength(700); // no 500-character cap on resources
+    expect(ds.license).toBe("CC BY-SA 4.0");
+  });
+
   it("rejects an oversized body", async () => {
     const res = await worker.fetch(
       new Request("http://localhost/mcp", {

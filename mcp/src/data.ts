@@ -25,7 +25,7 @@ export function ttlFor(path: string): number {
   return 3600;
 }
 
-const ALLOWED = /^(meta|members-index|counties-index|local-officials-index)\.json$|^zip\/\d{3}\.json$/;
+const ALLOWED = /^(meta|members-index|counties-index|local-officials-index|resources)\.json$|^zip\/\d{3}\.json$/;
 
 type Memo = { at: number; data: unknown };
 const memo = new Map<string, Memo>();

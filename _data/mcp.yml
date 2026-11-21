@@ -1,0 +1,136 @@
+# ============================================================================
+# VoteGA MCP server: the ONE source for its human-readable text
+# ============================================================================
+# Rendered two ways, so they cannot drift:
+#   - the /ai-assistants/ page (ai-assistants.html, Jekyll, from site.data.mcp);
+#   - the server's MCP resources votega://about and votega://glossary, which
+#     scripts/build_mcp_index.py writes into assets/data/mcp/resources.json at deploy.
+#     votega://datasets comes from _data/open_data.yml, not from here.
+# Spec: docs/superpowers/specs/2026-10-23-mcp-server-design.md §8.
+#
+# Plain text only (no HTML, no Markdown links): assistants read these strings verbatim.
+# Keep claims accurate and nonpartisan; say what the data does NOT cover.
+#
+# LAUNCH SWITCH. While `launched: false`, the page is noindex, out of the sitemap and
+# not in the navbar. At launch: set it to true AND add
+#     - AI Assistants: "ai-assistants/"
+# under `About:` in _config.yml's navbar-links (the navbar cannot read this flag).
+# ============================================================================
+
+launched: false
+endpoint: https://mcp.votega.org/mcp
+contact: admin@votega.org
+
+about:
+  summary: >-
+    VoteGA.org is an independent, nonpartisan record of who represents Georgia, at the State
+    Capitol, in Congress and in some county and city governments, and how they vote. Its MCP
+    server lets AI assistants look up that same data and cite the VoteGA page it came from.
+  principles:
+    - Nonpartisan. VoteGA is not supported by any party or candidate. The server reports what
+      the data says and never endorses, rates or ranks anyone. Party is shown as a fact, not a
+      score.
+    - Primary sources. Rosters, districts and votes come from official government sources
+      (legis.ga.gov, Congress.gov, the U.S. Census Bureau, HUD, the Georgia Secretary of State),
+      refreshed on a schedule. Every result names its source page and the date the data was built.
+    - Read-only and private. The server needs no account, sets no cookies and keeps no record of
+      what you ask. A ZIP code you enter is used for the lookup and stored nowhere.
+    - Honest about gaps. When the data does not cover something, the server says so instead of
+      guessing, for example a city whose officials VoteGA has not reviewed yet.
+  covers:
+    - Who represents a Georgia ZIP code or county in the Georgia Senate, Georgia House and U.S.
+      House, plus both U.S. senators.
+    - Georgia legislators and Georgia's members of Congress, with party, district, committees,
+      leadership roles and official contact details.
+    - County commissioners, city council members and sheriffs for the places VoteGA covers,
+      each with the source it was checked against.
+    - When each dataset was last updated and last checked against its source.
+  not_yet:
+    - Bills, voting records, races, candidates and executive orders are on VoteGA.org but are not
+      yet available through the server.
+    - Street-address lookups. A ZIP code or county can span several districts, so the server
+      lists every district it touches rather than guessing which one is yours.
+  license: >-
+    VoteGA's data and written content are licensed under Creative Commons
+    Attribution-ShareAlike 4.0 International (CC BY-SA 4.0). Credit VoteGA.org and share
+    adaptations under the same terms. The underlying facts come from public and government
+    sources whose own terms may also apply.
+  corrections: >-
+    If you find something wrong, email admin@votega.org. Every result includes a source_url,
+    so you can check the record yourself.
+
+# Each term: a short definition an assistant can quote. Order is display order.
+glossary:
+  - term: District
+    definition: >-
+      The area a single legislator represents. Georgia has 56 state Senate districts, 180 state
+      House districts and 14 U.S. House districts, drawn from census blocks by the maps adopted
+      in 2023.
+  - term: A ZIP code is not a district
+    definition: >-
+      ZIP codes are mail routes, not voting areas, and one ZIP can overlap several districts.
+      The server lists every district a ZIP touches with its estimated share of the ZIP's
+      residents. Only a street address decides which district a voter is in.
+  - term: A county is not a district
+    definition: >-
+      Large counties are split among many districts, and one district can cross several
+      counties. A county result lists every district that includes part of the county, with the
+      share of the county's population in each.
+  - term: Share
+    definition: >-
+      The estimated fraction of a ZIP's or county's residents living in a district, from 2020
+      Census population. A small share still means some residents live there; the server never
+      drops it.
+  - term: PO-box ZIP
+    definition: >-
+      A ZIP code used only for post office boxes. It has no residents, so it has no districts.
+      Use the ZIP code of the street address instead.
+  - term: Vacant seat
+    definition: >-
+      A seat with no sitting member, for example after a resignation or death. The server shows
+      it as vacant until the seat is filled; it never lists the departed member as the current
+      representative.
+  - term: Suspended
+    definition: >-
+      A member suspended from office still legally holds the seat while the suspension lasts, so
+      they remain listed with that status.
+  - term: Former member
+    definition: >-
+      Someone who left office during the current term (resigned, removed or died). Former members
+      appear only when asked for, and never with contact details.
+  - term: Incoming member
+    definition: >-
+      Someone elected to a local seat who has not yet taken office. Local results list them
+      separately until the day their term begins.
+  - term: Session (Georgia General Assembly)
+    definition: >-
+      Georgia's legislature serves two-year terms called bienniums, for example 2025-2026. Bill
+      numbers restart each biennium, so a bill is identified by its session and number together.
+  - term: Congress
+    definition: >-
+      A two-year term of the U.S. Congress, numbered (the 119th Congress runs 2025-2026). Each
+      new Congress begins on January 3 of an odd-numbered year.
+  - term: Legislator ids
+    definition: >-
+      An id like ga:5089 is a Georgia legislator's member id from legis.ga.gov, and one like
+      us:C001103 is a member of Congress's Bioguide id. A vgId such as vg-ga-p-000001 is VoteGA's
+      own id for a person across roles, for example a legislator who later runs for another
+      office.
+  - term: County FIPS code
+    definition: >-
+      The 5-digit federal code for a county, for example 13217 for Newton County. Georgia's
+      codes run from 13001 to 13321.
+
+# How to connect. `steps` are plain text; `code` is shown verbatim in a code block.
+clients:
+  - name: Claude (claude.ai and Claude Desktop)
+    steps: >-
+      Open Settings, then Connectors, choose Add custom connector, and enter the server URL.
+  - name: Claude Code
+    code: claude mcp add --transport http votega https://mcp.votega.org/mcp
+  - name: Cursor
+    steps: Add this to your MCP settings file (mcp.json).
+    code: '{ "mcpServers": { "votega": { "url": "https://mcp.votega.org/mcp" } } }'
+  - name: Other MCP clients
+    steps: >-
+      Use the Streamable HTTP transport with the server URL. No API key or account is needed.
