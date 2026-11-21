@@ -570,6 +570,11 @@
 
   function findMemberInRaces(bioguideId, races) {
     for (const race of races) {
+      // A decided race (certified, or a winner recorded) is not one anyone is still
+      // running in; the same test pickLiveRace() applies to the seat badge. Without
+      // it every member stayed "Running for Re-election" after November 2026 was
+      // certified.
+      if (race.status === 'certified' || race.winner) continue;
       // Only the current ballot says who is still running: the race's active
       // phase, else the latest present, falling back to the previous phase while
       // that ballot is empty. Reading every phase kept "Running for ..." on the

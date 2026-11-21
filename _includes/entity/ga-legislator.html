@@ -561,12 +561,14 @@
     return live.slice().sort((a, b) => (b.cycle || 0) - (a.cycle || 0))[0];
   }
 
+  // Roster chamber -> races.json chamber, shared by the seat and other-race lookups.
+  const SEAT_CHAMBER = {
+    'House of Representatives': 'Georgia House of Representatives',
+    'Senate': 'Georgia State Senate',
+  };
+
   function findSeatRace(member, races) {
-    const chamberMap = {
-      'House of Representatives': 'Georgia House of Representatives',
-      'Senate': 'Georgia State Senate',
-    };
-    const raceChamber = chamberMap[member.chamber] || member.chamber;
+    const raceChamber = SEAT_CHAMBER[member.chamber] || member.chamber;
     return pickLiveRace(races.filter(r =>
       r.level === 'state' &&
       r.chamber === raceChamber &&
@@ -612,9 +614,20 @@
     return null;
   }
 
-  // Find any race where this member is still on the current ballot, running for a different office
-  function findMemberInRaces(memberId, races) {
+  // Find any race where this member is still on the current ballot, running for a
+  // different office. Two exclusions, both needed:
+  //  - the member's own seat: the seat banner already covers it, and without this
+  //    every incumbent seeking re-election also read "Running for <their own seat>";
+  //  - a decided race (certified, or a winner recorded), the same test
+  //    pickLiveRace() applies to the seat banner. Without it, after the November
+  //    2026 results were certified every winner's page still said "Running for ...
+  //    in 2026", linking to a candidate page that now redirects back to the member.
+  function findMemberInRaces(member, races) {
+    const memberId = member.id;
+    const ownChamber = SEAT_CHAMBER[member.chamber] || member.chamber;
     for (const race of races) {
+      if (race.status === 'certified' || race.winner) continue;
+      if (race.level === 'state' && race.chamber === ownChamber && race.district === member.district) continue;
       const ballot = currentBallot(race);
       if (!ballot) continue;
       const match = ballot.candidates.find(
@@ -667,7 +680,7 @@
       if (racesRes.ok) {
         const racesData = await racesRes.json();
         seatRace = findSeatRace(member, racesData.races || []);
-        otherRaceInfo = findMemberInRaces(member.id, racesData.races || []);
+        otherRaceInfo = findMemberInRaces(member, racesData.races || []);
       } else {
         console.error('ga-member.html: races fetch failed', racesRes.status);
         electionDataUnavailable = true;
