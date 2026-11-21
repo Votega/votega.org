@@ -231,7 +231,7 @@ def load_builder():
     return mod
 
 
-def build(mod, d, members, ledger_assign=None):
+def build(mod, d, members, ledger_assign=None, sessions=None, xov=None):
     def w(name, obj):
         p = os.path.join(d, name)
         with open(p, "w") as f:
@@ -244,7 +244,8 @@ def build(mod, d, members, ledger_assign=None):
     mod.FEC_FILE = w("fec.json", {"candidates": {}})
     mod.RACES_FILE = w("races.json", {"races": []})
     mod.OVERRIDES_FILE = w("ov.json", {})
-    mod.XWALK_OVERRIDES_FILE = w("xov.json", {})
+    mod.XWALK_OVERRIDES_FILE = w("xov.json", xov or {})
+    mod.SESSIONS_SNAPSHOT_FILE = w("sessions.json", sessions or {})   # former members, if any
     mod.LEDGER_FILE = os.path.join(d, "ledger.json")
     if ledger_assign is not None:
         w("ledger.json", {"nextSeq": len(ledger_assign) + 1, "assign": ledger_assign})
@@ -300,6 +301,43 @@ def cohort_cases():
         check("a legis-* roster id is NOT published as ocdPersonId", p["ids"]["ocdPersonId"], None)
         check("legisGaGovId provenance no longer claims Open States",
               "Open States" in json.dumps(p["provenance"].get("legisGaGovId")), False)
+
+
+def former_cases():
+    print("former legislators (seat history): minted under legis:<id>, never twice")
+    mod = load_builder()
+    sitting = member(100, ocd(100), "Sitting")
+    apply_identity_slots([sitting], {})
+    snapshot = {"metadata": {"sessions": [
+                    {"id": 1031, "description": "2023-2024 Regular Session", "library": "20232024"},
+                    {"id": 1032, "description": "2023 Special Session", "library": "2023EX"},
+                    {"id": 1033, "description": "2025-2026 Regular Session", "library": "20252026"}]},
+                "sessions": {
+                    "1031": [{"id": 100}, {"id": 900, "first": "Gone", "last": "Member",
+                                           "chamber": "House", "district": 5, "party": "Democrat"}],
+                    "1032": [{"id": 100}, {"id": 900, "first": "Gone", "last": "Member",
+                                           "chamber": "House", "district": 5, "party": "Democrat"}],
+                    "1033": [{"id": 100}]}}
+    with tempfile.TemporaryDirectory() as d:
+        out, led = build(mod, d, [sitting], {ocd(100): "vg-ga-p-000001"}, sessions=snapshot)
+        by = {p["ids"]["legisGaGovId"]: p for p in out["people"] if p["ids"]["legisGaGovId"]}
+        gone = by.get(900) or {}
+        check("a member no longer on the roster gets a vgId under legis:<id>",
+              (led["assign"].get("legis:900"), gone.get("vgId")), ("vg-ga-p-000002", "vg-ga-p-000002"))
+        check("and is marked former, with roster-style chamber and party and the regular session",
+              {k: (gone.get("role") or {}).get(k) for k in ("status", "chamber", "party", "lastSession")},
+              {"status": "former", "chamber": "House of Representatives", "party": "Democratic",
+               "lastSession": "2023-2024 Regular Session"})
+        check("a sitting member is never treated as former", (by[100].get("role") or {}).get("status"), None)
+        out2, led2 = build(mod, d, [sitting], None, sessions=snapshot)
+        check("rebuilding mints nothing new", (led2["nextSeq"], led2["assign"]["legis:900"]),
+              (led["nextSeq"], "vg-ga-p-000002"))
+    with tempfile.TemporaryDirectory() as d:
+        out, led = build(mod, d, [sitting], {ocd(100): "vg-ga-p-000001", "peachfile:7": "vg-ga-p-000050"},
+                         sessions=snapshot,
+                         xov={"legis:900": {"sameAs": "peachfile:7", "_note": "same person"}})
+        check("a sameAs on legis:<id> joins an existing vgId instead of minting",
+              (led["assign"].get("legis:900"), led["nextSeq"]), ("vg-ga-p-000050", 3))
 
 
 def validator_cases():
@@ -387,7 +425,7 @@ def pin_cases():
     check("a pin matching nobody is an error", len(V.pin_errors([], ov)), 1)
 
 
-for fn in (resolver_cases, main_cases, roster_cases, cohort_cases, validator_cases, pin_cases):
+for fn in (resolver_cases, main_cases, roster_cases, cohort_cases, former_cases, validator_cases, pin_cases):
     fn()
 
 print()
