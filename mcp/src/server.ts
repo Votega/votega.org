@@ -1,5 +1,5 @@
 /**
- * The MCP server: tool registration only. Each tool's logic lives in src/tools/ and takes a
+ * The MCP server: tool, prompt and resource registration only. Each tool's logic lives in src/tools/ and takes a
  * Loader, so tests run the same code over fixture indexes.
  */
 import { McpServer } from "@modelcontextprotocol/server";
@@ -9,10 +9,11 @@ import { getDataFreshness } from "./tools/freshness";
 import { getLegislator, MAX_LIMIT, searchLegislators } from "./tools/legislators";
 import { findLocalOfficials } from "./tools/officials";
 import { findMyRepresentatives } from "./tools/representatives";
+import { localOfficials, MAX_ARG, whoRepresentsArea } from "./prompts";
 import { readResource, RESOURCES } from "./resources";
 import { fail, type ToolResult } from "./util";
 
-export const VERSION = "0.2.0";
+export const VERSION = "0.3.0";
 
 const READ_ONLY = { readOnlyHint: true, openWorldHint: false } as const;
 
@@ -126,6 +127,32 @@ export function createServer(loader: Loader, nowMs: number) {
       annotations: READ_ONLY,
     },
     async () => guarded(() => getDataFreshness(loader, nowMs)),
+  );
+
+  server.registerPrompt(
+    "who_represents_area",
+    {
+      title: "Who represents an area",
+      description:
+        "Who represents a Georgia ZIP code or county in the state legislature and Congress, listing every " +
+        "district the area touches.",
+      argsSchema: z.object({
+        area: z.string().min(1).max(MAX_ARG).describe('A 5-digit ZIP code or a Georgia county, e.g. "30014" or "Newton County".'),
+      }),
+    },
+    async ({ area }) => whoRepresentsArea(loader, area),
+  );
+
+  server.registerPrompt(
+    "local_officials",
+    {
+      title: "Local officials",
+      description: "The county commissioners or city council members and the sheriff for a Georgia county or city.",
+      argsSchema: z.object({
+        place: z.string().min(1).max(MAX_ARG).describe('A Georgia city or county, e.g. "Covington" or "Newton County".'),
+      }),
+    },
+    async ({ place }) => localOfficials(place),
   );
 
   for (const r of RESOURCES) {
