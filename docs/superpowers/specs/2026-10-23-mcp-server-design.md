@@ -14,13 +14,24 @@ or `mcp.votega.org` DNS record exists. This revision brings the spec in line wit
 - File sizes are re-measured, and the rollout and open questions are updated.
 Items marked **Proposed** still need a decision.
 
+**Second revision 2026-11-21 (open questions settled).** §12 is now a record of decisions, with
+the evidence behind each.
+- **Audience:** the first audience is the general public asking an AI assistant about their own
+  representatives and ballot. Tools for that question come first (§6, §13).
+- **Federal:** federal members *and their votes* are in v1.
+- **New tool:** `find_local_officials` (county commission or city council, plus the sheriff) is in v1.
+- **Deferred:** seat history moves to v2.
+- **Spike checks:** Phase 0 gains two (§12.9).
+
 ## 1. Summary
 
 A **remote, read-only, unauthenticated MCP server** at `https://mcp.votega.org/mcp`
 (Streamable HTTP), running on **Cloudflare Workers (free tier)**. It lets any MCP-capable AI
-assistant look up Georgia legislators, bills, races and candidates, executive orders and
-local-government mentions from VoteGA's published open data. It can also say which districts a
-ZIP code or county touches. Every answer carries a source link and an "as of" date.
+assistant look up Georgia legislators (state and federal, with their votes), county and city
+officials, bills, races and candidates, executive orders and local-government mentions from
+VoteGA's published open data. It can also say which districts a ZIP code or county touches. The
+first audience is a member of the public asking an assistant who represents them and what is on
+their ballot. Every answer carries a source link and an "as of" date.
 
 It is designed to chain with the two partner servers: Georgia Civic Data
 (county, tract and school data, keyed on 5-digit `county_fips` and 11-digit tract GEOIDs) and
@@ -32,8 +43,9 @@ This matches the project's stance: no key, no signup, nonpartisan, sourced to of
 ## 2. Goals / Non-goals
 
 **Goals**
-- Public data lookups over the existing datasets: legislators (state and federal), bills, races,
-  candidates, EOs, local mentions, and the districts touching a ZIP or county.
+- Public data lookups over the existing datasets: legislators (state and federal) and their votes,
+  county and city officials, bills, races, candidates, EOs, local mentions, and the districts
+  touching a ZIP or county.
 - Return the keys partner servers join on (`county_fips`, `legisGaGovId`, `votegaUrl`, bill
   session + number).
 - No new data pipeline in v1 beyond small precomputed index files.
@@ -72,7 +84,7 @@ AI client ──MCP (Streamable HTTP)──▶ mcp.votega.org  (Cloudflare Worke
 
 - **Runtime:** TypeScript, `@modelcontextprotocol/sdk`, plus either Cloudflare `agents`/`McpAgent`
   or the SDK's Web-standard Streamable HTTP transport in **stateless** mode
-  (no Durable Objects needed, which avoids the DO free-tier limits). Decide in the Phase 0 spike (§12.1).
+  (no Durable Objects needed, which avoids the DO free-tier limits). Decided: `createMcpHandler`, stateless (§12.1).
 - **Stateless:** every request is self-contained; no sessions.
 - **Routing:** `POST /mcp` (MCP), `GET /` (a human landing page with the tool list), `GET /health`.
 - **Repo location:** a new top-level `mcp/` directory (its own `package.json` and `wrangler.toml`),
@@ -98,7 +110,9 @@ gzipped, so parse cost stays inside the CPU budget:
 | `eo-index.json` | number, date, title, category, PDF url | `ga-executive-orders-*.json` |
 | `local-mentions-index.json` | place slug, topic, date, title, source url | `local-topics-*.json` |
 | `zip/<zip3>.json` | each ZIP under that 3-digit prefix: `kind`, counties (`county_fips`, share), state Senate / House / US House districts (with shares) | `ga-zip-districts.json` |
-| `counties-index.json` | `county_fips`, name, state Senate / House / US House districts | `ga-county-district-map.csv` (or the `ga-district-information` county table; §12.6) |
+| `counties-index.json` | `county_fips`, name, state Senate / House / US House districts, each with its population `share` | `scripts/data/ga-tract-districts.json`, rolled up by `counties_doc()` in `scripts/publish_ga_district_information.py` (imported, not copied; §12.6) |
+| `local-officials-index.json` | per county or city (`places.yml` slug + `county_fips`): commission/council members with seat and role, the sheriff, source URLs, last-reviewed date | `_data/local_officials.yml`, `_data/county_officers.yml` |
+| `federal-votes-index.json` (existing, not new) | positional roll-call rows; read only for `get_legislator_votes` on a federal member | `build_federal_votes_slices.py` |
 | `meta.json` | dataset → `generatedAt`, last checked, source, license, session/Congress; the list of local topics | `_data/data_freshness.yml`, `_data/freshness/*.json`, file metadata |
 
 If an index would go over budget (bills is the likely one), **shard** it (`bills-index-<A..Z|status>.json`)
@@ -154,10 +168,11 @@ Every result includes `source_url`, `as_of` (from `meta.json`) and `license: "CC
 |---|---|---|
 | `search_legislators` | `query?`, `chamber?` (house/senate/us_house/us_senate), `party?`, `district?`, `county_fips?`, `include_former?` (default false), `limit?` | Matching members: key, `vgId`, name, party, chamber, district, `status`, `votegaUrl` |
 | `get_legislator` | `id` (§5.5), `session?` | Profile, committees, contact (sitting members only), official page, `votegaUrl`, vote scorecard (party unity, participation), session/Congress the record covers |
-| `get_legislator_votes` | `id`, `session?`, `limit?` | Recent passage votes (bill, date, vote) from the vote slices |
+| `get_legislator_votes` | `id`, `session?`, `limit?` | Recent votes (bill, date, vote, result) from the vote slices. GA members: passage votes from `ga-votes/`. Federal members: every roll call of the current Congress from `federal-votes/<bioguideId>.json` and `federal-votes-index.json`, including bill-less votes (`bill: null`), with the result read from the stored `P`/`F` (never re-derived from wording) |
 | `search_bills` | `query?`, `session?` (default: current), `status?`, `sponsor_id?`, `subject?`, `limit?` | Matching bills: `session`, `identifier`, title, status, last action |
 | `get_bill` | `session` + `identifier`, or `legislationId` | Status, sponsors (with `votegaUrl`), subjects, actions, vote summary, legis.ga.gov link, `georgia_commons_url` (§6.3) |
 | `find_my_representatives` | `zip` or `county_fips` (exactly one) | Every district the area touches (§6.2), each with its current members, plus both US senators |
+| `find_local_officials` | `county_fips`, or `place` (a `places.yml` slug or city name, resolved like Georgia Civic Data's `resolve_entity`) | The county commission or city council (member, seat, role), the sheriff for a county, each with its source URL and the date it was last reviewed. A county or city we do not cover says so and gives no names |
 | `search_races` | `office?`, `district?`, `year?`, `county_fips?` | Races with candidates |
 | `get_candidate` | `id` | Candidate profile, race, party, links, finance summary if available |
 | `list_executive_orders` | `year?`, `category?`, `query?`, `limit?` | EOs: number, date, title, category, PDF link |
@@ -247,7 +262,8 @@ analytics. Move to the paid plan ($5/mo) at a sustained >60% of the daily quota,
 
 - **Unit:** tool handlers against fixture indexes (Vitest + `@cloudflare/vitest-pool-workers`).
 - **Contract:** an MCP Inspector smoke test in CI (list the tools, call each one with a known id).
-- **Data checks:** `scripts/validate_mcp_index.py` in CI. It checks index size budgets and required
+- **Data checks:** `scripts/validate_mcp_index.py`, run in the deploy right after the indexes are
+  built (§12.2), with its own offline test in `scripts/test_*.py`. It checks index size budgets and required
   fields. It also checks that every id resolves to a slice or page, that no roster `id` or
   positional candidate id is exposed as a key, that ZIP shares sum to ~1 and keep every district,
   and that the Georgia Commons slug table covers every session in `ga-bills.json`. Links pass the
@@ -255,38 +271,93 @@ analytics. Move to the paid plan ($5/mo) at a sustained >60% of the daily quota,
 - **CPU guard:** a test asserts that the largest index parses within a set ms budget.
 - **Observability:** Workers analytics, and `/health` returning the age of each index's `generatedAt`.
 
-## 12. Open questions / spikes
+## 12. Decisions on the former open questions (settled 2026-11-21)
 
-1. **Transport library:** `McpAgent` (needs Durable Objects) or the stateless SDK transport. Spike
-   both; prefer stateless.
-2. **Index freshness:** regenerate `assets/data/mcp/*` inside the existing deploy-pages workflow, or
-   in its own scheduled workflow? (Prefer the site build, so the indexes can't drift.)
-3. **Bills sharding:** does a compact bills index fit the CPU budget unsharded?
-4. **GitHub Pages cache headers:** confirm that `max-age` (10 min default) is acceptable as the
-   origin cache floor.
-5. **Federal data:** include federal bills and votes in v1, or later? The 119th Congress freeze
-   (`sessions/119th/` in `Votega/ga-federal-legislators`) gives a frozen record to point at.
-6. **County source:** the site's `ga-county-district-map.csv` or the `ga-district-information`
-   county table (which has shares)? Prefer the one that has shares, if it can be read from the site.
-7. **Georgia Commons matching:** confirm whether their sponsor links match on `legisGaGovId` or on
-   chamber + district (an open item in the collaboration doc). The answer decides what keeps
-   their links correct across the rollover.
-8. **Seat history:** expose `seats.json` and `seat-holds.json` ("who held this seat") in v1, or wait
-   until Phase 3 of `docs/seat-history-design.md`?
+Measurements were taken locally on 2026-11-21. Node 25 timings are a proxy: Workers CPU time is
+measured differently, so Phase 0 confirms each one on a real Worker.
+
+1. **Transport: Cloudflare's `createMcpHandler` (the `agents` package), stateless, with no
+   Durable Objects.** Cloudflare's docs describe it as the recommended way to build a new MCP
+   server. It runs in a plain Worker and builds a fresh server for each request, which suits a
+   read-only server with no sessions. The docs now target MCP TypeScript SDK v2, so Phase 0
+   pins exact versions of `agents` and the SDK and follows the docs for that version.
+   `McpAgent` and its Durable Objects are not needed.
+2. **The indexes are built at deploy, not committed.** `build_mcp_index.py` runs in
+   `deploy-pages.yml` after `build_entity_pages.py`, and writes `assets/data/mcp/*`
+   (gitignored), the same way the share cards are built. The indexes therefore always describe
+   the exact data the site deploys, can't drift from it, and add no git history. The validator
+   runs in the same step and fails the deploy if a budget or a check fails.
+3. **Bills: shard by session and bill type, and parse once per isolate.**
+   - **Measured:** all 5,656 bills as compact positional rows (interned subjects and statuses)
+     come to 938 KB raw, 262 KB gzipped. That's over the 150 KB target. Parsing them plus a
+     keyword scan took a median 2.3–2.7 ms and up to 4.5 ms in Node.
+   - **Titles are not the cost:** truncating them to 120 characters saves only 32 KB.
+   - **Shards:** `<session>-<HB|HR|SB|SR>`. A lookup by number reads one shard, about a quarter of
+     the size. A keyword search reads the current session's four shards.
+   - **Parse once:** the Worker keeps the parsed shards in module scope, so a warm isolate parses
+     each shard only once.
+   - Phase 0 measures the real Worker CPU time. If a cold keyword search goes over the CPU limit,
+     the fallback is a precomputed token → bill-id index.
+4. **Origin caching is acceptable as is.** Checked 2026-11-21: `www.votega.org/assets/data/*.json`
+   is served with `Cache-Control: max-age=600` and `cf-cache-status: DYNAMIC`, so Cloudflare does
+   not cache JSON at the edge. The Worker's own Cache API, with the TTLs in §5.3, is the only
+   cache layer, which keeps staleness to the TTL plus at most 10 minutes.
+5. **Federal: members and votes are in v1** (decided by the site owner).
+   - Federal members appear in `search_legislators`, `get_legislator` and
+     `find_my_representatives`.
+   - `get_legislator_votes` covers the 16 members from the existing `federal-votes/` slices and
+     the full index (300 KB raw, 55 KB gzipped, the same file the site loads lazily). Federal
+     bills and sponsorship wait for v2.
+   - **The 120th Congress:** the votes tool reports the Congress the data covers, and after
+     January 3 a frozen 119th record lives in `Votega/ga-federal-legislators` `sessions/119th/`.
+6. **The county table is computed from the tract table, with population shares.**
+   - `ga-county-district-map.csv` has no shares, and nothing in the repo reads it.
+   - `scripts/data/ga-tract-districts.json` (228 KB) is the source the `ga-district-information`
+     publisher already rolls up into its county table with `counties_doc()`.
+   - `build_mcp_index.py` imports that function, so the county figures match the published
+     dataset by construction and the Worker never fetches from another repository.
+7. **Georgia Commons matching does not block the MCP server.** Their bill pages link sponsors to
+   `votegaUrl`, which was verified on 2026-11-12. Every URL `votegaUrl` has ever pointed to stays
+   alive through the legislator ledger and the frozen bienniums. So whichever key they match on,
+   the link we hand out stays valid across the rollover. The server returns `votegaUrl` and
+   `legisGaGovId`. The question stays open in the collaboration doc as a matter for their side.
+8. **Seat history waits for v2** (decided by the site owner). General public users rarely ask
+   for it, and `seats.json` / `seat-holds.json` are still being built under their own design.
+9. **Two checks added to the Phase 0 spike:**
+   - **Bot protection:** Cloudflare's Bot Fight Mode once returned 403 to Googlebot across the
+     whole site. Confirm that the Worker's subrequests to `www.votega.org` are not challenged, or
+     allowlist them with a WAF skip rule scoped to the Worker.
+   - **Isolate reuse:** confirm that the module-scope parse cache (point 3) actually survives
+     between requests often enough to matter.
+10. **Local officials are in v1** (`find_local_officials`, decided by the site owner).
+    - **Source:** the tool reads an index built at deploy from `_data/local_officials.yml` and
+      `_data/county_officers.yml`. That's the same data the `/local/<slug>/` pages render. The
+      published `Votega/ga-local-government` `officials.json` is not used, because the Worker
+      fetches only from `www.votega.org`.
+    - **Coverage:** these rosters are reviewed by a person and incomplete, so every result
+      carries its last-reviewed date and source. A place we don't cover returns an explicit "not
+      covered" with no names.
+    - **Sheriffs:** they come from `county_officers.yml` and are kept apart from the commission,
+      as on the site.
 
 ## 13. Rollout
 
 | Phase | Scope | Exit criteria |
 |---|---|---|
-| 0. Spike | Hello-world Worker on `mcp.votega.org`, transport choice, CPU measurement on a real index | Decision on §12.1, §12.3 |
-| 1. Indexes | `build_mcp_index.py` + validator + CI, including the ZIP shards and county index | Index files published, within budgets |
-| 2. Core tools | legislators, bills, `find_my_representatives`, EOs, freshness | Passes Inspector + unit tests |
-| 3. Remaining tools | races/candidates, local government, former members and `session`, resources/prompts | Full v1 tool set |
+| 0. Spike | Hello-world `createMcpHandler` Worker on `mcp.votega.org`; pinned SDK versions; Worker CPU time for a bills shard, a ZIP shard and the federal votes index; the bot-protection and isolate-reuse checks (§12.9) | Each §12 measurement confirmed on a Worker, or the named fallback chosen |
+| 1. Indexes | `build_mcp_index.py` + validator in `deploy-pages.yml`: members, ZIP shards, county index, local officials, bills shards, races, candidates, EOs, local mentions, meta | Index files built at deploy, within budgets |
+| 2. Core tools (what a voter asks first) | `find_my_representatives`, `find_local_officials`, `search_legislators` / `get_legislator` (state and federal), `get_data_freshness` | Passes Inspector + unit tests |
+| 3. Remaining tools | `search_races` / `get_candidate`, `get_legislator_votes` (GA and federal), bills, EOs, local government, former members and `session`, resources/prompts | Full v1 tool set |
 | 4. Launch | Docs page on votega.org (an addition to `/open-data`), README entry, client config snippets (Claude, Cursor, etc.), rate-limit rule; proposed for after the 2027-01-11 rollover (§7) | Public, announced |
-| 5. v2 | Street-address lookup (needs a geocoding and privacy decision), federal votes if not in v1, optional KV/D1 search, Georgia Commons text if their license allows it | Separate spec |
+| 5. v2 | Street-address lookup (needs a geocoding and privacy decision), federal bills and sponsorship, seat history, optional KV/D1 search, Georgia Commons text if their license allows it | Separate spec |
 
 ## 14. Effort estimate
 
-Phases 0–2: small to medium (a focused few days); phases 3–4 similar. `find_my_representatives`
-adds about a day (the ZIP shards and county index are simple joins over existing tables). The
-largest risk is still the CPU budget on bills search (§12.3), which sharding mitigates.
+Phases 0–2: small to medium (a focused few days); phases 3–4 similar. The v1 additions each add
+about a day:
+- `find_my_representatives` (the ZIP shards and county index are simple joins over existing tables);
+- `find_local_officials` (one more index over two YAML files);
+- federal votes (existing slices, decoded with the site's existing format).
+
+The largest risk is still the CPU budget on bills search (§12.3): sharding mitigates it, and a
+token index is the fallback.
