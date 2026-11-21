@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-20T19:27:09.370569+00:00",
+    "generatedAt": "2026-11-21T01:53:40.705772+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -28,17 +28,25 @@
     "windowDays": 45,
     "entityTagged": 81,
     "topicCounts": {
+      "budget": 8,
+      "education": 10,
       "elections": 50,
       "healthcare": 18,
       "ethics": 3,
-      "education": 9,
-      "budget": 7,
       "courts": 6,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000021": {
+      "name": "Brad Raffensperger",
+      "url": null,
+      "rosterId": "ocd-person/02e75ac0-4350-4305-980e-8dc0462c5cc1",
+      "candidateIds": [
+        "challenger-brad-raffensperger-gov-2026"
+      ]
+    },
     "vg-ga-p-000254": {
       "name": "Nikema Williams",
       "url": null,
@@ -153,18 +161,49 @@
       "candidateIds": [
         "challenger-rick-jackson-gov-2026"
       ]
-    },
-    "vg-ga-p-000021": {
-      "name": "Brad Raffensperger",
-      "url": null,
-      "rosterId": "ocd-person/02e75ac0-4350-4305-980e-8dc0462c5cc1",
-      "candidateIds": [
-        "challenger-brad-raffensperger-gov-2026"
-      ]
     }
   },
   "mergedEntities": {},
   "items": [
+    {
+      "id": "5681b82c40a6",
+      "title": "Georgia Today: Morehouse College sexual assault; DFCS budget; Energy bill concerns",
+      "url": "https://www.gpb.org/news/2026/11/20/georgia-today-morehouse-college-sexual-assault-dfcs-budget-energy-bill-concerns",
+      "source": "GPB News",
+      "publishedAt": "2026-11-20T21:18:26+00:00",
+      "snippet": "On the Nov. 20 edition: Morehouse College is looking into its sexual misconduct policies after a senior was arrested on rape charges; state lawmakers want to figure out how to better track the state's",
+      "entityIds": [],
+      "topics": [
+        "budget",
+        "education"
+      ]
+    },
+    {
+      "id": "7d7dcb2772d0",
+      "title": "GPB evening headlines for November 20, 2026",
+      "url": "https://www.gpb.org/news/2026/11/20/gpb-evening-headlines-for-november-20-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-20T20:51:38+00:00",
+      "snippet": "Morehouse College says it's launching a review of its policies and procedures regarding allegations of sexual misconduct.\nGeorgia Democrat Stacey Abrams is shifting the focus of the group that she sta",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "4379ce1ff754",
+      "title": "It’s official: Raffensperger certifies Nov. 3 election results",
+      "url": "https://capitol-beat.org/2026/11/its-official-raffensperger-certifies-nov-3-election-results/?utm_source=rss&utm_medium=rss&utm_campaign=its-official-raffensperger-certifies-nov-3-election-results",
+      "source": "Capitol Beat",
+      "publishedAt": "2026-11-20T19:38:21+00:00",
+      "snippet": "ATLANTA — The Democratic candidates who swept Republicans out of power on Nov. 3 no longer have an asterisk beside their names. Secretary of State Brad Raffensperger certified the election results on ",
+      "entityIds": [
+        "vg-ga-p-000021"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
     {
       "id": "3d92699f7123",
       "title": "Georgia Board of Regents elects new leadership, backs DREAMS scholarship",
@@ -1130,18 +1169,6 @@
       ]
     },
     {
-      "id": "5e8294a945bc",
-      "title": "Missing memory card temporarily changed apparent outcome in state House race",
-      "url": "https://capitol-beat.org/2026/11/missing-memory-card-temporarily-changed-apparent-outcome-in-state-house-race/?utm_source=rss&utm_medium=rss&utm_campaign=missing-memory-card-temporarily-changed-apparent-outcome-in-state-house-race",
-      "source": "Capitol Beat",
-      "publishedAt": "2026-11-07T05:53:32+00:00",
-      "snippet": "ATLANTA — A previously missing election machine memory card in Seminole County has reversed the apparent outcome of a legislative race where early results showed a Republican incumbent losing his seat",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "3415f0e9f19d",
       "title": "Bottoms announces transition team as ascendent Georgia Democrats prepare to run state government",
       "url": "https://georgiarecorder.com/2026/11/06/bottoms-announces-transition-team-as-ascendent-georgia-democrats-prepare-to-run-state-government/",
@@ -1797,30 +1824,6 @@
         "elections",
         "healthcare"
       ]
-    },
-    {
-      "id": "4d06aeed99e0",
-      "title": "University System of Georgia Confers Record 86,660 Degrees in FY2026",
-      "url": "https://www.usg.edu/news/release/usg-confers-record-86,660-degrees-in-fy2026/",
-      "source": "University System of Georgia",
-      "publishedAt": "2026-10-07T00:00:00+00:00",
-      "snippet": null,
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
-    },
-    {
-      "id": "ef6db7721017",
-      "title": "ICYMI: Congresswoman Nikema Williams Urges HUD to Implement Whole Home Repairs Law",
-      "url": "https://nikemawilliams.house.gov/posts/icymi-congresswoman-nikema-williams-urges-hud-to-implement-whole-home-repairs-law",
-      "source": "Rep. Nikema Williams (GA-05, press)",
-      "publishedAt": "2026-10-06T21:23:11+00:00",
-      "snippet": "WASHINGTON, D.C. — Congresswoman Nikema Williams (GA-05) joined U.S. Senator John Fetterman (D-PA) and U.S. Senator Cynthia Lummis (R-WY) in a letter to U.S. Department of Housing and Urban Developmen",
-      "entityIds": [
-        "vg-ga-p-000254"
-      ],
-      "topics": []
     }
   ]
 }
