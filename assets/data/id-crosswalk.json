@@ -2,7 +2,7 @@
  "metadata": {
   "schemaVersion": 2,
   "schemaStability": "Stable field names and meanings. Additive since version 2: rosterId, executiveId (statewide executives, from ga-executive.json), ballotpediaId, and metadata.mergedVgIds (a retired vgId forwards to the surviving one; follow it); ocdPersonId is now ONLY an OCD person id or null (it used to carry the roster id, which can be legis-<id>). Changed in version 2: peachfileFilerEntityId and fecCandidateId became the lists peachfileFilerEntityIds / fecCandidateIds, because a person who files for two offices in one cycle has one filing per office; and a candidacies[] array was added. Records may carry vgId: null — see provenance.vgId for why.",
-  "generatedAt": "2026-11-21T00:24:55+00:00",
+  "generatedAt": "2026-11-22T17:05:18+00:00",
   "count": 784,
   "mergedVgIds": {
    "vg-ga-p-000376": "vg-ga-p-000222"
@@ -12775,7 +12775,8 @@
      "party": "Republican",
      "phases": [
       "primary",
-      "general"
+      "general",
+      "runoff"
      ],
      "isIncumbent": true,
      "withdrawn": false,
@@ -30978,7 +30979,8 @@
      "party": "Democrat",
      "phases": [
       "primary",
-      "general"
+      "general",
+      "runoff"
      ],
      "isIncumbent": false,
      "withdrawn": false,
