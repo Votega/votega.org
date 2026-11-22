@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-21T18:28:53.846888+00:00",
+    "generatedAt": "2026-11-22T00:48:10.851161+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,28 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 125,
+    "count": 124,
     "windowDays": 45,
     "entityTagged": 79,
     "topicCounts": {
-      "budget": 8,
-      "education": 10,
-      "elections": 46,
+      "courts": 7,
+      "elections": 48,
+      "budget": 7,
+      "education": 9,
       "healthcare": 17,
       "ethics": 3,
-      "courts": 6,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000335": {
+      "name": "Keisha Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
+      ]
+    },
     "vg-ga-p-000021": {
       "name": "Brad Raffensperger",
       "url": null,
@@ -123,13 +130,6 @@
         "ga-house-141-2026-d-1"
       ]
     },
-    "vg-ga-p-000335": {
-      "name": "Keisha Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
-      ]
-    },
     "vg-ga-p-000258": {
       "name": "Earl L. \"Buddy\" Carter",
       "url": null,
@@ -166,6 +166,46 @@
   "mergedEntities": {},
   "items": [
     {
+      "id": "cdc7d8971b31",
+      "title": "Chatham County seeks to block ‘illegal’ annexation of Bethesda property into Savannah",
+      "url": "https://thecurrentga.org/2026/11/21/chatham-county-seeks-to-block-illegal-annexation-of-bethesda-property-into-savannah/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-22T00:39:58+00:00",
+      "snippet": "Chatham County filed a lawsuit on November 13 to block the nonprofit owners of Bethesda Academy from annexing approximately 44 acres of land into the city of Savannah, arguing the move would create an",
+      "entityIds": [],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
+      "id": "da56a39b1e7a",
+      "title": "Bottoms proposes directing gambling revenue to education",
+      "url": "https://thecurrentga.org/2026/11/21/bottoms-proposes-directing-gambling-revenue-to-education/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-21T19:26:53+00:00",
+      "snippet": "Georgia Governor-elect Keisha Lance Bottoms expressed support for a potential gambling referendum to fund education and announced several policy committees to guide her administration's transition.\nTh",
+      "entityIds": [
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections",
+        "budget",
+        "education"
+      ]
+    },
+    {
+      "id": "ea6359573d2a",
+      "title": "Over half the Georgia counties that flipped in the midterms were rural",
+      "url": "https://thecurrentga.org/2026/11/21/over-half-the-georgia-counties-that-flipped-in-the-midterms-were-rural/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-21T19:05:49+00:00",
+      "snippet": "Five of the nine flipped counties in the gubernatorial election came from rural Georgia, which shifted more than six points left compared with the 2022 midterms. In this election cycle, Black voters r",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
       "id": "7e207c807003",
       "title": "Georgia Water Coalition releases its 14th ‘Dirty Dozen’ report for 2026",
       "url": "https://thecurrentga.org/2026/11/21/georgia-water-coalition-releases-its-14th-dirty-dozen-report-for-2026/",
@@ -174,31 +214,6 @@
       "snippet": "The Georgia Water Coalition unveiled its 2026 Dirty Dozen Report, naming their picks for the worst offenders and most pressing threats to the state’s waterways. \nThe Current is an inclusive nonprofit,",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "5681b82c40a6",
-      "title": "Georgia Today: Morehouse College sexual assault; DFCS budget; Energy bill concerns",
-      "url": "https://www.gpb.org/news/2026/11/20/georgia-today-morehouse-college-sexual-assault-dfcs-budget-energy-bill-concerns",
-      "source": "GPB News",
-      "publishedAt": "2026-11-20T21:18:26+00:00",
-      "snippet": "On the Nov. 20 edition: Morehouse College is looking into its sexual misconduct policies after a senior was arrested on rape charges; state lawmakers want to figure out how to better track the state's",
-      "entityIds": [],
-      "topics": [
-        "budget",
-        "education"
-      ]
-    },
-    {
-      "id": "7d7dcb2772d0",
-      "title": "GPB evening headlines for November 20, 2026",
-      "url": "https://www.gpb.org/news/2026/11/20/gpb-evening-headlines-for-november-20-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-20T20:51:38+00:00",
-      "snippet": "Morehouse College says it's launching a review of its policies and procedures regarding allegations of sexual misconduct.\nGeorgia Democrat Stacey Abrams is shifting the focus of the group that she sta",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
     },
     {
       "id": "4379ce1ff754",
@@ -428,18 +443,6 @@
       ],
       "topics": [
         "ethics"
-      ]
-    },
-    {
-      "id": "9ce7e33f07e9",
-      "title": "Lawmakers push for forensic audit of DFCS amid budget concerns",
-      "url": "https://thecurrentga.org/2026/11/18/lawmakers-push-for-forensic-audit-of-dfcs-amid-budget-concerns/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-18T21:20:34+00:00",
-      "snippet": "A bipartisan group of Georgia lawmakers is calling for a third-party forensic audit of the Division of Family and Children Services following reports of questionable spending and a significant budget ",
-      "entityIds": [],
-      "topics": [
-        "budget"
       ]
     },
     {
@@ -1753,22 +1756,6 @@
       "publishedAt": "2026-10-13T00:00:00+00:00",
       "snippet": null,
       "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "8a4d7d062edb",
-      "title": "Declaring a State of Emergency for Hurricane Isaias",
-      "url": "https://gov.georgia.gov/document/2026-executive-order/10082601/download",
-      "source": "Gov. Brian Kemp (executive orders)",
-      "publishedAt": "2026-10-08T00:00:00+00:00",
-      "snippet": "The National Hurricane Center forecasts Hurricane Isaias will make landfall near the Alabama and Florida coastline Friday evening as a near-major hurricane; and The wind field of Hurricane Isaias is…",
-      "category": "State of Emergency",
-      "orderNumber": "10.08.26.01",
-      "archiveUrl": "https://web.archive.org/web/20261009013141/https://gov.georgia.gov/document/2026-executive-order/10082601/download",
-      "sha256": "1176a7f909a9bdd08796d2a604ef69d1befdd3eedf0c1fd531089ed7a28a43fa",
-      "entityIds": [
-        "vg-ga-p-000024"
-      ],
       "topics": []
     }
   ]
