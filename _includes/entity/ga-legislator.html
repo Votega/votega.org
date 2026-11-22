@@ -700,12 +700,20 @@
       const currentPeers = all.filter(m => !['Resigned', 'Removed', 'Deceased'].includes(m.status));
       displaySidebar(member, currentPeers);
       loadCampaignFinance(member, seatRace);
-      loadCuratedBills(member);
+      const curatedReady = loadCuratedBills(member);
       loadVotingHistory(member, all);
       loadEntityNews(member);
-      if (window.location.hash) {
-        switchTab(window.location.hash.slice(1), false);
-        const target = document.getElementById(window.location.hash.slice(1));
+      // No tab is active in the markup: whether Key Votes exists is only known once
+      // the (small) curated file has been read, so the first tab is chosen here,
+      // after that one fetch and nowhere earlier. Choosing it before would flash the
+      // wrong tab either way (Key Votes with nothing in it, or Voting History
+      // swapped out for Key Votes). Voting History's own load is not waited on.
+      await curatedReady.catch(e => console.warn('Key Votes failed to render:', e));
+      const wanted = window.location.hash.slice(1);
+      const landed = wanted ? switchTab(wanted, false) : false;   // false for a removed Key Votes
+      if (!landed) switchTab(defaultTab(), false);
+      if (landed) {
+        const target = document.getElementById(wanted);
         if (target) target.scrollIntoView({ behavior: 'smooth' });
       }
       statusLine.textContent = '';
@@ -1104,13 +1112,13 @@
       <div id="votesTabs">
         <div class="tab-bar" role="tablist" aria-label="Voting record, sponsored legislation and campaign finance"
              data-tabs data-tab-active="tab-active">
-          <button class="tab-btn tab-active" data-tab="curatedBills" onclick="switchTab('curatedBills')">Key Votes</button>
+          <button class="tab-btn" data-tab="curatedBills" onclick="switchTab('curatedBills')" hidden>Key Votes</button>
           <button class="tab-btn" data-tab="votingHistory" onclick="switchTab('votingHistory')">Voting History</button>
           ${hasSponsorships(member) ? `<button class="tab-btn" data-tab="sponsoredLegislation" onclick="switchTab('sponsoredLegislation')">Sponsored Legislation</button>` : ''}
           <button class="tab-btn" data-tab="campaignFinance" onclick="switchTab('campaignFinance')">Campaign Finance</button>
           <button class="tab-btn" data-tab="entityNews" onclick="switchTab('entityNews')" hidden>In the News</button>
         </div>
-        <div id="curatedBills" class="tab-panel"></div>
+        <div id="curatedBills" class="tab-panel" style="display:none;"></div>
         <div id="votingHistory" class="tab-panel" style="display:none;"></div>
         <div id="sponsoredLegislation" class="tab-panel" style="display:none;"></div>
         <div id="campaignFinance" class="tab-panel" style="display:none;"></div>
@@ -1215,7 +1223,12 @@
   }
 
 
-  const DEFAULT_TAB = 'curatedBills';
+  // Key Votes is the default tab while it exists. It is removed (like In the News)
+  // when the curated list is empty - the list starts empty each biennium (D15) -
+  // and Voting History is the default then.
+  function defaultTab() {
+    return document.querySelector('.tab-btn[data-tab="curatedBills"]') ? 'curatedBills' : 'votingHistory';
+  }
 
   // Syncs the active tab to location.hash (pushHistory on a real user click,
   // not on hash-driven restores) so browser Back steps through tab switches
@@ -1238,7 +1251,8 @@
   }
 
   window.addEventListener('popstate', () => {
-    switchTab(window.location.hash.slice(1) || DEFAULT_TAB, false);
+    const wanted = window.location.hash.slice(1);
+    if (!(wanted && switchTab(wanted, false))) switchTab(defaultTab(), false);
   });
 
   const CURATED_BILLS_URL = dataRoot(SELECTED_BIENNIUM) + 'curated-ga-bill-votes.json';
@@ -1255,20 +1269,28 @@
 
   async function loadCuratedBills(member) {
     const container = document.getElementById('curatedBills');
+    const tabBtn = document.querySelector('.tab-btn[data-tab="curatedBills"]');
     if (!container) return;
 
-    let data;
+    let data = {};
     try {
       const res = await fetch(CURATED_BILLS_URL);
-      if (!res.ok) return; // silently skip if not yet generated
-      data = await res.json();
+      if (res.ok) data = await res.json();   // not-ok: not yet generated
     } catch (err) {
       console.warn('Could not load curated bills:', err);
-      return;
     }
 
-    const bills = (data.bills || []);
-    if (!bills.length) return;
+    const bills = (data && data.bills) || [];
+
+    // Same pattern as In the News: the tab stays hidden until there is something to
+    // show, and is removed outright when there is not, so a #curatedBills deep link
+    // finds no tab and falls through to the default (see switchTab).
+    if (!bills.length) {
+      if (tabBtn) tabBtn.remove();
+      container.remove();
+      return;
+    }
+    if (tabBtn) tabBtn.hidden = false;
 
     const chamberKey = member.chamber === 'Senate' ? 'senate' : 'house';
 
