@@ -104,6 +104,15 @@ def tier1(d):
     if meta.get("gaMembers") != sorted(by_member):
         errors.append(f"metadata.gaMembers {meta.get('gaMembers')!r} disagrees with "
                       f"the byMember keys {sorted(by_member)!r}")
+    for name, m in sorted(by_member.items()):
+        if not m.get("bioguideId"):
+            errors.append(f"{name}: no bioguideId. The surname does not resolve to "
+                          f"one current Georgia member; pin it with "
+                          f"{{\"{m.get('filerId')}\": {{\"bioguideId\": \"...\"}}}} "
+                          f"in ga-congress-trades-overrides.json")
+    for w in (meta.get("clerkCheck") or {}).get("wrongState") or []:
+        errors.append(f"{w.get('member')}: Clerk filing {w.get('docId')} is filed "
+                      f"under {w.get('stateDst')!r}, not Georgia")
     size = meta.get("delegationSize")
     if isinstance(size, int) and len(by_member) > size:
         errors.append(f"{len(by_member)} members published but the delegation has "
@@ -133,6 +142,33 @@ def collapse(new, old):
     return errors
 
 
+def clerk_sections(cc):
+    """Report sections from metadata.clerkCheck (the House Clerk cross-check)."""
+    if not cc:
+        return []
+    if cc.get("status") != "ok":
+        return [("Clerk cross-check did not run",
+                 [f"- {cc.get('reason') or 'unavailable'}. Completeness and state "
+                  f"were not verified this run."])]
+    out = []
+    if cc.get("departedRecent"):
+        out.append(("Dropped filer with a Georgia filing in the last 90 days", [
+            f"- {e['name']}: {e['filings']} filing(s), latest {e['latest']} "
+            f"(DocIDs {', '.join(e['docIds'][:5])}). Not in the current "
+            f"delegation roster, so not published. If they are a current member, "
+            f"the roster is behind; otherwise ignore." for e in cc["departedRecent"]]))
+    if cc.get("missingFilings"):
+        n = cc.get("missingCount", len(cc["missingFilings"]))
+        out.append((f"Georgia filings in the Clerk index but not in the file ({n})", [
+            f"- {m['name']}: DocID {m['docId']} filed {m['filed']} ({m['stateDst']})"
+            for m in cc["missingFilings"]]))
+    if cc.get("unverifiedCount"):
+        out.append(("Published filings the Clerk index did not list",
+                    [f"- {cc['unverifiedCount']} filing(s), e.g. " + ", ".join(
+                        f"{u['docId']} ({u['member']})" for u in cc["unverified"][:5])]))
+    return out
+
+
 def tier2(new, old):
     """Things worth a human glance. Returns [(heading, [lines])]."""
     sections = []
@@ -145,11 +181,7 @@ def tier2(new, old):
                           "the source. Legitimate for a quiet delegation; check the "
                           "run log if that is not expected."]))
 
-    unresolved = sorted(n for n, m in nm.items() if not m.get("bioguideId"))
-    if unresolved:
-        sections.append(("Members with no bioguideId", [
-            f"- {n}: the generator refuses to guess, so their card cannot link "
-            f"to a profile" for n in unresolved]))
+    sections.extend(clerk_sections(meta.get("clerkCheck")))
 
     quiet_fail = [n for n in (meta.get("fetchFailed") or [])
                   if not old or n not in (old.get("byMember") or {})]

@@ -70,6 +70,11 @@ def tier1_cases():
           t1(lambda d: d["byMember"]["C"].update(estVolume=1.0)), 1)
     check("missing field", t1(lambda d: d["byMember"]["D"].pop("filerId")), 1)
     check("more members than seats", t1(lambda d: d["metadata"].update(delegationSize=3)), 1)
+    check("null bioguideId is tier 1 (unresolved join)",
+          t1(lambda d: d["byMember"]["A"].update(bioguideId=None)), 1)
+    check("Clerk says a published filing is not Georgia",
+          t1(lambda d: d["metadata"].update(clerkCheck={"status": "ok", "wrongState": [
+              {"docId": "1", "member": "A", "stateDst": "TX05"}]})), 1)
     check("byMember not an object", V.tier1({"metadata": {}, "byMember": [], "tickerNames": {}}),
           ["byMember is missing or not an object"])
 
@@ -97,10 +102,24 @@ def tier2_cases():
     new = sound({"A": 10, "B": 6, "C": 4, "D": 3, "F": 1})
     heads = [h for h, _ in V.tier2(new, old)]
     check("added/removed named", heads, ["Members added or removed"])
-    nobio = sound()
-    nobio["byMember"]["A"]["bioguideId"] = None
-    check("null bioguideId reported", [h for h, _ in V.tier2(nobio, old)],
-          ["Members with no bioguideId"])
+    cc = sound()
+    cc["metadata"]["clerkCheck"] = {
+        "status": "ok", "wrongState": [], "unverifiedCount": 2,
+        "unverified": [{"docId": "9", "member": "A"}], "missingCount": 1,
+        "missingFilings": [{"name": "New Member", "docId": "7", "filed": "2026-11-01",
+                            "stateDst": "GA13"}],
+        "departedRecent": [{"name": "Ex Member", "filings": 1, "latest": "2026-11-01",
+                            "docIds": ["8"]}]}
+    check("clerk findings reported, in order",
+          [h for h, _ in V.tier2(cc, old)],
+          ["Dropped filer with a Georgia filing in the last 90 days",
+           "Georgia filings in the Clerk index but not in the file (1)",
+           "Published filings the Clerk index did not list"])
+    down = sound()
+    down["metadata"]["clerkCheck"] = {"status": "unavailable", "reason": "x"}
+    check("index unavailable reported, not gated", [h for h, _ in V.tier2(down, old)],
+          ["Clerk cross-check did not run"])
+    check("no clerkCheck (older file) -> nothing", V.tier2(sound(), old), [])
     zero = {"metadata": {}, "byMember": {}, "tickerNames": {}}
     check("no trades reported", [h for h, _ in V.tier2(zero, None)], ["No trades in the file"])
     check("render says no material change",

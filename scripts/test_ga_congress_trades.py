@@ -146,6 +146,14 @@ check('a missing roster drops nobody', len(kept_no_roster), len(FILERS))
 check('a missing roster reports no departures', gone_no_roster, [])
 
 
+# A hand-pinned bioguideId keeps a filer the surname join would drop.
+pf = [{'id': 'house_new_member', 'full_name': 'Nia Newcomer', 'office': 'GA-13'}]
+kept_pin, gone_pin = drop_departed(pf, ROSTER, {'house_new_member': 'N000001'})
+check('a pinned filer is kept despite an unknown surname', len(kept_pin), 1)
+check('an unpinned unknown surname is still dropped',
+      len(drop_departed(pf, ROSTER, {})[1]), 1)
+
+
 def member(filer_id, bioguide, *dates):
     """A by_member entry carrying one Purchase per date."""
     trades = [{'transaction_date': d, 'transaction_type': 'Purchase',

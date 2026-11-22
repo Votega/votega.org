@@ -22,7 +22,17 @@ leaving Georgia's federal delegation needs no code or override change:
 
 ga-congress-trades-overrides.json remains an escape hatch for what the roster
 cannot settle (chiefly an ambiguous surname, where `bioguideId` can be pinned
-by hand), but no entry is required for ordinary delegation turnover.
+by hand, keyed by the upstream filer id: {"house_x": {"bioguideId": "X000000"}}).
+A pinned filer is also kept when its surname is not in the roster. No entry is
+required for ordinary delegation turnover.
+
+A published member with no bioguideId fails validation (tier 1), so an
+unresolved join stops the weekly commit until it is pinned.
+
+The House Clerk's yearly disclosure index is used as a second source
+(lib/clerk_disclosures.py, metadata.clerkCheck): it confirms each published
+filing is filed under Georgia, lists Georgia periodic reports missing from the
+file, and names a dropped filer who has filed in the last 90 days.
 """
 
 import json
@@ -36,6 +46,7 @@ import urllib.error
 from datetime import datetime, timezone
 
 from lib.http import fetch_json as http_fetch_json
+from lib import clerk_disclosures
 
 BASE_RAW        = "https://raw.githubusercontent.com/kadoa-org/congress-trading-monitor/main/public/data"
 FILERS_URL      = f"{BASE_RAW}/filers.json"
@@ -131,7 +142,7 @@ def delegation_office(record):
     return f"U.S. Representative · GA-{district:02d}"
 
 
-def drop_departed(ga_filers, by_surname):
+def drop_departed(ga_filers, by_surname, pinned=()):
     """Split filers into (in the current delegation, no longer in it).
 
     The upstream feed keeps filing history for members who have left -- Tom
@@ -142,6 +153,9 @@ def drop_departed(ga_filers, by_surname):
     *ambiguous* surname (candidates exist, district cannot pick one) is kept and
     published without a profile link, exactly as before.
 
+    A filer whose `filerId` has a `bioguideId` pinned in the overrides file is
+    always kept: the pin is a hand decision that this filer is a current member.
+
     If the roster is unavailable, nothing is dropped -- a missing
     current-members.json must not empty the page.
     """
@@ -149,7 +163,8 @@ def drop_departed(ga_filers, by_surname):
         return ga_filers, []
     keep, departed = [], []
     for f in ga_filers:
-        (keep if filer_surname(f.get('full_name')) in by_surname
+        (keep if (f.get('id') in pinned
+                  or filer_surname(f.get('full_name')) in by_surname)
          else departed).append(f)
     return keep, departed
 
@@ -316,6 +331,31 @@ def load_overrides():
     return {k: v for k, v in data.items() if not k.startswith('_')}
 
 
+def run_clerk_check(by_member, departed_names):
+    """Cross-check against the House Clerk index; never raises.
+
+    The index is a second source. If it cannot be fetched the check is recorded
+    as unavailable and the run goes on -- it is a safeguard, not a dependency.
+    """
+    this_year = datetime.now(timezone.utc).year
+    rows, years = [], []
+    for y in (this_year, this_year - 1):
+        got = clerk_disclosures.fetch_index(y)
+        if got is None:
+            print(f"Warning: Clerk {y} index unavailable")
+            continue
+        rows.extend(got)
+        years.append(y)
+    if not years:
+        return clerk_disclosures.unavailable("no Clerk index could be fetched")
+    result = clerk_disclosures.audit(by_member, departed_names, rows, years)
+    print(f"Clerk check: {result['verifiedDocs']} filings verified, "
+          f"{len(result['wrongState'])} wrong state, "
+          f"{result['missingCount']} GA filings not in the file, "
+          f"{len(result['departedRecent'])} departed filers with recent filings")
+    return result
+
+
 def main():
     overrides = load_overrides()
     print(f"Loaded {len(overrides)} override entries")
@@ -333,7 +373,12 @@ def main():
 
     bioguide_by_surname, delegation = load_delegation()
 
-    ga_filers, departed = drop_departed(ga_filers, bioguide_by_surname)
+    # A bioguideId pinned by hand in the overrides file settles an ambiguous or
+    # unrecognised surname; see resolve below.
+    pinned = {fid: p['bioguideId'] for fid, p in overrides.items()
+              if isinstance(p, dict) and p.get('bioguideId')}
+
+    ga_filers, departed = drop_departed(ga_filers, bioguide_by_surname, pinned)
     for f in departed:
         print(f"  Skipping {f['full_name']} ({f.get('office', '?')}) — not in "
               f"Georgia's current federal delegation")
@@ -383,8 +428,8 @@ def main():
         # Sort most-recent first
         trades.sort(key=lambda t: t.get('transaction_date', ''), reverse=True)
 
-        bioguide_id = resolve_bioguide(name, filer.get('office', ''),
-                                      bioguide_by_surname)
+        bioguide_id = pinned.get(filer_id) or resolve_bioguide(
+            name, filer.get('office', ''), bioguide_by_surname)
 
         counters = derive_counters(trades)
         report_counter_drift(name, counters, filer)
@@ -490,6 +535,8 @@ def main():
                 all_tickers.add(t['ticker'])
     ticker_names = fetch_ticker_names(all_tickers)
 
+    clerk_check = run_clerk_check(by_member, [f['full_name'] for f in departed])
+
     output = {
         'metadata': {
             'generatedAt': datetime.now(timezone.utc).isoformat(),
@@ -504,6 +551,7 @@ def main():
             'delegationChambers': sorted({m['chamber'] for m in delegation.values() if m.get('chamber')}),
             'fetchFailed': sorted(fetch_failed),
             'skippedNotInDelegation': sorted(f['full_name'] for f in departed),
+            'clerkCheck': clerk_check,
             'mergedFilers': sorted(f"{absorbed} -> {primary}"
                                    for absorbed, primary, _ in auto_merges),
             'disclaimer':  (
