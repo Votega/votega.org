@@ -97,6 +97,21 @@ def parse_pairs(values, flag):
     return out
 
 
+def exceeds_shrink(prior, value, max_shrink):
+    """True when `value` fell from `prior` by AT LEAST `max_shrink` (a fraction).
+
+    The limit is inclusive: "fail if a metric drops by 20%" must fail a drop of exactly
+    20%. A strict comparison let it through -- losing 1 of 5 GA filers is exactly -20%.
+    The epsilon absorbs float error (0.2 is not exactly representable) so an exact-limit
+    drop is not rescued by rounding. A `max_shrink` of 1 or more disables the check (a
+    metric cannot fall by more than 100%); no drop at all never fails, even at limit 0.
+    """
+    limit = abs(max_shrink)
+    if limit >= 1 or prior <= 0 or value >= prior:
+        return False
+    return (prior - value) / prior >= limit - 1e-9
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -107,7 +122,7 @@ def main():
                     help='absolute floor for a metric (repeatable)')
     ap.add_argument('--max-shrink', type=float, default=DEFAULT_MAX_SHRINK,
                     metavar='FRACTION',
-                    help=f'fail if a metric drops by more than this fraction '
+                    help=f'fail if a metric drops by this fraction or more '
                          f'versus HEAD (default {DEFAULT_MAX_SHRINK})')
     ap.add_argument('--scope-key', metavar='PATH',
                     help='dotted path to the value identifying the dataset\'s scope '
@@ -184,12 +199,11 @@ def main():
             else:
                 if prior > 0:
                     change = (value - prior) / prior
-                    limit = -abs(args.max_shrink)
                     notes.append(f'was {prior} ({change:+.1%})')
-                    if change < limit:
+                    if exceeds_shrink(prior, value, args.max_shrink):
                         failures.append(
                             f'{label}: dropped {abs(change):.1%} versus HEAD '
-                            f'({prior} -> {value}), exceeding the '
+                            f'({prior} -> {value}), reaching the '
                             f'{abs(args.max_shrink):.0%} limit'
                         )
                 elif value == 0:

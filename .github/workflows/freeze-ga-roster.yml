@@ -39,6 +39,12 @@ jobs:
         with:
           python-version: '3.x'
 
+      # Refuses (::error + exit 1) before anything is published: the freeze cannot be
+      # repeated once the incoming class is seated, so a short, doubled or mislabelled
+      # roster must never become the permanent record.
+      - name: Validate roster is whole (56 Senate + 180 House seats)
+        run: python3 scripts/validate_ga_roster_freeze.py "${{ inputs.session_slug }}"
+
       - name: Freeze roster into ga-legislators sessions/<slug>/
         env:
           GA_LEGISLATORS_TOKEN: ${{ secrets.GA_LEGISLATORS_TOKEN }}
