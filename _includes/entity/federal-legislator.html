@@ -500,7 +500,8 @@
       loadCampaignFinance(member);
       loadKeyVotes(member);
       loadEntityNews(member);
-      if (window.location.hash) {
+      const landed = await chooseInitialTab(settleKeyVotesTab());
+      if (landed) {
         const target = document.getElementById(window.location.hash.slice(1));
         if (target) target.scrollIntoView({ behavior: 'smooth' });
       }
@@ -782,7 +783,12 @@
   }
 
 
-  const DEFAULT_TAB = 'keyVotes';
+  // Key Votes is the default tab while it exists. It is removed (like In the News)
+  // when the curated list is empty - each Congress starts with none (D12/D15) - and
+  // Voting History is the default then.
+  function defaultTab() {
+    return document.querySelector('.tab-btn[data-tab="keyVotes"]') ? 'keyVotes' : 'votingHistory';
+  }
 
   // Set once the roster resolves, so the lazy tab loaders below have the member
   // without re-reading current-members.json.
@@ -813,9 +819,22 @@
       btn.addEventListener('click', () => activateTab(btn.dataset.tab, true));
     });
     window.addEventListener('popstate', () => {
-      activateTab(window.location.hash.slice(1) || DEFAULT_TAB, false);
+      const wanted = window.location.hash.slice(1);
+      if (!(wanted && activateTab(wanted, false))) activateTab(defaultTab(), false);
     });
-    if (window.location.hash) activateTab(window.location.hash.slice(1), false);
+  }
+
+  // Chooses the first tab. No tab is active in the markup: whether Key Votes exists
+  // is only known once the small curated file has been read, so deciding earlier
+  // would flash the wrong tab either way. Waits on that file alone, not on the
+  // vote index/slice (loadKeyVotes owns those), so it costs one tiny fetch.
+  // currentMember must already be set: a #votingHistory deep link loads here.
+  async function chooseInitialTab(curatedReady) {
+    await curatedReady.catch(e => console.warn('Key Votes failed to render:', e));
+    const wanted = window.location.hash.slice(1);
+    const landed = wanted ? activateTab(wanted, false) : false;  // false for a removed Key Votes
+    if (!landed) activateTab(defaultTab(), false);
+    return landed;
   }
 
   // One shared formatter (assets/scripts/campaign-finance.js) so the finance panels agree.
@@ -1223,30 +1242,56 @@
     return { votes, misaligned: seen > 0 && votes.length === 0 };
   }
 
+  // The curated list's bills, read once and shared by the tab chooser and the panel.
+  // [] when the file is empty, missing or unreadable - all three mean "no Key Votes".
+  let curatedFederalPromise = null;
+  function getCuratedFederal() {
+    if (!curatedFederalPromise) {
+      curatedFederalPromise = fetch(getBasePath() + 'assets/data/curated-federal-bills.json')
+        .then(r => r.ok ? r.json() : null)
+        .then(d => (d && Array.isArray(d.bills)) ? d.bills : [])
+        .catch(err => { console.warn('Could not load curated federal bills:', err); return []; });
+    }
+    return curatedFederalPromise;
+  }
+
+  // Same pattern as In the News: the Key Votes tab stays hidden until there is
+  // something to show, and is removed when there is not, so a #keyVotes deep link
+  // finds no tab and falls through to the default (see activateTab).
+  async function settleKeyVotesTab() {
+    const bills = await getCuratedFederal();
+    const btn = document.querySelector('.tab-btn[data-tab="keyVotes"]');
+    const panel = document.getElementById('keyVotes');
+    if (!bills.length) {
+      if (btn) btn.remove();
+      if (panel) panel.remove();
+      return;
+    }
+    if (btn) btn.hidden = false;
+  }
+
   async function loadKeyVotes(member) {
     const container = document.getElementById('keyVotes');
     if (!container || !member.bioguideId) return;
 
-    const CURATED_URL = getBasePath() + 'assets/data/curated-federal-bills.json';
+    // Empty list: nothing to fetch or render (the tab is removed by settleKeyVotesTab).
+    const bills = await getCuratedFederal();
+    if (!bills.length) return;
 
-    let curatedData, voteIdx, slice;
+    let voteIdx, slice;
     try {
       // The sidecar, not the full index: this panel needs ~15 roll calls and runs
       // on every page load. See FED_KEYVOTES_INDEX_URL above.
-      const [cRes, idx, sl] = await Promise.all([
-        fetch(CURATED_URL), getFederalKeyVoteIndex(), getFederalVoteSlice(member.bioguideId),
+      const [idx, sl] = await Promise.all([
+        getFederalKeyVoteIndex(), getFederalVoteSlice(member.bioguideId),
       ]);
-      if (!cRes.ok || !idx) return;
-      curatedData = await cRes.json();
+      if (!idx) return;
       voteIdx = idx;
       slice = sl;
     } catch (err) {
       console.warn('Could not load key votes:', err);
       return;
     }
-
-    const bills = curatedData.bills || [];
-    if (!bills.length) return;
 
     const votesIndex   = voteIdx.votes || {};
     // The member's slice is keyed on each vote's position in the FULL index, so the
@@ -1937,13 +1982,13 @@
       ${state === 'Georgia' ? `<p id="stockTradesLink" hidden><a href="${getBasePath()}ga-congress-trades.html?member=${encodeURIComponent((firstName && lastName) ? `${firstName} ${lastName}` : fallbackName)}">View stock trades by ${escHtml(fullName)} →</a></p>` : ''}
       <div class="tab-container">
         <div class="tab-nav" role="tablist" aria-label="Voting record and campaign finance" data-tabs>
-          <button class="tab-btn active" data-tab="keyVotes">Key Votes</button>
+          <button class="tab-btn" data-tab="keyVotes" hidden>Key Votes</button>
           <button class="tab-btn" data-tab="votingHistory">Voting History</button>
           ${hasSponsorship(member) ? `<button class="tab-btn" data-tab="sponsoredLegislation">Sponsored Legislation</button>` : ''}
           ${state === 'Georgia' ? `<button class="tab-btn" data-tab="campaignFinance">Campaign Finance</button>` : ''}
           <button class="tab-btn" data-tab="entityNews" hidden>In the News</button>
         </div>
-        <div id="keyVotes" class="tab-panel active"></div>
+        <div id="keyVotes" class="tab-panel"></div>
         <div id="votingHistory" class="tab-panel"></div>
         <div id="sponsoredLegislation" class="tab-panel"></div>
         ${state === 'Georgia' ? `<div id="campaignFinance" class="tab-panel"></div>` : ''}
