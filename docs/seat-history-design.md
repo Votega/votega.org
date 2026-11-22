@@ -339,10 +339,42 @@ Tier 2 (reported, commit proceeds):
 ## What it unlocks (later, not part of the first phases)
 
 1. **Open seat derived from data:** the seat's current holder isn't on the race's active ballot. This replaces the planned `openSeat` field and the `_note` text inference.
-2. **Race and legislator pages:** "Previously held by …" with dates, stopping honestly at a plan boundary or at `historyFrom`.
+2. **Race and legislator pages:** "Previously held by …" with dates, stopping honestly at a plan boundary or at `historyFrom`. The race-page panel is scoped in "Prior-cycle result panel".
 3. **Majority tracker on any date since 2023,** including vacancies.
 4. **Rollover becomes hold changes, not overwrites.** The January legislature rollover closes and opens holds; the freeze in `ga-bienniums` remains the page-permanence mechanism.
 5. **Published dataset** in `Votega/ga-district-information` (decided 2026-11-20, was D6): the seat registry with its maps, and every hold with its dates and how it ended, keyed on `vgId` with `legisGaGovId` / bioguide alongside. Publish to the sibling repo first, then add the catalog entry (the open-data rule).
+
+## Prior-cycle result panel ("Last Time")
+
+**Added 2026-11-21.** The first user-facing use of seat history, scoped from a user request to see how a district voted last cycle, mostly for open seats (the prompt was Senate District 42, whose incumbent did not run). It extends the first two items under "What it unlocks". The older plan in `docs/TO-DO.md` (prior-cycle results for statewide races only) is narrowed by this: districted seats are comparable for the immediately prior cycle.
+
+**The problem.** A race page shows the election but not how the seat voted last time. The repo holds no pre-2026 election data, so the "last result" has to be fetched.
+
+**Why 2024 only.** The 2023 maps were first used in the 2024 election, so a 2024 result is on the same lines as 2026 for GA Senate, GA House and US House. Earlier cycles are on different lines and are out. Gate it on the registry and not on a typed flag: join the 2024 contest to the seat on the **current map** (`ga-senate-42@2023`) through `seats.json`, never by district number. A district number can name a different seat on a different map (SD 42 on the 2021 map is a different seat with a different holder).
+
+**Part 1: last result.** `scripts/build_prior_cycle_results.py` fetches the Secretary of State's certified 2024 general (`https://results.sos.ga.gov/results/public/api/elections/Georgia/2024NovGen/data`, one GET, about 0.9 MB, no key) and writes `assets/data/prior-cycle-results.json`, keyed by seat id.
+- Per seat: candidates (name, party, votes, share, incumbent flag), total votes, contested, margin.
+- Contests are named `State Senate - District N`, `State House of Representatives - District N` and `US House of Representatives - District N` (56, 180 and 14 in 2024; these are the validation floors).
+- **`isWinner` is null on every candidate; compute the winner from votes.** An `(I)` in the candidate name marks the incumbent going into 2024 (52 of 56 Senate contests have one). Strip the party and `(I)` markers when storing the name.
+- 33 of 56 Senate seats were unopposed, so "unopposed" is a normal display state and not an edge case. A margin for an unopposed seat is not computed.
+- Use the atomic writer and `metadata.generatedAt` / `count`. The panel prints its own provenance line from this file ("2024 certified results, Georgia Secretary of State"), per the per-dataset provenance rule.
+- Verified 2026-11-21 against the live API (SD 42: Strickland (I) 62,551, Morgan 44,854, 107,405 votes). The file had grown about 3% since 2026-10 and `isOfficialResults` is now true.
+
+**Part 2: seat history.** Read from `seat-holds.json` and its `vacancyNotes`; do not infer anything from roster status or names.
+- "Held by X since <start>" is the current open hold's `start`, which is the date they took the seat on this map. Do not use the roster's `termStart` for this: it is a person's continuous service in the role, not the seat (Strickland's is 2018-01-16, his hold on `ga-senate-42@2023` starts 2025-01-13).
+- A seat that changed hands mid-term shows up as a hold ending `resigned`, `deceased` and so on, followed by a gap and a new hold, with the vacancy's writ and special election in `vacancyNotes`. Show the 2024 result as the **2024 result**, and add a line when the seat's holder differs from the 2024 winner. Never match 2024 names to the roster to decide this: the SoS names carry suffixes and name changes (`Lauren Wylie McDonald, III` vs `Lauren McDonald`).
+- "Open seat" should come from the derivation in item 1 of "What it unlocks". Until that lands, reuse whatever `race.html` and `elections.html` use today (the `_note` prefix) and do not add a third inference. After a race is decided, the wording must read in the past tense ("was an open seat").
+
+**UI.** A "Last Time (2024)" panel beside the existing "Earlier This Cycle" tab on the race entity page, using the same contest-card styling. It resolves its data URL through `getBasePath()` and is verified on a clean `/races/<slug>/` URL. It appears only when the seat has a 2024 result on the same map.
+
+**Out of scope here.** Statewide offices (the earlier plan covers them and would reuse the same fetcher), special elections, any cycle before 2024, and a partisan-lean score. Lean would answer the real question for uncontested seats, but it needs precinct-to-district results (the reapportionment office's district-level 2024 President and Governor figures are the first thing to check) and is a separate project.
+
+**Open questions.**
+- Whether the dataset also publishes to `Votega/ga-district-information`. If it does, the page's source footnote links the published repo and not `assets/data/`.
+- How a 2024 result is shown for a seat whose 2024 contest was decided by a special election or runoff.
+- Check that Georgia has made no map change since 2024 before relying on same-lines.
+
+**Queued after this ships:** a data dictionary (`docs/TO-DO.md`, "Data Dictionary"), seeded with the `termStart` and seat-hold definitions above.
 
 ## Publishing
 
