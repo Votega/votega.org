@@ -49,6 +49,7 @@ jobs:
       render_degraded: ${{ steps.render.outputs.degraded }}
       entities_degraded: ${{ steps.entities.outputs.degraded }}
       mcp_degraded: ${{ steps.mcp.outputs.degraded }}
+      cards_degraded: ${{ steps.cards.outputs.degraded }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -135,8 +136,19 @@ jobs:
       # so there is no browser download. Non-fatal: an entity whose card is missing
       # falls back to the default card, and a failed run leaves every page on it.
       - name: Generate share cards
+        id: cards
         run: |
-          CHROME_CHANNEL=chrome python3 scripts/build_share_cards.py || echo "share card generation failed; pages use the default card"
+          set +e
+          CHROME_CHANNEL=chrome python3 scripts/build_share_cards.py
+          code=$?
+          if [ "$code" -ne 0 ]; then
+            echo "degraded=true" >> "$GITHUB_OUTPUT"
+            echo "::error title=Share cards failed::build_share_cards.py exited $code; pages use the default card"
+            echo ":warning: **Share cards failed** (exit $code). Pages use the default card; the site still deployed." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "degraded=false" >> "$GITHUB_OUTPUT"
+          fi
+          exit 0
 
       # The MCP server's index files (assets/data/mcp/, gitignored), built from the same data
       # this deploy publishes (spec: docs/superpowers/specs/2026-10-23-mcp-server-design.md §5.1,
@@ -165,6 +177,38 @@ jobs:
           source: ./
           destination: ./_site
 
+      # THE hard gate. The generators above degrade softly (a failed one is flagged and
+      # the site still ships its fallbacks), so a non-zero exit alone does not block a
+      # deploy: that would let one flaky data-adjacent generator freeze the whole site,
+      # including the Dec 1 runoff results. What must never ship is a site that lost
+      # pages, so this fails the build job BEFORE upload/deploy (and therefore before
+      # the indexnow ping, which only follows a successful run) when the built page
+      # count is under the floor or >10% below the previous deploy. Thresholds and
+      # rationale: scripts/check_site_page_count.py.
+      - name: Restore previous page count
+        uses: actions/cache@v4
+        with:
+          path: .deploy-page-count.json
+          key: deploy-page-count-${{ github.run_id }}
+          restore-keys: |
+            deploy-page-count-
+
+      - name: Gate on built page count
+        run: |
+          set +e
+          python3 scripts/check_site_page_count.py --site _site --state .deploy-page-count.json 2>&1 | tee page-count.log
+          code=${PIPESTATUS[0]}
+          {
+            echo "### Built page count"
+            echo "\`$(grep '^SITE_PAGE_COUNT' page-count.log | tail -1)\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$code" -ne 0 ]; then
+            echo "::error title=Page count dropped::$(grep '^check_site_page_count' page-count.log | paste -sd' ') Not deploying."
+            echo ":x: **Deploy blocked**: page count dropped (see above). Check the entity-page step." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          rm -f page-count.log
+          exit "$code"
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
@@ -187,9 +231,9 @@ jobs:
     runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
     timeout-minutes: 5
     needs: [build, deploy]
-    if: ${{ always() && (needs.build.outputs.render_degraded == 'true' || needs.build.outputs.entities_degraded == 'true' || needs.build.outputs.mcp_degraded == 'true') }}
+    if: ${{ always() && (needs.build.outputs.render_degraded == 'true' || needs.build.outputs.entities_degraded == 'true' || needs.build.outputs.mcp_degraded == 'true' || needs.build.outputs.cards_degraded == 'true') }}
     steps:
       - name: Fail the run so the failure notifier fires
         run: |
-          echo "::error::Deployed, but a non-fatal generator degraded (server-render data: ${{ needs.build.outputs.render_degraded }}, entity pages: ${{ needs.build.outputs.entities_degraded }}, MCP indexes: ${{ needs.build.outputs.mcp_degraded }}). See the build job's step summary."
+          echo "::error::Deployed, but a non-fatal generator degraded (server-render data: ${{ needs.build.outputs.render_degraded }}, entity pages: ${{ needs.build.outputs.entities_degraded }}, MCP indexes: ${{ needs.build.outputs.mcp_degraded }}, share cards: ${{ needs.build.outputs.cards_degraded }}). See the build job's step summary."
           exit 1
