@@ -17,7 +17,9 @@ Source:
 
 Subjects: SOAP has no topical subject tags, so they come from the frozen Open States
 overlay assets/data/ga-bills-subjects-base.json (snapshot), then manual corrections in
-ga-bills-subjects.json (overrides win), then local-bill inference (lib.ga_bill_subjects).
+ga-bills-subjects.json (overrides win), then local-bill inference (lib.ga_bill_subjects),
+then — only for a bill still untagged — a REVIEWED AI tag from assets/data/ga-bill-ai.json
+(scripts/ai_enrich_ga_bills.py), marked subjectsSource="ai" on the bill.
 Refresh the base snapshot periodically from a historical OS pull as new bills accrue.
 
 Incremental model: only the ACTIVE session is fetched live; every closed session in
@@ -104,6 +106,7 @@ DATA_DIR          = "assets/data"
 OUTPUT_FILE       = os.path.join(DATA_DIR, "ga-bills.json")
 SUBJECTS_BASE     = os.path.join(DATA_DIR, "ga-bills-subjects-base.json")
 OVERRIDES_FILE    = os.path.join(DATA_DIR, "ga-bills-subjects.json")
+AI_FILE           = os.path.join(DATA_DIR, "ga-bill-ai.json")
 MEMBERS_FILE      = os.path.join(DATA_DIR, "ga-members.json")
 REVIEW_CSV_FILE   = os.path.join(DATA_DIR, "ga-bills-untagged-review.csv")
 ABSTRACT_MAX      = 500
@@ -410,16 +413,48 @@ def get_detail(lid):
     return root.find(".//s:GetLegislationDetailResult", ns)
 
 
-def apply_subjects(bill, base, overrides):
+def apply_subjects(bill, base, overrides, ai=None):
     """Layer the authoritative subject sources on top of the fallback map_bill() seeded.
     Precedence: manual override > frozen OS snapshot (current biennium) > the code-title /
-    local-inference fallback already on the bill (what carries a new session forward)."""
+    local-inference fallback already on the bill (what carries a new session forward)
+    > a reviewed AI tag (ga-bill-ai.json), used ONLY when every other source is empty.
+
+    AI-sourced subjects are marked subjectsSource="ai" so they stay distinguishable
+    downstream, and are cleared before re-layering: a preserved bill carries last run's
+    subjects verbatim, so without this an AI tag withdrawn from review would stick."""
     ident = bill["identifier"]
+    if bill.pop("subjectsSource", None) == "ai":
+        bill["subjects"] = []
     if ident in overrides:
         bill["subjects"] = overrides[ident]
     elif ident in base:
         bill["subjects"] = base[ident]
     # else: keep the fallback subjects map_bill() already derived from the summary/title.
+    if not bill.get("subjects") and ai:
+        entry = ai.get(ident)
+        if entry and entry["session"] == bill.get("session"):
+            bill["subjects"] = list(entry["subjects"])
+            bill["subjectsSource"] = "ai"
+
+
+def load_ai_subjects(path=AI_FILE, allowed=None):
+    """{identifier: {session, subjects}} for REVIEWED AI tags only (needsReview false).
+    Written locally by ai_enrich_ga_bills.py; a missing or unreadable file means no AI
+    layer, never a failed run. `allowed`, when given, drops any tag outside the taxonomy."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            entries = (json.load(f) or {}).get("bills", {})
+    except (OSError, ValueError):
+        return {}
+    out = {}
+    for ident, v in entries.items():
+        if not isinstance(v, dict) or v.get("needsReview", True) or not v.get("session"):
+            continue
+        subjects = [s for s in (v.get("subjects") or [])
+                    if isinstance(s, str) and (allowed is None or s in allowed)]
+        if subjects:
+            out[ident] = {"session": v["session"], "subjects": subjects}
+    return out
 
 
 def load_preserved_bills(path, sessions):
@@ -520,8 +555,10 @@ def main():
     roster = load_roster()
     base, overrides = load_subjects()
     titles_map = get_titles()   # O.C.G.A. Title -> subject name (GetTitles; OS-free vocabulary)
-    print("Loaded %d roster names, %d base subjects, %d manual overrides, %d code titles"
-          % (len(roster), len(base), len(overrides), len(titles_map)))
+    ai_subjects = load_ai_subjects(allowed=set(titles_map.values()) | {"Local / Municipal"}
+                                   if titles_map else None)
+    print("Loaded %d roster names, %d base subjects, %d manual overrides, %d reviewed AI tags, %d code titles"
+          % (len(roster), len(base), len(overrides), len(ai_subjects), len(titles_map)))
 
     bills = []
     for our_session in sessions:
@@ -559,7 +596,7 @@ def main():
             sys.exit(1)
 
     for bill in bills:
-        apply_subjects(bill, base, overrides)
+        apply_subjects(bill, base, overrides, ai_subjects)
 
     bills.sort(key=lambda b: (b.get("session") or "", b.get("chamber") or "", b.get("identifier") or ""))
 
