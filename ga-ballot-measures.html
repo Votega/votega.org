@@ -290,8 +290,14 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
       : '';
 
     const leg = m.enablingLegislation;
+    // A bare ?bill= names a number, and numbers restart each General Assembly, so a
+    // measure from 2026 would open the wrong bill once 2027's HR 32 exists. The
+    // bill's own id is the last segment of its legis.ga.gov URL
+    // (…/legislation/69433), and ga-bills.html matches on it first, in the current
+    // file and then in the frozen earlier ones.
+    const legisId = leg && leg.url ? (String(leg.url).match(/\/legislation\/(\d+)\/?(?:[?#].*)?$/) || [])[1] : '';
     const legHtml = leg && leg.identifier
-      ? `<a href="${getBasePath()}ga-bills.html?bill=${encodeURIComponent(leg.identifier)}">Enabling legislation: ${escHtml(leg.identifier)} →</a>`
+      ? `<a href="${getBasePath()}ga-bills.html?bill=${encodeURIComponent(leg.identifier)}${legisId ? `&legislationId=${legisId}` : ''}">Enabling legislation: ${escHtml(leg.identifier)} →</a>`
       : '';
 
     const fullTextHtml = m.fullText
