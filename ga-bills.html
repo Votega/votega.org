@@ -246,6 +246,18 @@ breadcrumb:
     margin-bottom: 4px;
   }
   .detail-body { font-size: 0.875rem; color: var(--color-text); line-height: 1.55; }
+  .summary-badge {
+    display: inline-block;
+    margin-left: 0.35rem;
+    padding: 0 0.4rem;
+    border: 1px solid var(--color-border, currentColor);
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: none;
+  }
+  .summary-note { margin-top: 0.3rem; font-size: 0.75rem; color: var(--color-text-muted); line-height: 1.45; }
 
   .vote-bar-section { margin-top: 0.75rem; }
   .vote-bar-header {
@@ -833,6 +845,34 @@ breadcrumb:
     return truncated ? out + '\u2026' : out;
   }
 
+  // ── Plain-English summary (editor-written or reviewed AI) ─────────────────
+  // ga-bill-summaries.json is built by scripts/ai_enrich_ga_bills.py and holds only
+  // what may be shown: editor summaries (curated summaryOverride, which always win)
+  // and AI summaries a person has reviewed. Unreviewed drafts never reach this file.
+  // Keyed "<session>|<identifier>" because bill numbers restart each biennium. A
+  // missing file or entry leaves the card exactly as it was.
+  const SUMMARIES_URL = '/assets/data/ga-bill-summaries.json';
+  let billSummaries = {};
+
+  function summaryHtml(bill) {
+    const s = billSummaries[(bill.session || '') + '|' + bill.identifier];
+    if (!s || !s.text) return '';
+    const isAi = s.source === 'ai';
+    const official = bill.billUrl
+      ? ' <a href="' + escHtml(bill.billUrl) + '" target="_blank" rel="noopener">Read the official bill</a>.'
+      : '';
+    const note = isAi
+      ? 'Written by AI from the official bill and reviewed by a person. It can miss details; the bill itself is the record.'
+        + official + ' <a href="/about-the-data#ai-bill-summaries">How this works</a>'
+      : 'Written by Votega.' + official;
+    return '<div class="detail-section bill-summary">'
+      + '<div class="detail-label">Summary'
+      + (isAi ? ' <span class="summary-badge">AI summary</span>' : '') + '</div>'
+      + '<div class="detail-body">' + escHtml(s.text) + '</div>'
+      + '<div class="summary-note">' + note + '</div>'
+      + '</div>';
+  }
+
   // ── Stable per-bill anchor ────────────────────────────────────────────────
   // Keyed by session + identifier ("HB 111" in 2025_26 -> "bill-2025_26-HB111"), not
   // list index, so a link survives filtering/sorting/pagination. The session is part
@@ -877,6 +917,7 @@ breadcrumb:
     // kept verbatim behind the disclosure, because the trimmed form is a reading
     // aid and the official text is the record.
     const gist = billGist(bill.abstract);
+    const summary = summaryHtml(bill);
     const abstract = bill.abstract
       ? '<div class="detail-section"><div class="detail-label">What it does</div>'
         + '<div class="detail-body">' + escHtml(gist || bill.abstract) + '</div>'
@@ -925,6 +966,7 @@ breadcrumb:
       + '</div>'
       + '</div>'
       + '<div class="bill-detail">'
+      + summary
       + abstract
       + governorDetail
       + allSponsors
@@ -1538,7 +1580,13 @@ breadcrumb:
     });
   }).catch(function () {});
 
-  linkDataReady.then(function () { return fetch(DATA_URL); })
+  // Small and optional: loaded alongside the roster, and a failure only means no summaries.
+  const summariesReady = fetch(SUMMARIES_URL)
+    .then(function (r) { return r.ok ? r.json() : {}; })
+    .then(function (d) { billSummaries = (d && d.summaries) || {}; })
+    .catch(function () {});
+
+  Promise.all([linkDataReady, summariesReady]).then(function () { return fetch(DATA_URL); })
     .then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();

@@ -165,6 +165,19 @@ A bill is tagged "⚡ Party-line" if any of its recorded passage votes met this 
 - **Scope:** All bills and resolutions from the 2025–26 regular session.
 - **Freshness:** Current and periodically refreshed, given the 2025-2026 Regular Georgia Legislative Session has ended.
 
+### AI bill summaries
+
+Some bill cards on [Georgia Bills](/ga-bills) carry a short **Summary** above "What it does". It comes from one of two places, and the card says which:
+
+- **Written by Votega:** a summary our editors wrote for a key bill. Where one exists, it is always the one shown.
+- **AI summary:** written by AI from the official bill, then **reviewed by a person before it appears**. Drafts nobody has reviewed are never shown.
+
+**How they are made.** A language model running on our own computer (Qwen 2.5, through Ollama) drafts a summary of each bill from its official title and caption. For key bills, and for bills whose caption is too thin to explain them, a second pass with Anthropic's Claude reads the bill text itself (from legis.ga.gov) and rewrites the draft. Nothing AI-related runs on this website or sees anything about its visitors: summaries are produced ahead of time and published as a static file.
+
+**The rules the AI is given.** Use only the bill's own text. No opinions, predictions, or calling a bill good or bad. No mention of parties or sponsors' motives. Plain English at about an 8th-grade reading level. Never guess at text that is cut off.
+
+**Limits.** AI summaries can leave out provisions or simplify them, and a person's review is a check, not a guarantee. The official bill, linked from every card, is the record; the untouched official caption stays on the card too. The same process suggests subject tags, which are used only for bills no official source tags, and only after review. To report a wrong summary, see [Corrections and Feedback](#corrections-and-feedback).
+
 ---
 
 ## [GA Legislators — Published for Reuse](https://github.com/Votega/ga-legislators)
