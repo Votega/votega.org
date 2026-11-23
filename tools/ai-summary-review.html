@@ -14,14 +14,20 @@
   -->
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; font-size: 14px; background: #f5f5f5; color: #222; }
+    body { font-family: system-ui, sans-serif; font-size: 14px; background: #f5f5f5; color: #222;
+           height: 100vh; display: flex; flex-direction: column; }
     header { background: #1e3a5f; color: #fff; padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
     header h1 { font-size: 1rem; font-weight: 600; margin-right: auto; }
     .status { font-size: 0.78rem; opacity: 0.85; }
-    .runnote { background: #fef3c7; color: #78350f; padding: 0.5rem 1.25rem; font-size: 12.5px; line-height: 1.7; border-bottom: 1px solid #fde68a; }
+    .runnote { background: #fef3c7; color: #78350f; padding: 0.45rem 1.25rem; font-size: 12.5px; line-height: 1.55; border-bottom: 1px solid #fde68a; flex: none; max-height: 45vh; overflow-y: auto; }
+    .runnote summary { cursor: pointer; font-weight: 600; }
+    .runnote ol { margin: 0.35rem 0 0.2rem 1.3rem; display: grid; gap: 0.3rem; }
+    .runnote li::marker { font-weight: 700; }
+    .runnote .sub { color: #92400e; font-size: 12px; }
     .runnote code { background: #fffbeb; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
-    .runnote button { padding: 0.15rem 0.6rem; font-size: 12px; margin: 0 0.4rem; }
-    .layout { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 52px - 62px); }
+    .runnote button { padding: 0.1rem 0.55rem; font-size: 11.5px; margin-left: 0.35rem; }
+    header { flex: none; }
+    .layout { display: grid; grid-template-columns: 320px 1fr; flex: 1; min-height: 0; }
     .sidebar { background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; overflow: hidden; }
     .sidebar-top { padding: 0.6rem; border-bottom: 1px solid #eee; display: flex; flex-direction: column; gap: 0.4rem; }
     .list { flex: 1; overflow-y: auto; }
@@ -75,13 +81,28 @@
   <button class="sec" id="btn-open">Open repo folder</button>
   <button class="sec" id="btn-reload" disabled>Reload data</button>
 </header>
-<div class="runnote">
-  <strong>When you're done reviewing:</strong> decisions are saved to <code>_data/ga_bill_ai_decisions.json</code> only. Apply them from the repo root
-  (<code>C:\Users\justi\Documents\GitHub\votega.org</code>):
-  <code id="runcmd">python scripts/ai_enrich_ga_bills.py apply-reviews</code>
-  <button class="sec" id="btn-copy">Copy command</button>
-  Then check <code>git diff</code> and commit the decisions file, <code>assets/data/ga-bill-ai.json</code> and <code>assets/data/ga-bill-summaries.json</code> together.
-</div>
+<details class="runnote" id="steps" open>
+  <summary>How a review session works (click to hide)</summary>
+  <ol>
+    <li><strong>Start on a fresh branch.</strong> In the repo root (<code>C:\Users\justi\Documents\GitHub\votega.org</code>), update <code>main</code> and branch from it:
+      <code>git switch main; git pull; git switch -c ai-review-$(Get-Date -Format yyyy-MM-dd)</code><button class="sec copy" data-cmd="git switch main; git pull; git switch -c ai-review-$(Get-Date -Format yyyy-MM-dd)">Copy</button>
+      <span class="sub">(PowerShell; names the branch with today's date)</span>
+      <div class="sub">Then click <strong>Open repo folder</strong> above and choose <code>votega.org</code>.</div></li>
+    <li><strong>Review.</strong> For each bill, read the caption and summary (open the bill text when a warning asks you to).
+      <strong>Approve (A)</strong>, editing the text or tags first if needed. Or write a note and <strong>Send back for redo (R)</strong>. <strong>Skip (S)</strong> moves on.
+      <div class="sub">Every click is saved to <code>_data/ga_bill_ai_decisions.json</code> right away. Nothing reaches the site yet.</div></li>
+    <li><strong>Apply your decisions:</strong>
+      <code>python scripts/ai_enrich_ga_bills.py apply-reviews</code><button class="sec copy" data-cmd="python scripts/ai_enrich_ga_bills.py apply-reviews">Copy</button>
+      <div class="sub">It lists what changed. Lines marked STALE are decisions on text that has since been refined; they are skipped, which is expected.</div></li>
+    <li><strong>Sent any back? Refine them</strong> (uses your Claude plan, one call per bill; add <code>--limit 10</code> for a batch):
+      <code>python scripts/ai_enrich_ga_bills.py refine --redo-only</code><button class="sec copy" data-cmd="python scripts/ai_enrich_ga_bills.py refine --redo-only">Copy</button>
+      <div class="sub">Then click <strong>Reload data</strong>. They come back under "To review" with new full-text summaries. Repeat steps 2 and 3 for them.</div></li>
+    <li><strong>Check and commit.</strong> Run <code>git diff --stat</code>. All three files should change. Commit them together, push, and open a PR to <code>main</code>:
+      <code>git add _data/ga_bill_ai_decisions.json assets/data/ga-bill-ai.json assets/data/ga-bill-summaries.json</code><button class="sec copy" data-cmd="git add _data/ga_bill_ai_decisions.json assets/data/ga-bill-ai.json assets/data/ga-bill-summaries.json">Copy</button>
+      <div class="sub">Never edit <code>ga-bill-ai.json</code> by hand. <code>apply-reviews</code> is the only thing that should change it.</div></li>
+    <li><strong>After merging, it shows up:</strong> summaries on <code>/ga-bills</code> at the next site deploy; approved tags for untagged bills at the next Sunday <code>update-ga-bills</code> run (or start it by hand); Key Votes at its Tue/Thu run, only for curated bills with no summary of your own.</li>
+  </ol>
+</details>
 <div class="layout">
   <aside class="sidebar">
     <div class="sidebar-top">
@@ -101,7 +122,7 @@
     <div class="list" id="list"></div>
   </aside>
   <main class="main" id="main"><div class="empty">
-    Click <strong>Open repo folder</strong> and choose <code>votega.org</code> (the repo root). The tool reads the AI drafts and bill data from
+    Follow the steps above. Start by clicking <strong>Open repo folder</strong> and choosing <code>votega.org</code> (the repo root). The tool reads the AI drafts and bill data from
     <code>assets/data/</code> and saves your decisions to <code>_data/ga_bill_ai_decisions.json</code> after every click.
     It never changes the data files itself; <code>apply-reviews</code> does that, and skips any decision made on text that has since been re-drafted.
   </div></main>
@@ -382,10 +403,18 @@ $('btn-reload').onclick = async () => {
   if (!rootHandle) return;
   try { await loadAll(); toast('Reloaded'); } catch (err) { alert('Could not reload: ' + err.message); }
 };
-$('btn-copy').onclick = async () => {
-  try { await navigator.clipboard.writeText($('runcmd').textContent); toast('Command copied'); }
-  catch (err) { toast('Select the command and copy it by hand'); }
-};
+document.querySelectorAll('.runnote .copy').forEach(b => {
+  b.onclick = async ev => {
+    ev.preventDefault();
+    try { await navigator.clipboard.writeText(b.dataset.cmd); toast('Copied'); }
+    catch (err) { toast('Select the command and copy it by hand'); }
+  };
+});
+// Remember whether the steps are collapsed (a convenience only; works without storage).
+try {
+  if (localStorage.getItem('aiReviewStepsOpen') === '0') $('steps').open = false;
+  $('steps').addEventListener('toggle', () => { try { localStorage.setItem('aiReviewStepsOpen', $('steps').open ? '1' : '0'); } catch (e) {} });
+} catch (e) { /* storage unavailable */ }
 $('search').oninput = () => renderList();
 $('filter').onchange = () => renderList();
 document.addEventListener('keydown', ev => {
