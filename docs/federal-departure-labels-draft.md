@@ -1,6 +1,8 @@
-# Federal departure labels, draft (NOT approved)
+# Federal departure labels, batch 1 (approved)
 
-Drafted 2026-11-23 for the approval step in D6 and D12 of `ga-biennium-rollover-decisions.md`. **Nothing here is approved.** The page reads only `assets/data/federal-departure-labels.json`, which is empty until the site owner approves entries (approval cutoff: 4 January 2027, a week before the GA rollover; the federal pages must be live before 2027-01-03, and they work without labels: the banner then says only that the member served in the 119th Congress).
+**Approved by the site owner on 2026-11-23:** the four labels in section A, exactly as drafted, and now in `assets/data/federal-departure-labels.json`. Loudermilk's "did not run" is accepted on the primary-ballot evidence. Blair keeps both sentences. Section B (Greene, Scott) is **not** approved and gets no page; it stays here as a draft until the dates are sourced and the owner wants pages built.
+
+Drafted 2026-11-23 for the approval step in D6 and D12 of `ga-biennium-rollover-decisions.md`. The page reads only `assets/data/federal-departure-labels.json`, which is empty until the site owner approves entries (approval cutoff: 4 January 2027, a week before the GA rollover; the federal pages must be live before 2027-01-03, and they work without labels: the banner then says only that the member served in the 119th Congress).
 
 Rules are the GA batches' (D6): only the fact and a date; "lost" and "did not run", never "retired", "ousted" or "unseated"; no label names the winner of a contest the member lost; vote figures stay in the evidence column; each label links the certified results page that sources it (the page prints "Certified results: ..." after the label).
 
