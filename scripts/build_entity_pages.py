@@ -33,6 +33,7 @@ from lib.ga_ledger import load_ledger, current_path
 from lib.ga_former import (load_frozen, former_records, bienniums_for, departure_sentence,
                            departure_note, job_title)
 from lib.ga_sessions import session_slug
+from lib import federal_pages as fedp
 from lib.candidate_standing import LIVE, OFF_BALLOT, LOST, WON, overall, standing, officeholder_target
 import os
 import re
@@ -1160,11 +1161,17 @@ def build_federal_legislators(records, urls, prior, new_state):
     data_date = _date_only((data.get("metadata") or {}).get("generatedAt"))
     seen = set()
     count = 0
+    # Members of a frozen Congress who are no longer sitting (rollover decision D12): they keep
+    # their page, built from the frozen record below. A roster that still lists one with
+    # currentMember false must not also get a "sitting" page built from the live record.
+    frozen = fedp.load_frozen(os.path.join(SRC_DIR, "federal-congresses"))
+    former = fedp.former_records(data.get("members") or [], frozen)
+    former_ids = {r["bioguideId"] for r, _slug in former}
     for rec in records:
         if rec.get("category") != "U.S. Congress":
             continue
         bid = qs_id(rec["url"], "bioguideId")
-        if not bid:
+        if not bid or bid in former_ids:
             continue
         m = members.get(bid, {})
         name = " ".join(x for x in (m.get("firstName"), m.get("lastName")) if x)
@@ -1227,6 +1234,115 @@ def build_federal_legislators(records, urls, prior, new_state):
                  photo=_portrait((m.get("depiction") or {}).get("imageUrl")),
                  stamp=data_date, source="congress.gov")
         count += 1
+    count += _build_former_federal(former, frozen, data, urls, seen, prior, new_state)
+    return count
+
+
+def _former_federal_banner(m, slug, label, holder):
+    """The "Former member" banner: fact and date only (D6), then the approved label, whose
+    certified-results links are how each departure is sourced, then the seat's holder."""
+    sentence = html.escape(fedp.departure_sentence(m, slug))
+    if label:
+        sentence += " " + html.escape(label["label"].rstrip(".")) + "."
+        links = [f'<a href="{html.escape(r["url"], quote=True)}">{html.escape(r["title"])}</a>'
+                 for r in (label.get("results") or []) if r.get("url") and r.get("title")]
+        if links:
+            sentence += " Certified results: " + "; ".join(links) + "."
+    if holder:
+        sentence += (f' The seat is now held by <a href="{html.escape(holder[1], quote=True)}">'
+                     f'{html.escape(holder[0])}</a>.')
+    return ('<p class="former-member-banner"><i class="fa-solid fa-clock-rotate-left" '
+            f'aria-hidden="true"></i> {sentence}</p>\n')
+
+
+def _build_former_federal(former, frozen, data, urls, seen, prior, new_state):
+    """One page per frozen-Congress member who is no longer sitting (decision D12, option B),
+    at the URL the freeze promised; plus a redirect from any promised URL a sitting member's
+    page no longer occupies. Built from the frozen on-site copy (assets/data/federal-congresses/),
+    never from the live roster, which no longer lists them. A promised URL with no page raises
+    AFTER every other page is written, so main() reports the category degraded rather than dying."""
+    labels = fedp.load_labels(os.path.join(SRC_DIR, "federal-departure-labels.json"))
+    promised = fedp.frozen_urls(frozen)
+    us_urls = urls.setdefault("us-congress", {})
+    holders = {}
+    for m in data.get("members") or []:
+        bid = m.get("bioguideId")
+        if (bid in us_urls and m.get("state") == "Georgia" and m.get("currentMember") is not False
+                and not fedp.is_senate(m) and isinstance(m.get("district"), int)):
+            holders[m["district"]] = (fedp.member_name(m), us_urls[bid])
+    count, built = 0, set()
+    for m, slug in former:
+        bid = m["bioguideId"]
+        permalink = promised.get(bid) or fedp.federal_permalink(m)
+        pslug = permalink.strip("/").split("/")[-1]
+        if pslug in seen:
+            raise RuntimeError(f"former member {bid} would take the page URL {permalink}, "
+                               f"which a sitting member already has")
+        seen.add(pslug)
+        built.add(bid)
+        urls.setdefault("us-congress-former", {})[bid] = permalink
+        name = fedp.member_name(m)
+        district = m.get("district")
+        party = m.get("partyName") or ""
+        sen = fedp.is_senate(m)
+        role = "U.S. Senator" if sen else "U.S. Representative"
+        chamber = "U.S. Senate" if sen else "U.S. House of Representatives"
+        years = "–".join(str(y) for y in fedp.congress_slug_years(slug))
+        label = labels.get(bid)
+        _dir_add("congress", f"Former Members from Georgia ({slug} Congress)", 2,
+                 (district if isinstance(district, int) else 0, name),
+                 (f"{name} — District {district}" if district and not sen else name), permalink)
+        dist_txt = f", Georgia District {district}" if district and not sen else " for Georgia"
+        share_title = f"{name} — Former {role}{dist_txt}"
+        desc = (f"Former {role}{dist_txt}. Voting record, sponsored legislation and committee "
+                f"assignments for {name} in the {slug} Congress ({years}).")
+        ld = json_ld({
+            "@context": "https://schema.org", "@type": "Person", "name": name,
+            "jobTitle": fedp.job_title(m), "url": SITE_URL + permalink,
+            "memberOf": {"@type": "GovernmentOrganization", "name": chamber},
+            "affiliation": party or None,
+        })
+        banner = _former_federal_banner(m, slug, label, holders.get(district) if not sen else None)
+        entity = {"type": "us-congress", "id": bid, "name": name, "title": fedp.job_title(m),
+                  "chamber": chamber, "district": district, "party": party,
+                  "former": {"congress": slug, "leftOffice": fedp.term_end_text(slug),
+                             "label": label["label"] if label else None}}
+        manifest = frozen[slug]["manifest"]
+        data_date = _date_only(manifest.get("frozenAt"))
+        lastmod = resolve_lastmod(permalink, {"e": entity, "t": share_title, "d": desc, "b": banner},
+                                  data_date, prior, new_state)
+        fm = {"layout": "default", "title": yaml_quote(name),
+              "share-title": yaml_quote(share_title), "share-description": yaml_quote(desc),
+              "permalink": permalink, "last_modified_at": lastmod, "entity": entity}
+        bc = breadcrumbs(fm, [("Home", "/"), ("U.S. Congress", "/federal-reps"), (name, None)])
+        ve = {"id": bid, "frozen": slug, "former": {"leftOffice": fedp.term_end_text(slug)}}
+        body = (f'<script>window.VOTEGA_ENTITY = {json.dumps(ve)};</script>\n'
+                f"{ld}\n{bc}\n{banner}"
+                f"{{% include entity/federal-legislator.html %}}")
+        write_page("us-congress", pslug, fm, body)
+        add_card("us-congress", pslug, name, kind="person",
+                 role=(f"U.S. House · Georgia District {district}" if district and not sen
+                       else f"{role} · Georgia"),
+                 party=party or None, badges=["Former Officeholder"],
+                 fact="Votes, sponsored bills & committees",
+                 photo=_portrait((m.get("depiction") or {}).get("imageUrl")),
+                 stamp=data_date, source="congress.gov")
+        count += 1
+    # Every URL a freeze promised must resolve: a sitting member's moved page redirects.
+    missing = []
+    for bid, path in sorted(promised.items()):
+        if bid in built:
+            continue
+        live = us_urls.get(bid)
+        if not live:
+            missing.append(bid)
+        elif live != path:
+            write_page("us-congress", path.strip("/").split("/")[-1],
+                       {"permalink": path, "redirect_to": SITE_URL + live, "sitemap": "false"}, "")
+            count += 1
+    if missing:
+        raise RuntimeError("frozen federal member(s) with no page (neither sitting nor built as "
+                           "former): " + ", ".join(missing))
     return count
 
 
