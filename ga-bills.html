@@ -10,7 +10,7 @@ breadcrumb:
 ---
 
 <h1>Georgia General Assembly: Bills &amp; Resolutions</h1>
-<p>Browse legislation from the 2025–2026 General Assembly, including the 2026 special session. Data sourced from the <a href="https://www.legis.ga.gov/" target="_blank" rel="noopener">Georgia General Assembly</a> (legis.ga.gov).</p>
+<p id="billsIntro">Browse legislation from the 2025–2026 General Assembly, including the 2026 special session. Data sourced from the <a href="https://www.legis.ga.gov/" target="_blank" rel="noopener">Georgia General Assembly</a> (legis.ga.gov).</p>
 <p class="data-note" id="billsDataNote" style="display:none"></p>
 
 <style>
@@ -384,6 +384,16 @@ breadcrumb:
 </script>
 {%- endif -%}
 
+{%- comment -%}
+  Earlier General Assemblies frozen on the site (scripts/freeze_ga_bills.py writes
+  assets/data/ga-bienniums/<tag>/ga-bills.json at a rollover). Listed from the built
+  file set, so the page makes no request to find out and, until a freeze exists, this
+  is empty and the page is exactly the single-biennium page. The files themselves are
+  fetched only when a reader picks one (or a link needs one).
+{%- endcomment -%}
+{%- assign frozen_bill_files = site.static_files | where_exp: "f", "f.name == 'ga-bills.json' and f.path contains '/assets/data/ga-bienniums/'" -%}
+<div id="billsFrozen" hidden data-tags="{% for f in frozen_bill_files %}{{ f.path | split: '/' | reverse | slice: 1, 1 | first }}{% unless forloop.last %},{% endunless %}{% endfor %}"></div>
+
 <div id="billsStats" class="bills-stats" style="display:none"></div>
 
 {%- comment -%}
@@ -418,6 +428,8 @@ breadcrumb:
     <select id="billSubject">
       <option value="">All subjects</option>
     </select>
+    <label class="sr-only" for="billBiennium">General Assembly</label>
+    <select id="billBiennium" style="display:none"></select>
     <label class="sr-only" for="billSession">Filter by session</label>
     <select id="billSession" style="display:none">
       <option value="">All sessions</option>
@@ -468,14 +480,17 @@ breadcrumb:
 <div class="bills-pagination" id="billsPagination"></div>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/ga-bills-resolve.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
 (function () {
   'use strict';
 
-  // Page-relative path (the site is served at the domain root, so this resolves
-  // to /assets/data/ga-bills.json).
-  const DATA_URL  = 'assets/data/ga-bills.json';
+  // Root-absolute: the site is served at the domain root, and a bare-relative
+  // path would break if this page were ever reached under a directory.
+  const DATA_URL  = '/assets/data/ga-bills.json';
+  const FROZEN_DIR = '/assets/data/ga-bienniums/';   // <tag>/ga-bills.json, see freeze_ga_bills.py
   const PER_PAGE  = 50;
+  const RESOLVE   = VoteGA.billsResolve;
 
   let allBills     = [];
   let filtered     = [];
@@ -488,6 +503,17 @@ breadcrumb:
   let sessionNames  = {};       // session id -> display name (from metadata.sessions)
   let billsMeta     = {};       // ga-bills.json metadata, kept for stat rebuilds
   let multiSession  = false;    // more than one session present -> show session UI
+  // Which General Assembly is on screen. '' is the live file (the CURRENT biennium,
+  // and the only one a visitor downloads unless they ask); a tag like '2025_26' is a
+  // frozen earlier one, fetched on demand and kept so switching back is free.
+  let activeTag     = '';
+  let liveBiennium  = '';       // live file's metadata.biennium, e.g. '2025-2026'
+  let liveData      = null;     // parsed live file
+  const frozenData  = {};       // tag -> parsed frozen file
+  const frozenTags  = (function () {
+    const el = document.getElementById('billsFrozen');
+    return ((el && el.dataset.tags) || '').split(',').filter(function (t) { return t && RESOLVE.tagToBiennium(t); });
+  }());
 
   // ── DOM refs ──────────────────────────────────────────────────────────────
   const elLoading    = document.getElementById('billsLoading');
@@ -502,6 +528,7 @@ breadcrumb:
   const elSearch     = document.getElementById('billSearch');
   const elSubject    = document.getElementById('billSubject');
   const elSession    = document.getElementById('billSession');
+  const elBiennium   = document.getElementById('billBiennium');
   const elSort       = document.getElementById('billSort');
 
   // ── Status classification ─────────────────────────────────────────────────
@@ -806,10 +833,12 @@ breadcrumb:
   }
 
   // ── Stable per-bill anchor ────────────────────────────────────────────────
-  // Keyed by identifier (e.g. "HB 111" -> "bill-HB111") rather than list index,
-  // so a link to a specific bill survives filtering/sorting/pagination changes.
-  function billAnchorId(identifier) {
-    return 'bill-' + String(identifier).replace(/\s+/g, '');
+  // Keyed by session + identifier ("HB 111" in 2025_26 -> "bill-2025_26-HB111"), not
+  // list index, so a link survives filtering/sorting/pagination. The session is part
+  // of the key because bill numbers restart each General Assembly. The old
+  // "bill-HB111" form still works as a #hash (see routeFromURL).
+  function billAnchorId(bill) {
+    return RESOLVE.anchorId(bill);
   }
 
   // A session badge is shown only for a NON-regular session (e.g. the special
@@ -871,7 +900,7 @@ breadcrumb:
       + (bill.textUrl ? '<a class="detail-link" href="' + escHtml(bill.textUrl) + '" target="_blank" rel="noopener">&#128196; Bill text</a>' : '')
       + '</div>';
 
-    const anchorId = billAnchorId(bill.identifier);
+    const anchorId = billAnchorId(bill);
     return '<div class="bill-card" id="' + anchorId + '">'
       + '<div class="bill-card-header" onclick="toggleBill(\'' + anchorId + '\')" aria-expanded="false">'
       + '<div class="bill-top-row">'
@@ -1018,6 +1047,8 @@ breadcrumb:
 
   // ── Populate subject dropdown ──────────────────────────────────────────────
   function buildSubjectDropdown() {
+    // Rebuilt per dataset (switching General Assembly): keep only "All subjects".
+    while (elSubject.options.length > 1) elSubject.remove(1);
     const counts = {};
     allBills.forEach(function (b) {
       (b.subjects || []).forEach(function (s) { counts[s] = (counts[s] || 0) + 1; });
@@ -1036,6 +1067,10 @@ breadcrumb:
   // (e.g. once the 2026 special session appears). Built from metadata.sessions so
   // it stays data-driven; counts come from the bills actually present.
   function buildSessionDropdown(meta) {
+    // Rebuilt per dataset: keep only "All sessions" and hide until there is a choice.
+    while (elSession.options.length > 1) elSession.remove(1);
+    elSession.style.display = 'none';
+    sessionNames = {};
     const sessions = (meta.sessions || []).filter(function (s) { return s.id; });
     sessions.forEach(function (s) { sessionNames[s.id] = s.name || s.id; });
     const counts = {};
@@ -1182,55 +1217,126 @@ breadcrumb:
 
   function escHtml(value) { return VoteGA.escapeHtml(value); }
 
-  // ── Deep-link to a specific bill via ?bill=HB111 ────────────────────────────
-  function normalizeIdentifier(s) {
-    return String(s).replace(/\s+/g, '').toUpperCase();
+  // ── Which General Assembly is on screen ───────────────────────────────────
+  // The live file is the current biennium; earlier ones are frozen files fetched only
+  // when a reader (or a link that needs one) asks. Until a freeze exists frozenTags is
+  // empty and none of this is reachable.
+  function bienniumLabel(tag) {
+    return (RESOLVE.tagToBiennium(tag) || tag).replace('-', '–');
   }
 
-  function jumpToBillFromURL() {
-    const params    = new URLSearchParams(window.location.search);
-    const billParam = params.get('bill');
-    // legislationId is the bill's own id and is unique across bienniums; `bill=` is
-    // an identifier string, which is only unique within one. Links from a member's
-    // page send both, so match on the id first and keep the identifier for the
-    // search fallback and the not-carried notice below.
-    const legisParam = params.get('legislationId');
-    if (!billParam && !legisParam) { applyFilters(); return; }
+  function prepare(data) {
+    const bills = (data.bills || []).map(function (b) {
+      b._status = classifyStatus(b);
+      b._partyLine = (b.passageVotes || []).some(function (v) {
+        const pli = computePartyLineInfo(v.partyTally);
+        // Same bar the detail tag uses, so the badge and the filter can never
+        // claim a party-line vote the vote panel declines to tag.
+        return pli && pli.isPartyLine && partyLineIsSound(v) && !hasLowCoverage(v);
+      });
+      return b;
+    });
+    return { data: data, bills: bills };
+  }
 
-    const target = billParam ? normalizeIdentifier(billParam) : null;
-    const bill = legisParam
-      ? allBills.find(function (b) { return String(b.legislationId) === String(legisParam); })
-      : allBills.find(function (b) { return normalizeIdentifier(b.identifier) === target; });
+  function setUrlParams(updates) {
+    try {
+      const url = new URL(window.location.href);
+      Object.keys(updates).forEach(function (k) {
+        if (updates[k]) url.searchParams.set(k, updates[k]); else url.searchParams.delete(k);
+      });
+      window.history.replaceState({}, '', url);
+    } catch (err) { /* non-critical */ }
+  }
 
-    if (!bill) {
-      // A legislationId we don't carry is a bill from an earlier biennium — this
-      // file holds the current one. Say so and point at the official record, rather
-      // than searching the identifier and opening whichever bill of THIS biennium
-      // happens to reuse that number.
-      if (legisParam) {
-        const notice = document.getElementById('billsNotice');
-        if (notice) {
-          notice.innerHTML = (billParam ? '<strong>' + escHtml(billParam) + '</strong> is not' : 'That bill is not')
-            + ' in this biennium&rsquo;s bill file — it is from an earlier session. '
-            + '<a href="https://www.legis.ga.gov/legislation/' + encodeURIComponent(legisParam)
-            + '" target="_blank" rel="noopener">View it on legis.ga.gov &#8599;</a>';
-          notice.style.display = '';
-        }
-        applyFilters();
-        return;
-      }
-      // No exact match — fall back to a search for the requested identifier so
-      // the visitor lands somewhere useful instead of a silent no-op.
-      elSearch.value = billParam;
-      applyFilters();
-      return;
+  function loadFrozen(tag) {
+    if (frozenData[tag]) return Promise.resolve(frozenData[tag]);
+    return fetch(FROZEN_DIR + encodeURIComponent(tag) + '/ga-bills.json')
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (data) { return (frozenData[tag] = prepare(data)); });
+  }
+
+  function dataNoteHtml(meta, tag) {
+    const open = ' Open data: <a href="https://github.com/Votega/ga-legislation" target="_blank" rel="noopener">Votega/ga-legislation</a>.';
+    if (tag) {
+      return 'This is the frozen record of the ' + escHtml(bienniumLabel(tag)) + ' General Assembly'
+        + (meta.generatedAt ? ' as of ' + escHtml(meta.generatedAt.slice(0, 10)) : '')
+        + '. It is not updated. Bill numbers restart each General Assembly, so a number here can be a different bill in the current one.'
+        + open;
     }
+    const withVotes = allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length;
+    const withParty = allBills.filter(function (b) {
+      return (b.passageVotes || []).some(function (v) { return v.partyTally; });
+    }).length;
+    const coverageNote = withVotes && withParty < withVotes
+      ? ' Party-line tags and Democrat/Republican vote tallies are still being backfilled. Available for ' + withParty.toLocaleString() + ' of ' + withVotes.toLocaleString() + ' bills with recorded votes, so some party-line votes may not yet be flagged.'
+      : '';
+    return 'Data from the Georgia General Assembly (legis.ga.gov), refreshed weekly. Last data pull generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) + (window.VotegaFreshness ? window.VotegaFreshness.suffix('ga-bills', meta.generatedAt) : '') : '') + '. Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote)
+      // Published as open data (JSON/CSV/schema) in the ga-legislation repo —
+      // the stable home, not the internal asset this page fetches. See CLAUDE.md.
+      + open;
+  }
 
-    // Reset filters so the linked bill isn't hidden by whatever filter/tab
-    // happens to be active by default.
+  // Put one prepared dataset on screen: dropdowns, stats, note. Filters reset because
+  // a subject or session from one General Assembly means nothing in another.
+  function installData(ds, tag) {
+    const meta = ds.data.metadata || {};
+    activeTag = tag;
+    billsMeta = meta;
+    allBills  = ds.bills;
+    sessionFilter = '';
+    elSubject.value = '';
+    elLoading.style.display = 'none';
+    buildSubjectDropdown();
+    buildSessionDropdown(meta);
+    applySessionParam();          // sets sessionFilter from ?session=, if valid
+    buildStats(meta);             // AFTER the param, so a deep link counts its own session
+    elControls.style.display = '';
+    if (elBiennium) elBiennium.value = tag;
+    // The intro names the General Assembly on screen (the server copy is the no-JS default).
+    const intro = document.getElementById('billsIntro');
+    const bien  = meta.biennium ? meta.biennium.replace('-', '–') : '';
+    if (intro && bien) {
+      const specials = (meta.sessions || []).filter(function (x) { return x.id && !/Regular/i.test(x.name || '') && sessionNames[x.id]; })
+        .map(function (x) { return x.name; });
+      intro.innerHTML = 'Browse legislation from the ' + escHtml(bien) + ' General Assembly'
+        + (specials.length ? ', including the ' + escHtml(specials.join(' and the ').toLowerCase()) : '')
+        + '. Data sourced from the <a href="https://www.legis.ga.gov/" target="_blank" rel="noopener">Georgia General Assembly</a> (legis.ga.gov).';
+    }
+    elDataNote.innerHTML = dataNoteHtml(meta, tag);
+    elDataNote.style.display = '';
+  }
+
+  function buildBienniumDropdown() {
+    // A frozen file for the biennium the live file already holds is a stale copy
+    // (frozen early, or the bump has not happened): never offer it.
+    const offer = frozenTags.filter(function (t) { return RESOLVE.tagToBiennium(t) !== liveBiennium; });
+    frozenTags.length = 0;
+    offer.sort().reverse().forEach(function (t) { frozenTags.push(t); });
+    if (!frozenTags.length || !elBiennium) return;
+    const cur = document.createElement('option');
+    cur.value = '';
+    cur.textContent = liveBiennium.replace('-', '–') + ' (current)';
+    elBiennium.appendChild(cur);
+    const grp = document.createElement('optgroup');
+    grp.label = 'Earlier General Assembly';
+    frozenTags.forEach(function (t) {
+      const o = document.createElement('option');
+      o.value = t;
+      o.textContent = bienniumLabel(t);
+      grp.appendChild(o);
+    });
+    elBiennium.appendChild(grp);
+    elBiennium.style.display = '';
+  }
+
+  function resetFilters() {
     elSearch.value = '';
     elSubject.value = '';
-    if (elSession) { elSession.value = ''; sessionFilter = ''; syncSessionParam(); buildStats(billsMeta); }
+    if (elSession) { elSession.value = ''; sessionFilter = ''; }
     chamberTab = '';
     statusFilter = '';
     partyLineOnly = false;
@@ -1238,7 +1344,94 @@ breadcrumb:
     document.querySelectorAll('#statusPills .bills-status-btn:not(#partyLineToggle)').forEach(function (b) { b.classList.toggle('active', b.dataset.status === ''); });
     document.getElementById('partyLineToggle').classList.remove('active');
     document.getElementById('partyLineToggle').setAttribute('aria-pressed', 'false');
+  }
 
+  // Switch to a General Assembly ('' = current). Resolves once it is on screen; a failed
+  // fetch leaves the previous one showing and says so.
+  function showBiennium(tag) {
+    if (tag === activeTag) return Promise.resolve(true);
+    const ready = tag ? loadFrozen(tag) : Promise.resolve(liveData);
+    if (tag) {
+      elCount.textContent = 'Loading ' + bienniumLabel(tag) + ' bills…';
+      elResultsBar.style.display = '';
+      if (elBiennium) elBiennium.disabled = true;
+    }
+    return ready.then(function (ds) {
+      installData(ds, tag);
+      return true;
+    }).catch(function (err) {
+      console.error('ga-bills: could not load ' + (tag || 'current') + ' bills', err);
+      const notice = document.getElementById('billsNotice');
+      if (notice) {
+        notice.textContent = 'The ' + bienniumLabel(tag) + ' bills could not be loaded just now. Please try again.';
+        notice.style.display = '';
+      }
+      if (elBiennium) elBiennium.value = activeTag;
+      render();
+      return false;
+    }).then(function (ok) {
+      if (elBiennium) elBiennium.disabled = false;
+      return ok;
+    });
+  }
+
+  if (elBiennium) {
+    elBiennium.addEventListener('change', function () {
+      const tag = elBiennium.value;
+      const notice = document.getElementById('billsNotice');
+      if (notice) notice.style.display = 'none';
+      resetFilters();
+      // The reader left whatever link brought them here.
+      setUrlParams({ biennium: tag ? RESOLVE.tagToBiennium(tag) : null, session: null, bill: null, legislationId: null });
+      showBiennium(tag).then(function () { applyFilters(); });
+      window.vgTrack && window.vgTrack('bills_filter', { control: 'biennium', value: tag || 'current' });
+    });
+  }
+
+  // ── Deep-link to a specific bill ────────────────────────────────────────────
+  //   ?bill=HB111              bare: resolves in the CURRENT biennium
+  //   &legislationId=<id>      the bill's own id, unique across bienniums: tried first, in the
+  //                            current file, then in the frozen ones (member pages send it)
+  //   &session=<id>            narrows a bare identifier; also the session filter, as before
+  //   &biennium=2025-2026      opens that frozen General Assembly
+  // ?bill= stays a supported alias forever (external links, the share cards). The page
+  // never opens a bill other than the one named: a legislationId that matches nothing is
+  // a miss, and a bare link after a rollover says which General Assembly it opened.
+  function readLinkParams() {
+    const p = new URLSearchParams(window.location.search);
+    return {
+      identifier:    p.get('bill'),
+      legislationId: p.get('legislationId'),
+      session:       p.get('session'),
+      biennium:      p.get('biennium')
+    };
+  }
+
+  function showNotice(html) {
+    const notice = document.getElementById('billsNotice');
+    if (!notice) return;
+    notice.innerHTML = html;
+    notice.style.display = '';
+  }
+
+  // After a rollover a bare number is ambiguous: say which bill opened and offer the
+  // earlier General Assemblies' same number, without fetching anything.
+  function bareLinkNotice(identifier, found) {
+    if (!frozenTags.length) return;
+    const links = frozenTags.map(function (t) {
+      const href = '?bill=' + encodeURIComponent(identifier) + '&biennium=' + encodeURIComponent(RESOLVE.tagToBiennium(t));
+      return '<a href="' + escHtml(href) + '">' + escHtml(identifier) + ' in ' + escHtml(bienniumLabel(t)) + '</a>';
+    }).join(' &middot; ');
+    showNotice('Bill numbers restart each General Assembly. '
+      + (found ? 'Showing <strong>' + escHtml(identifier) + '</strong> from ' + escHtml(liveBiennium.replace('-', '–')) + '.'
+               : '<strong>' + escHtml(identifier) + '</strong> is not in the current General Assembly.')
+      + ' Looking for an earlier one? ' + links);
+  }
+
+  function openBill(bill) {
+    resetFilters();
+    syncSessionParam();
+    buildStats(billsMeta);
     applyFilters();
 
     const idx = filtered.indexOf(bill);
@@ -1246,7 +1439,7 @@ breadcrumb:
     currentPage = Math.floor(idx / PER_PAGE) + 1;
     render();
 
-    const anchorId = billAnchorId(bill.identifier);
+    const anchorId = billAnchorId(bill);
     requestAnimationFrame(function () {
       const card = document.getElementById(anchorId);
       if (!card) return;
@@ -1255,6 +1448,76 @@ breadcrumb:
       if (hdr) hdr.setAttribute('aria-expanded', 'true');
       card.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
+  }
+
+  function routeFromURL() {
+    const q = readLinkParams();
+
+    // 1. Which General Assembly? A named frozen biennium, or a session id that only
+    //    a frozen one holds (an old shared ?session=2026_ss link).
+    let want = '';
+    if (q.biennium) {
+      want = RESOLVE.toTag(q.biennium) || '';
+    } else if (q.session && !(billsMeta.sessions || []).some(function (s) { return s.id === q.session; })) {
+      want = RESOLVE.tagForSession(q.session, frozenTags) || '';
+    }
+    if (want && frozenTags.indexOf(want) === -1) want = '';
+
+    return showBiennium(want).then(function () {
+      if (!q.identifier && !q.legislationId) {
+        // The pre-session anchor form, #bill-HB111, still opens its bill.
+        const hash = (window.location.hash || '').replace(/^#/, '');
+        const hashBill = hash.indexOf('bill-') === 0 ? allBills.find(function (b) {
+          return RESOLVE.anchorId(b) === hash || RESOLVE.legacyAnchorId(b.identifier) === hash;
+        }) : null;
+        if (hashBill) openBill(hashBill); else applyFilters();
+        return null;
+      }
+      return findInOrder(q);
+    }).then(function (bill) {
+      if (bill === null) return;
+      if (bill) {
+        openBill(bill);
+        if (!activeTag && RESOLVE.isBareLink(q)) bareLinkNotice(bill.identifier, true);
+        return;
+      }
+      // Not found anywhere we looked.
+      if (q.legislationId) {
+        // A bill id we carry in no file: send them to the official record rather than
+        // searching the number and opening some other bill that reuses it.
+        showNotice((q.identifier ? '<strong>' + escHtml(q.identifier) + '</strong> is not' : 'That bill is not')
+          + ' in the bill files on this site. '
+          + '<a href="https://www.legis.ga.gov/legislation/' + encodeURIComponent(q.legislationId)
+          + '" target="_blank" rel="noopener">View it on legis.ga.gov &#8599;</a>');
+        applyFilters();
+        return;
+      }
+      // No exact match: search for the requested identifier so the visitor lands
+      // somewhere useful instead of a silent no-op.
+      elSearch.value = q.identifier;
+      applyFilters();
+      if (!activeTag && RESOLVE.isBareLink(q)) bareLinkNotice(q.identifier, false);
+    });
+  }
+
+  // legislationId: the biennium on screen first, then each frozen one (loaded lazily,
+  // only because a link named a bill the current file does not carry). Bare
+  // identifier: only the biennium on screen. Resolves to a bill, or false.
+  function findInOrder(q) {
+    const here = RESOLVE.findBill(allBills, { legislationId: q.legislationId, identifier: q.identifier, session: q.session });
+    if (here) return Promise.resolve(here);
+    if (!q.legislationId || !frozenTags.length) return Promise.resolve(false);
+    const queue = frozenTags.filter(function (t) { return t !== activeTag; });
+    function next() {
+      if (!queue.length) return Promise.resolve(false);
+      const tag = queue.shift();
+      return loadFrozen(tag).then(function (ds) {
+        const hit = RESOLVE.findBill(ds.bills, { legislationId: q.legislationId });
+        if (!hit) return next();
+        return showBiennium(tag).then(function () { return hit; });
+      }, function () { return next(); });
+    }
+    return next();
   }
 
   // Sponsors carry only legisGaGovId. The roster maps that to the member id,
@@ -1280,40 +1543,11 @@ breadcrumb:
       return r.json();
     })
     .then(function (data) {
-      const meta = data.metadata || {};
-      billsMeta = meta;
-      allBills = (data.bills || []).map(function (b) {
-        b._status = classifyStatus(b);
-        b._partyLine = (b.passageVotes || []).some(function (v) {
-          const pli = computePartyLineInfo(v.partyTally);
-          // Same bar the detail tag uses, so the badge and the filter can never
-          // claim a party-line vote the vote panel declines to tag.
-          return pli && pli.isPartyLine && partyLineIsSound(v) && !hasLowCoverage(v);
-        });
-        return b;
-      });
-
-      elLoading.style.display = 'none';
-      buildSubjectDropdown();
-      buildSessionDropdown(meta);
-      applySessionParam();          // sets sessionFilter from ?session=, if valid
-      buildStats(meta);             // AFTER the param, so a deep link counts its own session
-      elControls.style.display   = '';
-
-      const withVotes = allBills.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length;
-      const withParty = allBills.filter(function (b) {
-        return (b.passageVotes || []).some(function (v) { return v.partyTally; });
-      }).length;
-      const coverageNote = withVotes && withParty < withVotes
-        ? ' Party-line tags and Democrat/Republican vote tallies are still being backfilled. Available for ' + withParty.toLocaleString() + ' of ' + withVotes.toLocaleString() + ' bills with recorded votes, so some party-line votes may not yet be flagged.'
-        : '';
-      elDataNote.innerHTML = 'Data from the Georgia General Assembly (legis.ga.gov), refreshed weekly. Last data pull generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) + (window.VotegaFreshness ? window.VotegaFreshness.suffix('ga-bills', meta.generatedAt) : '') : '') + '. Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote)
-        // Published as open data (JSON/CSV/schema) in the ga-legislation repo —
-        // the stable home, not the internal asset this page fetches. See CLAUDE.md.
-        + ' Open data: <a href="https://github.com/Votega/ga-legislation" target="_blank" rel="noopener">Votega/ga-legislation</a>.';
-      elDataNote.style.display   = '';
-
-      jumpToBillFromURL();
+      liveData = prepare(data);
+      liveBiennium = (data.metadata || {}).biennium || '';
+      buildBienniumDropdown();
+      installData(liveData, '');
+      return routeFromURL();
     })
     .catch(function (err) {
       // Keep the server-rendered bill list when there is one: a short list of
