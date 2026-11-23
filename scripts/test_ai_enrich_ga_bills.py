@@ -37,11 +37,12 @@ def entry(summary="AI text", session="2025_26", review=False, refined=False):
 
 def public_cases():
     out = {"bills": {
-        "HB 1": entry(),
-        "HB 2": entry(review=True),                       # unreviewed draft
-        "HB 3": {"summary": "x", "session": "2025_26"},   # no flag = unreviewed
-        "HB 4": entry(),                                  # editor override below
-        "SB 5": entry(session="2026_ss", refined=True),
+        "2025_26|HB 1": entry(),
+        "2025_26|HB 2": entry(review=True),                       # unreviewed draft
+        "2025_26|HB 3": {"summary": "x", "session": "2025_26"},   # no flag = unreviewed
+        "2025_26|HB 4": entry(),                                  # editor override below
+        "2026_ss|SB 5": entry(session="2026_ss", refined=True),
+        "2027_28|HB 1": entry("2027 text", session="2027_28"),    # same number, next biennium
     }}
     curated = {"ga": [
         {"identifier": "HB 4", "session": "2025_26", "summaryOverride": "Editor text"},
@@ -58,6 +59,8 @@ def public_cases():
     check("same number in another biennium is a separate entry", s.get("2023_24|HB 1"),
           {"text": "Old biennium", "source": "editor"})
     check("blank override is skipped", "2025_26|HB 9" in s, False)
+    check("2027 HB 1 and 2025-26 HB 1 coexist",
+          (s["2025_26|HB 1"]["text"], s["2027_28|HB 1"]["text"]), ("AI text", "2027 text"))
     check("refined flag carried", s.get("2026_ss|SB 5", {}).get("refined"), True)
 
 
@@ -92,9 +95,9 @@ def hash_and_filter_cases():
 
 def bills_fixture():
     return {"bills": {
-        "HB 1": {"summary": "AI one", "subjects": ["HEALTH"], "session": "2025_26",
+        "2025_26|HB 1": {"summary": "AI one", "subjects": ["HEALTH"], "session": "2025_26",
                  "generatedAt": "t1", "needsReview": True},
-        "HB 2": {"summary": "AI two", "subjects": [], "session": "2025_26",
+        "2025_26|HB 2": {"summary": "AI two", "subjects": [], "session": "2025_26",
                  "generatedAt": "t2", "needsReview": False},
     }}
 
@@ -106,7 +109,7 @@ def dec(key, action, against, **kw):
 def review_cases():
     out = bills_fixture()
     r = A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "t1")])
-    check("approve clears needsReview", out["bills"]["HB 1"]["needsReview"], False)
+    check("approve clears needsReview", out["bills"]["2025_26|HB 1"]["needsReview"], False)
     check("approve is reported as a change", r["changed"], ["2025_26|HB 1"])
     r = A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "t1")])
     check("replaying the same log changes nothing", (r["changed"], r["unchanged"]), ([], ["2025_26|HB 1"]))
@@ -115,7 +118,7 @@ def review_cases():
     A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "t1", summary="Edited.",
                                 subjects=["EDUCATION", "EDUCATION", "MADE UP"])],
                       allowed={"EDUCATION", "HEALTH"})
-    e = out["bills"]["HB 1"]
+    e = out["bills"]["2025_26|HB 1"]
     check("edited summary is used", e["summary"], "Edited.")
     check("model's original summary is kept", e["aiSummary"], "AI one")
     check("edited subjects deduped and filtered", e["subjects"], ["EDUCATION"])
@@ -127,21 +130,21 @@ def review_cases():
     out = bills_fixture()
     r = A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "OLD")])
     check("decision on re-drafted text is stale, not applied",
-          (r["stale"], out["bills"]["HB 1"]["needsReview"]), (["2025_26|HB 1"], True))
+          (r["stale"], out["bills"]["2025_26|HB 1"]["needsReview"]), (["2025_26|HB 1"], True))
     r = A.apply_decisions(out, [dec("2023_24|HB 1", "approve", "t1")])
     check("decision for another biennium's bill is stale", r["stale"], ["2023_24|HB 1"])
 
     out = bills_fixture()
     r = A.apply_decisions(out, [dec("2025_26|HB 2", "revoke", "t2")])
-    check("revoke without a note is refused", (r["invalid"], out["bills"]["HB 2"]["needsReview"]),
+    check("revoke without a note is refused", (r["invalid"], out["bills"]["2025_26|HB 2"]["needsReview"]),
           (["2025_26|HB 2"], False))
     A.apply_decisions(out, [dec("2025_26|HB 2", "revoke", "t2", note="Wrong amount")])
-    check("revoke with a note reopens review", out["bills"]["HB 2"]["needsReview"], True)
+    check("revoke with a note reopens review", out["bills"]["2025_26|HB 2"]["needsReview"], True)
 
     out = bills_fixture()
     A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "t1"),
                             dec("2025_26|HB 1", "redo", "t1", note="Misses the fee")])
-    e = out["bills"]["HB 1"]
+    e = out["bills"]["2025_26|HB 1"]
     check("the last decision wins", (e["needsReview"], e.get("redo"), e.get("reviewNote")),
           (True, True, "Misses the fee"))
     A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "t1")])
@@ -151,11 +154,87 @@ def review_cases():
                                               "humanEdited", "aiSummary", "aiSubjects")), True)
 
 
+def old_bills():
+    return [{"identifier": "HB 1", "session": "2025_26"}, {"identifier": "SB 5", "session": "2026_ss"},
+            {"identifier": "HB 2", "session": "2025_26"}, {"identifier": "HB 2", "session": "2027_28"}]
+
+
+def old_file():
+    return {"metadata": {"count": 3, "updatedAt": "x"}, "bills": {
+        "HB 1": {"summary": "a", "session": "2025_26", "generatedAt": "t1"},
+        "SB 5": {"summary": "b", "session": "2026_ss", "generatedAt": "t2"},
+        "HB 2": {"summary": "c", "session": "2025_26", "generatedAt": "t3", "needsReview": False}}}
+
+
+def raises(exc, fn):
+    try:
+        fn()
+    except exc as e:
+        return str(e) or True
+    return False
+
+
+def key_cases():
+    import copy
+    import tempfile
+    old = old_file()
+    snapshot = copy.deepcopy(old)
+    new = A.migrate_keys(old, old_bills())
+    check("migration leaves its input untouched", old, snapshot)
+    check("migration keeps every entry (3 -> 3)", (len(old["bills"]), len(new["bills"])), (3, 3))
+    check("migrated keys are session|identifier",
+          sorted(new["bills"]), ["2025_26|HB 1", "2025_26|HB 2", "2026_ss|SB 5"])
+    lost = [i for i, v in old["bills"].items() if new["bills"][v["session"] + "|" + i] != v]
+    check("migration loses nothing (every entry round-trips unchanged)", lost, [])
+    check("schema version stamped", new["metadata"]["schemaVersion"], A.SCHEMA_VERSION)
+    new["bills"]["2027_28|HB 2"] = {"summary": "2027", "session": "2027_28", "generatedAt": "t9"}
+    check("2027 HB 2 draft coexists with 2025-26 HB 2",
+          (new["bills"]["2025_26|HB 2"]["summary"], new["bills"]["2027_28|HB 2"]["summary"]),
+          ("c", "2027"))
+    check("migration refuses an entry session ga-bills.json does not hold",
+          bool(raises(ValueError, lambda: A.migrate_keys(
+              {"bills": {"HB 1": {"session": "2027_28"}}}, old_bills()))), True)
+    check("migration refuses a bill absent from ga-bills.json",
+          bool(raises(ValueError, lambda: A.migrate_keys(
+              {"bills": {"HB 99": {"session": "2025_26"}}}, old_bills()))), True)
+    check("a session-less entry takes the only session holding its identifier",
+          list(A.migrate_keys({"bills": {"SB 5": {"summary": "x"}}}, old_bills())["bills"]),
+          ["2026_ss|SB 5"])
+    check("a session-less entry with two candidate sessions is refused",
+          bool(raises(ValueError, lambda: A.migrate_keys(
+              {"bills": {"HB 2": {"summary": "x"}}}, old_bills()))), True)
+    msg = raises(SystemExit, lambda: A.require_schema(old_file()))
+    check("readers refuse an old-format file and name the fix", "migrate-keys" in str(msg), True)
+    check("an empty old file is not an error", A.require_schema({"bills": {}}), None)
+    import generate_ga_bills_soap as G
+    with tempfile.TemporaryDirectory() as d:
+        path = os.path.join(d, "ga-bill-ai.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(old_file(), f)
+        msg = raises(SystemExit, lambda: G.load_ai_subjects(path))
+        check("bills generator refuses an old-format AI file", "migrate-keys" in str(msg), True)
+    bills = old_bills()
+    check("--only bare id with one session resolves", A.resolve_only(["SB 5"], bills), {"2026_ss|SB 5"})
+    check("--only session|id resolves", A.resolve_only(["2027_28|HB 2"], bills), {"2027_28|HB 2"})
+    check("--only bare id narrowed by --session", A.resolve_only(["HB 2"], bills, "2027_28"),
+          {"2027_28|HB 2"})
+    check("--only ambiguous bare id is refused",
+          bool(raises(SystemExit, lambda: A.resolve_only(["HB 2"], bills))), True)
+    here = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(here, "..", "tools", "ai-summary-review.html"), encoding="utf-8") as f:
+        html = f.read()
+    check("review tool refuses an old-format file", "schemaVersion !== 2" in html, True)
+    check("review tool takes the entry key, not a bare identifier",
+          ("k.startsWith(e.session + '|')" in html and "([ident, e])" not in html), True)
+
+
 def committed_file_case():
     out, pub = A.load_json(A.OUT_FILE), A.load_json(A.PUBLIC_FILE)
     if out is None or pub is None:
         print("  skip committed-file check (files not present)")
         return
+    check("committed ga-bill-ai.json is schemaVersion 2",
+          (out.get("metadata") or {}).get("schemaVersion"), 2)
     built = A.build_public(out, A.load_json(A.CURATED_FILE) or {})
     check("ga-bill-summaries.json matches the committed drafts (run `publish` if not)",
           pub.get("summaries"), built["summaries"])
@@ -166,6 +245,7 @@ if __name__ == "__main__":
     print("model output parsing"); parse_cases()
     print("hashing and filters"); hash_and_filter_cases()
     print("review decisions"); review_cases()
+    print("session keys"); key_cases()
     print("committed files"); committed_file_case()
     if failures:
         print(f"\n{len(failures)} failure(s)")

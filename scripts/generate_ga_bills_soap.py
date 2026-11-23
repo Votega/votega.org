@@ -448,24 +448,32 @@ def apply_subjects(bill, base, overrides, ai=None):
         bill["subjects"] = base[ident]
     # else: keep the fallback subjects map_bill() already derived from the summary/title.
     if not bill.get("subjects") and ai:
-        entry = ai.get(ident)
-        if entry and entry["session"] == bill.get("session"):
+        entry = ai.get("%s|%s" % (bill.get("session"), ident))
+        if entry:
             bill["subjects"] = list(entry["subjects"])
             bill["subjectsSource"] = "ai"
 
 
 def load_ai_subjects(path=AI_FILE, allowed=None):
-    """{identifier: {session, subjects}} for REVIEWED AI tags only (needsReview false).
+    """{"<session>|<identifier>": {session, subjects}} for REVIEWED AI tags only (needsReview false).
     Written locally by ai_enrich_ga_bills.py; a missing or unreadable file means no AI
     layer, never a failed run. `allowed`, when given, drops any tag outside the taxonomy."""
     try:
         with open(path, encoding="utf-8") as f:
-            entries = (json.load(f) or {}).get("bills", {})
+            doc = json.load(f) or {}
     except (OSError, ValueError):
         return {}
+    entries = doc.get("bills", {})
+    # An old-format file is keyed by bare identifier; reading it would attach a 2025-26
+    # draft to a same-numbered bill of another biennium. Fail loud, never skip silently.
+    if entries and (doc.get("metadata") or {}).get("schemaVersion") != 2:
+        sys.exit("%s is in the old format (bare-identifier keys, no metadata.schemaVersion 2). "
+                 "Run: python scripts/ai_enrich_ga_bills.py migrate-keys" % path)
     out = {}
     for ident, v in entries.items():
         if not isinstance(v, dict) or v.get("needsReview", True) or not v.get("session"):
+            continue
+        if ident.partition("|")[0] != v["session"]:
             continue
         subjects = [s for s in (v.get("subjects") or [])
                     if isinstance(s, str) and (allowed is None or s in allowed)]

@@ -38,7 +38,7 @@ def bill(ident="HB 1", session="2025_26", subjects=None, source=None):
     return b
 
 
-AI = {"HB 1": {"session": "2025_26", "subjects": ["Education"]}}
+AI = {"2025_26|HB 1": {"session": "2025_26", "subjects": ["Education"]}}
 
 
 def layered(b, base=None, overrides=None, ai=AI):
@@ -57,6 +57,8 @@ def precedence_cases():
           layered(bill(subjects=["Local / Municipal"])), (["Local / Municipal"], None))
     check("AI for another session is ignored",
           layered(bill(session="2026_ss")), ([], None))
+    check("AI for the same number in a later biennium is ignored",
+          layered(bill(session="2027_28")), ([], None))
     check("no AI layer leaves an untagged bill untagged",
           layered(bill(), ai={}), ([], None))
 
@@ -70,16 +72,17 @@ def stale_cases():
     check("preserved AI tag is re-applied when still reviewed",
           layered(bill(subjects=["Education"], source="ai")), (["Education"], "ai"))
     check("the layer never mutates the AI map's list",
-          AI["HB 1"]["subjects"], ["Education"])
+          AI["2025_26|HB 1"]["subjects"], ["Education"])
 
 
 def load_cases():
-    data = {"metadata": {}, "bills": {
-        "HB 1": {"session": "2025_26", "subjects": ["Education", "Made Up"], "needsReview": False},
-        "HB 2": {"session": "2025_26", "subjects": ["Health"], "needsReview": True},
-        "HB 3": {"session": "2025_26", "subjects": ["Health"]},                # no flag = unreviewed
-        "HB 4": {"subjects": ["Health"], "needsReview": False},                # no session
-        "HB 5": {"session": "2025_26", "subjects": ["Made Up"], "needsReview": False},
+    data = {"metadata": {"schemaVersion": 2}, "bills": {
+        "2025_26|HB 1": {"session": "2025_26", "subjects": ["Education", "Made Up"], "needsReview": False},
+        "2025_26|HB 2": {"session": "2025_26", "subjects": ["Health"], "needsReview": True},
+        "2025_26|HB 3": {"session": "2025_26", "subjects": ["Health"]},        # no flag = unreviewed
+        "2025_26|HB 4": {"subjects": ["Health"], "needsReview": False},        # no session
+        "2025_26|HB 5": {"session": "2025_26", "subjects": ["Made Up"], "needsReview": False},
+        "2026_ss|HB 6": {"session": "2025_26", "subjects": ["Health"], "needsReview": False},  # key/session disagree
     }}
     with tempfile.TemporaryDirectory() as d:
         path = os.path.join(d, "ga-bill-ai.json")
@@ -87,7 +90,7 @@ def load_cases():
             json.dump(data, f)
         got = G.load_ai_subjects(path, allowed={"Education", "Health"})
         check("only reviewed, session-tagged, in-taxonomy tags load", got,
-              {"HB 1": {"session": "2025_26", "subjects": ["Education"]}})
+              {"2025_26|HB 1": {"session": "2025_26", "subjects": ["Education"]}})
         check("missing file means no AI layer",
               G.load_ai_subjects(os.path.join(d, "nope.json")), {})
         with open(path, "w", encoding="utf-8") as f:
