@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-23T11:30:46.724803+00:00",
+    "generatedAt": "2026-11-23T23:04:41.659669+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,39 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 123,
+    "count": 127,
     "windowDays": 45,
     "entityTagged": 80,
     "topicCounts": {
-      "elections": 48,
-      "healthcare": 18,
+      "elections": 50,
+      "education": 10,
+      "healthcare": 17,
       "courts": 7,
       "budget": 7,
-      "education": 8,
       "ethics": 3,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
+    },
+    "vg-ga-p-000264": {
+      "name": "Jon Ossoff",
+      "url": null,
+      "bioguideId": "O000174"
+    },
+    "vg-ga-p-000039": {
+      "name": "Chris Carr",
+      "url": null,
+      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
+      "candidateIds": [
+        "challenger-chris-carr-gov-2026"
+      ]
+    },
     "vg-ga-p-000335": {
       "name": "Keisha Lance Bottoms",
       "url": null,
@@ -58,24 +76,6 @@
       "name": "Nikema Williams",
       "url": null,
       "bioguideId": "W000788"
-    },
-    "vg-ga-p-000039": {
-      "name": "Chris Carr",
-      "url": null,
-      "rosterId": "ocd-person/57002bfc-2ba0-48cd-85d4-94673c5bf75a",
-      "candidateIds": [
-        "challenger-chris-carr-gov-2026"
-      ]
-    },
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
-      "url": null,
-      "bioguideId": "W000790"
-    },
-    "vg-ga-p-000264": {
-      "name": "Jon Ossoff",
-      "url": null,
-      "bioguideId": "O000174"
     },
     "vg-ga-p-000361": {
       "name": "Penny Brown Reynolds",
@@ -166,8 +166,103 @@
   "mergedEntities": {},
   "items": [
     {
+      "id": "9ab206b321de",
+      "title": "Discursive Verses: Can a trap revivalist resolve Atlanta street rap's authenticity crisis?",
+      "url": "https://www.gpb.org/news/2026/11/23/discursive-verses-can-trap-revivalist-resolve-atlanta-street-raps-authenticity",
+      "source": "GPB News",
+      "publishedAt": "2026-11-23T21:00:08+00:00",
+      "snippet": "NPR Music culture critic and reporter Rodney Carmichael ruminates on the latest in rap culture. This week: Belly Gang Kushington epitomizes an ongoing battle in the city's local scene.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "38a26dca4884",
+      "title": "Voters head to the polls in Southwest Georgia for state House runoff",
+      "url": "https://www.gpb.org/news/2026/11/23/voters-head-the-polls-in-southwest-georgia-for-state-house-runoff",
+      "source": "GPB News",
+      "publishedAt": "2026-11-23T20:28:00+00:00",
+      "snippet": "Early voting started Monday for a special election in Southwest Georgia that could influence the final balance of power in the state House.",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "5f3e5852d58c",
+      "title": "GPB evening headlines for November 23, 2026",
+      "url": "https://www.gpb.org/news/2026/11/23/gpb-evening-headlines-for-november-23-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-23T20:25:21+00:00",
+      "snippet": "Delays continued for Delta Air Lines today after the Atlanta-based company reported a problem with an automation system.\nEarly voting has started in a runoff election in southwest Georgia that could i",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "236c1e67c0c2",
+      "title": "Georgia Today: SPLC hunger study; Delta delays; FIFA Women's World Cup",
+      "url": "https://www.gpb.org/news/2026/11/23/georgia-today-splc-hunger-study-delta-delays-fifa-womens-world-cup",
+      "source": "GPB News",
+      "publishedAt": "2026-11-23T19:51:01+00:00",
+      "snippet": "On today's Nov. 23 edition: Delta Air Lines experienced flight delays earlier today; early voting for a special election in southwest Georgia started today; and a fire ant study has found a 'super gen",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "6bb845aec6e1",
+      "title": "Queen of the hill: Ants' genes may determine who gets to rule, according to new research",
+      "url": "https://www.gpb.org/news/2026/11/23/queen-of-the-hill-ants-genes-may-determine-who-gets-rule-according-new-research",
+      "source": "GPB News",
+      "publishedAt": "2026-11-23T17:16:00+00:00",
+      "snippet": "New research from the University of Georgia suggests that so-called \"supergenes\" select which fire ants become the queens of their colonies.",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "c34456e98f51",
+      "title": "Sens. Ossoff & Rev. Warnock Delivering Nearly $50 Million to Upgrade Georgia’s Airports",
+      "url": "https://www.ossoff.senate.gov/press-releases/sens-ossoff-rev-warnock-delivering-nearly-50-million-to-upgrade-georgias-airports/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-23T17:03:31+00:00",
+      "snippet": "Hartsfield–Jackson Atlanta International Airport to receive over $30 million Savannah/Hilton Head International Airport to receive over $12 million Washington, D.C. — U.S. Senators Jon Ossoff and Reve",
+      "entityIds": [
+        "vg-ga-p-000263",
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "ea9870ab4c11",
+      "title": "After 15 years at No.1 for business, Georgia aims to be tops in workforce talent",
+      "url": "https://www.gpb.org/news/2026/11/23/after-15-years-at-no1-for-business-georgia-aims-be-tops-in-workforce-talent",
+      "source": "GPB News",
+      "publishedAt": "2026-11-23T15:58:00+00:00",
+      "snippet": "The new Office of Education and Workforce Strategy connects students and industry with strategic data and collaboration.",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
+      "id": "75dc4795f733",
+      "title": "Carr: New Crypto Theft Case Results in $151k Returned to Columbia County Victim",
+      "url": "https://law.georgia.gov/press-releases/2026-11-23/carr-new-crypto-theft-case-results-151k-returned-columbia-county-victim",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-23T12:00:00+00:00",
+      "snippet": "COLUMBIA COUNTY, GA – Georgia Attorney General Chris Carr today announced the seizure and return of stolen cryptocurrency to an investment fraud victim in Columbia County.",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
+    },
+    {
       "id": "7923ec3e1fea",
-      "title": "Georgia Democrats intend to look for ‘pathway’ to target state’s six-week abortion ban",
+      "title": "Georgia Democrats intend to look for ‘pathway’ to target state’s 6-week abortion ban",
       "url": "https://georgiarecorder.com/2026/11/23/georgia-democrats-intend-to-look-for-pathway-to-target-states-six-week-abortion-ban/",
       "source": "Georgia Recorder",
       "publishedAt": "2026-11-23T09:00:46+00:00",
@@ -255,16 +350,6 @@
       "topics": [
         "elections"
       ]
-    },
-    {
-      "id": "50296881c150",
-      "title": "An obscure utility calculation is putting a thumb on the scale for gas in Georgia",
-      "url": "https://thecurrentga.org/2026/11/20/an-obscure-utility-calculation-is-putting-a-thumb-on-the-scale-for-gas-in-georgia/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-20T18:29:59+00:00",
-      "snippet": "Georgia Power is facing scrutiny from renewable energy advocates over its decision to assign a significantly lower reliability rating to battery storage in its planned 2,000 to 6,000 megawatt grid exp",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "1b740cb4c1a8",
@@ -1083,20 +1168,6 @@
       ]
     },
     {
-      "id": "61016d080181",
-      "title": "Sen. Ossoff Working Across the Aisle to Support Georgia’s Rural Hospitals",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-working-across-the-aisle-to-support-georgias-rural-hospitals/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-11-09T16:53:49+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working with Republicans and Democrats to support rural hospitals across Georgia. Sen. Ossoff is cosponsoring the bipartisan Rural Development Hospital Te",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": [
-        "healthcare"
-      ]
-    },
-    {
       "id": "cd529ed2a330",
       "title": "Gov. Kemp Announces New Stone Mountain Authority CEO",
       "url": "https://gov.georgia.gov/press-releases/2026-11-09/gov-kemp-announces-new-stone-mountain-authority-ceo",
@@ -1545,18 +1616,6 @@
       ]
     },
     {
-      "id": "49f44819a798",
-      "title": "Carr Calls on Convenience Stores to Remove Dangerous Kratom Products Immediately",
-      "url": "https://law.georgia.gov/press-releases/2026-10-23/carr-calls-convenience-stores-remove-dangerous-kratom-products",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-10-23T12:00:00+00:00",
-      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr is calling on all convenience stores throughout the state to remove dangerous kratom products from their shelves immediately, particularly those produ",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
-    },
-    {
       "id": "e8e7700252e6",
       "title": "Bottoms is vowing to expand Medicaid. But has the longtime Democratic priority lost its zip?",
       "url": "https://georgiarecorder.com/2026/10/23/bottoms-is-vowing-to-expand-medicaid-but-has-the-longtime-democratic-priority-lost-its-zip/",
@@ -1687,18 +1746,6 @@
       "entityIds": [
         "vg-ga-p-000368"
       ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "85ffe07018a3",
-      "title": "Growth of data centers becomes a defining issue of the midterms, entangling some Georgia candidates",
-      "url": "https://georgiarecorder.com/2026/10/19/growth-of-data-centers-becomes-a-defining-issue-of-the-midterms-entangling-some-georgia-candidates/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-19T08:00:28+00:00",
-      "snippet": "Georgia candidates up and down the ballot are campaigning on an issue that has struck a nerve across the political spectrum: data centers.  A wave of data center projects across Georgia has been met w",
-      "entityIds": [],
       "topics": [
         "elections"
       ]
