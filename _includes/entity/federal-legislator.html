@@ -80,6 +80,8 @@
     #stateSidebar { width: auto; position: static; max-height: 300px; display: block !important; }
   }
 
+  /* Former-member notice (D12); same treatment as the GA legislator page. Warning role = a status note, with its icon and a label in the text. */
+  .former-member-banner { background: var(--color-warning-tint); border: 1px solid var(--color-warning-line); border-radius: 6px; padding: 0.6rem 0.8rem; margin: 0 0 1rem; }
   .running-badge {
     padding: 0.6rem 1rem;
     border-radius: 0 6px 6px 0;
@@ -423,7 +425,11 @@
   // the delegation sidebar) avoids the legacy member.html?bioguideId= shell, whose
   // location.replace() to the clean URL is a second navigation the user sees as a
   // blank flash before the next profile populates.
-  const US_CONGRESS_URLS = {{ site.data.entity_urls['us-congress'] | jsonify }};
+  // 'us-congress-former' holds the pages of members who have left office (D12); they are a
+  // separate key so the race/candidate pages, which read 'us-congress' to find a SITTING
+  // member, are unaffected. Object.assign skips a null source.
+  const US_CONGRESS_URLS = Object.assign({}, {{ site.data.entity_urls['us-congress'] | jsonify }},
+                                             {{ site.data.entity_urls['us-congress-former'] | jsonify }});
   // Same purpose for the "View race →" / "View candidate profile →" links below.
   const RACE_URLS        = {{ site.data.entity_urls['race'] | jsonify }};
   const CANDIDATE_URLS   = {{ site.data.entity_urls['candidate'] | jsonify }};
@@ -432,6 +438,17 @@
   // Clean per-entity URLs set window.VOTEGA_ENTITY; the legacy ?bioguideId= URL still works.
   const bioguideId = urlParams.get('bioguideId') || (window.VOTEGA_ENTITY && window.VOTEGA_ENTITY.id);
 
+  // A former member's page (D12) is built from the frozen copy of the delegation's record,
+  // assets/data/federal-congresses/<congress>/, whose file names mirror the live ones:
+  // the live files describe the CURRENT Congress and no longer carry the member. Every
+  // data URL below goes through dataUrl(), never a literal 'assets/data/…' path, so a
+  // frozen page cannot silently mix in the next Congress's data.
+  const FROZEN_CONGRESS = (window.VOTEGA_ENTITY && window.VOTEGA_ENTITY.frozen) || null;
+  const FORMER = (FROZEN_CONGRESS && window.VOTEGA_ENTITY.former) || null;
+  function dataUrl(name) {
+    return getBasePath() + 'assets/data/' + (FROZEN_CONGRESS ? 'federal-congresses/' + FROZEN_CONGRESS + '/' : '') + name;
+  }
+
   if (!bioguideId) {
     document.getElementById('memberDetails').innerHTML = `<p>No member selected. <a href="${getBasePath()}federal-reps">Go back</a></p>`;
   } else {
@@ -439,15 +456,16 @@
   }
 
   async function loadMemberDetails(bioguideId) {
-    const DATA_URL = getBasePath() + 'assets/data/current-members.json';
-    const RACES_URL = getBasePath() + 'assets/data/races.json';
+    const DATA_URL = dataUrl('current-members.json');
+    const RACES_URL = dataUrl('races.json');  // never fetched on a frozen page (no live race data)
     const statusLine = document.getElementById('status');
     statusLine.textContent = 'Loading member details…';
 
     try {
+      // A former member is not on any ballot this cycle: no race data, no election framing.
       const [membersRes, racesRes] = await Promise.all([
         fetch(DATA_URL),
-        fetch(RACES_URL)
+        FROZEN_CONGRESS ? Promise.resolve({ ok: false }) : fetch(RACES_URL)
       ]);
       if (!membersRes.ok) throw new Error(`HTTP ${membersRes.status}`);
 
@@ -457,8 +475,10 @@
         window.dataStamp.render('dataStamp', {
           updated: (data.metadata || {}).generatedAt,
           source:  (data.metadata || {}).source || 'Congress.gov API',
-          dataset: 'current-members',
-        repo:    { url: 'https://github.com/Votega/ga-federal-legislators' },
+          // A frozen record is not stale by age, so it opts out of the "older than usual" rule.
+          dataset: FROZEN_CONGRESS ? undefined : 'current-members',
+          repo:    { url: 'https://github.com/Votega/ga-federal-legislators' +
+                          (FROZEN_CONGRESS ? '/tree/main/sessions/' + FROZEN_CONGRESS : '') },
         });
       }
       const allMembers = data.members || [];
@@ -636,6 +656,12 @@
   // once and cached; a missing/failed file just yields no connectors.
   let _enactedLawsPromise = null;
   function getEnactedLaws() {
+    if (!_enactedLawsPromise && FROZEN_CONGRESS) {
+      // presidential-laws.json indexes the CURRENT Congress's laws by bill type+number, and
+      // numbers restart each Congress, so joining a frozen Congress's bills to it would mark
+      // the 119th's H.R. 1 as the 120th's law. No connector beats a wrong one.
+      _enactedLawsPromise = Promise.resolve(new Map());
+    }
     if (!_enactedLawsPromise) {
       _enactedLawsPromise = fetch(`${getBasePath()}assets/data/presidential-laws.json`)
         .then(r => (r.ok ? r.json() : null))
@@ -776,7 +802,8 @@
       return `<div class="sidebar-group-label">${escHtml(label)}</div>${items}`;
     }
 
-    document.getElementById('sidebarTitle').textContent = `${state} Delegation`;
+    document.getElementById('sidebarTitle').textContent =
+      FROZEN_CONGRESS ? `${state} Delegation, ${FROZEN_CONGRESS} Congress` : `${state} Delegation`;
     document.getElementById('sidebarContent').innerHTML =
       renderGroup(senators, 'Senate') + renderGroup(reps, 'House');
     document.getElementById('stateSidebar').style.display = 'block';
@@ -980,10 +1007,10 @@
   // (`indices`) so a member's slice — which is keyed on that position — can still be
   // decoded without it. The full index is now paid for only by a reader who opens
   // Voting History, which activateTab() loads lazily.
-  const FED_VOTES_INDEX_URL    = getBasePath() + 'assets/data/federal-votes-index.json';
-  const FED_KEYVOTES_INDEX_URL = getBasePath() + 'assets/data/federal-votes-keyvotes.json';
+  const FED_VOTES_INDEX_URL    = dataUrl('federal-votes-index.json');
+  const FED_KEYVOTES_INDEX_URL = dataUrl('federal-votes-keyvotes.json');
   const fedVoteSliceUrl = bioguide =>
-    `${getBasePath()}assets/data/federal-votes/${encodeURIComponent(bioguide)}.json`;
+    dataUrl(`federal-votes/${encodeURIComponent(bioguide)}.json`);
 
   // Positions in an index row. Rows are positional arrays because the field names
   // would otherwise repeat on all ~1,591 records (~140 KB of key names alone).
@@ -1077,7 +1104,7 @@
   // The delegation ranks need all 16 members' votes, and this page deliberately
   // fetches only this member's slice — recomputing client-side would mean 16 slice
   // fetches or re-shipping the 1.2 MB monolith. The file is ~8 KB.
-  const FED_SCORECARD_URL = getBasePath() + 'assets/data/federal-party-unity.json';
+  const FED_SCORECARD_URL = dataUrl('federal-party-unity.json');
 
   // Mirrors RANK_MIN_COHORT in scripts/generate_federal_party_unity.py. Georgia
   // has two senators, and "2nd of 2" is noise where naming the other senator's
@@ -1247,7 +1274,7 @@
   let curatedFederalPromise = null;
   function getCuratedFederal() {
     if (!curatedFederalPromise) {
-      curatedFederalPromise = fetch(getBasePath() + 'assets/data/curated-federal-bills.json')
+      curatedFederalPromise = fetch(dataUrl('curated-federal-bills.json'))
         .then(r => r.ok ? r.json() : null)
         .then(d => (d && Array.isArray(d.bills)) ? d.bills : [])
         .catch(err => { console.warn('Could not load curated federal bills:', err); return []; });
@@ -1400,9 +1427,9 @@
   // would be paid for by every visitor to read one member's panel. Same two
   // artifacts the GA panel uses instead: a small shared index and this member's
   // own slice, fetched only when the tab is opened.
-  const SPON_INDEX_URL = getBasePath() + 'assets/data/federal-sponsorship-index.json';
+  const SPON_INDEX_URL = dataUrl('federal-sponsorship-index.json');
   const sponSliceUrl   = bioguide =>
-    `${getBasePath()}assets/data/federal-sponsorship/${encodeURIComponent(bioguide)}.json`;
+    dataUrl(`federal-sponsorship/${encodeURIComponent(bioguide)}.json`);
 
   // Bill type -> congress.gov URL slug. Mirrors BILL_TYPE_SLUG in
   // scripts/lib/federal_sponsorship.py; the slice stores congress + type + number
@@ -1837,7 +1864,7 @@
     const currentTerm = member.terms?.item?.slice(-1)[0] || {};
     const chamber = currentTerm.chamber || 'N/A';
 
-    document.title = `${fullName} — ${chamber === 'Senate' ? 'U.S. Senator' : 'U.S. Representative'}`;
+    document.title = `${fullName} — ${FORMER ? 'Former ' : ''}${chamber === 'Senate' ? 'U.S. Senator' : 'U.S. Representative'}`;
     const district = (member.district !== null && member.district !== undefined)
       ? `District ${member.district}`
       : (chamber === 'Senate' ? 'U.S. Senator' : chamber === 'House of Representatives' ? 'At-Large' : 'N/A');
@@ -1848,6 +1875,11 @@
     const startYear = startYears.length ? Math.max(...startYears) : 'N/A';
     const currentYear = new Date().getFullYear();
     const yearsInOffice = typeof startYear === 'number' ? (currentYear - startYear) : 'N/A';
+    // The last column of the term line: years served so far for a sitting member, the date the
+    // term ended for a former one (a count from today would keep growing on a closed record).
+    const termLineEnd = FORMER
+      ? `<strong>Left Office:</strong> ${escHtml(FORMER.leftOffice)}`
+      : `<strong>Years in Office:</strong> ${yearsInOffice}`;
 
     const imageUrl = member.depiction?.imageUrl;
     const imageHtml = imageUrl ? `<img src="${escHtml(window.VotegaPortraits ? VotegaPortraits.src(imageUrl) : imageUrl)}" alt="${escHtml(fullName)}" loading="lazy" decoding="async" style="max-width: 200px; margin-bottom: 1rem; border-radius: 8px;">` : '';
@@ -1875,7 +1907,8 @@
     // Contact information
     const contactInfo = member.contactInfo || {};
     let contactHtml = '';
-    if (contactInfo.phoneNumber || contactInfo.officeAddress) {
+    // A former member's office is closed and their site may be reassigned: no contact details (D5).
+    if (!FORMER && (contactInfo.phoneNumber || contactInfo.officeAddress)) {
       const phone = contactInfo.phoneNumber ? `<br><i class="fa-solid fa-phone" aria-hidden="true"></i> ${escHtml(contactInfo.phoneNumber)}` : '';
       let addressStr = contactInfo.officeAddress || '';
       if (addressStr) {
@@ -1891,7 +1924,7 @@
     }
 
     // Official website
-    const websiteHtml = member.officialWebsiteUrl ?
+    const websiteHtml = (!FORMER && member.officialWebsiteUrl) ?
       `<p><strong>Official Website:</strong> <a class="url-text" href="${escHtml(member.officialWebsiteUrl)}" target="_blank">${escHtml(member.officialWebsiteUrl)}</a></p>` : '';
 
     // Running for office badge
@@ -1966,7 +1999,7 @@
       ${window.VotegaShare ? VotegaShare.html({type:'federal-legislator', id:(window.VOTEGA_ENTITY||{}).id}) : ''}
       ${runningBadgeHtml}
       ${bornHtml}
-      <p style="display:flex;justify-content:space-between;"><span><strong>First Term (Current Chamber):</strong> ${startYear}</span><span><strong>Years in Office:</strong> ${yearsInOffice}</span></p>
+      <p style="display:flex;justify-content:space-between;"><span><strong>First Term (Current Chamber):</strong> ${startYear}</span><span>${termLineEnd}</span></p>
       <p><strong>Party:</strong> ${escHtml(party)} ${getPartyIconHtml(party)}</p>
       <p><strong>State:</strong> ${escHtml(state)}</p>
       <p><strong>District:</strong> ${escHtml(district)}</p>
@@ -1985,13 +2018,13 @@
           <button class="tab-btn" data-tab="keyVotes" hidden>Key Votes</button>
           <button class="tab-btn" data-tab="votingHistory">Voting History</button>
           ${hasSponsorship(member) ? `<button class="tab-btn" data-tab="sponsoredLegislation">Sponsored Legislation</button>` : ''}
-          ${state === 'Georgia' ? `<button class="tab-btn" data-tab="campaignFinance">Campaign Finance</button>` : ''}
+          ${(state === 'Georgia' && !FORMER) ? `<button class="tab-btn" data-tab="campaignFinance">Campaign Finance</button>` : ''}
           <button class="tab-btn" data-tab="entityNews" hidden>In the News</button>
         </div>
         <div id="keyVotes" class="tab-panel"></div>
         <div id="votingHistory" class="tab-panel"></div>
         <div id="sponsoredLegislation" class="tab-panel"></div>
-        ${state === 'Georgia' ? `<div id="campaignFinance" class="tab-panel"></div>` : ''}
+        ${(state === 'Georgia' && !FORMER) ? `<div id="campaignFinance" class="tab-panel"></div>` : ''}
         <div id="entityNews" class="tab-panel"></div>
       </div>
     `;
