@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "updatedAt": "2026-11-23T13:35:57+00:00",
+  "updatedAt": "2026-11-23T13:50:59+00:00",
   "count": 2667,
   "note": "AI-generated drafts (Ollama) refined for key bills (Claude). Display with an 'AI summary' label and a link to the official bill."
  },
@@ -369,15 +369,20 @@
    "refined": false
   },
   "HR 119": {
-   "summary": "This resolution compensates Mr. Mario Stinchcomb for a specific purpose.",
-   "subjects": [],
-   "confidence": "low",
+   "summary": "This resolution directs the Department of Administrative Services to pay Mario Stinchcomb $975,000 for his wrongful murder conviction, for which he was exonerated in 2021. He would get an initial $321,750, with the rest paid in monthly installments over ten years starting in 2026. The state would get a credit for any damages he wins in a related lawsuit, and the payment would be excluded from his state taxable income.",
+   "subjects": [
+    "CRIMINAL PROCEDURE",
+    "REVENUE AND TAXATION",
+    "STATE GOVERNMENT"
+   ],
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "64c31d0089531827",
-   "generatedAt": "2026-11-23T04:27:28+00:00",
+   "source": "claude-code",
+   "inputHash": "c282812f1b2935d3",
+   "generatedAt": "2026-11-23T13:44:41+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HR 128": {
    "summary": "This resolution compensates Mr. Joseph Samuel Watkins.",
@@ -1571,17 +1576,18 @@
    "refined": false
   },
   "HB 1092": {
-   "summary": "The bill would extend the existence of the Chehaw Park Authority, which was originally created in 1979 and most recently amended in 2020.",
+   "summary": "This bill extends the life of the Chehaw Park Authority, a local authority created by a 1979 law. Under the bill, the authority would continue to exist through December 31, 2036.",
    "subjects": [
     "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "3a4e10951604f6c2",
-   "generatedAt": "2026-11-23T05:55:50+00:00",
+   "source": "claude-code",
+   "inputHash": "e0c9a14bd79e1131",
+   "generatedAt": "2026-11-23T13:44:50+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1093": {
    "summary": "This bill would allow a nonbinding referendum in Ware County to ask voters if they support building a perimeter highway bypass around Waycross.",
@@ -2023,19 +2029,20 @@
    "refined": false
   },
   "HB 1122": {
-   "summary": "The bill would amend laws related to insurance, counties and municipal corporations, employees' insurance and benefits, and other related matters.",
+   "summary": "Starting January 1, 2027, this bill would require health insurance plans, the state health benefit plan, and Medicaid to cover a peripheral artery disease screening test at least once every 12 months for people at higher risk, such as those 65 or older. Coverage would follow each plan's usual deductibles and copays. The state plan and Medicaid parts take effect only if funds are appropriated.",
    "subjects": [
     "INSURANCE",
-    "LOCAL GOVERNMENT",
+    "HEALTH",
     "PUBLIC OFFICERS AND EMPLOYEES"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "082030cb09f46b31",
-   "generatedAt": "2026-11-23T05:02:00+00:00",
+   "source": "claude-code",
+   "inputHash": "123b753ad68d9ce7",
+   "generatedAt": "2026-11-23T13:44:59+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1123": {
    "summary": "This bill would require schools that offer after-school programs to make these programs available to pre-kindergarten students on the same basis as other students. It also allows for limited exceptions to this requirement.",
@@ -2505,17 +2512,19 @@
    "refined": false
   },
   "HB 1155": {
-   "summary": "The bill would revise purchasing provisions for the board of commissioners of Tift County.",
+   "summary": "This bill changes how Tift County's board of commissioners handles purchasing. The board is the county's purchasing agent. Purchasing and bidding would follow a policy the board adopts, replacing the current provisions in the county's 1917 act.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "3444d3a2ef5a1738",
-   "generatedAt": "2026-11-23T05:55:53+00:00",
+   "source": "claude-code",
+   "inputHash": "ac34fd072a90b04a",
+   "generatedAt": "2026-11-23T13:45:09+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1156": {
    "summary": "This bill would allow local governments to create grant programs to give incentives to homeowners. It also allows the establishment of local funds for these homeowner incentive grants.",
@@ -3223,18 +3232,19 @@
    "refined": false
   },
   "HB 1203": {
-   "summary": "The bill would automatically give homeowners in Chatham County who already get a homestead exemption a new exemption from school district property taxes. The new exemption is based on the difference between the current year's and the base year's assessed values of their homes.",
+   "summary": "This bill changes how Chatham County homeowners get a school district property tax exemption created by a 2025 law. Anyone who, as of December 31, 2026, has applied for and is eligible for the existing 1999 homestead exemption from Chatham County and City of Savannah school district taxes would automatically qualify for the 2025 exemption. They would not need to apply separately.",
    "subjects": [
     "REVENUE AND TAXATION",
     "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "a93e42ce92f2fb17",
-   "generatedAt": "2026-11-23T05:55:56+00:00",
+   "source": "claude-code",
+   "inputHash": "b831bb693bd3ab18",
+   "generatedAt": "2026-11-23T13:45:18+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1204": {
    "summary": "The bill would change the age at which individuals are protected from age discrimination in employment.",
@@ -3780,17 +3790,18 @@
    "refined": false
   },
   "HB 1241": {
-   "summary": "The bill would revise provisions regarding the city commission and the public school system for the City of Decatur.",
+   "summary": "This bill changes the charter of the City of Decatur, rewriting the article on the city commission. The city commission has four commissioners and a mayor. Commissioners come from two election districts, and the mayor is elected citywide. Other parts of the article cover who can run for office, how terms are staggered, and how the mayor and the commission operate.",
    "subjects": [
     "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "medium",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "9ae518fcc955a132",
-   "generatedAt": "2026-11-23T05:55:57+00:00",
+   "source": "claude-code",
+   "inputHash": "e35b189ec3d95d1a",
+   "generatedAt": "2026-11-23T13:45:28+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1242": {
    "summary": "This bill would remove the authority of the Department of Public Health and county boards of health to require vaccinations or other preventive measures against contagious or infectious diseases.",
@@ -5202,18 +5213,20 @@
    "refined": false
   },
   "HB 1338": {
-   "summary": "This bill would amend an existing law about a homestead exemption from certain City of Savannah ad valorem taxes for municipal purposes. The bill does not provide details of the amendment due to a cut-off in the official caption.",
+   "summary": "This bill would change a 1999 homestead exemption from City of Savannah property taxes for city purposes. It would cap the \"adjusted base year assessed value\" of a homestead at its tax year 2025 level for later years. It would take effect only if Savannah voters approve it in the November 2026 election and the General Assembly passes it by a two-thirds vote.",
    "subjects": [
     "Local / Municipal",
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "PROPERTY"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "a8302237bed19fe1",
-   "generatedAt": "2026-11-23T05:56:03+00:00",
+   "source": "claude-code",
+   "inputHash": "9319081378cea38b",
+   "generatedAt": "2026-11-23T13:45:38+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1339": {
    "summary": "The bill would revise the provisions for filling vacancies in the office of mayor or councilor in the city of Columbus, Georgia.",
@@ -5483,17 +5496,20 @@
    "refined": false
   },
   "HB 1357": {
-   "summary": "The bill would revise provisions related to the revenue bonding authority of the Bulloch County Public Facilities Authority and update definitions.",
+   "summary": "This bill changes the law that created the Bulloch County Public Facilities Authority. It revises what counts as a \"project\" the authority can fund with revenue bonds, including county buildings, facilities, and equipment. It bars the authority from issuing bonds for projects of the school district or other local governments in the county, and says no bond may have a maturity over 40 years.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT",
+    "BANKING AND FINANCE"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "17a3fc8f337d9137",
-   "generatedAt": "2026-11-23T05:56:09+00:00",
+   "source": "claude-code",
+   "inputHash": "ea4e29cd5d3b3c85",
+   "generatedAt": "2026-11-23T13:45:47+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1358": {
    "summary": "The bill would allow the Magistrate Court of Brooks County to charge a technology fee and specify how the money from this fee can be used. It also sets rules for ending the fee and handling leftover funds.",
@@ -6998,17 +7014,20 @@
    "refined": false
   },
   "HB 1460": {
-   "summary": "The bill would modify the salary provisions for the solicitor-general, the chief assistant solicitor-general, and other assistant solicitors-general in Muscogee County's State Court.",
+   "summary": "This bill changes how salaries are set for prosecutors in Muscogee County's State Court. The solicitor-general's pay would be at least 90 percent of a junior judge's salary in that court. The chief assistant solicitor-general would earn at least 80 percent of the solicitor-general's pay. Other assistant solicitors-general would have pay set by the solicitor-general, in line with other county or state attorneys.",
    "subjects": [
-    "COURTS"
+    "COURTS",
+    "PUBLIC OFFICERS AND EMPLOYEES",
+    "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "8a05718025145778",
-   "generatedAt": "2026-11-23T05:56:14+00:00",
+   "source": "claude-code",
+   "inputHash": "04c25ee393e3cea8",
+   "generatedAt": "2026-11-23T13:45:58+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1461": {
    "summary": "The bill would change the salary provisions for the clerk of the Superior Court of Muscogee County and the chief deputy clerk.",
@@ -7597,17 +7616,18 @@
    "refined": false
   },
   "HB 1500": {
-   "summary": "The bill would change the corporate limits of the City of Suwanee.",
+   "summary": "This bill changes the city limits of Suwanee in Gwinnett County. It adds about 93 acres to the city, including parcels and the unincorporated parts of McGinnis Ferry Road. It also removes about 8 acres, including a parcel and the nearby right-of-way along McGinnis Ferry Road and I-85.",
    "subjects": [
     "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "c93f068d708798f3",
-   "generatedAt": "2026-11-23T05:56:20+00:00",
+   "source": "claude-code",
+   "inputHash": "d8e30632db57324c",
+   "generatedAt": "2026-11-23T13:46:06+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1501": {
    "summary": "The bill would require the Environmental Protection Division to maintain a public website to monitor levels of certain contaminants in public water systems. It also requires annual reports and recommendations to the General Assembly.",
@@ -8140,18 +8160,20 @@
    "refined": false
   },
   "HB 1537": {
-   "summary": "This bill would provide a homestead exemption from Bibb County school district ad valorem taxes for residents aged 65 to 74, with an exemption amount of $17,000. It also provides a $32,000 exemption for residents of the same age range, but the caption is cut off before completing the description.",
+   "summary": "This bill would give Bibb County school district homeowners age 65 and older a homestead exemption from school district property taxes. Ages 65 to 74 would get $17,000 off the assessed value, ages 75 to 84 would get $32,000, and those 85 and older would be fully exempt. Residents must apply to the county tax commissioner. It takes effect only if Bibb County school district voters approve it in the November 2026 election.",
    "subjects": [
     "REVENUE AND TAXATION",
-    "EDUCATION"
+    "EDUCATION",
+    "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "4d07a97ca9861617",
-   "generatedAt": "2026-11-23T05:11:41+00:00",
+   "source": "claude-code",
+   "inputHash": "ea57dcf333621e66",
+   "generatedAt": "2026-11-23T13:46:15+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1538": {
    "summary": "This bill would provide a homestead tax exemption for residents of Macon-Bibb County. Those aged 65 to 74 would get a $17,000 exemption, and those aged 75 to 84 would get a $32,000 exemption.",
@@ -8340,17 +8362,18 @@
    "refined": false
   },
   "HB 1550": {
-   "summary": "The bill would change the corporate limits of the City of Byron. The exact new limits are not specified in the provided text.",
+   "summary": "This bill adds an area to the City of Byron's corporate limits. The added area runs along Housers Mill Road, near the Georgia Highway 247 connector. It takes effect June 1, 2026 only if a separate act removes the same right of way from the City of Fort Valley. Otherwise, it does not take effect and is repealed that day.",
    "subjects": [
     "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "7d1b812cfd6d3079",
-   "generatedAt": "2026-11-23T05:56:37+00:00",
+   "source": "claude-code",
+   "inputHash": "7c378ef0b6420c58",
+   "generatedAt": "2026-11-23T13:46:28+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1551": {
    "summary": "The bill would increase the income cap for a homestead exemption from Pickens County School District ad valorem taxes for educational purposes.",
@@ -8516,17 +8539,20 @@
    "refined": false
   },
   "HB 1562": {
-   "summary": "This bill would increase the homestead exemption amount for totally disabled residents of Pike County from ad valorem taxes for county purposes. It also provides for increased amounts of homestead exemptions for certain residents who have lived in the county for a specific period of time.",
+   "summary": "This bill would raise the homestead exemption from Pike County property taxes for totally disabled residents, from the county's 2002 law. The base exemption would be $15,000 of assessed value. Higher amounts, up to $30,000, would apply to those age 70 or older who have lived in the county for set lengths of time. It would take effect only if Pike County voters approve it in November 2026.",
    "subjects": [
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "HANDICAPPED PERSONS",
+    "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "79688c8dded16eb5",
-   "generatedAt": "2026-11-23T05:56:44+00:00",
+   "source": "claude-code",
+   "inputHash": "96b5e94773563326",
+   "generatedAt": "2026-11-23T13:46:36+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1563": {
    "summary": "This bill would increase the homestead exemption from ad valorem taxes for senior citizens in Pike County. It also provides for increased exemptions for certain residents who have lived in the county for a specific period of time.",
@@ -8624,17 +8650,18 @@
    "refined": false
   },
   "HB 157": {
-   "summary": "The bill would amend the charter of the Town of Braselton to annex certain properties into the town.",
+   "summary": "This bill would add certain properties in Jackson County to the Town of Braselton. The land is described by survey and plat records, with two tax parcels excluded. The change amends the town's 2003 charter so those properties fall within the town limits. It takes effect when the Governor approves it or it becomes law without approval.",
    "subjects": [
     "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "8d4c827cef33e68e",
-   "generatedAt": "2026-11-23T05:56:47+00:00",
+   "source": "claude-code",
+   "inputHash": "8a83b8bce6c990b9",
+   "generatedAt": "2026-11-23T13:46:45+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1570": {
    "summary": "The bill would revise the membership of the board of the Cochran/Bleckley Airport Authority.",
@@ -8650,18 +8677,19 @@
    "refined": false
   },
   "HB 1571": {
-   "summary": "The bill would revise the terms of the State Court of Bryan County, which was previously the City Court of Pembroke.",
+   "summary": "This bill changes when the State Court of Bryan County, formerly the City Court of Pembroke, holds its terms. Criminal trials would be held in four regular terms a year, starting January 2 and the first day of April, July, and October. Civil trials would be held monthly, starting on the first of each month. It takes effect July 1, 2026.",
    "subjects": [
-    "Local / Municipal",
-    "COURTS"
+    "COURTS",
+    "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "3788d198baf76804",
-   "generatedAt": "2026-11-23T05:56:49+00:00",
+   "source": "claude-code",
+   "inputHash": "81a1a2480d48d096",
+   "generatedAt": "2026-11-23T13:46:53+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1572": {
    "summary": "The bill would require food service establishments to take certain actions related to food allergy awareness and to post specific information in staff areas, as approved by the Department of Public Health.",
@@ -8746,17 +8774,18 @@
    "refined": false
   },
   "HB 1578": {
-   "summary": "The bill would clarify the name of the Town of Arcade and make related changes to its charter.",
+   "summary": "This bill updates the charter of the Town of Arcade. It changes the municipality's name to the \"City of Arcade\" throughout the charter and sets the council's organizational meeting for the second Monday of January after an election. It also revises rules for emergency ordinances and gives the mayor the power to veto council actions, which the council can override by a vote of four members.",
    "subjects": [
     "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "18aa46f95264203b",
-   "generatedAt": "2026-11-23T05:56:53+00:00",
+   "source": "claude-code",
+   "inputHash": "0e1c8916e73b26a9",
+   "generatedAt": "2026-11-23T13:47:02+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1579": {
    "summary": "This bill would change the boundaries of the City of Savannah.",
@@ -8985,17 +9014,19 @@
    "refined": false
   },
   "HB 1594": {
-   "summary": "The bill would revise the corporate limits of the City of Riceboro.",
+   "summary": "This bill would add about 809 acres to the City of Riceboro by revising its corporate limits. The new area is described by boundary measurements that begin at the intersection of U.S. Highway 17 (South Coastal Highway) and Retreat Road. It amends the city's 1992 charter.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "615d52f206f12336",
-   "generatedAt": "2026-11-23T05:56:58+00:00",
+   "source": "claude-code",
+   "inputHash": "0375c9a614153f64",
+   "generatedAt": "2026-11-23T13:47:12+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 1595": {
    "summary": "The bill would revise how the income cap is calculated for a $10,000 homestead exemption from certain ad valorem taxes in Clarke County, Georgia, for residents and the Clarke County School District.",
@@ -10165,17 +10196,18 @@
    "refined": false
   },
   "HB 226": {
-   "summary": "The bill would change the corporate limits of the City of Cochran.",
+   "summary": "This bill adds a stretch of road to the City of Cochran's corporate limits. The added area is the right of way of State Route 23 (also U.S. Highway 87), running north from the current city limits to where it meets Jac Arts Road.",
    "subjects": [
     "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "730e7bd9dd9336e4",
-   "generatedAt": "2026-11-23T05:57:02+00:00",
+   "source": "claude-code",
+   "inputHash": "ae133c1fb20591f3",
+   "generatedAt": "2026-11-23T13:47:20+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 227": {
    "summary": "The bill would rename low THC oil as medical cannabis and clarify and revise criminal penalties related to offenses against public health and morals, regulation of controlled substances, and general provisions relative to the Department of Public Health.",
@@ -10832,17 +10864,18 @@
    "refined": false
   },
   "HB 271": {
-   "summary": "The bill would change certain provisions regarding definitions in Georgia's revenue and taxation laws.",
+   "summary": "House Bill 271 changes the definition of \"agency\" in Georgia's general revenue and taxation law (Code Section 48-1-2). Under the revised definition, an agency means any department, commission, institution, office, or officer of the state. The bill takes effect when the Governor approves it or it becomes law without approval.",
    "subjects": [
     "REVENUE AND TAXATION"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "2aa104e80bc1ffe1",
-   "generatedAt": "2026-11-23T05:15:57+00:00",
+   "source": "claude-code",
+   "inputHash": "78b7772e2052c565",
+   "generatedAt": "2026-11-23T13:47:31+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 272": {
    "summary": "The bill would change certain provisions regarding definitions in Georgia's revenue and taxation laws.",
@@ -10897,17 +10930,18 @@
    "refined": false
   },
   "HB 276": {
-   "summary": "The bill would change certain definitions related to income taxes.",
+   "summary": "This bill creates a state income tax credit for buying, installing, and preparing a power generator that runs on woody biomass (such as land-clearing residue and wood pellets) and has at least 50 megawatts of capacity. It also changes a sales tax exemption on computer equipment for high-technology companies and data centers, adding companies that use such generators on site to those eligible from 2029 through 2034.",
    "subjects": [
     "REVENUE AND TAXATION"
    ],
-   "confidence": "low",
+   "confidence": "medium",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "2a8d5aa6192dce0f",
-   "generatedAt": "2026-11-23T05:16:02+00:00",
+   "source": "claude-code",
+   "inputHash": "02df3024d8487196",
+   "generatedAt": "2026-11-23T13:47:41+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 277": {
    "summary": "The bill would change certain definitions related to the excise tax on rooms, lodgings, and accommodations.",
@@ -11178,17 +11212,20 @@
    "refined": false
   },
   "HB 295": {
-   "summary": "This bill would provide procedures for property owners to claim compensation from local governments for losses in property value or expenses due to the local government's failure to follow certain laws, ordinances, or resolutions, or due to the local government's maintenance of something.",
+   "summary": "This bill lets Georgia owners of real property submit a written claim to their city or county for money if a local government's policy or a public nuisance it maintains cuts the property's value or causes the owner expenses. Covered policies include not following immigration sanctuary and lawful-presence laws, or not enforcing laws on things like illegal camping, loitering, and shoplifting. If the claim is rejected or ignored for 30 days, the owner may sue.",
    "subjects": [
-    "LOCAL GOVERNMENT"
+    "LOCAL GOVERNMENT",
+    "PROPERTY",
+    "TORTS"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "39c0a1ab1fa07049",
-   "generatedAt": "2026-11-23T05:16:27+00:00",
+   "source": "claude-code",
+   "inputHash": "69631c9a0b3e0e24",
+   "generatedAt": "2026-11-23T13:47:50+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 296": {
    "summary": "This bill would allow people to show a driver's license in an electronic format when driving, instead of needing a physical license. It also says that law enforcement cannot force someone to show their license on a wireless device.",
@@ -12798,17 +12835,19 @@
    "refined": false
   },
   "HB 404": {
-   "summary": "The bill would revise the city boundaries of Conyers.",
+   "summary": "This bill changes the boundaries of the City of Conyers. It adds nine listed properties, mostly along Milstead Avenue (Highway 20) and one on Old Covington Highway, in Rockdale County, to the city limits. Each parcel is described by its address and legal land description.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "98c7034518e4a13f",
-   "generatedAt": "2026-11-23T05:57:05+00:00",
+   "source": "claude-code",
+   "inputHash": "6a0a979f8c697dcf",
+   "generatedAt": "2026-11-23T13:47:59+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 405": {
    "summary": "This bill would require insurance adjusters to also be licensed as contractors. It limits the type of adjuster license based on the contractor's license type and allows licensed contractors to become licensed adjusters.",
@@ -12919,17 +12958,20 @@
    "refined": false
   },
   "HB 412": {
-   "summary": "The bill would change certain provisions related to the reappointment of members of the Polk County Water Authority.",
+   "summary": "This bill changes the rules for how long members of the Polk County Water Authority can serve. A member cannot be reappointed for two years after the end of their second consecutive term. Members also keep serving until their successors are appointed and qualified.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT",
+    "PUBLIC OFFICERS AND EMPLOYEES"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "b92c09aef30d2e5b",
-   "generatedAt": "2026-11-23T05:57:07+00:00",
+   "source": "claude-code",
+   "inputHash": "5c8dc9e41c2e00ab",
+   "generatedAt": "2026-11-23T13:48:08+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 413": {
    "summary": "This bill would stop local governments from making rules that ban mobile sawmills on agricultural land.",
@@ -13725,18 +13767,20 @@
    "refined": false
   },
   "HB 468": {
-   "summary": "The bill would revise the compensation of members of the Heard County Board of Education.",
+   "summary": "This bill changes how members of the Heard County Board of Education are paid. Each member would receive $450 per month. Members who travel outside the county on board business, such as for training or state meetings, would be reimbursed for actual expenses if a majority of the board approves the travel first. The change takes effect July 1, 2025.",
    "subjects": [
     "Local / Municipal",
-    "EDUCATION"
+    "EDUCATION",
+    "PUBLIC OFFICERS AND EMPLOYEES"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "e16079fc68f4b2be",
-   "generatedAt": "2026-11-23T05:57:09+00:00",
+   "source": "claude-code",
+   "inputHash": "1c48992c9e2f8091",
+   "generatedAt": "2026-11-23T13:48:18+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 469": {
    "summary": "The bill would repeal certain provisions that allow personnel to carry weapons within school safety zones and at school functions.",
@@ -14410,17 +14454,19 @@
    "refined": false
   },
   "HB 514": {
-   "summary": "The bill would change provisions related to the corporate limits of the City of Kennesaw.",
+   "summary": "This bill adds a described 2.20-acre parcel in Land Lot 208 of Cobb County, near Ernest Barrett Parkway and U.S. Highway 41, to the corporate limits of the City of Kennesaw. It amends the city's 2013 charter to do so.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "1349fe45e67aca86",
-   "generatedAt": "2026-11-23T05:57:10+00:00",
+   "source": "claude-code",
+   "inputHash": "91d9a5e49d0dbf75",
+   "generatedAt": "2026-11-23T13:48:27+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 515": {
    "summary": "This bill would add a sixth judge to the superior courts in the Augusta Judicial Circuit and allow the Governor to appoint this additional judge.",
@@ -14899,17 +14945,19 @@
    "refined": false
   },
   "HB 548": {
-   "summary": "The bill would amend the existing law governing the Albany-Dougherty Inner City Authority, restating the law and providing definitions, membership, officers, conflicts of interest, and powers of the authority.",
+   "summary": "This bill rewrites the 1977 law that created the Albany-Dougherty Inner City Authority, a public body serving the City of Albany and Dougherty County. It gives the law a short title and restates the authority's definitions, purposes, and membership. The authority can own, sell, or lease projects, including redevelopment projects, and the bill also covers revenue bonds, immunity, and tax exemptions.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
-   "confidence": "low",
+   "confidence": "medium",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "1dcf102d1853c4eb",
-   "generatedAt": "2026-11-23T05:57:14+00:00",
+   "source": "claude-code",
+   "inputHash": "ec3b70bdb5c67073",
+   "generatedAt": "2026-11-23T13:48:37+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 549": {
    "summary": "The bill would extend the time frame for which a subsequent employer of a peace officer must reimburse the officer for total training expenses. It also specifies the types of training eligible for reimbursement.",
@@ -15629,19 +15677,20 @@
    "refined": false
   },
   "HB 598": {
-   "summary": "The bill would amend laws related to persons and their rights, the Juvenile Code, offenses against public health and morals, domestic relations, and education. It does not provide specific details about the changes.",
+   "summary": "This bill would create the \"Reproductive Freedom Act\" and state that every individual has a fundamental right to reproductive freedom. It would repeal Georgia's criminal abortion provisions and the \"Woman's Right to Know Act.\" It would change the Parental Notification Act for minors seeking abortions and add exceptions to its notice rules. It would also remove limits on insurance and Medicaid coverage of abortion.",
    "subjects": [
-    "GENERAL PROVISIONS, OCGA",
-    "COURTS",
+    "HEALTH",
+    "CRIMES AND OFFENSES (CRIMINAL CODE)",
     "DOMESTIC RELATIONS"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "f25f23d2f34fe4c6",
-   "generatedAt": "2026-11-23T05:23:25+00:00",
+   "source": "claude-code",
+   "inputHash": "d6ad286a5898a953",
+   "generatedAt": "2026-11-23T13:48:47+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 599": {
    "summary": "The bill would allow public school systems to hire certain beneficiaries of the Teachers Retirement System of Georgia as full-time classroom teachers until June 30, 2030.",
@@ -16001,17 +16050,19 @@
    "refined": false
   },
   "HB 622": {
-   "summary": "The bill would revise the compensation for the mayor and councilmembers of the City of Hoboken, Georgia.",
+   "summary": "This bill changes how much the mayor and city council members of Hoboken, Georgia are paid. The mayor would receive $475 per month, and each councilmember would receive $175 per month. They would also be repaid for actual and necessary expenses they have while doing their jobs.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "PUBLIC OFFICERS AND EMPLOYEES"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "46272edcdda20fc0",
-   "generatedAt": "2026-11-23T05:57:24+00:00",
+   "source": "claude-code",
+   "inputHash": "faeab56c0494d9bf",
+   "generatedAt": "2026-11-23T13:48:56+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 623": {
    "summary": "This bill would allow the Probate Court of Carroll County to charge a technology fee and specify how the money can be used. It also sets rules for ending the fee and handling leftover funds.",
@@ -17112,18 +17163,19 @@
    "refined": false
   },
   "HB 698": {
-   "summary": "This bill would provide a homestead exemption from Walker County school district ad valorem taxes for residents who are 70 years old or older, up to $50,000 of the assessed value of their homestead. It also aims to provide a full exemption for residents who have lived in the district for a certain period, but the caption is cut off before specifying the full details.",
+   "summary": "This bill would give some Walker County school district homeowners a break on school property taxes. Residents 70 and older would get a $50,000 homestead exemption. Residents 75 and older who have lived in the district five years or more would be exempt on the full assessed value of their homestead. Voters in the district would decide in November 2026.",
    "subjects": [
     "REVENUE AND TAXATION",
     "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "719d989ba3e306e2",
-   "generatedAt": "2026-11-23T05:25:45+00:00",
+   "source": "claude-code",
+   "inputHash": "1ab965f63254cdcd",
+   "generatedAt": "2026-11-23T13:49:04+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 699": {
    "summary": "This bill would change the terms of the board of elections and registration for Dawson County to be staggered.",
@@ -17427,17 +17479,20 @@
    "refined": false
   },
   "HB 719": {
-   "summary": "This bill would revise the compensation for the chairperson and members of the board of education in Worth County.",
+   "summary": "This bill changes how much Worth County board of education members are paid. The chairperson would receive $300 per day and each other member $200 per day for attending board meetings or committee meetings and travel on official board business approved in advance by a majority of the board. Actual expenses would also be reimbursed. It takes effect on the first day of the month after it becomes law.",
    "subjects": [
-    "EDUCATION"
+    "EDUCATION",
+    "Local / Municipal",
+    "PUBLIC OFFICERS AND EMPLOYEES"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "70c47b5de86db2ae",
-   "generatedAt": "2026-11-23T05:57:33+00:00",
+   "source": "claude-code",
+   "inputHash": "929c577581dbbf0b",
+   "generatedAt": "2026-11-23T13:49:13+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 72": {
    "summary": "The bill would provide funding for the operation of state government and its departments, boards, bureaus, commissions, institutions, and other agencies, as well as for the university system, common schools, counties, municipalities, and political subdivisions for the State Fiscal Year beginning July 1, 2025, and ending June 30, 2026.",
@@ -18199,17 +18254,20 @@
    "refined": false
   },
   "HB 771": {
-   "summary": "The bill would extend a homestead exemption from Cherokee County School District ad valorem taxes for certain residents who are 62 years old or older and have an annual income not exceeding $16,000.",
+   "summary": "This bill would change a Cherokee County School District property tax exemption for residents who are disabled or at least 62 and meet an income limit. It would waive the five-year homestead requirement for the surviving spouse of someone who got the exemption. It would take effect only if Cherokee County school district voters approve it in an election no later than November 2026.",
    "subjects": [
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "EDUCATION",
+    "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "25ed4eb0b261d9b2",
-   "generatedAt": "2026-11-23T05:57:53+00:00",
+   "source": "claude-code",
+   "inputHash": "ec6be8e3fbd4e3e4",
+   "generatedAt": "2026-11-23T13:49:22+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 772": {
    "summary": "The bill would increase the homestead exemption from city ad valorem taxes for residents of Norcross who own and occupy their residences, and for those who are 62 years old or older and own and occupy their residences.",
@@ -19169,17 +19227,20 @@
    "refined": false
   },
   "HB 836": {
-   "summary": "The bill would increase the homestead exemption from ad valorem taxes for educational purposes in Coweta County School District for residents aged 65 to 70, 71 to 74, and 75 and older.",
+   "summary": "This bill would raise the Coweta County School District homestead exemption from school property taxes for older homeowners. The exemption would go to $75,000 of assessed value for ages 65 to 70 and $100,000 for ages 71 to 74. Residents 75 and older would be fully exempt from school taxes on their homestead. It takes effect only if Coweta County voters approve it in a November 2025 election.",
    "subjects": [
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "EDUCATION",
+    "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "0c6460119fdaf22f",
-   "generatedAt": "2026-11-23T05:58:09+00:00",
+   "source": "claude-code",
+   "inputHash": "0ed0f320a75c4494",
+   "generatedAt": "2026-11-23T13:49:31+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 837": {
    "summary": "This bill would allow the Probate Court of Richmond County to charge a technology fee and specify how the money collected can be used. It also outlines what happens to any leftover funds once the fee is no longer collected.",
@@ -19262,17 +19323,19 @@
    "refined": false
   },
   "HB 842": {
-   "summary": "This bill would revise the homestead exemption amount for residents aged 70 or older in Whitfield County who are exempt from ad valorem taxes for county purposes. The current exemption amount is $250,000.00, but the bill does not specify the new amount.",
+   "summary": "This bill would raise the Whitfield County homestead exemption for residents 70 or older from $250,000 to $325,000 of appraised value, for county property taxes. It would apply to tax years starting January 1, 2026. It would take effect only if Whitfield County voters approve it in a November 2025 election.",
    "subjects": [
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "bfacbf42477790ec",
-   "generatedAt": "2026-11-23T05:58:10+00:00",
+   "source": "claude-code",
+   "inputHash": "86d5624293fc24e1",
+   "generatedAt": "2026-11-23T13:49:40+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 843": {
    "summary": "The bill would increase the homestead exemption from City of Dalton ad valorem taxes for municipal purposes for residents aged 70 or older. It also revises provisions for grandfathering certain residents and ensures compliance with constitutional requirements.",
@@ -19288,17 +19351,20 @@
    "refined": false
   },
   "HB 844": {
-   "summary": "The bill would change the homestead exemption amount for residents over 70 years old in the Whitfield County School District who pay ad valorem taxes for educational purposes.",
+   "summary": "This bill would raise a homestead exemption from Whitfield County School District property taxes for educational purposes. The exemption would go from $250,000 to $325,000 of a home's appraised value for residents of the school district who are 70 or older. It would apply to tax years beginning in 2026 and takes effect only if voters approve it in a November 2025 election.",
    "subjects": [
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "EDUCATION",
+    "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "f54b02c1e15a477a",
-   "generatedAt": "2026-11-23T05:58:13+00:00",
+   "source": "claude-code",
+   "inputHash": "e567bc38b42e3254",
+   "generatedAt": "2026-11-23T13:49:50+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 845": {
    "summary": "The bill would require the Cherokee County Board of Education to have an internal audit function and establish a position of internal auditor. It also provides for the selection, powers, and duties of the internal auditor and sets a sunset date for the provisions governing the internal auditor.",
@@ -19356,17 +19422,20 @@
    "refined": false
   },
   "HB 849": {
-   "summary": "The bill would rename the Lower Chattahoochee Regional Airport Authority and make other unspecified changes.",
+   "summary": "This bill renames the Lower Chattahoochee Regional Airport Authority as the Randolph County Airport Authority. The renamed authority becomes the successor to the old one and takes over its assets, debts, and obligations. The bill also updates the authority's name in the law's short title and in the rules for validating its bonds.",
    "subjects": [
-    "AVIATION"
+    "AVIATION",
+    "LOCAL GOVERNMENT",
+    "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "573685143f437817",
-   "generatedAt": "2026-11-23T05:58:16+00:00",
+   "source": "claude-code",
+   "inputHash": "d64c204a5c7b3c15",
+   "generatedAt": "2026-11-23T13:49:59+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 85": {
    "summary": "This bill would modify the compensation received by superior court judges and revise the method for calculating and setting their salaries.",
@@ -19503,18 +19572,20 @@
    "refined": false
   },
   "HB 859": {
-   "summary": "The bill would provide a homestead exemption from City of Cartersville independent school district ad valorem taxes for educational purposes for certain residents.",
+   "summary": "If voters approve it in a November 2026 referendum, this bill would raise the Cartersville school district property tax homestead exemption for residents who are 65 or older or totally disabled. The exemption would range from $60,000 for ages 65–69 or totally disabled to $200,000 for ages 80 and up. It would apply to tax years 2028 through 2032 only.",
    "subjects": [
     "Local / Municipal",
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "EDUCATION"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "9d468b0132c80e5a",
-   "generatedAt": "2026-11-23T05:58:22+00:00",
+   "source": "claude-code",
+   "inputHash": "05d1de090ceb4417",
+   "generatedAt": "2026-11-23T13:50:12+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 86": {
    "summary": "This bill would revise how the salaries of certain state officials are calculated and set, including Justices of the Supreme Court, Judges of the Court of Appeals, the judge of the Georgia State-wide Business Court, and the judge of the Georgia State Tax Court.",
@@ -19543,17 +19614,20 @@
    "refined": false
   },
   "HB 861": {
-   "summary": "The bill would increase the homestead exemption from City of Calhoun independent school district ad valorem taxes for certain residents. It would raise the exemption amount for residents aged 65 to 69 from $40,000 to a higher amount, and for those 70 and older from $100,000 to a higher amount.",
+   "summary": "This bill would raise the homestead exemption from City of Calhoun independent school district property taxes for older residents, if local voters approve it in a November 2025 referendum. The exemption would become $50,000 for ages 65 to 69, $115,000 for ages 70 to 74, and $125,000 for ages 75 and older. Each amount applies to the assessed value of the home.",
    "subjects": [
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "EDUCATION",
+    "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "1d220f0e3e844a2a",
-   "generatedAt": "2026-11-23T05:58:26+00:00",
+   "source": "claude-code",
+   "inputHash": "57db121d1a435249",
+   "generatedAt": "2026-11-23T13:50:21+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 862": {
    "summary": "The bill sets the salary for the sheriff of Fulton County.",
@@ -21313,17 +21387,19 @@
    "refined": false
   },
   "HB 982": {
-   "summary": "The bill would change the description of election districts for the city council of Barnesville. It also provides for current members to continue in office and includes definitions and other related matters.",
+   "summary": "This bill changes how the City of Barnesville's five city council districts are described, using a new map labeled \"barnesville-p1-2025.\" The districts keep their numbers (1 through 5). Current council members stay in office until their terms end and are treated as serving from the newly described districts. It affects voters and council members in Barnesville.",
    "subjects": [
+    "ELECTIONS",
     "Local / Municipal"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "ad1ae26410f82e44",
-   "generatedAt": "2026-11-23T05:58:32+00:00",
+   "source": "claude-code",
+   "inputHash": "4453df49c36d9375",
+   "generatedAt": "2026-11-23T13:50:30+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "HB 983": {
    "summary": "The bill would clarify that prescribed burning for silviculture purposes is exempt from certain burning notice and permit requirements. It also revises requirements for prescribed burning.",
@@ -25622,17 +25698,20 @@
    "refined": false
   },
   "SB 189": {
-   "summary": "The bill would require the Department of Community Affairs to create and maintain a public database of legal notices that must be published in newspapers. This database would be an additional mandatory way to post these notices.",
+   "summary": "This bill would have the Department of Community Affairs build and run a free-to-search public website of legal notices that the law now requires to be published in a newspaper. It would depend on funding from the General Assembly. Posting on the site would be required in addition to newspaper publication. In some cases, such as when a county's legal newspaper has no local office, a posting could replace newspaper publication.",
    "subjects": [
-    "STATE GOVERNMENT"
+    "STATE GOVERNMENT",
+    "LOCAL GOVERNMENT",
+    "COMMERCE AND TRADE"
    ],
    "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "70b7d2e5d46bd336",
-   "generatedAt": "2026-11-23T05:38:45+00:00",
+   "source": "claude-code",
+   "inputHash": "8cb5c95aa5629ec2",
+   "generatedAt": "2026-11-23T13:44:19+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "SB 19": {
    "summary": "The bill would require a ten-day waiting period for the purchase or transfer of certain firearms, with some exceptions, and set criminal penalties for violations.",
@@ -26294,17 +26373,19 @@
    "refined": false
   },
   "SB 233": {
-   "summary": "The bill would revise the subcommittees of the Behavioral Health Reform and Innovation Commission and extend the automatic repeal date.",
+   "summary": "This bill changes the Behavioral Health Reform and Innovation Commission. It raises the commission from 24 to 30 members and adds seats such as people with lived experience of addiction or overdose loss and disability-related roles. It renames the subcommittees, replacing two with Addictive Diseases and Intellectual and Developmental Disabilities. It also moves the commission's end date from June 30, 2025, to December 31, 2026.",
    "subjects": [
-    "MENTAL HEALTH"
+    "MENTAL HEALTH",
+    "STATE GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "962627a8d0dc42ed",
-   "generatedAt": "2026-11-23T05:39:51+00:00",
+   "source": "claude-code",
+   "inputHash": "f53885fed5e8f8f9",
+   "generatedAt": "2026-11-23T13:44:28+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "SB 234": {
    "summary": "This bill would provide a homestead exemption from City of Dalton independent school district ad valorem taxes for educational purposes. The exemption amount would be the difference between the current year's assessed value and the adjusted base year's assessed value of a homestead.",
@@ -27967,18 +28048,20 @@
    "refined": false
   },
   "SB 346": {
-   "summary": "The bill would revise the compensation for certain judges, judicial officers, and county officers in DeKalb County.",
+   "summary": "This bill changes how DeKalb County pays certain officials. It sets the salaries of the CEO, sheriff, clerk of superior court, tax commissioner, and county commissioners as percentages of a \"gross salary\" figure. Judges of the State, Juvenile, and Probate Courts, the chief magistrate, and the solicitor-general get the higher of $208,040 or 90 percent of that figure. It also sets associate magistrate pay and renames the Stone Mountain Judicial Circuit the DeKalb Judicial Circuit.",
    "subjects": [
-    "COURTS",
-    "PUBLIC OFFICERS AND EMPLOYEES"
+    "LOCAL GOVERNMENT",
+    "PUBLIC OFFICERS AND EMPLOYEES",
+    "COURTS"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "251c773ecf40f1ff",
-   "generatedAt": "2026-11-23T05:58:44+00:00",
+   "source": "claude-code",
+   "inputHash": "0798cc1fd6d1ffbb",
+   "generatedAt": "2026-11-23T13:50:40+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "SB 347": {
    "summary": "The bill would change the way members of the Brunswick and Glynn County Development Authority are appointed, alter the term of their office, and set new qualifications for membership.",
@@ -27994,17 +28077,20 @@
    "refined": false
   },
   "SB 348": {
-   "summary": "The bill would change the description of the commissioner districts for Hancock County, Georgia. It also provides for the continuation in office of current members and defines certain terms.",
+   "summary": "This bill changes how Hancock County's four commissioner districts are described, using a new map named in the bill. The chairperson is still elected by the whole county. Current commissioners stay in office until their terms end, and districts 1 through 4 keep their numbers under the new descriptions. The bill takes effect July 1, 2025.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT",
+    "ELECTIONS"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "0938598d1586a4de",
-   "generatedAt": "2026-11-23T05:58:45+00:00",
+   "source": "claude-code",
+   "inputHash": "bfbfbf50a2ec2a5f",
+   "generatedAt": "2026-11-23T13:50:49+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "SB 349": {
    "summary": "This bill would allow the governing authority of Hancock County to levy an excise tax as specified in a certain section of the O.C.G.A.",
@@ -28034,18 +28120,20 @@
    "refined": false
   },
   "SB 350": {
-   "summary": "The bill would revise the compensation for certain judges, judicial officers, and county officers in DeKalb County.",
+   "summary": "This bill changes how much certain DeKalb County officials and judges are paid. It sets salaries for officials such as the Chief Executive Officer, District Attorney, Sheriff, Clerk of the Superior Court, Tax Commissioner, and county commissioners as percentages of a base \"gross salary.\" It also sets pay for several judges, the Chief Magistrate, and the Solicitor-General, and for associate magistrates. It updates references to the Stone Mountain Judicial Circuit, now called the DeKalb Judicial Circuit.",
    "subjects": [
-    "COURTS",
-    "PUBLIC OFFICERS AND EMPLOYEES"
+    "LOCAL GOVERNMENT",
+    "PUBLIC OFFICERS AND EMPLOYEES",
+    "COURTS"
    ],
-   "confidence": "low",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "6facbdca6267420a",
-   "generatedAt": "2026-11-23T05:58:47+00:00",
+   "source": "claude-code",
+   "inputHash": "b3ae435b6b2c336d",
+   "generatedAt": "2026-11-23T13:50:59+00:00",
    "needsReview": true,
-   "refined": false
+   "refined": true,
+   "usedFullText": true
   },
   "SB 351": {
    "summary": "The bill would change the salary of the judge and solicitor-general for the State Court of Treutlen in Treutlen County.",
