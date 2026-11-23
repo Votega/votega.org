@@ -123,6 +123,7 @@ breadcrumb:
   .lh-flag-lu { background: var(--color-watch-landuse-tint); color: var(--color-watch-landuse); }
   .lh-flag-alpr { background: var(--color-watch-alpr-tint); color: var(--color-watch-alpr); }
   .lh-flag-tax { background: var(--color-watch-taxes-tint); color: var(--color-watch-taxes); }
+  .lh-flag-budget { background: var(--color-watch-budget-tint); color: var(--color-watch-budget); }
   /* Place whose site blocks automated access, or has stopped posting: its links and
      topic badges are not being refreshed. Three places of 62 carry this, so on a
      card it is a corner mark rather than a row of its own; the legend below keeps
@@ -181,6 +182,10 @@ breadcrumb:
     <span class="lh-legend-item">
       <span class="lh-flag lh-flag-tax"><i class="fa-solid fa-receipt" aria-hidden="true"></i> Local taxes</span>
       A SPLOST, ESPLOST, TSPLOST, bond, or other local tax or referendum on recent agendas.
+    </span>
+    <span class="lh-legend-item">
+      <span class="lh-flag lh-flag-budget"><i class="fa-solid fa-coins" aria-hidden="true"></i> Budgets</span>
+      A budget adoption, amendment, public hearing or work session on recent agendas.
     </span>
     <span class="lh-legend-item">
       <span class="lh-flag lh-flag-votes"><i class="fa-solid fa-gavel" aria-hidden="true"></i></span>
@@ -519,13 +524,13 @@ breadcrumb:
     // There is no special case here any more. The old millage-budget tag had to be
     // excluded from ranking — its bare "budget" / "fiscal year" keywords put it on
     // 59 of 59 places — and it has been replaced by the narrow `budget` topic, which
-    // ranks like any other (docs/BUDGET-TOPIC-SCOPE.md). Its pill joins this list in
-    // phase 2, once the topic has a page to link to.
+    // ranks like any other (docs/BUDGET-TOPIC-SCOPE.md).
     var TOPIC_PILLS = [
       { key: 'alprCount', flag: null, cls: 'lh-flag-alpr', icon: 'fa-camera', label: 'ALPR' },
       { key: 'dataCenterCount', flag: null, cls: 'lh-flag-dc', icon: 'fa-industry', label: 'Data centers' },
       { key: 'landUseCount', flag: 'land-use', cls: 'lh-flag-lu', icon: 'fa-trowel-bricks', label: 'Land use' },
-      { key: 'localTaxesCount', flag: 'local-taxes', cls: 'lh-flag-tax', icon: 'fa-receipt', label: 'Local taxes' }
+      { key: 'localTaxesCount', flag: 'local-taxes', cls: 'lh-flag-tax', icon: 'fa-receipt', label: 'Local taxes' },
+      { key: 'budgetCount', flag: 'budget', cls: 'lh-flag-budget', icon: 'fa-coins', label: 'Budgets' }
     ];
     var MAX_PILLS = 2;
 
