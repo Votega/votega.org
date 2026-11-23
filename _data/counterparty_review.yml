@@ -1910,7 +1910,7 @@ entities:
   - Rush Truck Center, Atlanta
   reviewNote: DBA
 - key: ga-ii
-  status: approved
+  status: rejected
   displayName: CAR Industries of GA II, LLC
   role: vendor
   date: '2026-06-09'
@@ -1921,7 +1921,8 @@ entities:
     to CAR Industries of GA II, LLC, dba Container Repair Services. Amount Not To Exceed: $200,000.00.'
   aka:
   - Container Repair Services
-  reviewNote: DBA
+  reviewNote: duplicate of car-industries-of-ga-ii (extractor fragment "GA II, LLC" of the same company);
+    its item is carried there
 - key: gainesville
   status: approved
   displayName: Mansfield Oil Co. of Gainesville, Inc
@@ -2326,7 +2327,7 @@ entities:
     Hill Road.'
   reviewNote: c/o names the applicant's or vendor's representative, not another name for the organization
 - key: ids-global
-  status: approved
+  status: rejected
   displayName: International Design Services, Inc.
   role: vendor
   date: '2026-06-09'
@@ -2341,7 +2342,7 @@ entities:
     LLC; and International Design Services, Inc., dba IDS Global, Inc.: Total Amount Not to Exceed: $1,650,000.00.'
   aka:
   - IDS Global, Inc.
-  reviewNote: dba
+  reviewNote: duplicate of international-design-services; the dba IDS Global is kept there as its aka
 - key: imagetrend
   status: approved
   displayName: ImageTrend, LLC.
@@ -3164,7 +3165,7 @@ entities:
   - American Medical Response
   reviewNote: dba
 - key: metro-ambulance-services
-  status: approved
+  status: rejected
   displayName: Metro Ambulance Services, Inc.
   role: vendor
   date: '2026-06-23'
@@ -3176,7 +3177,8 @@ entities:
     Services, Inc. d/b/a American Medical Response, Inc.: Amount Not To Exceed: $1,480,000.00.'
   aka:
   - American Medical Response, Inc.
-  reviewNote: dba
+  reviewNote: 'duplicate of metro-ambulance-service: the county spells it Service in 2026-1050 and Services
+    in 2026-1001; both items still carry the text'
 - key: mgt-impact-solutions
   status: approved
   displayName: MGT Impact Solutions, LLC
