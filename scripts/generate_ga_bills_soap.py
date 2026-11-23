@@ -72,6 +72,8 @@ from lib.atomic_io import write_json_atomic, atomic_write
 from lib.ga_passage import native_is_passage
 from lib.ga_vote_rules import is_state_constitutional_amendment, vote_passed
 from lib.ga_bill_subjects import infer_local_subject
+from lib.ga_bills_rollover import (WRITE_FLOOR, detect_changeover, floor_problem,  # noqa: E402
+                                   frozen_problem, rollover_stamp)
 from lib.ga_sessions import (ACTIVE_SESSION, BIENNIUM, all_session_ids,
                              legis_session_id, preserved_session_ids, session_name,
                              tag_session)
@@ -102,7 +104,13 @@ _CODE_SECTION_RE = re.compile(r"\bCode Sections?\s+(\d{1,2})-", re.IGNORECASE)
 _APPROPRIATIONS_RE = re.compile(r"\bmak\w+ and provid\w+ appropriations", re.IGNORECASE)
 _GENERAL_ASSEMBLY_TITLE = 28
 
+# The sessions ga-bills-subjects-base.json (OS snapshot) and ga-bills-subjects.json
+# (manual overrides) describe: both are keyed by bare identifier, and identifiers repeat
+# every biennium. A new biennium's bills never read them (see apply_subjects).
+SUBJECT_SNAPSHOT_SESSIONS = frozenset({"2025_26", "2026_ss"})
+
 DATA_DIR          = "assets/data"
+REPO_ROOT         = "."   # cwd-relative like DATA_DIR; where the frozen biennium is looked for
 OUTPUT_FILE       = os.path.join(DATA_DIR, "ga-bills.json")
 SUBJECTS_BASE     = os.path.join(DATA_DIR, "ga-bills-subjects-base.json")
 OVERRIDES_FILE    = os.path.join(DATA_DIR, "ga-bills-subjects.json")
@@ -394,10 +402,15 @@ def map_bill(detail, our_session, roster, titles_map):
 
 
 def get_index(legis_session):
-    """GetLegislationForSession -> [{Id, Number, Description}] for the session."""
+    """GetLegislationForSession -> [legislation id] for the session.
+
+    Returns None when the CALL failed, [] when it succeeded and the session is simply
+    empty (an unfiled session at a biennium changeover). The two must not be confused:
+    main() treats None as fatal, because an outage that looked like an empty session
+    would otherwise be written as one."""
     root = soap_call("GetLegislationForSession", "<s:SessionId>%d</s:SessionId>" % legis_session)
     if root is None:
-        return []
+        return None
     out = []
     for li in root.findall(".//d:LegislationIndex", ns):
         lid = _text(li, "Id", int)
@@ -425,30 +438,42 @@ def apply_subjects(bill, base, overrides, ai=None):
     ident = bill["identifier"]
     if bill.pop("subjectsSource", None) == "ai":
         bill["subjects"] = []
-    if ident in overrides:
+    # `base` and `overrides` are keyed by BARE identifier and describe the 2025-26
+    # General Assembly. Bill numbers restart each biennium, so a 2027 "HB 1532" must not
+    # inherit the 2025-26 HB 1532's subjects; those bills keep the fallback below.
+    scoped = tag_session(bill.get("session")) in SUBJECT_SNAPSHOT_SESSIONS
+    if scoped and ident in overrides:
         bill["subjects"] = overrides[ident]
-    elif ident in base:
+    elif scoped and ident in base:
         bill["subjects"] = base[ident]
     # else: keep the fallback subjects map_bill() already derived from the summary/title.
     if not bill.get("subjects") and ai:
-        entry = ai.get(ident)
-        if entry and entry["session"] == bill.get("session"):
+        entry = ai.get("%s|%s" % (bill.get("session"), ident))
+        if entry:
             bill["subjects"] = list(entry["subjects"])
             bill["subjectsSource"] = "ai"
 
 
 def load_ai_subjects(path=AI_FILE, allowed=None):
-    """{identifier: {session, subjects}} for REVIEWED AI tags only (needsReview false).
+    """{"<session>|<identifier>": {session, subjects}} for REVIEWED AI tags only (needsReview false).
     Written locally by ai_enrich_ga_bills.py; a missing or unreadable file means no AI
     layer, never a failed run. `allowed`, when given, drops any tag outside the taxonomy."""
     try:
         with open(path, encoding="utf-8") as f:
-            entries = (json.load(f) or {}).get("bills", {})
+            doc = json.load(f) or {}
     except (OSError, ValueError):
         return {}
+    entries = doc.get("bills", {})
+    # An old-format file is keyed by bare identifier; reading it would attach a 2025-26
+    # draft to a same-numbered bill of another biennium. Fail loud, never skip silently.
+    if entries and (doc.get("metadata") or {}).get("schemaVersion") != 2:
+        sys.exit("%s is in the old format (bare-identifier keys, no metadata.schemaVersion 2). "
+                 "Run: python scripts/ai_enrich_ga_bills.py migrate-keys" % path)
     out = {}
     for ident, v in entries.items():
         if not isinstance(v, dict) or v.get("needsReview", True) or not v.get("session"):
+            continue
+        if ident.partition("|")[0] != v["session"]:
             continue
         subjects = [s for s in (v.get("subjects") or [])
                     if isinstance(s, str) and (allowed is None or s in allowed)]
@@ -521,6 +546,32 @@ def main():
     else:
         preserve = preserved_session_ids()   # the canonical closed-session set
 
+    # A biennium changeover: the committed file holds a different General Assembly than
+    # lib/ga_sessions.py now builds. Detected from the data, not a flag, but only honoured
+    # when the outgoing biennium is frozen (freeze_ga_bills.py): this run replaces the live
+    # file, so without the freeze the old bills would exist nowhere on the site.
+    committed_meta, committed_total = None, None
+    try:
+        with open(args.output_file, encoding="utf-8") as fh:
+            _committed = json.load(fh)
+        committed_meta = _committed.get("metadata") or {}
+        committed_total = len(_committed.get("bills") or [])
+    except (OSError, json.JSONDecodeError, AttributeError):
+        pass
+    changeover = None if (sample or args.inspect) else detect_changeover(committed_meta, BIENNIUM)
+    if changeover:
+        why = frozen_problem(REPO_ROOT, changeover["from"])
+        if why:
+            print("Error: biennium changeover detected (%s -> %s) but the outgoing biennium "
+                  "is not frozen: %s.\n"
+                  "       Run scripts/freeze_ga_bills.py on the PRE-bump commit first "
+                  "(docs/RECURRING-TASKS.md section 3, step 2c)."
+                  % (changeover["from"], changeover["to"], why), file=sys.stderr)
+            sys.exit(1)
+        print("BIENNIUM CHANGEOVER %s -> %s: outgoing biennium is frozen; write floor "
+              "lifted, closed sessions not preserved." % (changeover["from"], changeover["to"]))
+        preserve = []
+
     # Carry the closed sessions forward. Fatal if that fails: the active session alone
     # clears the 100-bill write floor below, so a silent miss would publish a file short
     # by thousands of bills and still validate.
@@ -564,6 +615,11 @@ def main():
     for our_session in sessions:
         legis_session = legis_session_id(our_session)
         index = get_index(legis_session)
+        if index is None:
+            print("Error: GetLegislationForSession failed for %s (legis %d) — an outage, "
+                  "not an empty session. Refusing to write." % (our_session, legis_session),
+                  file=sys.stderr)
+            sys.exit(1)
         if sample:
             index = index[:sample]
         print("Session %s (legis %d): %d bills to fetch%s"
@@ -617,9 +673,11 @@ def main():
             print("sample bill:\n%s" % json.dumps(bills[0], indent=2)[:1400])
         return
 
-    if len(bills) < 100:
-        print("Error: only %d bills collected — refusing to write (SOAP sweep likely failed)."
-              % len(bills), file=sys.stderr)
+    problem = floor_problem(len(bills), None if sample else committed_total, changeover)
+    if sample and not problem and len(bills) < WRITE_FLOOR:
+        problem = "only %d bills collected — a --sample run is partial" % len(bills)
+    if problem:
+        print("Error: %s" % problem, file=sys.stderr)
         sys.exit(1)
 
     output = {
@@ -642,6 +700,10 @@ def main():
         },
         "bills": bills,
     }
+    stamp = rollover_stamp(changeover, committed_meta, len(bills),
+                           datetime.now(timezone.utc).isoformat())
+    if stamp:
+        output["metadata"]["rollover"] = stamp
     write_json_atomic(args.output_file, output, separators=(",", ":"))
 
     untagged = [b for b in bills_only if not b["subjects"]]
@@ -660,7 +722,7 @@ def main():
           % (fetched_count, ", ".join(sessions),
              len(bills) - fetched_count, ", ".join(preserve) or "none"))
     print("  with subjects: %d (%.0f%%) · with passageVotes: %d · signed: %d · vetoed: %d · untagged bills: %d"
-          % (with_subjects, 100 * with_subjects / len(bills), with_votes, signed, vetoed, len(untagged)))
+          % (with_subjects, 100 * with_subjects / max(len(bills), 1), with_votes, signed, vetoed, len(untagged)))
 
 
 if __name__ == "__main__":

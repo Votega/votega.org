@@ -354,8 +354,12 @@ function install(ai, billsDoc, curatedDoc, log) {
   (billsDoc.bills || []).forEach(b => { if (b.identifier) bills[b.session + '|' + b.identifier] = b; });
   taxonomy = [...new Set((billsDoc.bills || []).flatMap(b => b.subjectsSource === 'ai' ? [] : (b.subjects || [])))].sort();
   const editor = new Set(((curatedDoc || {}).ga || []).filter(c => (c.summaryOverride || '').trim()).map(c => c.session + '|' + c.identifier));
-  entries = Object.entries(ai.bills || {}).filter(([, e]) => e && e.session && e.summary).map(([ident, e]) => {
-    const key = e.session + '|' + ident;
+  if (Object.keys(ai.bills || {}).length && ((ai.metadata || {}).schemaVersion !== 2)) {
+    throw new Error('ga-bill-ai.json is in the old format (keyed by bare identifier). Run: python scripts/ai_enrich_ga_bills.py migrate-keys');
+  }
+  // Entries are keyed "<session>|<identifier>"; a key whose session disagrees with the entry is skipped.
+  entries = Object.entries(ai.bills || {}).filter(([k, e]) => e && e.session && e.summary && k.startsWith(e.session + '|')).map(([key, e]) => {
+    const ident = key.slice(e.session.length + 1);
     return { key, ident, session: e.session, e, bill: bills[key] || null, editor: editor.has(key) };
   });
   entries.sort((a, b) => (b.e.refined ? 1 : 0) - (a.e.refined ? 1 : 0)

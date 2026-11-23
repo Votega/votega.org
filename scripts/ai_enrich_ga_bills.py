@@ -11,6 +11,9 @@ Runs on the maintainer's PC only. No API keys, nothing called from the live site
           summaries. The ONLY way review state should change; never hand-edit the JSON.
   publish Rebuild assets/data/ga-bill-summaries.json (what /ga-bills shows).
           draft/refine/apply-reviews rebuild it automatically.
+  migrate-keys
+          One-time: re-key an old-format ga-bill-ai.json (bare identifiers) to
+          "<session>|<identifier>", taking each session from ga-bills.json.
   status  Read-only report of which AI subject tags the bills generator will use.
           Tags are never written to ga-bills-subjects.json (manual overrides only):
           generate_ga_bills_soap.py reads REVIEWED tags from ga-bill-ai.json directly,
@@ -24,6 +27,11 @@ Usage:
   python scripts/ai_enrich_ga_bills.py status
   python scripts/ai_enrich_ga_bills.py apply-reviews
   python scripts/ai_enrich_ga_bills.py publish
+  python scripts/ai_enrich_ga_bills.py migrate-keys     # once, on a schemaVersion-less file
+
+Entries are keyed "<session>|<identifier>" (schemaVersion 2), like ga-bill-summaries.json,
+because bill numbers restart each General Assembly. --only accepts that form, or a bare
+identifier when exactly one session holds it.
 """
 
 import argparse
@@ -71,6 +79,22 @@ RULES = (
 # Bump whenever the prompt or schema changes: it is part of input_hash, so every draft made
 # under an older prompt is redone on the next `draft` run instead of being skipped.
 PROMPT_VERSION = 3
+# ga-bill-ai.json layout. 2 = entries keyed "<session>|<identifier>". A file without it
+# is keyed by bare identifier; every reader refuses it (see require_schema).
+SCHEMA_VERSION = 2
+
+
+def ai_key(session, identifier):
+    return f"{session}|{identifier}"
+
+
+def require_schema(out, where="ga-bill-ai.json"):
+    """Exit with a clear message on an old-format (bare-identifier) file instead of
+    silently attaching a draft to the wrong biennium's bill."""
+    if (out.get("bills") or {}) and (out.get("metadata") or {}).get("schemaVersion") != SCHEMA_VERSION:
+        sys.exit(f"{where} is in the old format (entries keyed by bare identifier, no "
+                 f"metadata.schemaVersion {SCHEMA_VERSION}). Bill numbers restart each biennium, so it "
+                 "cannot be read safely. Run once: python scripts/ai_enrich_ga_bills.py migrate-keys")
 
 
 def now():
@@ -149,11 +173,13 @@ def load_out():
     out = load_json(OUT_FILE) or {}
     out.setdefault("metadata", {})
     out.setdefault("bills", {})
+    require_schema(out)
     return out
 
 
 def write_out(out):
     out["metadata"].update({
+        "schemaVersion": SCHEMA_VERSION,
         "updatedAt": now(),
         "count": len(out["bills"]),
         "note": "AI-generated drafts (Ollama) refined for key bills (Claude). Display with an 'AI summary' label and a link to the official bill.",
@@ -170,9 +196,13 @@ def build_public(out, curated):
     Unreviewed drafts are left out entirely. Keys carry the session because bill
     numbers restart each biennium."""
     summaries = {}
-    for ident, v in sorted(out.get("bills", {}).items()):
-        if v.get("needsReview", True) is False and v.get("summary") and v.get("session"):
-            summaries[f"{v['session']}|{ident}"] = {
+    # Ordered by (identifier, session) so the published file keeps the order it had when
+    # entries were keyed by identifier alone (a quiet run stays byte-identical).
+    for key, v in sorted(out.get("bills", {}).items(),
+                         key=lambda kv: (kv[0].partition("|")[2], kv[0].partition("|")[0])):
+        if (v.get("needsReview", True) is False and v.get("summary") and v.get("session")
+                and key.partition("|")[0] == v["session"]):
+            summaries[key] = {
                 "text": v["summary"], "source": "ai", "refined": bool(v.get("refined"))}
     for e in curated.get("ga", []):
         text = (e.get("summaryOverride") or "").strip()
@@ -215,8 +245,8 @@ def apply_decisions(out, decisions, allowed=None):
         last[decision_key(d)] = d
     report = {"changed": [], "unchanged": [], "stale": [], "invalid": []}
     for (key, against), d in last.items():
-        session, _, ident = (key or "").partition("|")
-        e = out.get("bills", {}).get(ident)
+        session = (key or "").partition("|")[0]
+        e = out.get("bills", {}).get(key)
         if not e or e.get("session") != session or e.get("generatedAt") != against:
             report["stale"].append(key)
             continue
@@ -348,28 +378,52 @@ def ollama(model, bill, allowed, titles=None):
         return json.loads(r.read())["message"]["content"]
 
 
+def resolve_only(names, bills, session=None):
+    """--only names -> a set of "<session>|<identifier>" keys. A name is that key, or a bare
+    identifier, which must match exactly one session's bill (after --session, if given)."""
+    keys = set()
+    have = {ai_key(b.get("session"), b["identifier"]) for b in bills if b.get("identifier")}
+    for name in names or []:
+        if "|" in name:
+            if name not in have:
+                sys.exit(f"--only {name!r}: no such bill in ga-bills.json")
+            keys.add(name)
+            continue
+        hits = sorted(k for k in have if k.partition("|")[2] == name
+                      and (not session or k.partition("|")[0] == session))
+        if not hits:
+            sys.exit(f"--only {name!r}: no such bill in ga-bills.json")
+        if len(hits) > 1:
+            sys.exit(f"--only {name!r} is in several sessions ({', '.join(hits)}); "
+                     "name one as <session>|<identifier>")
+        keys.add(hits[0])
+    return keys
+
+
 def cmd_draft(args):
     bills = load_json(BILLS_FILE)["bills"]
     allowed = taxonomy(bills)
     out = load_out()
-    only = set(args.only or [])
+    only = resolve_only(args.only, bills, args.session)
+    named = set(only)
     if args.amends_act:
-        only |= {b["identifier"] for b in bills
+        only |= {ai_key(b["session"], b["identifier"]) for b in bills
                  if b.get("identifier") and _AMENDS_ACT_RE.search(b.get("abstract") or "")}
 
     def stale(b):
-        prev = out["bills"].get(b["identifier"], {})
+        prev = out["bills"].get(ai_key(b["session"], b["identifier"]), {})
         return not prev.get("refined") and prev.get("inputHash") != input_hash(b, args.model)
 
     todo = [b for b in bills
             if b.get("identifier")
             and (not args.session or b.get("session") == args.session)
-            and (not only or b["identifier"] in only)
+            and (not only or ai_key(b.get("session"), b["identifier"]) in only)
             and (args.include_ceremonial or only or not is_ceremonial(b))
             # naming a bill with --only re-drafts it regardless; --amends-act never
             # overwrites a Claude-refined entry
-            and (b["identifier"] in (args.only or []) or
-                 (stale(b) if not only else not out["bills"].get(b["identifier"], {}).get("refined")))]
+            and (ai_key(b.get("session"), b["identifier"]) in named or
+                 (stale(b) if not only
+                  else not out["bills"].get(ai_key(b.get("session"), b["identifier"]), {}).get("refined")))]
     if args.untagged_first:  # untagged bills are where AI subjects can actually be used
         todo.sort(key=lambda b: bool(b.get("subjects")))
     todo = todo[: args.limit] if args.limit else todo
@@ -384,7 +438,7 @@ def cmd_draft(args):
             failed += 1
             print(f"  ! {b['identifier']}: {e}", file=sys.stderr)
             continue
-        out["bills"][b["identifier"]] = {
+        out["bills"][ai_key(b["session"], b["identifier"])] = {
             **res,
             "session": b.get("session"),
             "source": f"ollama:{args.model}",
@@ -436,16 +490,18 @@ def claude(prompt):
 
 
 def cmd_refine(args):
-    bills = {b["identifier"]: b for b in load_json(BILLS_FILE)["bills"] if b.get("identifier")}
+    all_bills = [b for b in load_json(BILLS_FILE)["bills"] if b.get("identifier")]
+    bills = {ai_key(b.get("session"), b["identifier"]): b for b in all_bills}
     allowed = taxonomy(bills.values())
     # Match curated entries on session too: bill numbers restart each biennium, so a
     # 2023_24 curated "SB 189" is not the 2025_26 SB 189 in ga-bills.json.
-    curated = {e["identifier"] for e in (load_json(CURATED_FILE) or {}).get("ga", [])
-               if e["identifier"] in bills and bills[e["identifier"]].get("session") == e.get("session")}
+    curated = {ai_key(e.get("session"), e["identifier"])
+               for e in (load_json(CURATED_FILE) or {}).get("ga", [])
+               if ai_key(e.get("session"), e["identifier"]) in bills}
     out = load_out()
     sent_back = [k for k, v in out["bills"].items() if v.get("redo")]
     if args.only:  # exactly the bills named
-        targets = args.only
+        targets = sorted(resolve_only(args.only, all_bills))
     elif args.redo_only:  # only what a reviewer sent back
         targets = sent_back
     else:  # bills a reviewer sent back, then key bills, then low-confidence drafts
@@ -456,9 +512,10 @@ def cmd_refine(args):
     limit = args.limit if args.limit is not None else (None if (args.only or args.redo_only) else 10)
     targets = [t for t in dict.fromkeys(targets) if t in bills][:limit]
     print(f"Refining {len(targets)} bill(s) with Claude Code (uses your plan's usage)…")
-    for ident in targets:
-        b = bills[ident]
-        draft = out["bills"].get(ident, {})
+    for key in targets:
+        b = bills[key]
+        ident = b["identifier"]
+        draft = out["bills"].get(key, {})
         text = fetch_text(b.get("textUrl"))
         prompt = (
             f"{RULES}\n\nImprove this draft summary of Georgia bill {ident} — {b.get('title','')}. "
@@ -477,9 +534,9 @@ def cmd_refine(args):
         try:
             res = clean_result(claude(prompt), allowed)
         except Exception as e:
-            print(f"  ! {ident}: {e}", file=sys.stderr)
+            print(f"  ! {key}: {e}", file=sys.stderr)
             continue
-        out["bills"][ident] = {
+        out["bills"][key] = {
             # A new summary needs a new review: drop the old one's review state.
             **{k: v for k, v in draft.items() if k not in REVIEW_FIELDS}, **res,
             "session": b.get("session"),
@@ -491,7 +548,7 @@ def cmd_refine(args):
             "refined": True,
         }
         write_out(out)
-        print(f"  ✓ {ident}")
+        print(f"  ✓ {key}")
     return 0
 
 
@@ -505,7 +562,8 @@ def cmd_status(args):
     a REVIEWED tag (needsReview: false) only for a bill no other source tags, marking it
     subjectsSource="ai". So: approve entries here, commit ga-bill-ai.json, and the next
     weekly update-ga-bills run (or a manual dispatch) applies them."""
-    bills = {b["identifier"]: b for b in load_json(BILLS_FILE)["bills"] if b.get("identifier")}
+    bills = {ai_key(b.get("session"), b["identifier"]): b
+             for b in load_json(BILLS_FILE)["bills"] if b.get("identifier")}
     ai = load_out()["bills"]
     c = Counter()
     for ident, v in ai.items():
@@ -538,6 +596,57 @@ def cmd_status(args):
     return 0
 
 
+def migrate_keys(out, bills):
+    """Pure: old-format `out` (bare identifier keys) -> new-format dict. The session is read
+    from ga-bills.json, never guessed: an entry's own `session` must agree with the bill's
+    record there, and an entry with no session takes the only one that holds its identifier.
+    Raises ValueError listing everything it cannot place; nothing is dropped."""
+    sessions_of = {}
+    for b in bills:
+        if b.get("identifier"):
+            sessions_of.setdefault(b["identifier"], set()).add(b.get("session"))
+    new, problems = {}, []
+    for ident, v in out.get("bills", {}).items():
+        have = sessions_of.get(ident, set())
+        sess = v.get("session")
+        if sess and sess in have:
+            pass
+        elif not sess and len(have) == 1:
+            sess = next(iter(have))
+        else:
+            found = sorted(map(str, have)) or "no such bill"
+            problems.append(f"{ident}: entry session {sess!r}, ga-bills.json has {found}")
+            continue
+        key = ai_key(sess, ident)
+        if key in new:
+            problems.append(f"{ident}: two entries map to {key}")
+            continue
+        new[key] = {**v, "session": sess}
+    if problems:
+        raise ValueError("cannot place %d entr(ies):\n  " % len(problems) + "\n  ".join(problems[:40]))
+    result = {**out, "bills": new}
+    result["metadata"] = {**(out.get("metadata") or {}), "schemaVersion": SCHEMA_VERSION}
+    return result
+
+
+def cmd_migrate_keys(args):
+    out = load_json(OUT_FILE) or {}
+    if (out.get("metadata") or {}).get("schemaVersion") == SCHEMA_VERSION:
+        print(f"{OUT_FILE} is already schemaVersion {SCHEMA_VERSION}; nothing to do.")
+        return 0
+    before = len(out.get("bills") or {})
+    try:
+        new = migrate_keys(out, load_json(BILLS_FILE)["bills"])
+    except ValueError as e:
+        print(f"Refusing to migrate: {e}", file=sys.stderr)
+        return 1
+    write_out(new)
+    by = Counter(v["session"] for v in new["bills"].values())
+    print(f"Migrated {before} entries -> {len(new['bills'])} (schemaVersion {SCHEMA_VERSION}). "
+          "By session: " + ", ".join(f"{k}={n}" for k, n in sorted(by.items())))
+    return 0
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -555,9 +664,11 @@ def main():
     sub.add_parser("status")
     sub.add_parser("publish")
     sub.add_parser("apply-reviews")
+    sub.add_parser("migrate-keys")
     args = p.parse_args()
     sys.exit({"draft": cmd_draft, "refine": cmd_refine, "status": cmd_status,
-              "publish": cmd_publish, "apply-reviews": cmd_apply_reviews}[args.cmd](args))
+              "publish": cmd_publish, "apply-reviews": cmd_apply_reviews,
+              "migrate-keys": cmd_migrate_keys}[args.cmd](args))
 
 
 if __name__ == "__main__":
