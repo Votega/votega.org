@@ -125,6 +125,22 @@
           html += '</ul></div>';
         }
 
+        var budget = s.budgetItems || [];
+        if (budget.length) {
+          html += '<div class="sub-budget"><strong><i class="fa-solid fa-coins" aria-hidden="true"></i> Budgets on recent, or upcoming, agendas</strong><ul>';
+          budget.slice(0, 6).forEach(function (it) {
+            var t = esc(cleanTitle(it.title)).slice(0, 150);
+            var terms = (it.terms && it.terms.length)
+              ? ' <span class="sub-budget-terms">(' + esc(prettyTerms(it.terms)) + ')</span>' : '';
+            html += '<li>' +
+              (it.date ? '<span class="sub-date">' + esc(it.date) + '</span> ' : '') + t + terms +
+              (it.sourceUrl ? ' <a href="' + esc(it.sourceUrl) + '" target="_blank" rel="noopener">source ↗</a>' : '') +
+              excerptHtml(it) +
+              '</li>';
+          });
+          html += '</ul></div>';
+        }
+
         var totals = s.topicTotals || {};
         var top = Object.keys(totals).sort(function (a, b) { return totals[b] - totals[a]; }).slice(0, 8);
         if (top.length) {
@@ -135,7 +151,7 @@
         container.innerHTML =
           '<h2 class="po-heading" style="margin-top:2rem;">On recent agendas</h2>' +
           '<p class="place-intro">Subjects that appeared on this government’s recent meeting agendas, ' +
-          'from the published agenda data. ALPR, data-center, land-use, and local-tax items link to their source.</p>' + html;
+          'from the published agenda data. ALPR, data-center, land-use, local-tax, and budget items link to their source.</p>' + html;
         container.hidden = false;
       })
       .catch(function () { /* no enrichment — leave the section hidden */ });

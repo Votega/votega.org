@@ -357,11 +357,20 @@ exclusion test would pass even if proximity had silently died. Retire `millage-b
 `budgeted` exclusion, the FY-token cases, and a regression pinning that each noise
 sample quoted in §1 does **not** match.
 
-**Phase 2 — the surfaces.** `budget` in `_data/topics.yml` with blurb and definition,
+**Phase 2 — the surfaces. DONE.** `budget` in `_data/topics.yml` with blurb and definition,
 `TOPICS` in `generate_topic_mentions.py`, the `/local/topics/budgets/` index, the
 per-place section, and `budgetItems` in `build_summary` + `budgetCount` in
 `flag_entry`. The topic then ranks on the hub card like any other, and the
 millage special case in `local.html` is deleted.
+
+Shipped: `budget` entry in `_data/topics.yml` (order 5, icon `coins`); `TOPICS` + a `topic_hit` branch in 
+`generate_topic_mentions.py` emitting `assets/data/local-topics-budget.json` (79 mentions across 31 of 63 places on the 
+committed sidecars); the index at **`/local/topics/budget/`** (`local/topics/budget.html`). The slug is `budget`, not `budgets`: 
+`topics.yml` requires slug == generator key == data file name, and every existing page lives at `local/topics/<slug>/`. 
+A `.sub-budget` section on place pages (`local-subjects.js` + `place.html`), role tokens `--color-watch-budget*`, a 
+`budgetCount` pill on the `/local/` hub plus its legend entry. `budgetItems` / `budgetCount` already existed from Phase 1. 
+The millage special case in `local.html` was already gone; its stale "joins in phase 2" comment is removed. 
+Tests: `scripts/test_budget_topic_surfaces.py`. The sibling publisher stays at four topics (Phase 4).
 
 **Phase 3 — explainer, optional.** A `/local-budgets/` page on how a Georgia local
 budget is adopted, mirroring `/property-tax/`. Budget pairs naturally with the millage

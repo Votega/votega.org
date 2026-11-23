@@ -102,6 +102,7 @@ TOPICS = {
     "data-center": {"label": "Data centers",            "emoji": "🏭"},
     "land-use":    {"label": "Land use",                "emoji": "🏗️"},
     "local-taxes": {"label": "Local taxes & referenda", "emoji": "🗳️"},
+    "budget":      {"label": "Budgets",                 "emoji": "💰"},
 }
 
 ENRICHED_GLOB = "local-*-meetings-enriched.json"
@@ -175,6 +176,14 @@ def topic_hit(topic: str, meeting: dict):
         confidence = "high"
         tags = []
         ex = excerpts.get("local-taxes")
+    elif topic == "budget":
+        if "budget" not in topics:
+            return None
+        terms = sorted(matched & set(TOPIC_RULES["budget"]))
+        vendors = []
+        confidence = "high"
+        tags = []
+        ex = excerpts.get("budget")
     else:
         return None
 
