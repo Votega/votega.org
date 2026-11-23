@@ -10,7 +10,6 @@ import time
 import urllib.request
 import urllib.error
 from urllib.parse import quote
-import yaml
 from datetime import datetime, timezone
 
 from lib.http import fetch_bytes, fetch_json
@@ -108,6 +107,9 @@ def fetch_yaml(url):
     Now retries via lib.http; previously a single transient failure fetching
     the congress-legislators YAML silently dropped that enrichment source.
     """
+    # PyYAML is third-party: import it here, not at module level, so the
+    # stdlib-only script tests (run-script-tests.yml) can import this module.
+    import yaml
     print(f"Fetching YAML: {url}...")
     raw = fetch_bytes(url, label=url)
     if raw is None:
