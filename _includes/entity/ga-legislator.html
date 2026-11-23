@@ -58,6 +58,7 @@
     color: var(--color-success);
   }
   .status-running a { color: inherit; font-weight: 600; }
+  .status-departing { background: var(--color-warning-tint); border: 1px solid var(--color-warning-line); }
   .status-candidacy {
     background: var(--color-surface-tint);
     border-color: var(--color-accent);
@@ -433,6 +434,7 @@
 <link rel="stylesheet" href="{{ '/assets/css/votes-table.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 <script src="{{ '/assets/scripts/votega-votes-table.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/departure-label.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/ga-districts.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/entity-news.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -672,6 +674,10 @@
 
     try {
       const [res, racesRes] = await Promise.all([fetch(DATA_URL), fetch(RACES_URL)]);
+      // Lame-duck label (D6): only a sitting member's live page asks for it. Non-fatal.
+      const labelsPromise = (IS_LIVE && !ENTITY_FORMER && window.VotegaDeparture)
+        ? fetch(getBasePath() + 'assets/data/ga-departure-labels.json').then(r => r.ok ? r.json() : null).catch(() => null)
+        : Promise.resolve(null);
       // Kicked off here, not awaited until just before the tab bar is built, so the
       // ~4KB sponsorship index overlaps the work below instead of costing its own
       // round trip. It cannot start any earlier: loadMemberDetails() is called at the
@@ -719,7 +725,14 @@
       if (window.VotegaPortraits) await VotegaPortraits.load(getBasePath());
       await loadSponsorshipIndex();   // resolved by now in practice; see above
       rosterSession = (data.metadata || {}).session || null;
-      await displayMemberDetails(member, seatRace, otherRaceInfo, data.metadata?.committeesAvailable, electionDataUnavailable, findSeatSuccessor(member, all));
+      const labelsDoc = await labelsPromise;
+      // A member with a status (resigned, suspended…) already has the status banner.
+      const lameDuck = (!member.status && labelsDoc)
+        ? VotegaDeparture.lameDuckLabel(labelsDoc, member.legisGaGovId,
+            { live: IS_LIVE, former: !!ENTITY_FORMER, session: rosterSession, now: new Date() })
+        : null;
+      const termEnds = lameDuck ? labelsDoc.metadata.termEnds : null;
+      await displayMemberDetails(member, seatRace, lameDuck ? null : otherRaceInfo, data.metadata?.committeesAvailable, electionDataUnavailable, findSeatSuccessor(member, all), lameDuck, termEnds);
       // Resigned/Removed/Deceased entries are historical records kept only so
       // ga-member-votes.json can still join their earlier votes by OCD id —
       // exclude them from the sidebar's "current occupants" peer list, but
@@ -941,7 +954,7 @@
   }
 
   let rosterSession = null; // metadata.session of the roster this page loaded
-  async function displayMemberDetails(member, seatRace, otherRaceInfo, committeesAvailable, electionDataUnavailable, seatSuccessor) {
+  async function displayMemberDetails(member, seatRace, otherRaceInfo, committeesAvailable, electionDataUnavailable, seatSuccessor, lameDuck, termEnds) {
     const currentYear = new Date().getFullYear();
     const detailsDiv  = document.getElementById('memberDetails');
     const age = computeAge(member);
@@ -1014,6 +1027,14 @@
         <a href="${escHtml(candidateUrl)}">View candidate profile →</a>
       </div>`;
     })();
+
+    // Replaces the "Running for…" banner, which never read results (D6, 11-23).
+    const departureBannerHtml = lameDuck
+      ? `<div class="status-banner status-departing">
+          <span class="status-label">${escHtml(lameDuck.label)}</span>
+          <span class="status-note">Their current term ends ${escHtml(VotegaDeparture.longDate(termEnds))}.</span>
+        </div>`
+      : '';
 
     const statusBannerHtml = (() => {
       if (!member.status) return '';
@@ -1111,6 +1132,7 @@
       ${electionDataUnavailableHtml}
       ${electionBannerHtml}
       ${statusBannerHtml}
+      ${departureBannerHtml}
       ${imageHtml}
       <h1>${escHtml(name)}</h1>
       ${bienniumNavHtml}

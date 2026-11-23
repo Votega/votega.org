@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "description": "Approved departure labels for members whose 2025-26 service ends at the January 2027 rollover, plus members who move to the other chamber. Display text states only the fact and date. Not yet shown on any page. Placement (rollover decision D6): former members' index and pages; a member who stays in the General Assembly after winning another seat shows the label on their own page (decided 2026-11-21). Keyed by legisGaGovId. Entries without a batch field are batch 1.",
+    "description": "Approved departure labels for members whose 2025-26 service ends at the January 2027 rollover, plus members who move to the other chamber. Display text states only the fact and date. Placement (rollover decision D6): former members' index and pages; a member who stays in the General Assembly after winning another seat shows the label on their own page (decided 2026-11-21). Keyed by legisGaGovId. Entries without a batch field are batch 1.",
     "session": "2025_26",
     "approvedBy": "site owner",
     "batches": [
@@ -18,7 +18,9 @@
         ]
       }
     ],
-    "count": 61
+    "count": 61,
+    "termEnds": "2027-01-11",
+    "liveDisplay": "Shown on a sitting member's own live page until termEnds (D6, decided 2026-11-23), then retired automatically; former-member pages are separate."
   },
   "labels": {
     "840": {

@@ -104,6 +104,8 @@ Hide phone, address and email. Today the legacy shell for a resigned member stil
 
 **Amended 2026-11-21, placement:** a member who wins another General Assembly seat and stays (Romman, Reese, Draper and Wade, House to Senate) shows their label on their own member page. They are still not in the former-members index. All other labels keep the rule above.
 
+**Amended 2026-11-23, placement:** labels also show on a sitting member's own live page during the lame-duck window (certification to the end of the term), for GA and the federal delegation. They drop off automatically: `departure-label.js` hides a label from the file's `metadata.termEnds` (GA 2027-01-11, federal 2027-01-03), and a GA label shows only while the live roster's session matches the file's `session`. Former members' index and pages are unchanged.
+
 **Decided 2026-10-30, hard gate:** the rollover refuses to run while any departing member is unresolved.
 
 **Qualifying export:** the site owner downloads it from the Secretary of State when needed. The May 19 primary report's candidate list closed with that primary, and the 2026-10-30 re-download matched the committed file, so no further pull is expected for the primary-based labels. The November report is the one that may need pulling, after certification, for any label that depends on it.
@@ -134,7 +136,7 @@ Sourcing for withdrawals: a member who withdrew after qualifying needs a source 
 4. Confirmed entries flow into the former-members index (D3).
 Build the classifier and queue now against the primary and runoff data; finish after the general election and any runoff are certified.
 
-**Open decisions:** (a) the label wording is decided for every case, including the 11 pending nominations (written after November is certified; the refinements above are proposed); (b) who approves entries and by when; (c) whether `departure` is public in the live roster and `ga-legislators` or only in the former-members index and pages (proposed: index and pages only; the live roster until the member actually leaves); (d) whether the hard gate is acceptable; (e) where the qualifying export comes from and how it is refreshed (it is dated 2026-05-06 and has no withdrawal dates), and who records the provenance of the Sims affidavit. Estimate 35-50k tokens.
+**Open decisions:** (a) the label wording is decided for every case, including the 11 pending nominations (written after November is certified; the refinements above are proposed); (b) who approves entries and by when; (c) decided 2026-11-23: shown on the live page during the lame-duck window too (see the placement amendment); (d) decided 2026-10-30 (hard gate, above); (e) where the qualifying export comes from and how it is refreshed (it is dated 2026-05-06 and has no withdrawal dates), and who records the provenance of the Sims affidavit. Estimate 35-50k tokens.
 
 **Page behavior to fix alongside (found 2026-10-29, not yet scheduled).** The member page's "Running for…" banner (`_includes/entity/ga-legislator.html`) does not read results, so Henderson and Gooch, who lost their primaries, still show it; it appears for only 6 of the 18 members who ran for another office, because the races builder links a candidate to a roster member only for the seat's own incumbent and cross-office links are hand-added; and the seat banner ("This seat is up for election in 2026") describes the seat, not the person. The Senate 7 special election has no race record in `races.json`. Alvin Payton's candidate link was fixed on 2026-10-29 (the incumbent name rule failed on "Jr").
 
