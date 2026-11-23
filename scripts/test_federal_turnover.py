@@ -213,6 +213,24 @@ legacy["metadata"].pop("congress")          # the committed file predates the st
 check("e: an unstamped committed file is read through the sponsorship index",
       T.committed_congress(legacy, {"metadata": {"congress": 119}}), 119)
 
+# --- votes dispatch after a turnover commit ---------------------------------------------
+print("votes dispatch")
+r119 = doc(roster(2025), 119)
+r120 = doc(roster(2027), 120)
+r120_stamped = doc(roster(2027), 120, rollover={"from": 119, "to": 120})
+check("f: a stamped 119 -> 120 commit dispatches the votes run",
+      T.opened_congress(r119, None, r120_stamped), True)
+check("f: an ordinary in-Congress commit does not",
+      T.opened_congress(r119, None, r119), False)
+check("f: a later in-Congress commit that still carries the stamp does not",
+      T.opened_congress(r120_stamped, None, r120_stamped), False)
+check("f: an unstamped change of Congress does not",
+      T.opened_congress(r119, None, r120), False)
+check("f: no committed baseline does not",
+      T.opened_congress(None, None, r120_stamped), False)
+check("f: an unstamped baseline resolves through its sponsorship index",
+      T.opened_congress(legacy, {"metadata": {"congress": 119}}, r120_stamped), True)
+
 # --- validator rules on their own ------------------------------------------------------
 print("validator")
 old = doc(roster(2025), 119)

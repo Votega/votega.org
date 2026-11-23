@@ -3,6 +3,7 @@ name: Update Congress.gov current members data (daily, 06:00 UTC)
 permissions:
   contents: write  # Allows the bot to commit and push changes
   issues: write    # the tier-2 report keeps one refreshed tracking issue
+  actions: write   # dispatches update-federal-votes.yml after a Congress turnover
 
 on:
   workflow_dispatch:
@@ -100,6 +101,7 @@ jobs:
             --report-out "$RUNNER_TEMP/federal-members-changes.md"
 
       - name: Commit and push generated data
+        id: commit
         run: |
           set -e
           git config user.name "github-actions[bot]"
@@ -110,6 +112,11 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
+            # Did this run open a new Congress? Compared against HEAD before the
+            # commit, with the same committed_congress() the generator uses, so a
+            # roster that predates metadata.congress still resolves via the index.
+            turnover=$(python3 scripts/federal_turnover_committed.py)
+            echo "turnover=$turnover" >> "$GITHUB_OUTPUT"
             git commit -m "Update current Congress member data (members, leadership, GA delegation sponsorship)"
             pushed=0
             for attempt in 1 2 3; do
@@ -122,6 +129,24 @@ jobs:
               exit 1
             fi
           fi
+
+      # A turnover commit brings the new Congress's members (GA's newcomers among
+      # them), but their per-member vote slices are built only by the weekly votes
+      # run (Sun 09:00 UTC). On 2027-01-03, itself a Sunday, that run fires before
+      # Congress.gov lists the 120th, so without this the newcomers would have no
+      # slice until the following Sunday. Dispatch it once, right after the turnover
+      # lands. GITHUB_TOKEN can raise workflow_dispatch (unlike push). The votes run
+      # has its own final-freeze gate, so the operator's freeze_confirmed is passed
+      # through rather than re-asked.
+      - name: Dispatch the votes run after a Congress turnover
+        if: steps.commit.outputs.turnover == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FREEZE_CONFIRMED: ${{ inputs.freeze_confirmed && 'true' || 'false' }}
+        run: |
+          set -e
+          gh workflow run update-federal-votes.yml --ref main -f freeze_confirmed="$FREEZE_CONFIRMED"
+          echo "Congress turnover committed: dispatched update-federal-votes.yml (freeze_confirmed=$FREEZE_CONFIRMED)." >> "$GITHUB_STEP_SUMMARY"
 
       # After the commit, not before: the report describes data that has already
       # shipped. One issue, refreshed in place, so the history of vacancies and
