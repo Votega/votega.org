@@ -575,11 +575,18 @@ def freeze_readme(slug, congress, kind, meta, counts):
 def build_freeze(slug, kind, src_members_doc, votes_doc, unity_doc, sponsor_index, slices, now=None):
     """The whole sessions/<slug>/ artifact set. Pure: no network, no disk."""
     congress = (votes_doc.get("metadata") or {}).get("congress")
-    assert_same_congress(slug, {
+    sources = {
         "federal-member-votes.json": congress,
         "federal-party-unity.json": (unity_doc.get("metadata") or {}).get("congress"),
         "federal-sponsorship-index.json": (sponsor_index.get("metadata") or {}).get("congress"),
-    })
+    }
+    # The roster carries its Congress since the turnover guard (lib/federal_turnover.py). A
+    # roster already turned over to the 120th with votes still the 119th's would otherwise
+    # file the new delegation under the old name. Absent on a pre-guard file: not checked.
+    roster_congress = (src_members_doc.get("metadata") or {}).get("congress")
+    if roster_congress is not None:
+        sources["current-members.json"] = roster_congress
+    assert_same_congress(slug, sources)
     ga = [normalize_member(m) for m in src_members_doc.get("members", [])
           if m.get("state") == "Georgia"]
     for warning in check_sources(ga, votes_doc):

@@ -211,7 +211,9 @@ The 120th Congress convenes **January 3, 2027**, eight days before the General A
 - **Indexing:** departed members' pages `noindex` and out of the sitemap, as in D4; the roster page itself may be indexed.
 - **Timing:** the data comes from the freeze, so the `--final` freeze (by 2 January 2027) is the hard dependency; the page can be built and tested now against the provisional freeze output. Estimate 65-105k tokens (the two-page version was 50-80k; the include refactor adds 15-25k). Rough, not measured.
 
-**Still open:** the transition guard on the roster run, who curates the 120th's key votes, and whether the D6 departure labels extend to federal members. Whether departed federal members keep a page is answered by the proposal above, pending agreement.
+**Built 2026-11-23:** the transition guard (`lib/federal_turnover.py`; roster and votes runs refuse until a final freeze exists, >25-departure limit replaced by sanity checks at a turnover, early-switch hold, `metadata.rollover` stamp). Runbook: RECURRING-TASKS.md §3b.
+
+**Still open:** who curates the 120th's key votes, and whether the D6 departure labels extend to federal members. Whether departed federal members keep a page is answered by the proposal above, pending agreement.
 
 ### D13. Georgia Commons — Proposed 2026-10-30. **Update 2026-11-12: their sponsor links are already live**, so the ordering below is moot; tell them URLs are preserved once the page-permanence spec's rollout step 1 ships
 Tell them that links to members who leave office will be preserved, or hold the sponsor-link request until D1-D4 are settled. Include the licensing questions from `docs/georgia-civic-data-collaboration.md`.

@@ -64,6 +64,7 @@ from lib.atomic_io import write_json_atomic
 from lib.http import fetch_bytes
 from lib import voteview, senate_drop
 from lib.congress_session import current_congress, congress_years
+from lib import federal_turnover
 
 LEGISLATORS_BASE = "https://raw.githubusercontent.com/unitedstates/congress-legislators/main"
 HOUSE_ROLL_BASE  = "https://clerk.house.gov/evs"
@@ -616,6 +617,27 @@ def main():
     args = ap.parse_args()
 
     out_file, members_file = args.output, args.members
+
+    # The first run of a new Congress (Sunday 3 January 2027 09:00 UTC is one) replaces the
+    # committed file, the slices and the scorecard with the new Congress's, and the daily
+    # publish then replaces data/ in the sibling repo. Refuse until the outgoing Congress
+    # has a FINAL freeze, same as the roster run (lib/federal_turnover.py). A late freeze
+    # also needs the live files still to describe the outgoing Congress, which this gate
+    # keeps true.
+    try:
+        with open(out_file, encoding="utf-8") as fh:
+            committed = (json.load(fh).get("metadata") or {}).get("congress")
+    except (OSError, ValueError):
+        committed = None
+    if (isinstance(committed, int) and committed < CURRENT_CONGRESS
+            and not federal_turnover.freeze_confirmed()):
+        problems = federal_turnover.freeze_problems(committed)
+        if problems:
+            print(f"Error: {out_file} is the {committed} Congress and this run would "
+                  f"replace it with the {CURRENT_CONGRESS}; its final freeze is not in place:")
+            for p in problems:
+                print(f"  - {p}")
+            sys.exit(1)
 
     # Reuse layer. A roll call is immutable once the chamber has published it, so
     # anything already in the committed file is taken as-is and never re-fetched.

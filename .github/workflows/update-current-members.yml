@@ -6,6 +6,21 @@ permissions:
 
 on:
   workflow_dispatch:
+    # Turnover-day levers only (3 January of an odd year). A normal run needs none of them;
+    # see scripts/lib/federal_turnover.py and RECURRING-TASKS.md, federal turnover.
+    inputs:
+      freeze_confirmed:
+        description: 'Turnover only: the outgoing Congress WAS frozen (final) but the freeze check cannot see it'
+        type: boolean
+        default: false
+      accept_turnover:
+        description: 'Turnover only: build the new Congress even though the "new Congress is listed" signal says it is not (sanity checks still apply)'
+        type: boolean
+        default: false
+      ga_vacant:
+        description: 'Turnover only: Georgia seats that are genuinely vacant, comma-separated (GA-<district 1-14>, GA-S for a Senate seat)'
+        type: string
+        default: ''
   schedule:
     - cron: '0 6 * * *' # daily at 06:00 UTC
 
@@ -47,6 +62,9 @@ jobs:
           ls -la assets/data/current-members.json 2>/dev/null || echo "File not found"
         env:
           CONGRESS_API_KEY: ${{ secrets.CONGRESS_API_KEY }}
+          FEDERAL_FREEZE_CONFIRMED: ${{ inputs.freeze_confirmed && 'true' || '' }}
+          FEDERAL_ACCEPT_TURNOVER: ${{ inputs.accept_turnover && 'true' || '' }}
+          FEDERAL_GA_VACANT: ${{ inputs.ga_vacant }}
 
       # Two tiers, and the split is the point. Tier 1 is the data against
       # ITSELF -- a metadata.count that disagrees with the member list, a

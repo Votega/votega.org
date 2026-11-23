@@ -59,6 +59,9 @@ import os
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib import federal_turnover  # noqa: E402
+
 # 435 representatives + 100 senators + the 6 non-voting delegates and the
 # resident commissioner that Congress.gov's current-members list includes.
 # These are the seats that EXIST: the count may legitimately sit below, never
@@ -498,7 +501,13 @@ def main():
             print(f"FAIL: {index_path} is not valid JSON: {exc}", file=sys.stderr)
             return 1
 
+    old_roster = baseline(roster_path, args.baseline_ref)
+    old_index = baseline(index_path, args.baseline_ref)
     errors = tier1(roster, index, read_slices(args.data_dir, index))
+    # A Congress turnover is accepted only with its stamp, and a large unexplained drop
+    # inside a Congress is refused here as well as in the generator (a hand-edited or
+    # differently-produced file must not get around the generator's guard).
+    errors += federal_turnover.validate_stamp(roster, index, old_roster, old_index)
     if errors:
         print("TIER 1 FAILED — the data contradicts itself, refusing to commit:\n",
               file=sys.stderr)
@@ -519,9 +528,7 @@ def main():
           f"({imeta.get('totalSponsored')} sponsored + "
           f"{imeta.get('totalCosponsored')} cosponsored).")
 
-    sections = tier2(roster, index,
-                     baseline(roster_path, args.baseline_ref),
-                     baseline(index_path, args.baseline_ref))
+    sections = tier2(roster, index, old_roster, old_index)
     report = render(sections)
     if args.report_out:
         with open(args.report_out, "w", encoding="utf-8") as f:

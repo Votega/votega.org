@@ -11,6 +11,10 @@ on:
         description: 'Commit even though roll calls at HEAD are missing from the new file (only after inspecting the rejected file)'
         type: boolean
         default: false
+      freeze_confirmed:
+        description: 'First run of a new Congress only: the outgoing Congress WAS frozen (final) but the freeze check cannot see it'
+        type: boolean
+        default: false
   schedule:
     # Weekly on Sundays at 09:00 UTC
     - cron: '0 9 * * 0'
@@ -51,6 +55,8 @@ jobs:
       # few dozen requests rather than ~1,600.
       - name: Generate federal vote data
         id: generate
+        env:
+          FEDERAL_FREEZE_CONFIRMED: ${{ inputs.freeze_confirmed && 'true' || '' }}
         run: python scripts/generate_federal_votes_data.py assets/data/federal-member-votes.json assets/data/current-members.json
 
       - name: Build the shared vote index and per-member slices
