@@ -15,7 +15,8 @@ from datetime import datetime, timezone
 
 from lib.http import fetch_bytes, fetch_json
 from lib.atomic_io import write_json_atomic
-from lib.congress_session import current_congress
+from lib.congress_session import congress_ordinal, current_congress
+from lib import federal_turnover as turnover
 from lib.federal_sponsorship import (
     as_recent_sponsored, carriable, fetch_member_legislation, load_previous,
     most_recent, write_sponsorship_artifacts,
@@ -371,6 +372,14 @@ def get_current_members():
     print(f"Filtered to {len(current_members)} current members")
     return current_members
 
+def _read_json(path):
+    try:
+        with open(path, encoding='utf-8') as fh:
+            return json.load(fh)
+    except (OSError, ValueError):
+        return None
+
+
 def main():
     if not API_KEY:
         print("Error: CONGRESS_API_KEY environment variable not set")
@@ -386,12 +395,56 @@ def main():
     except (OSError, ValueError):
         PREVIOUS['members'] = {}
 
+    # Is this a run inside a Congress, or the one that opens a new one? Decided from the
+    # committed file's Congress against the date-derived one, never from a flag, so a
+    # turnover cannot be skipped or forced by accident (lib/federal_turnover.py).
+    committed_doc = _read_json(OUTPUT_FILE)
+    committed_index = _read_json(os.path.join(data_dir, 'federal-sponsorship-index.json'))
+    prev_congress = turnover.committed_congress(committed_doc, committed_index)
+    run_kind = turnover.classify_run(prev_congress, CURRENT_CONGRESS)
+    freeze_info = None
+    if run_kind == turnover.REGRESSION:
+        print(f"Error: the committed roster is for Congress {prev_congress}, newer than the "
+              f"{CURRENT_CONGRESS} this run derives (CONGRESS override?). Refusing to write "
+              f"an older Congress over a newer one.")
+        sys.exit(1)
+    if run_kind == turnover.TURNOVER:
+        slug = congress_ordinal(prev_congress)
+        print(f"TURNOVER: committed roster is the {slug} Congress, this run builds the "
+              f"{congress_ordinal(CURRENT_CONGRESS)}.")
+        if turnover.freeze_confirmed():
+            freeze_info = {'confirmed': True, 'slug': slug}
+            print(f"  {turnover.ENV_FREEZE_CONFIRMED} set: not checking for a final {slug} freeze.")
+        else:
+            problems = turnover.freeze_problems(prev_congress, committed_doc)
+            if problems:
+                print(f"Error: the {slug} Congress is not safely frozen, and this run would "
+                      f"replace it in the published data/. Refusing to write:")
+                for p in problems:
+                    print(f"  - {p}")
+                print(f"Run the freeze-federal-delegation workflow (slug {slug}, final=true; "
+                      f"overwrite=true if it complains a final freeze exists), then re-run "
+                      f"this job. See RECURRING-TASKS.md, federal turnover.")
+                sys.exit(1)
+            freeze_info = {'kind': 'final', 'slug': slug}
+            print(f"  final {slug} freeze found and matches the committed delegation.")
+
     print("Fetching current Congress members...")
     members = get_current_members()
     
     if not members:
         print("Error: No members fetched")
         sys.exit(1)
+
+    if run_kind == turnover.TURNOVER:
+        verdict, why = turnover.early_window(members, CURRENT_CONGRESS,
+                                             accept=turnover.accept_turnover())
+        print(f"  {why}")
+        if verdict == 'hold':
+            print(f"::notice title=Federal roster held::{why}")
+            return
+        if verdict == 'fail':
+            sys.exit(1)
     
     print("Enriching member data with leadership positions...")
     enriched_members = []
@@ -428,11 +481,30 @@ def main():
         print(f"Removing {len(departed)} member(s) Congress.gov reports as no longer serving:")
         for m in departed:
             print(f"  - {m.get('name', 'Unknown')} ({m.get('state')}, {m.get('bioguideId')})")
-        # A large jump means the flag or the API changed, not that Congress emptied out.
-        if len(departed) > 25:
-            print(f"Error: {len(departed)} members flagged as departed — implausible. Not committing.")
+        # Inside a Congress a large jump means the flag or the API changed, not that
+        # Congress emptied out. At a turnover it is the expected shape, and the sanity
+        # checks below (a full Georgia delegation, a plausible count) replace the limit.
+        ok, why = turnover.departure_verdict(run_kind, len(departed))
+        print(f"  {why}")
+        if not ok:
             sys.exit(1)
         enriched_members = [m for m in enriched_members if m.get('currentMember') is not False]
+
+    rollover = None
+    if run_kind == turnover.TURNOVER:
+        vacant = os.environ.get(turnover.ENV_GA_VACANT, '')
+        errors = turnover.turnover_errors(enriched_members, CURRENT_CONGRESS, vacant)
+        if errors:
+            print("Error: the new Congress's roster failed its sanity checks. Not committing:")
+            for e in errors:
+                print(f"  - {e}")
+            print("If a Georgia seat is genuinely vacant, name it in ga_vacant "
+                  "(for example GA-13 or GA-S) and re-run.")
+            sys.exit(1)
+        rollover = turnover.rollover_stamp(
+            prev_congress, CURRENT_CONGRESS, len(departed),
+            len((committed_doc or {}).get('members') or []), len(enriched_members),
+            turnover.new_term_share(enriched_members, CURRENT_CONGRESS), vacant, freeze_info)
 
     print("Fetching committee memberships...")
     committee_lookup = get_committee_memberships()
@@ -471,11 +543,15 @@ def main():
             'source': 'Congress.gov API',
             'count': len(enriched_members),
             'apiVersion': 'v3',
+            'congress': CURRENT_CONGRESS,
             'enrichmentFailures': enrichment_failures
         },
         'members': enriched_members
     }
     
+    if rollover:
+        output_data['metadata']['rollover'] = rollover
+
     # Ensure output directory exists (simple approach)
     try:
         os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)

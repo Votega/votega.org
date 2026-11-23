@@ -97,6 +97,12 @@ check("120th votes are refused under 119th",
 u120 = {"metadata": {"congress": 120}, "members": {}}
 check("a scorecard from another Congress is refused",
       exits(lambda: freeze(unity=u120)), True)
+m120 = {"metadata": {"generatedAt": "2027-01-03T06:00:00+00:00", "congress": 120}, "members": MEMBERS["members"]}
+check("a roster already turned over to the 120th is refused under 119th",
+      exits(lambda: P.build_freeze("119th", "final", m120, VOTES, UNITY, SP_INDEX, {"W000790": SLICE})), True)
+m119 = {"metadata": {"generatedAt": "2026-12-30T06:00:00+00:00", "congress": 119}, "members": MEMBERS["members"]}
+check("a stamped 119th roster is accepted",
+      exits(lambda: P.build_freeze("119th", "final", m119, VOTES, UNITY, SP_INDEX, {"W000790": SLICE})), False)
 check("slug derives from the votes file's Congress", P.resolve_freeze_slug(None, VOTES), "119th")
 check("an explicit slug must look like 119th", exits(lambda: P.resolve_freeze_slug("2025-2027", VOTES)), True)
 
