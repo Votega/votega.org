@@ -82,6 +82,20 @@ def committed_congress(roster_doc, index_doc=None):
     return None
 
 
+def opened_congress(old_roster, old_index, new_roster, new_index=None):
+    """True when `new_roster` is a stamped turnover that opens a newer Congress than `old_*`.
+
+    The roster workflow asks this of its staged files against HEAD, to dispatch the votes
+    run once a turnover has landed. All three conditions are needed: a known baseline, a
+    higher Congress, and the rollover stamp (an unstamped change of Congress is refused by
+    the validator anyway, so it never gets this far).
+    """
+    was = committed_congress(old_roster, old_index)
+    now = committed_congress(new_roster, new_index)
+    stamped = bool(((new_roster or {}).get("metadata") or {}).get("rollover"))
+    return bool(was and now and now > was and stamped)
+
+
 def classify_run(committed, current):
     """in-congress | turnover | regression | unknown (no committed Congress to compare)."""
     if committed is None:
