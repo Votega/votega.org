@@ -30,8 +30,13 @@ patch for exactly that). The per-session `billCount` equality below is the check
 that actually catches a broken merge: it compares what the producer says it wrote
 for EACH session against what is in the file.
 
-(The producer itself refuses to write below 100 bills or short a preserved
-session, so a tier-1 floor of any kind would be redundant here.)
+(The producer itself refuses to write below its floor or short a preserved
+session, so a tier-1 floor of any kind would be redundant here. A biennium
+changeover is the one time the file legitimately shrinks from thousands of bills to
+a handful or none: nothing here compares sizes against HEAD, so tier 2 only REPORTS
+it, and tier 1 accepts an empty file only with the producer's `metadata.rollover`
+stamp. A same-session shrink never reaches the validator as a size: the producer's
+floor refuses it, and the per-session billCount equality catches a broken merge.)
 
 See docs/audits/2026-10-13-data-pipeline-audit.md 2.6 for this class of
 validator repo-wide, scripts/validate_fec_data.py for the reference
@@ -90,9 +95,26 @@ def tier1(d):
     bills = d.get("bills")
     meta = d.get("metadata") or {}
 
-    if not isinstance(bills, list) or not bills:
+    if not isinstance(bills, list):
         errors.append("no bills in the file")
-        return errors          # nothing below can say anything useful
+        return errors
+    if not bills:
+        # Empty is legitimate in exactly one case: the first run(s) of a new General
+        # Assembly before anything is filed. The producer stamps `metadata.rollover`
+        # then (after proving the outgoing biennium is frozen and that the SOAP call
+        # itself succeeded). Without the stamp, empty is a failed sweep. The stamp
+        # must agree with the file's own biennium, and the counts must all be zero.
+        roll = meta.get("rollover")
+        if not (isinstance(roll, dict) and roll.get("to") == meta.get("biennium")
+                and meta.get("totalBills") == 0):
+            errors.append("no bills in the file (and no metadata.rollover stamp "
+                          "explaining an empty new biennium)")
+            return errors
+        for row in (meta.get("sessions") or []):
+            if row.get("billCount"):
+                errors.append(f"metadata claims {row.get('billCount')} bills for session "
+                              f"{row.get('id')} but the file holds 0")
+        return errors
 
     total = meta.get("totalBills")
     if total != len(bills):
@@ -169,6 +191,13 @@ def tier2(new, old=None):
     old_bills = old.get("bills") or []
     old_actual = by_session(old_bills)
     old_meta = old.get("metadata") or {}
+
+    roll = meta.get("rollover")
+    if roll:
+        sections.append(("A new General Assembly began", [
+            f"- {roll.get('from')} → {roll.get('to')}: the outgoing biennium's bills left the "
+            f"live file (they live in the frozen copy under assets/data/ga-bienniums/). "
+            f"The live file holds {len(bills)} bill(s) so far."]))
 
     if old_meta.get("session") != meta.get("session"):
         sections.append(("The active session changed", [

@@ -124,7 +124,13 @@ def main() -> int:
 
     bills = data.get("bills")
     meta = data.get("metadata") or {}
-    if not isinstance(bills, list) or not bills:
+    # An EMPTY file is a real sponsorship record in exactly one case: the first run of a
+    # new General Assembly, which the bills producer stamps with metadata.rollover (it
+    # proves the outgoing biennium is frozen first). Anything else is a broken file.
+    rollover_empty = (isinstance(bills, list) and not bills
+                      and isinstance(meta.get("rollover"), dict)
+                      and meta["rollover"].get("to") == meta.get("biennium"))
+    if not isinstance(bills, list) or (not bills and not rollover_empty):
         print("build_sponsorship_slices: ga-bills.json carries no bills[] "
               "— refusing to split (an empty slice set would read as "
               "'nobody sponsored anything').")
@@ -226,7 +232,7 @@ def main() -> int:
     median_kb = (sizes[len(sizes) // 2] / 1024) if sizes else 0
     print(f"build_sponsorship_slices: index {os.path.getsize(INDEX_OUT) / 1024:.0f}KB, "
           f"{len(counts)} member slices (median {median_kb:.1f}KB, "
-          f"max {sizes[-1] / 1024:.1f}KB) from {sponsorships} sponsorship records "
+          f"max {(sizes[-1] if sizes else 0) / 1024:.1f}KB) from {sponsorships} sponsorship records "
           f"across {len(bills)} bills.")
     if roster:
         missing = sorted(roster - set(by_member))
