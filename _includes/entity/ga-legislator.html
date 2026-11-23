@@ -486,6 +486,28 @@
   const RACE_URLS          = {{ site.data.entity_urls['race'] | jsonify }};
   const CANDIDATE_URLS     = {{ site.data.entity_urls['candidate'] | jsonify }};
 
+  // Where this member's page may point at the full scorecard ranking (ga-party-unity.html).
+  // Scorecards are per biennium and never combined (decision D10): the live page links the
+  // current ranking, plus each frozen biennium's FINAL ranking that actually exists (a
+  // frozen scorecard file is probed first, so no link opens a page that quietly falls back
+  // to the current ranking). A page switched to a frozen biennium links only that one.
+  async function findScorecardTargets() {
+    const frozenTags = ENTITY_BIENNIUMS.filter(b => b !== 'current');
+    const wanted = IS_LIVE ? frozenTags : [SELECTED_BIENNIUM];
+    const found = [];
+    if (IS_LIVE) found.push({ tag: 'current', param: '', label: null });
+    await Promise.all(wanted.map(async tag => {
+      const sp = bienniumSpan(tag);
+      if (!sp) return;
+      try {
+        const r = await fetch(dataRoot(tag) + 'ga-party-unity.json', { method: 'HEAD' });
+        if (r.ok) found.push({ tag, param: '?biennium=' + sp.slug, label: sp.label });
+      } catch (e) { /* no frozen scorecard: no link */ }
+    }));
+    // current first, then newest frozen first
+    return found.sort((a, b) => (a.tag === 'current' ? -1 : b.tag === 'current' ? 1 : b.tag.localeCompare(a.tag)));
+  }
+
   // Set once the roster resolves; read by the lazily-loaded Sponsored Legislation tab.
   let currentMember = null;
 
@@ -1866,6 +1888,7 @@
     // whole ~3.7MB ga-member-votes.json with every member's votes. The slice name
     // mirrors member_slug() in that script: id → [^a-zA-Z0-9]+ collapsed to '-'.
     const base       = getBasePath();
+    const scorecardTargets = await findScorecardTargets();
     const INDEX_URL  = dataRoot(SELECTED_BIENNIUM) + 'ga-votes-index.json';
     const SLICE_URL  = dataRoot(SELECTED_BIENNIUM) + 'ga-votes/'
       + member.id.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-+|-+$/g, '') + '.json';
@@ -2067,9 +2090,12 @@
         const scopeNote = (multiSession && sel !== SESSION_ALL)
           ? ' <span style="color:var(--color-text-secondary);">(ranked across the full ' + escHtml(session || 'biennium') + ')</span>'
           : '';
-        const scorecardLink = ((participationHtml || partyLoyaltyHtml) && !partyLoyalty.suppressed)
+        const scorecardLink = ((participationHtml || partyLoyaltyHtml) && !partyLoyalty.suppressed && scorecardTargets.length)
           ? `<p style="margin:0.35rem 0 1rem 0;font-size:0.85rem;">
-               <a href="${getBasePath()}ga-party-unity.html#${encodeURIComponent(member.id)}">See how this ranks among other GA legislators&nbsp;&rarr;</a>${scopeNote}
+               ${scorecardTargets.map(t => t.tag === 'current'
+                   ? `<a href="${getBasePath()}ga-party-unity.html#${encodeURIComponent(member.id)}">See how this ranks among other GA legislators&nbsp;&rarr;</a>${scopeNote}`
+                   : `<a href="${getBasePath()}ga-party-unity.html${t.param}#${encodeURIComponent(member.id)}">${IS_LIVE ? 'See the final ' + escHtml(t.label) + ' scorecard' : 'See how this ranked among other GA legislators in ' + escHtml(t.label)}&nbsp;&rarr;</a>`
+                 ).join('<br>')}
              </p>`
           : '';
 

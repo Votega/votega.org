@@ -163,7 +163,22 @@ members, from the same roll-call record behind each member's page.</p>
   </div>
 </div>
 
+{%- comment -%}
+  Earlier General Assemblies frozen on the site (scripts/freeze_ga_party_unity.py writes
+  assets/data/ga-bienniums/<tag>/ga-party-unity.json at a rollover, decision D10). Listed
+  from the built file set, so the page makes no request to find out; until a freeze exists
+  this is empty, the selector stays hidden and the page is exactly the single-biennium page.
+  Jekyll 3.10-safe: a plain where filter and string tests only.
+{%- endcomment -%}
+{%- assign frozen_pu_files = site.static_files | where: "name", "ga-party-unity.json" -%}
+{%- capture frozen_pu_tags -%}{%- for f in frozen_pu_files -%}{%- if f.path contains "/assets/data/ga-bienniums/" -%}{{ f.path | split: "/" | reverse | slice: 1, 1 | first }},{%- endif -%}{%- endfor -%}{%- endcapture -%}
+<div id="pu-frozen" hidden data-tags="{{ frozen_pu_tags }}"></div>
+
 <div class="pu-controls" role="region" aria-label="Filters">
+  <div class="pu-ctl" id="pu-bien-wrap" hidden>
+    <label id="pu-lbl-bien" for="pu-bien">General Assembly</label>
+    <select id="pu-bien" aria-labelledby="pu-lbl-bien"></select>
+  </div>
   <div class="pu-ctl">
     <label id="pu-lbl-sort">Rank by</label>
     <select id="pu-sort" aria-labelledby="pu-lbl-sort">
@@ -238,7 +253,38 @@ members, from the same roll-call record behind each member's page.</p>
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
 (function () {
-  var DATA_URL = 'assets/data/ga-party-unity.json';
+  // Root-absolute: this page may be reached with a hash or query, never under a directory.
+  var DATA_URL = '/assets/data/ga-party-unity.json';
+  var FROZEN_DIR = '/assets/data/ga-bienniums/';   // <tag>/ga-party-unity.json, see freeze_ga_party_unity.py
+  // BEGIN pu-biennium-helpers
+  // Frozen tags the build found ('2025_26'), newest first. Empty until a freeze is committed.
+  function frozenTags() {
+    var el = document.getElementById('pu-frozen');
+    var raw = el ? (el.getAttribute('data-tags') || '') : '';
+    return raw.split(',').map(function (t) { return t.trim(); })
+      .filter(function (t) { return /^\d{4}_\d{2}$/.test(t); })
+      .sort().reverse();
+  }
+  // '2025_26' -> '2025-2026'; null when not a regular tag.
+  function tagSlug(tag) {
+    var m = /^(\d{4})_(\d{2})$/.exec(tag || '');
+    if (!m) return null;
+    var start = parseInt(m[1], 10), end = start - (start % 100) + parseInt(m[2], 10);
+    if (end < start) end += 100;
+    return start + '-' + end;
+  }
+  // ?biennium=2025-2026 -> '2025_26' when that frozen file exists, else 'current'.
+  function pickBiennium(available, param) {
+    if (typeof param === 'string' && /^\d{4}-\d{4}$/.test(param)) {
+      var tag = param.slice(0, 4) + '_' + param.slice(7);
+      if (available.indexOf(tag) !== -1) return tag;
+    }
+    return 'current';
+  }
+  function dataUrlFor(sel) { return sel === 'current' ? DATA_URL : FROZEN_DIR + sel + '/ga-party-unity.json'; }
+  // END pu-biennium-helpers
+  var FROZEN = frozenTags();
+  var selected = pickBiennium(FROZEN, new URLSearchParams(window.location.search).get('biennium'));
   // The published, machine-readable home for this scorecard is the ga-legislators
   // repo, which archives it per session (scorecard.{json,csv} + schema) and, unlike
   // the internal asset above, is not destructively replaced at the biennium rollover.
@@ -260,6 +306,7 @@ members, from the same roll-call record behind each member's page.</p>
   var limit = PAGE_SIZE;
   var lastKey = '';
   var highlightId = null;
+  var shownBiennium = null;   // metadata.biennium of the file on screen, labelled in the count line
 
   var $ = function (id) { return document.getElementById(id); };
   var pct = function (x) { return (x * 100).toFixed(1) + '%'; };
@@ -339,6 +386,7 @@ members, from the same roll-call record behind each member's page.</p>
     var shown = Math.min(limit, total);
 
     $('pu-count').innerHTML = 'Showing <strong>' + (shown < total ? shown + ' of ' + total : total) + '</strong> members'
+      + (FROZEN.length && shownBiennium ? ' &middot; ' + esc(shownBiennium.replace('-', '–')) + (selected === 'current' ? '' : ' final') : '')
       + (state.chamber === 'all' ? '' : ' &middot; ' + (state.chamber === 'Senate' ? 'Senate' : 'House'))
       + (state.party === 'all' ? '' : ' &middot; ' + state.party)
       + (state.min > 0 ? ' &middot; min ' + state.min + ' ' + s.sample : '')
@@ -478,14 +526,54 @@ members, from the same roll-call record behind each member's page.</p>
   // straight to /ga-legislators/<slug>/ instead of the ga-member.html shell that
   // only redirects there. It resolves to {} if unavailable, and every row then
   // keeps the shell URL -- see assets/scripts/entity-urls.js.
-  Promise.all([
-    fetch(DATA_URL)
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
-    VoteGA.entityUrls.load(getBasePath()),
-  ])
+  var urlsReady = VoteGA.entityUrls.load(getBasePath());
+
+  // Selector: shown only once a frozen file exists. Each option is a whole General Assembly's
+  // scorecard; nothing is combined across them. The current biennium's own label is filled in
+  // from its data (metadata.biennium) when it loads.
+  var currentLabel = 'Current';
+  function buildSelector() {
+    if (!FROZEN.length) return;
+    var sel = $('pu-bien');
+    var opts = '<option value="current">' + esc(currentLabel) + ' (current)</option>';
+    FROZEN.forEach(function (t) {
+      var slug = tagSlug(t);
+      opts += '<option value="' + esc(t) + '">' + esc(slug ? slug.replace('-', '–') : t) + ' (final)</option>';
+    });
+    sel.innerHTML = opts;
+    sel.value = selected;
+    $('pu-bien-wrap').hidden = false;
+  }
+  $('pu-bien').addEventListener('change', function () {
+    selected = this.value;
+    if (window.history && history.replaceState) {
+      var slug = selected === 'current' ? null : tagSlug(selected);
+      history.replaceState(null, '', window.location.pathname + (slug ? '?biennium=' + slug : '') + window.location.hash);
+    }
+    load();
+  });
+
+  function load() {
+    dataLoaded = false;
+    var isFrozen = selected !== 'current';
+    // The server-rendered fallback rows are the CURRENT biennium's; never leave them up
+    // under a frozen selection.
+    if (isFrozen) {
+      $('pu-rows').innerHTML = '<tr><td colspan="6" style="padding:1.5rem;color:var(--color-text-secondary);">Loading the ' + esc(tagSlug(selected) || selected) + ' scorecard…</td></tr>';
+      $('pu-count').textContent = '';
+      $('pu-more').hidden = true;
+    }
+    Promise.all([
+      fetch(dataUrlFor(selected))
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); }),
+      urlsReady,
+    ])
     .then(function (results) {
       var data = results[0];
       members = data.members || [];
+      byId = {};
+      chamberMax = {};
+      lastKey = '';
       dataLoaded = members.length > 0;
       members.forEach(function (m) {
         byId[m.id] = m;
@@ -493,6 +581,11 @@ members, from the same roll-call record behind each member's page.</p>
       });
 
       var meta = data.metadata || {};
+      shownBiennium = meta.biennium || null;
+      if (!isFrozen && meta.biennium) {
+        currentLabel = meta.biennium.replace('-', '–');
+        buildSelector();
+      }
       // Legacy coverage-gap flag, and a deliberate no-op today — the same guard
       // and the same reasoning as _includes/entity/ga-legislator.html. The former
       // Open States source could leave the roll-call record short of the session
@@ -515,12 +608,22 @@ members, from the same roll-call record behind each member's page.</p>
         + 'passage votes only; committee and procedural votes are excluded. '
         + (incomplete ? '<strong>Our roll-call record covers most, but not all, of the regular session\'s bills, so some passage votes are missing and these figures may understate a member\'s totals.</strong> ' : '')
         + 'Source: legis.ga.gov official roll-call record'
-        + (meta.biennium ? ' for the ' + esc(meta.biennium) + ' biennium' : '') + '. '
+        + (meta.biennium ? ' for the ' + esc(meta.biennium) + ' biennium' : '')
+        + (isFrozen ? ' (final scorecard, frozen at the end of the biennium; it will not change)' : '') + '. '
         + 'Machine-readable data: party unity and participation for every member are published as '
         + 'open data — <code>scorecard.csv</code> / <code>scorecard.json</code> — in the '
         + '<a href="' + esc(scorecardRepoUrl(meta.biennium)) + '" target="_blank" rel="noopener">'
         + 'Votega/ga-legislators</a> repository.';
 
+      // A new biennium's first days can have no scored member yet. Say so, rather than
+      // leaving the previous run's server-rendered rows under a new biennium's heading.
+      if (!dataLoaded) {
+        $('pu-rows').innerHTML = '<tr><td colspan="6" style="padding:1.5rem;color:var(--color-text-secondary);">'
+          + 'No member has a recorded roll call in this biennium yet. Scores appear once passage votes are held.</td></tr>';
+        $('pu-count').textContent = '';
+        $('pu-more').hidden = true;
+        return;
+      }
       highlightId = readHash();
       if (highlightId) focusHighlighted();
       render();
@@ -531,7 +634,8 @@ members, from the same roll-call record behind each member's page.</p>
       // have run yet" described our pipeline, not their problem.
       console.warn('scorecard load failed:', err);
       var rows = $('pu-rows');
-      if (rows.dataset.fallback === '1') {
+      // The fallback rows are the current biennium's, so they are only honest under it.
+      if (rows.dataset.fallback === '1' && !isFrozen) {
         $('pu-count').innerHTML = 'The sortable scorecard could not be loaded just now. '
           + 'The figures we last published are shown below.';
       } else {
@@ -540,5 +644,11 @@ members, from the same roll-call record behind each member's page.</p>
         $('pu-count').textContent = '';
       }
     });
+  }
+
+  // A frozen selection is shown at once (the selector needs no data to label it); the current
+  // biennium's selector fills in when its file arrives, or here when only a frozen one loads.
+  if (selected !== 'current') { currentLabel = 'Current'; buildSelector(); }
+  load();
 })();
 </script>

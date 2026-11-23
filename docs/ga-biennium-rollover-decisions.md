@@ -172,7 +172,7 @@ Also suppress the election framing for these two: a member who died or was remov
 
 Settles it: a person reviewing the first real case. None exist today, which is exactly why the wording is worth agreeing now rather than under time pressure.
 
-### D10. Party-unity and scorecard treatment — Proposed 2026-10-30
+### D10. Party-unity and scorecard treatment — Approved; BUILT 2026-11-23 (`scripts/freeze_ga_party_unity.py`, run as RECURRING-TASKS §3 step 2d; selector on `ga-party-unity.html`, per-biennium links on the legislator page)
 Scorecards are per biennium. A frozen final scorecard for 2025-2026; the page follows the current biennium. Needs agreement on what a returning member's page shows across bienniums.
 
 **Proposed: freeze a final 2025-2026 scorecard and keep the live page on the current biennium** (option 3 in D1, for this page only, as D1 already proposes).
