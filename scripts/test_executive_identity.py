@@ -125,8 +125,7 @@ check("history is declared not backfilled, so empty start dates are not a claim"
       ("not-backfilled", True))
 # docs/seat-history-design.md "Date semantics": why THIS hold ended; outcomes elsewhere are
 # derived from later holds, never stored. (redistricted is omitted: no executive seat has a map.)
-ENDED_BY = {"term-limited", "did-not-run", "lost", "resigned", "removed", "deceased",
-            "term-ended"}
+from lib.seat_holds import ENDED_BY  # noqa: E402  (the shared list; the local copy was retired in Phase 3)
 ended = [h for s in seats for h in s["holders"] if h["end"] is not None]
 check("a recorded end carries a reason, a basis and a source",
       all(h.get("endedBy") in ENDED_BY and h.get("endBasis") and h.get("source")

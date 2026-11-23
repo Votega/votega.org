@@ -209,6 +209,57 @@ def derive_holds(snapshot, seats_doc, roster, overrides, vgid_for, specials=()):
     return holds
 
 
+EXEC_PARTY = {"D": "Democratic", "R": "Republican", "Democrat": "Democratic"}
+EXEC_SOURCE = "ga-executive-seats.json + ga-executive.json"
+
+
+def derive_executive_holds(exec_seats_doc, officials, vgid_for):
+    """Holds for the statewide executives (Phase 3), oldest first within each seat.
+
+    ga-executive-seats.json (`holders`, newest first) stays the hand-edited surface; this
+    reads it and ga-executive.json and writes the shared shape. A holder who took office
+    on or before historyFrom (termStartYear <= 2023) starts null with basis
+    `before-history`; a later one (an appointee, or a 2026 special-election winner) starts
+    null with basis `unknown`, because the record has no source for the predecessors it
+    would otherwise sit beside. Provisional holders keep their reserved vgId and carry
+    `provisional`, `name` and `candidateId`.
+
+    vgid_for(exec_record) -> vgId or None, for people already in ga-executive.json."""
+    by_id = {o["id"]: o for o in officials}
+    holds = []
+    for seat in exec_seats_doc["seats"]:
+        for hld in reversed(seat["holders"]):
+            o = by_id.get(hld["execId"])
+            prov = bool(hld.get("provisional"))
+            if prov:
+                vg = hld.get("vgId")
+            else:
+                if o is None:
+                    raise ValueError(f"{hld['execId']} on {seat['id']} is not in ga-executive.json")
+                vg = vgid_for(o)
+            if not vg:
+                raise ValueError(f"{hld['execId']} on {seat['id']} has no vgId")
+            party = hld.get("party") if prov else (o or {}).get("party")
+            party = EXEC_PARTY.get(party, party)
+            if prov or hld.get("start"):
+                start, basis = hld["start"], hld.get("startBasis")
+            elif o.get("termStartYear") is not None and o["termStartYear"] > 2023:
+                start, basis = None, "unknown"
+            else:
+                start, basis = None, "before-history"
+            h = {"seatId": seat["id"], "vgId": vg, "ids": {"executiveId": hld["execId"]},
+                 "start": start, "startBasis": basis, "end": hld.get("end"),
+                 "endBasis": hld.get("endBasis") if hld.get("end") else None,
+                 "endedBy": hld.get("endedBy") if hld.get("end") else None,
+                 "party": party, "source": hld.get("source") or EXEC_SOURCE}
+            if prov:
+                h.update(provisional=True, name=hld["name"], candidateId=hld.get("candidateId"))
+            if hld.get("note"):
+                h["note"] = hld["note"]
+            holds.append(h)
+    return holds
+
+
 def overrides_errors(overrides, corrections=()):
     """Every hand-reviewed entry must say how it was confirmed and where."""
     errs = []
@@ -266,7 +317,7 @@ def vacancy_gaps(holds, seats_doc):
             a = hs[i - 1] if i else None
             if a and a["end"] and a["endedBy"] != "redistricted" and (b["start"] is None or b["start"] > a["end"]):
                 gaps.append((seat_id, a["end"], b["start"]))
-            elif b["startBasis"] != "convening" and b["start"]:
+            elif b["startBasis"] != "convening" and b["start"] and seats[seat_id]["body"] in ("ga-house", "ga-senate"):
                 conv = convening_on_or_before(b["start"])
                 if b["start"] > conv and (a is None or (a["end"] and a["end"] <= conv)):
                     gaps.append((seat_id, conv, b["start"]))
@@ -380,8 +431,10 @@ def holds_errors(doc, seats_doc, merged=None, previous=None, corrections=()):
             errs.append(f"{who}: no vgId")
         elif h["vgId"] in merged:
             errs.append(f"{who}: retired vgId (forwards to {merged[h['vgId']]})")
-        if h["start"] is None and h.get("startBasis") != "unknown":
-            errs.append(f"{who}: null start needs startBasis 'unknown'")
+        if h["start"] is None and h.get("startBasis") not in ("unknown", "before-history"):
+            errs.append(f"{who}: null start needs startBasis 'unknown' or 'before-history'")
+        if h.get("provisional") and (h["end"] is not None or not h.get("name")):
+            errs.append(f"{who}: a provisional hold is open and carries a name")
         if s["plan"] and h["start"] and h["start"] < eff[s["plan"]]:
             errs.append(f"{who}: starts before its seat's map took effect")
         if h["end"] is not None:
@@ -405,7 +458,8 @@ def holds_errors(doc, seats_doc, merged=None, previous=None, corrections=()):
             if a["end"] is None or a["end"] > b["start"]:
                 errs.append(f"{who}: suspensions overlap")
         by_seat.setdefault(h["seatId"], []).append(h)
-        by_vg.setdefault(h.get("vgId"), []).append(h)
+        if not h.get("provisional"):      # a staged future holder may overlap the person's current seat
+            by_vg.setdefault(h.get("vgId"), []).append(h)
     for seat_id, hs in by_seat.items():
         if sum(1 for h in hs if h["end"] is None) > seats[seat_id]["capacity"]:
             errs.append(f"{seat_id}: more open holds than its capacity")
@@ -439,7 +493,7 @@ def holds_errors(doc, seats_doc, merged=None, previous=None, corrections=()):
 def report(doc, seats_doc):
     """Tier 2 lines: unknown starts and seats with no open hold (vacancies)."""
     lines = []
-    unknown = [h for h in doc["holds"] if h["start"] is None]
+    unknown = [h for h in doc["holds"] if h["start"] is None and h.get("startBasis") == "unknown"]
     if unknown:
         lines.append(f"{len(unknown)} hold(s) with an unknown start: "
                      + ", ".join(f"{h['vgId']} on {h['seatId']}" for h in unknown))

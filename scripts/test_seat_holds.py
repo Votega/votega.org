@@ -275,7 +275,6 @@ def committed_cases():
         kinds.setdefault((n["seatId"], n["from"]), set()).add(n["kind"])
     check("20 vacancies since 2023, each with a writ and a special election",
           (len(gaps), all({"writ", "special-election"} <= kinds.get((g[0], g[1]), set()) for g in gaps)), (20, True))
-    by0 = {(h["ids"]["legisGaGovId"], h["seatId"]): h for h in doc0["holds"]}
     check("four seats were vacant at the 2023 convening (HD 7, 119, 172, SD 11)",
           sorted(g[0] for g in gaps if g[1] == "2023-01-09"),
           ["ga-house-119@2021", "ga-house-172@2021", "ga-house-7@2021", "ga-senate-11@2021"])
@@ -296,11 +295,12 @@ def committed_cases():
                       B.load(B.OVERRIDES_FILE), ledger)
     check("seat-holds.json matches a rebuild (run build_seat_holds.py if this fails)",
           B.same_content(rebuilt, doc), True)
-    open_ = [h for h in doc["holds"] if h["end"] is None]
+    legis = [h for h in doc["holds"] if "legisGaGovId" in h["ids"]]
+    open_ = [h for h in legis if h["end"] is None]
     check("every current legislative seat has exactly one open hold (180 + 56)",
           (len(open_), len({h["seatId"] for h in open_})), (236, 236))
     by = {}
-    for h in doc["holds"]:
+    for h in legis:
         by.setdefault(h["ids"]["legisGaGovId"], []).append(h)
     check("J Collins (HD 71, carried over) ended did-not-run at the 2025 convening",
           [(h["seatId"], h["end"], h["endedBy"]) for h in by[4892]],
@@ -314,6 +314,38 @@ def committed_cases():
           [(h["end"], h["endedBy"]) for h in by[808]], [("2025-10-12", "deceased")])
 
 
+def executive_cases():
+    print("statewide executives (Phase 3)")
+    doc, seats = B.load(B.OUTPUT_FILE), B.load(B.SEATS_FILE)
+    ex = [h for h in doc["holds"] if "executiveId" in h["ids"]]
+    exec_seats = {s["id"] for s in seats["seats"] if s["body"] == "ga-executive"}
+    check("22 executive holds on the 13 statewide seats (13 current + 9 staged)",
+          (len(ex), {h["seatId"] for h in ex} == exec_seats), (22, True))
+    prov = [h for h in ex if h.get("provisional")]
+    check("9 provisional holds, each open, named, starting the day the outgoing hold ends",
+          (len(prov), all(h["end"] is None and h["name"] for h in prov),
+           all(any(o["seatId"] == h["seatId"] and o["end"] == h["start"] for o in ex) for h in prov)),
+          (9, True, True))
+    check("history starts 2023-01-09 for executives", doc["metadata"]["historyFrom"]["ga-executive"], "2023-01-09")
+    kemp = next(h for h in ex if h["ids"]["executiveId"] == "exec:ga-kemp-brian")
+    check("Kemp: before-history start, ended term-limited 2027-01-11, Republican",
+          (kemp["start"], kemp["startBasis"], kemp["end"], kemp["endedBy"], kemp["party"]),
+          (None, "before-history", "2027-01-11", "term-limited", "Republican"))
+    hub = next(h for h in ex if h["ids"]["executiveId"] == "exec:ga-hubbard-peter")
+    check("a 2026 winner's start is unknown, not before-history (no source for the predecessor)",
+          (hub["start"], hub["startBasis"]), (None, "unknown"))
+    ids = [h["vgId"] for h in ex if not h.get("provisional")]
+    check("each sitting executive has a distinct vgId", len(set(ids)), 13)
+    mc = [h for h in doc["holds"] if h["vgId"] == "vg-ga-p-000115"]
+    check("McLaurin's staged Lt. Governor hold may sit beside his open SD 14 hold",
+          sorted(h["seatId"] for h in mc if h["end"] is None), ["ga-lt-governor", "ga-senate-14@2021"])
+    broken = lambda f: holds_errors((lambda d: (f(d["holds"]), d)[1])(copy.deepcopy(doc)), seats)  # noqa: E731
+    check("a provisional hold with an end is rejected", any("provisional" in e for e in broken(
+        lambda hs: next(h for h in hs if h.get("provisional")).update(end="2028-01-01", endBasis="reported", endedBy="lost"))), True)
+    check("an executive hold ended 'redistricted' is rejected", any("redistricted" in e for e in broken(
+        lambda hs: next(h for h in hs if h["ids"].get("executiveId") == "exec:ga-kemp-brian").update(endedBy="redistricted"))), True)
+
+
 def main():
     derivation_cases()
     validation_cases()
@@ -321,6 +353,7 @@ def main():
     roster_layer_cases()
     vacancy_cases()
     committed_cases()
+    executive_cases()
     if failures:
         print(f"\n{len(failures)} failure(s): {failures}")
         return 1

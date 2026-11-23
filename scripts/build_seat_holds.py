@@ -30,8 +30,8 @@ import copy
 
 from lib.atomic_io import write_json_atomic  # noqa: E402
 from lib.ga_roster import EDITORIAL_STATUS_FIELDS, apply_member_overrides  # noqa: E402
-from lib.ga_identity import ledger_keys  # noqa: E402
-from lib.seat_holds import (bienniums, derive_holds, derive_vacancy_notes, holds_errors,  # noqa: E402
+from lib.ga_identity import executive_keys, ledger_keys  # noqa: E402
+from lib.seat_holds import (bienniums, derive_executive_holds, derive_holds, derive_vacancy_notes, holds_errors,  # noqa: E402
                              overrides_errors, report, vacancy_note_errors, vacancy_report)
 import glob  # noqa: E402
 
@@ -44,6 +44,8 @@ MEMBER_OVERRIDES_FILE = P("assets", "data", "ga-members-overrides.json")
 OVERRIDES_FILE = P("assets", "data", "seat-hold-overrides.json")
 LEDGER_FILE = P("assets", "data", "id-crosswalk-ledger.json")
 OUTPUT_FILE = P("assets", "data", "seat-holds.json")
+EXEC_SEATS_FILE = P("assets", "data", "ga-executive-seats.json")
+EXEC_FILE = P("assets", "data", "ga-executive.json")
 SPECIALS_FILE = P("assets", "data", "ga-legislative-specials.json")
 EXEC_ORDERS_GLOB = P("assets", "data", "ga-executive-orders-*.json")
 
@@ -104,13 +106,27 @@ def load_writs(first_convening):
     return orders
 
 
-def build(snapshot, seats_doc, roster_members, overrides_doc, ledger, specials_doc=None, writs=None):
+def build(snapshot, seats_doc, roster_members, overrides_doc, ledger, specials_doc=None, writs=None,
+          exec_seats_doc=None, officials=None):
     roster = {m["legisGaGovId"]: m for m in roster_members if m.get("legisGaGovId") is not None}
     specials_doc = specials_doc if specials_doc is not None else load(SPECIALS_FILE, {"specials": [], "sources": {}})
     first = bienniums(snapshot)[0][1]
     writs = writs if writs is not None else load_writs(first)
     holds = derive_holds(snapshot, seats_doc, roster, overrides_doc.get("holds", []),
                          vgid_resolver(ledger), specials=specials_doc.get("specials", []))
+    exec_seats_doc = exec_seats_doc if exec_seats_doc is not None else load(EXEC_SEATS_FILE)
+    officials = officials if officials is not None else load(EXEC_FILE)["officials"]
+    assign, merged = ledger.get("assign", {}), ledger.get("merged", {})
+
+    def exec_vgid(o):
+        for k in executive_keys(o.get("legacyRosterId"), o.get("legisGaGovId"), o["id"]):
+            if k in assign:
+                vg = assign[k]
+                while vg in merged:
+                    vg = merged[vg]
+                return vg
+        return None
+    holds = holds + derive_executive_holds(exec_seats_doc, officials, exec_vgid)
     notes = derive_vacancy_notes(holds, seats_doc, writs, specials_doc.get("specials", []),
                                  specials_doc.get("sources", {}), today="9999-12-31")
     return {
@@ -118,7 +134,7 @@ def build(snapshot, seats_doc, roster_members, overrides_doc, ledger, specials_d
             "generatedAt": None,
             "count": len(holds),
             "schemaVersion": 1,
-            "historyFrom": {"ga-house": first, "ga-senate": first},
+            "historyFrom": {"ga-house": first, "ga-senate": first, "ga-executive": "2023-01-09"},
             "meaning": ("One record per person per continuous time in one seat, in the order "
                         "held. start/end are the first day in and the first day out, each with "
                         "a basis; endedBy says only why THIS hold ended (a win or loss "
@@ -127,6 +143,7 @@ def build(snapshot, seats_doc, roster_members, overrides_doc, ledger, specials_d
                         "'redistricted'. Vacancies are the gaps between holds."),
             "sources": [
                 "legis.ga.gov Members/GetMembersBySession (scripts/data/ga-members-by-session.json)",
+                "assets/data/ga-executive-seats.json + ga-executive.json (statewide executives, Phase 3)",
                 "assets/data/seats.json", "assets/data/ga-members.json (status, termStart)",
                 "assets/data/seat-hold-overrides.json (hand-reviewed end reasons, with sources)",
                 "assets/data/id-crosswalk-ledger.json (vgIds)",
