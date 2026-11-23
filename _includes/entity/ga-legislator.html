@@ -178,6 +178,12 @@
   .bill-status-tag { font-size: 0.75rem; color: var(--color-text-secondary); }
   .bill-title { font-size: 0.875rem; color: var(--color-text); font-style: italic; margin-bottom: 0.35rem; }
   .bill-summary { font-size: 0.875rem; color: var(--color-text); line-height: 1.5; margin-bottom: 0.75rem; }
+  .bill-summary-note { margin-top: 0.3rem; font-size: 0.75rem; color: var(--color-text-secondary); line-height: 1.45; }
+  .summary-badge {
+    display: inline-block; padding: 0 0.4rem; margin-right: 0.2rem;
+    border: 1px solid var(--color-border, currentColor); border-radius: 999px;
+    font-size: 0.66rem; font-weight: 600;
+  }
   .bill-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
   .bill-vote-badge {
     display: inline-block;
@@ -1337,7 +1343,17 @@
         ? new Date(String(bill.statusDate).slice(0, 10) + 'T00:00:00').toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'})
         : '';
       const statusTag = escHtml([bill.status, statusDate].filter(Boolean).join(' · '));
-      const summaryHtml = bill.summary ? `<div class="bill-summary">${escHtml(bill.summary)}</div>` : '';
+      // summarySource (generate_curated_ga_bills.py): "editor" = written by VoteGA,
+      // "ai" = a reviewed AI summary used when no editor summary exists, "caption" =
+      // the official caption. AI text is always labeled as AI, with a link to how it's made.
+      const aiNote = bill.summarySource === 'ai'
+        ? `<div class="bill-summary-note"><span class="summary-badge">AI summary</span> `
+          + `Written by AI from the official bill and reviewed by a person. `
+          + `<a href="${getBasePath()}about-the-data#ai-bill-summaries">How this works</a></div>`
+        : '';
+      const summaryHtml = bill.summary
+        ? `<div class="bill-summary">${escHtml(bill.summary)}${aiNote}</div>`
+        : '';
 
       // The identifier goes to OUR bill page, as it does on the Sponsored Legislation
       // rows below - the two tabs used to disagree, the same-looking link leaving the

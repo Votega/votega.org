@@ -5,6 +5,8 @@ Runs on the maintainer's PC only. No API keys, nothing called from the live site
 
   draft   Ollama (local) first pass for every bill that's new or whose text changed.
   refine  Claude Code (`claude -p`, your subscription) rewrites key/flagged bills.
+  publish Rebuild assets/data/ga-bill-summaries.json (what /ga-bills shows) after you
+          approve entries by hand. draft/refine rebuild it automatically.
   status  Read-only report of which AI subject tags the bills generator will use.
           Tags are never written to ga-bills-subjects.json (manual overrides only):
           generate_ga_bills_soap.py reads REVIEWED tags from ga-bill-ai.json directly,
@@ -16,6 +18,7 @@ Usage:
   python scripts/ai_enrich_ga_bills.py draft  [--limit 50] [--session 2026_ss] [--model qwen2.5:14b]
   python scripts/ai_enrich_ga_bills.py refine [--limit 10] [--only "SB 443"]
   python scripts/ai_enrich_ga_bills.py status
+  python scripts/ai_enrich_ga_bills.py publish
 """
 
 import argparse
@@ -36,6 +39,9 @@ DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__
 BILLS_FILE = os.path.join(DATA_DIR, "ga-bills.json")
 CURATED_FILE = os.path.join(DATA_DIR, "curated-ga-bills.json")
 OUT_FILE = os.path.join(DATA_DIR, "ga-bill-ai.json")
+# What the site loads: REVIEWED summaries only, plus editor-written summaryOverrides,
+# which always win. Small on purpose: ga-bill-ai.json is ~1.3 MB of mostly drafts.
+PUBLIC_FILE = os.path.join(DATA_DIR, "ga-bill-summaries.json")
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434/api/chat")
 DEFAULT_MODEL = "qwen2.5:14b"
 MAX_TEXT_CHARS = 12000  # caps Claude plan usage per bill
@@ -141,6 +147,46 @@ def write_out(out):
         "note": "AI-generated drafts (Ollama) refined for key bills (Claude). Display with an 'AI summary' label and a link to the official bill.",
     })
     save_json(OUT_FILE, out)
+    save_json(PUBLIC_FILE, build_public(out, load_json(CURATED_FILE) or {}))
+
+
+def build_public(out, curated):
+    """{metadata, summaries: {"<session>|<identifier>": {text, source}}} for the site.
+
+    source "editor": a human summaryOverride from curated-ga-bills.json. It always wins,
+    so AI text never replaces it. source "ai": a REVIEWED (needsReview false) AI summary.
+    Unreviewed drafts are left out entirely. Keys carry the session because bill
+    numbers restart each biennium."""
+    summaries = {}
+    for ident, v in sorted(out.get("bills", {}).items()):
+        if v.get("needsReview", True) is False and v.get("summary") and v.get("session"):
+            summaries[f"{v['session']}|{ident}"] = {
+                "text": v["summary"], "source": "ai", "refined": bool(v.get("refined"))}
+    for e in curated.get("ga", []):
+        text = (e.get("summaryOverride") or "").strip()
+        if text and e.get("identifier") and e.get("session"):
+            summaries[f"{e['session']}|{e['identifier']}"] = {"text": text, "source": "editor"}
+    return {
+        "metadata": {
+            "note": "Bill summaries shown on /ga-bills. 'editor' = written by Votega; "
+                    "'ai' = AI-generated from the official bill and reviewed by a person. "
+                    "Built by scripts/ai_enrich_ga_bills.py; do not edit by hand.",
+            "count": len(summaries),
+            "ai": sum(1 for s in summaries.values() if s["source"] == "ai"),
+            "editor": sum(1 for s in summaries.values() if s["source"] == "editor"),
+        },
+        "summaries": summaries,
+    }
+
+
+def cmd_publish(args):
+    """Rebuild ga-bill-summaries.json, e.g. after approving entries by hand."""
+    out = load_out()
+    data = build_public(out, load_json(CURATED_FILE) or {})
+    save_json(PUBLIC_FILE, data)
+    m = data["metadata"]
+    print(f"{m['count']} summaries ({m['ai']} reviewed AI, {m['editor']} editor) → {PUBLIC_FILE}")
+    return 0
 
 
 # ---------- draft (Ollama) ----------
@@ -379,8 +425,8 @@ def cmd_status(args):
         print(f"Tag check vs existing tags on {len(scored)} already-tagged bill(s): first pick "
               f"right {first}/{len(scored)} ({100 * first / len(scored):.0f}%), "
               f"{100 * precision:.0f}% of all AI tags match")
-    print("Approve an entry by setting needsReview: false, commit ga-bill-ai.json, "
-          "then run update-ga-bills (weekly, or dispatch it).")
+    print("Approve an entry by setting needsReview: false, run `publish` (updates the summaries "
+          "/ga-bills shows), commit both files; tags reach ga-bills.json on the next update-ga-bills run.")
     return 0
 
 
@@ -396,8 +442,10 @@ def main():
                    help="also draft honorary resolutions (commend/condolences/recognize), skipped by default")
     r = sub.add_parser("refine"); r.add_argument("--limit", type=int, default=10); r.add_argument("--only", nargs="+")
     sub.add_parser("status")
+    sub.add_parser("publish")
     args = p.parse_args()
-    sys.exit({"draft": cmd_draft, "refine": cmd_refine, "status": cmd_status}[args.cmd](args))
+    sys.exit({"draft": cmd_draft, "refine": cmd_refine, "status": cmd_status,
+              "publish": cmd_publish}[args.cmd](args))
 
 
 if __name__ == "__main__":

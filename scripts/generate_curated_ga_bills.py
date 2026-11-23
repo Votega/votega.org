@@ -50,6 +50,9 @@ GA_MEMBERS_FILE    = "assets/data/ga-members.json"
 GA_BILLS_FILE      = "assets/data/ga-bills.json"
 GA_VOTES_FILE      = "assets/data/ga-member-votes.json"
 CROSSWALK_FILE     = "assets/data/id-crosswalk.json"
+# Reviewed-only summaries built by scripts/ai_enrich_ga_bills.py (unreviewed AI drafts
+# never reach it), keyed "<session>|<identifier>".
+SUMMARIES_FILE     = "assets/data/ga-bill-summaries.json"
 OUTPUT_FILE        = sys.argv[1] if len(sys.argv) > 1 else "assets/data/curated-ga-bill-votes.json"
 
 #: The project's vote strings -> the option vocabulary this file publishes. Kept as a
@@ -149,6 +152,29 @@ def vote_record(meta, member_votes, party_lookup):
     }
 
 
+def load_reviewed_summaries(path=SUMMARIES_FILE):
+    """{"<session>|<identifier>": {text, source}}; {} when the file is absent or unreadable,
+    so a missing AI layer only means falling back to the caption."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            return (json.load(f) or {}).get("summaries", {}) or {}
+    except (OSError, ValueError):
+        return {}
+
+
+def pick_summary(entry, reviewed, caption=""):
+    """(text, source) for one curated bill. Precedence: the editor's summaryOverride >
+    a reviewed AI summary > the official caption. summarySource lets the page label AI
+    text as AI; an override is never replaced, and an unreviewed draft is never used."""
+    override = (entry.get("summaryOverride") or "").strip()
+    if override:
+        return override, "editor"
+    ai = reviewed.get(f"{entry.get('session')}|{entry.get('identifier')}") or {}
+    if ai.get("source") == "ai" and (ai.get("text") or "").strip():
+        return ai["text"].strip(), "ai"
+    return (caption, "caption") if caption else ("", None)
+
+
 # --------------------------------------------------------------------------- local
 
 class LocalRecord:
@@ -193,7 +219,7 @@ class LocalRecord:
         return out
 
 
-def local_bill_record(entry, local, party_lookup):
+def local_bill_record(entry, local, party_lookup, reviewed=None):
     """Build one bill's record from the committed artifacts, or None if not present."""
     session, identifier = entry["session"], entry["identifier"]
     bill = local.bill(session, identifier)
@@ -216,12 +242,14 @@ def local_bill_record(entry, local, party_lookup):
         print(f"  WARNING: No passage votes found for {identifier} ({session})")
 
     lid = bill.get("legislationId")
+    summary, summary_source = pick_summary(entry, reviewed or {}, bill.get("abstract") or "")
     return {
         "legislationId": lid,
         "session":       session,
         "identifier":    identifier,
         "title":         bill.get("title", ""),
-        "summary":       entry.get("summaryOverride") or bill.get("abstract") or "",
+        "summary":       summary,
+        "summarySource": summary_source,
         "status":        bill.get("status", ""),
         "statusDate":    bill.get("statusDate", ""),
         "billUrl":       bill.get("billUrl") or (BILL_URL % lid if lid else ""),
@@ -233,7 +261,7 @@ def local_bill_record(entry, local, party_lookup):
 
 # ---------------------------------------------------------------------------- SOAP
 
-def soap_bill_record(entry, crosswalk, party_lookup, stats=None):
+def soap_bill_record(entry, crosswalk, party_lookup, stats=None, reviewed=None):
     """Fetch one bill's passage votes straight from SOAP.
 
     For a curated bill older than the committed artifacts. Walks the session's listings
@@ -303,13 +331,15 @@ def soap_bill_record(entry, crosswalk, party_lookup, stats=None):
     # One extra call gives the session's titles; without it the card would render a
     # bare bill number. Best-effort — get_title_index returns {} on failure.
     title = get_title_index(legis_session).get(legislation_id, "") if legislation_id else ""
+    summary, summary_source = pick_summary(entry, reviewed or {})
 
     return {
         "legislationId": legislation_id,
         "session":       session,
         "identifier":    identifier,
         "title":         title,
-        "summary":       entry.get("summaryOverride") or "",
+        "summary":       summary,
+        "summarySource": summary_source,
         # Status/statusDate come from ga-bills.json, which covers the current
         # biennium only — an older bill shows no status tag rather than a wrong one.
         "status":        "",
@@ -334,6 +364,8 @@ def main():
     party_lookup = build_party_lookup()
     print("Loading the local official record...")
     local = LocalRecord()
+    reviewed = load_reviewed_summaries()
+    print(f"  Loaded {len(reviewed)} reviewed summaries ({SUMMARIES_FILE})")
 
     # Prior records, so a bill that can't be sourced keeps its last-known data instead
     # of vanishing from the site. Keyed by (session, identifier) because the curated list
@@ -357,7 +389,7 @@ def main():
     for entry in bill_list:
         label = entry.get("_name") or entry["identifier"]
         print(f"\n--- {label} ({entry['identifier']}, {entry['session']}) ---")
-        record = local_bill_record(entry, local, party_lookup)
+        record = local_bill_record(entry, local, party_lookup, reviewed)
         if record:
             print(f"  OK — {len(record['votes'])} chamber vote(s) from the local record")
         else:
@@ -366,7 +398,7 @@ def main():
             if crosswalk is None:
                 crosswalk = build_crosswalk()
                 print(f"  Loaded crosswalk: {len(crosswalk)} legisGaGovId -> OCD ids")
-            record = soap_bill_record(entry, crosswalk, party_lookup, stats)
+            record = soap_bill_record(entry, crosswalk, party_lookup, stats, reviewed)
             if record:
                 print(f"  OK — {len(record['votes'])} chamber vote(s) over SOAP")
 
