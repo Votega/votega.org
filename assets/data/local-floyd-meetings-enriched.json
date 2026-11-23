@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-20T12:14:31Z",
+  "generatedAt": "2026-11-23T21:05:09Z",
   "source": "Floyd County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Floyd County",
-  "count": 22
+  "count": 23
  },
  "summary": {
   "flags": [
@@ -13,13 +13,13 @@
    "land-use",
    "local-taxes"
   ],
-  "lastActivity": "2026-11-18",
+  "lastActivity": "2026-11-24",
   "topicTotals": {
-   "budget": 5,
-   "local-taxes": 19,
-   "rezoning": 13,
-   "contract": 18,
-   "appointment": 8,
+   "appointment": 9,
+   "budget": 6,
+   "contract": 19,
+   "local-taxes": 20,
+   "rezoning": 14,
    "data-center": 2,
    "development": 4,
    "alpr": 2
@@ -34,6 +34,14 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-11-24",
+    "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=6283,plainText=false)",
+    "tags": [
+     "rezoning"
+    ]
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-11-10",
@@ -139,7 +147,7 @@
     ]
    }
   ],
-  "landUseMeetings": 15,
+  "landUseMeetings": 16,
   "alprItems": [
    {
     "title": "Board of Commissioners Meeting",
@@ -160,6 +168,14 @@
   ],
   "alprMeetings": 2,
   "localTaxItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-11-24",
+    "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=6283,plainText=false)",
+    "terms": [
+     "splost"
+    ]
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-11-10",
@@ -313,8 +329,16 @@
     ]
    }
   ],
-  "localTaxCitations": 19,
+  "localTaxCitations": 20,
   "budgetItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-11-24",
+    "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=6283,plainText=false)",
+    "terms": [
+     "recommended budget"
+    ]
+   },
    {
     "title": "One Time Event",
     "date": "2026-11-18",
@@ -356,12 +380,79 @@
     ]
    }
   ],
-  "budgetCitations": 5,
-  "landUseCitations": 13,
+  "budgetCitations": 6,
+  "landUseCitations": 14,
   "alprCitations": 2,
   "dataCenterCitations": 1
  },
  "meetings": [
+  {
+   "id": "37",
+   "date": "2026-11-24",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=6283,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://floydcountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=6283,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 10917,
+   "pdfSha256": "e8e8a134d2ed26d994fcf920a742f1a3ccfdcbd9cb5279f6a7ba2902b07acbad",
+   "topics": {
+    "appointment": 1,
+    "budget": 1,
+    "contract": 1,
+    "local-taxes": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "budget",
+    "contract",
+    "local-taxes",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "reappoint",
+    "recommended budget",
+    "rezon",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… ioners of Georgia Defined Benefit Plan for Floyd County Employees. 2. Consider request to approve a resolution appointing county records custodian and open records clerk. XII. Chairman's Report 1. Consider reappointin …",
+     "context": "agenda-action"
+    },
+    "budget": {
+     "term": "recommended budget",
+     "excerpt": "… DA Wildlife Services for 2027. No 2026 budget change is required. This is included in the FY 2027 recommended budget. 8. Consider request from Parks and Rec to approve a sponsorship contract with the Burkhalter Firm …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… in the FY 2027 recommended budget. 8. Consider request from Parks and Rec to approve a sponsorship contract with the Burkhalter Firm for the ice skating rink. This requires a budget increase of $1,000 in r …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… . Rome-Floyd Planning Commission Next Meeting, Thursday, December 3, 2:00 p.m., 2026 i. SPLOST Project Overview Committee Next Meeting, TBD j. Transportation Policy Committee …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Z26-11-01, for the property at 0 Calhoun Hwy., Rome, GA 30161, Floyd County Tax Parcel M10Z095, requests to rezone from Heavy Industrial (H-I) to Light Industrial (L-I). Staff recommended approval on the follow …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "58",
    "date": "2026-11-18",

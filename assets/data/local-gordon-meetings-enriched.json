@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-20T12:13:23Z",
+  "generatedAt": "2026-11-23T21:04:36Z",
   "source": "Gordon County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Gordon County",
   "count": 25
@@ -12,15 +12,15 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-17",
+  "lastActivity": "2026-12-14",
   "topicTotals": {
-   "contract": 9,
-   "local-taxes": 12,
-   "rezoning": 15,
-   "special-land-use": 9,
    "comprehensive-plan": 8,
    "development": 8,
+   "rezoning": 15,
    "variance": 9,
+   "contract": 9,
+   "local-taxes": 12,
+   "special-land-use": 9,
    "millage-budget": 16,
    "annexation": 1,
    "data-center": 3,
@@ -41,6 +41,19 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "December 14 Planning commission Agenda",
+    "date": "2026-12-14",
+    "sourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_12142026-1134",
+    "tags": [
+     "comprehensive-plan",
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… ied. CASE 1 OF 4 | POLICY REVIEW VAR-26-25 — Comprehensive Plan & Infrastructure Alignment JOINT COMPREHENSIVE PLAN ALIGNMENT …",
+    "excerptTerm": "comprehensive plan"
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-11-17",
@@ -196,17 +209,6 @@
     ],
     "excerpt": "… and abandon a portion of Oak Grove Road. 2.​ Application RZ-2026-008 requesting rezoning from Agricultural District (A-1) to Low Density Residential (R-1) located at 183 Hummingbird La …",
     "excerptTerm": "rezon"
-   },
-   {
-    "title": "April 13, 2026 Agenda and Report for Planning Commission",
-    "date": "2026-04-13",
-    "sourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_04132026-1083",
-    "tags": [
-     "comprehensive-plan",
-     "development",
-     "rezoning",
-     "variance"
-    ]
    }
   ],
   "landUseMeetings": 18,
@@ -335,6 +337,63 @@
   "dataCenterCitations": 2
  },
  "meetings": [
+  {
+   "id": "1134",
+   "date": "2026-12-14",
+   "body": "Planning Commission",
+   "title": "December 14 Planning commission Agenda",
+   "sourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_12142026-1134",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_12142026-1134",
+   "textMethod": "pdftotext",
+   "textChars": 30336,
+   "pdfSha256": "d402202ab35503496be04415f5c21016cc3fdbcc12e7f4272bdd0c71f5f7d4bb",
+   "topics": {
+    "comprehensive-plan": 1,
+    "development": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "development",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "comprehensive plan",
+    "mixed use",
+    "rezon",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… ied. CASE 1 OF 4 | POLICY REVIEW VAR-26-25 — Comprehensive Plan & Infrastructure Alignment JOINT COMPREHENSIVE PLAN ALIGNMENT …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "mixed use",
+     "excerpt": "… rrent Zoning: A-1 (Agricultural) Requested Zoning/Action: C-G (General Commercial) Comp Plan Character Area: Emerging Mixed Use Planning Staff Recommenda …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… OUNTY PLANNING & ZONING DEPARTMENT Official Planning Commission Presentation Comprehensive Docket Review: Variance & Rezoning Applications ADMINISTRATIVE & HEARING DEPARTMENT CONTACT INFORMATIO …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "GORDON COUNTY PLANNING & ZONING DEPARTMENT Official Planning Commission Presentation Comprehensive Docket Review: Variance & Rezoning Applications ADMINISTRATIVE & HEARING DEPARTMENT CONTACT IN …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1133",
    "date": "2026-11-17",
@@ -1546,43 +1605,6 @@
     "land-use",
     "millage-budget",
     "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1083",
-   "date": "2026-04-13",
-   "body": "Planning Commission",
-   "title": "April 13, 2026 Agenda and Report for Planning Commission",
-   "sourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_04132026-1083",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gordoncountyga.gov/AgendaCenter/ViewFile/Agenda/_04132026-1083",
-   "textMethod": "ocr",
-   "textChars": 45116,
-   "pdfSha256": "ee6937763c327f6d3532583cb97de8e46d1693de63e171daf8142a683837b77f",
-   "topics": {
-    "comprehensive-plan": 1,
-    "development": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "comprehensive-plan",
-    "development",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "comprehensive plan",
-    "future land use",
-    "mixed use",
-    "rezon",
-    "subdivision",
-    "variance"
-   ],
-   "topicExcerpts": {},
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

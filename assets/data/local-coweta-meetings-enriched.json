@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-20T12:13:20Z",
+  "generatedAt": "2026-11-23T21:04:29Z",
   "source": "Coweta County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Coweta County",
   "count": 25
@@ -20,8 +20,8 @@
    "contract": 14,
    "development": 6,
    "rezoning": 9,
-   "millage-budget": 14,
    "data-center": 4,
+   "millage-budget": 13,
    "comprehensive-plan": 3,
    "local-taxes": 5
   },
@@ -67,7 +67,7 @@
    {
     "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
     "date": "2026-10-20",
-    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3712,plainText=false)",
+    "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3768,plainText=false)",
     "tags": [
      "development",
      "rezoning",
@@ -445,17 +445,16 @@
    "date": "2026-10-20",
    "body": "Board of Commissioners",
    "title": "Coweta County Board of Commissioners - Public Hearing/Regular Meeting",
-   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3712,plainText=false)",
+   "sourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3768,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3712,plainText=false)",
+   "textSourceUrl": "https://cowetacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3768,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 6062,
-   "pdfSha256": "ed1317350abf6e55999af2c2abdd079b1aae93d397b74a0e21cd57740aaeaa68",
+   "textChars": 6038,
+   "pdfSha256": "8ac5bf54494d0c57b1d0a7bd0594ecd235481813656ec40324858d85daa2dbac",
    "topics": {
     "appointment": 1,
     "contract": 1,
     "development": 1,
-    "millage-budget": 1,
     "rezoning": 1,
     "variance": 1
    },
@@ -463,14 +462,12 @@
     "appointment",
     "contract",
     "development",
-    "millage-budget",
     "rezoning",
     "variance"
    ],
    "matchedTerms": [
     "appoint",
     "contract",
-    "fiscal year",
     "rezon",
     "subdivision",
     "variance"
@@ -478,22 +475,17 @@
    "topicExcerpts": {
     "appointment": {
      "term": "appoint",
-     "excerpt": "… ptance of Roadways and Right-of-Way Located at the Estates at North Shore - District 3 Unfinished Business 13. Request Appointments to Various Boards/Authorities 14. Request Approval forTemporary Closure of the State Court Clerk's Office Update …",
+     "excerpt": "… ptance of Roadways and Right-of-Way Located at the Estates at North Shore - District 3 Unfinished Business 13. Request Appointments to Various Boards/Authorities 14. Request Approval for Temporary Closure of the State Court Clerk's Office Updat …",
      "context": "unknown"
     },
     "contract": {
      "term": "contract",
-     "excerpt": "… st Approval forTemporary Closure of the State Court Clerk's Office Updates from Administration New Business Bids and Contracts Coweta County Board of Commissioners Page 2 of 3 15. …",
+     "excerpt": "… t Approval for Temporary Closure of the State Court Clerk's Office Updates from Administration New Business Bids and Contracts Coweta County Board of Commissioners Page 2 of 3 15. …",
      "context": "unknown"
     },
     "development": {
      "term": "subdivision",
      "excerpt": "… rm Acceptance of Roadways and a Deed of Open Space Restriction Associated with Property Located in the Chapel Hill Subdivision, Phase 4A - District 5 Supplemental and Non-Agenda Items Public Hearing (The Chairman will call for any comments rega …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "fiscal year",
-     "excerpt": "… missioners Page 2 of 3 15. Bid Award Associated with the Fiscal Year 2027 VMWare Renewal Additional Action Items 16. Request Approval/Execution of a Resolution to Adopt the Eighth Amendme …",
      "context": "agenda-action"
     },
     "rezoning": {
@@ -508,8 +500,7 @@
     }
    },
    "flags": [
-    "land-use",
-    "millage-budget"
+    "land-use"
    ],
    "dataCenterItems": []
   },

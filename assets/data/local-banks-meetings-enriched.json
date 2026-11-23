@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-20T12:13:20Z",
+  "generatedAt": "2026-11-23T21:03:27Z",
   "source": "Banks County (teammunicode agenda/minutes PDFs, poppler+OCR)",
   "place": "Banks County",
-  "count": 24
+  "count": 23
  },
  "summary": {
   "flags": [
@@ -12,17 +12,17 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-10-13",
+  "lastActivity": "2026-11-03",
   "topicTotals": {
+   "rezoning": 5,
    "appointment": 4,
-   "contract": 16,
-   "local-taxes": 5,
+   "contract": 14,
+   "local-taxes": 4,
    "development": 6,
-   "special-land-use": 8,
+   "special-land-use": 7,
    "comprehensive-plan": 1,
    "data-center": 2,
-   "millage-budget": 7,
-   "rezoning": 5
+   "millage-budget": 6
   },
   "dataCenterItems": [
    {
@@ -39,6 +39,16 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Banks County Planning Commission Meeting",
+    "date": "2026-11-03",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-dd6da992c7ca4a66acae02743e0b4861.pdf",
+    "tags": [
+     "rezoning"
+    ],
+    "excerpt": "… ce 2. APPROVAL OF AGENDA 3. APPROVAL OF MINUTES a. a. Minutes from October 2026 Meeting 4. APPLICATIONS TO REZONE a. Z-26-07 REZONE FROM ARR TO C2 b. Z-26-08 REZONING FROM ARR TO C2 5. ROUNDTABLE DISCUSSION 6. ADJO …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Banks County Planning Commission Meeting",
     "date": "2026-10-06",
@@ -148,17 +158,6 @@
     "tags": [
      "special-land-use"
     ]
-   },
-   {
-    "title": "Banks County Board of Commissioners Meeting",
-    "date": "2026-04-14",
-    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-8545fdb0f2f148f9947cd3d69fe38970.pdf",
-    "tags": [
-     "rezoning",
-     "special-land-use"
-    ],
-    "excerpt": "… Selit Dr. for an outdoor storage yard. d. Z-26-04 An application has been submitted by Terry Rylee to Rezone the property identified as B19 005, a 1.5-acre parcel located at 899 Henderson from C2- General Commercial t …",
-    "excerptTerm": "rezon"
    }
   ],
   "landUseMeetings": 14,
@@ -202,19 +201,9 @@
     "terms": [
      "splost"
     ]
-   },
-   {
-    "title": "Banks County Board of Commissioners Meeting",
-    "date": "2026-04-14",
-    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-8545fdb0f2f148f9947cd3d69fe38970.pdf",
-    "terms": [
-     "splost"
-    ],
-    "excerpt": "… c. Roads & Bridges: LMIG - Wynn Lake Rd - Yonah Homer to Bridge - Bid Award and Contract d. Roads & Bridges: TSPLOST - Lake Forest - Wynn Lake (Portion) Hancock - Antioch - Bid Award & Contract Approval e. Roads & Bridg …",
-    "excerptTerm": "splost"
    }
   ],
-  "localTaxCitations": 5,
+  "localTaxCitations": 4,
   "budgetItems": [],
   "budgetCitations": 0,
   "landUseCitations": 12,
@@ -222,6 +211,38 @@
   "dataCenterCitations": 2
  },
  "meetings": [
+  {
+   "id": "65",
+   "date": "2026-11-03",
+   "body": "Planning Commission",
+   "title": "Banks County Planning Commission Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-dd6da992c7ca4a66acae02743e0b4861.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-dd6da992c7ca4a66acae02743e0b4861.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 607,
+   "pdfSha256": "2fca178fe19e9d22aa40fade5ca7d52e424158e7dd5a2630d25980b218542180",
+   "topics": {
+    "rezoning": 1
+   },
+   "tags": [
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ce 2. APPROVAL OF AGENDA 3. APPROVAL OF MINUTES a. a. Minutes from October 2026 Meeting 4. APPLICATIONS TO REZONE a. Z-26-07 REZONE FROM ARR TO C2 b. Z-26-08 REZONING FROM ARR TO C2 5. ROUNDTABLE DISCUSSION 6. ADJO …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "77",
    "date": "2026-10-13",
@@ -1140,103 +1161,6 @@
    },
    "flags": [
     "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "banks-county-board-commissioners-called-meeting-fy2027-budget",
-   "date": "2026-04-21",
-   "body": "Board of Commissioners",
-   "title": "Banks County Board of Commissioners Called Meeting - FY2027 Budget",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-f27778ced9f24953aa606a0f4dc040e6.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-f27778ced9f24953aa606a0f4dc040e6.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 1676,
-   "pdfSha256": "f8e1e6f5f23862a5a0dac7bcc82fa43501cf21b9ca1dcec5f48a3b7e5fbd38f1",
-   "topics": {
-    "contract": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "contract",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… AGENDA 1. CALL TO ORDER 2. APPROVAL OF AGENDA 3. APPROVAL OF MINUTES 4. PLEDGE TO THE AMERICAN FLAG 5. CONTRACTS AND AGREEMENTS: a. Senior Center: Legacy Link - Addendum #1 6. MISCELLANEOUS: a. Senior Center: Vehicl …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "BANKS COUNTY BOARD OF COMMISSIONERS CALLED MEETING - FY2027 BUDGET Courthouse Annex Boardroom | 150 Hudson Ridge | Homer, GA 30547 …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "72",
-   "date": "2026-04-14",
-   "body": "Board of Commissioners",
-   "title": "Banks County Board of Commissioners Meeting",
-   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-8545fdb0f2f148f9947cd3d69fe38970.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/banksctyga-pubu/MEET-Agenda-8545fdb0f2f148f9947cd3d69fe38970.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 4278,
-   "pdfSha256": "1615b1b9b3b3588d98b8bfdaf782d5bf56c7faa7cbe1f95af3d045511520cae3",
-   "topics": {
-    "contract": 1,
-    "local-taxes": 1,
-    "rezoning": 1,
-    "special-land-use": 1
-   },
-   "tags": [
-    "contract",
-    "local-taxes",
-    "rezoning",
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "conditional use",
-    "contract",
-    "rezon",
-    "splost"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… er Purchase 9. RESOLUTIONS AND ORDINANCES: a. Roads & Bridges: A Portion of Old Webbs Creek Rd Abandonment 10. CONTRACTS AND AGREEMENTS: a. Parks & Recreation: Concessions Contract - Ratification b. Parks & Recreation: Field …",
-     "context": "agenda-action"
-    },
-    "local-taxes": {
-     "term": "splost",
-     "excerpt": "… c. Roads & Bridges: LMIG - Wynn Lake Rd - Yonah Homer to Bridge - Bid Award and Contract d. Roads & Bridges: TSPLOST - Lake Forest - Wynn Lake (Portion) Hancock - Antioch - Bid Award & Contract Approval e. Roads & Bridg …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… Selit Dr. for an outdoor storage yard. d. Z-26-04 An application has been submitted by Terry Rylee to Rezone the property identified as B19 005, a 1.5-acre parcel located at 899 Henderson from C2- General Commercial t …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "conditional use",
-     "excerpt": "… 'S REPORT 7. PUBLIC HEARINGS: a. CU-26-09 An application has been submitted by Clark and Summer Schwartz for a Conditional Use on the property identified as B67E 019, a 2.07-acre parcel located at 149 Buckeye Pt. to operate a home …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "local-taxes"
    ],
    "dataCenterItems": []
   }

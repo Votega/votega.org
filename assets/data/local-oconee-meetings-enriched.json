@@ -1,25 +1,27 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-20T12:13:23Z",
+  "generatedAt": "2026-11-23T21:04:36Z",
   "source": "Oconee County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Oconee County",
   "count": 25
  },
  "summary": {
   "flags": [
+   "budget",
    "land-use",
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-03",
+  "lastActivity": "2026-11-24",
   "topicTotals": {
+   "budget": 1,
    "contract": 18,
    "millage-budget": 17,
    "variance": 9,
-   "rezoning": 12,
+   "rezoning": 11,
    "appointment": 3,
    "local-taxes": 4,
-   "development": 3
+   "development": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
@@ -154,20 +156,9 @@
      "rezoning",
      "variance"
     ]
-   },
-   {
-    "title": "Planning Commission Meeting",
-    "date": "2026-01-20",
-    "sourceUrl": "https://oconeecountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4125,plainText=false)",
-    "tags": [
-     "development",
-     "rezoning"
-    ],
-    "excerpt": "… se #P25-0228 Oconee Medical Properties LLC; Special Use Approval for a Contractor’s Office/Showroom/Warehouse/Corporate Area with limited outdoor storage within privacy-fenced area; 5.014 acres; 1691 Jimmy Dan …",
-    "excerptTerm": "warehouse"
    }
   ],
-  "landUseMeetings": 15,
+  "landUseMeetings": 14,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
@@ -216,13 +207,62 @@
    }
   ],
   "localTaxCitations": 4,
-  "budgetItems": [],
-  "budgetCitations": 0,
-  "landUseCitations": 15,
+  "budgetItems": [
+   {
+    "title": "Board of Commissioners Agenda Setting Meeting",
+    "date": "2026-11-24",
+    "sourceUrl": "https://oconeecountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4336,plainText=false)",
+    "terms": [
+     "budget transfer"
+    ]
+   }
+  ],
+  "budgetCitations": 1,
+  "landUseCitations": 14,
   "alprCitations": 0,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "1821",
+   "date": "2026-11-24",
+   "body": "Board of Commissioners Meeting",
+   "title": "Board of Commissioners Agenda Setting Meeting",
+   "sourceUrl": "https://oconeecountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4336,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://oconeecountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4336,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 2101,
+   "pdfSha256": "17327c6ee402d988a3df2e465b710b185ed6f07b0982ba419629fbd95b929d59",
+   "topics": {
+    "budget": 1,
+    "contract": 1
+   },
+   "tags": [
+    "budget",
+    "contract"
+   ],
+   "matchedTerms": [
+    "budget transfer",
+    "contract"
+   ],
+   "topicExcerpts": {
+    "budget": {
+     "term": "budget transfer",
+     "excerpt": "… Items 1) Discuss a Change Order for the Rocky Branch Lift Station 2) Discuss a Budget Transfer for HCM Shop Fencing 3) Discuss the FY28 Budget Submittal Plan 6. County-wide Matters …",
+     "context": "unknown"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… pmental Review and Building Inspection Services 2) Discuss the Aging Services Contract for FY27 3) Discuss a Potential Donation 4) Discuss the Public Safety Radio Sys …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1808",
    "date": "2026-11-03",
@@ -1314,54 +1354,6 @@
    "flags": [
     "millage-budget",
     "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1723",
-   "date": "2026-01-20",
-   "body": "Planning Commission Meeting",
-   "title": "Planning Commission Meeting",
-   "sourceUrl": "https://oconeecountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4125,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://oconeecountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4125,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 1450,
-   "pdfSha256": "685cd0d634a7075882caeafcae9d803bea552c54b75f46985902cf964eec63d1",
-   "topics": {
-    "contract": 1,
-    "development": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "contract",
-    "development",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "contract",
-    "rezon",
-    "warehouse"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… 1. Special Use #P25-0228 Oconee Medical Properties LLC; Special Use Approval for a Contractor’s Office/Showroom/Warehouse/Corporate Area with limited outdoor storage within privacy-fenced are …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "warehouse",
-     "excerpt": "… se #P25-0228 Oconee Medical Properties LLC; Special Use Approval for a Contractor’s Office/Showroom/Warehouse/Corporate Area with limited outdoor storage within privacy-fenced area; 5.014 acres; 1691 Jimmy Dan …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… storage within privacy-fenced area; 5.014 acres; 1691 Jimmy Daniel Road; Vacant. 2. Rezone #P25-0272 Kirk McClellan & Joseph Hale, III; Rezone from AG to AR; 5.00 acres; 2251 Clotfelter Roa …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-20T12:13:20Z",
+  "generatedAt": "2026-11-23T21:03:28Z",
   "source": "Forsyth County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Forsyth County",
   "count": 25
@@ -13,22 +13,30 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-19",
+  "lastActivity": "2026-11-24",
   "topicTotals": {
+   "budget": 3,
    "contract": 25,
-   "development": 13,
-   "local-taxes": 16,
    "rezoning": 18,
+   "development": 12,
+   "local-taxes": 16,
    "special-land-use": 8,
-   "variance": 13,
+   "variance": 12,
    "appointment": 8,
-   "budget": 2,
    "alpr": 2,
-   "millage-budget": 19,
+   "millage-budget": 18,
    "comprehensive-plan": 6
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Work Session",
+    "date": "2026-11-24",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5438,plainText=false)",
+    "tags": [
+     "rezoning"
+    ]
+   },
    {
     "title": "Board of Commissioners Regular Meeting",
     "date": "2026-11-19",
@@ -225,14 +233,6 @@
     ],
     "excerpt": "… y Development (5) Public Hearing and possible vote regarding the County-Initiated request to rezone from Single Family Residential District (RES3) to Single Family Residential District (RE …",
     "excerptTerm": "rezon"
-   },
-   {
-    "title": "Board of Commissioners Work Session",
-    "date": "2026-06-09",
-    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5154,plainText=false)",
-    "tags": [
-     "special-land-use"
-    ]
    }
   ],
   "landUseMeetings": 21,
@@ -391,6 +391,16 @@
   "budgetItems": [
    {
     "title": "Board of Commissioners Work Session",
+    "date": "2026-11-24",
+    "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5438,plainText=false)",
+    "terms": [
+     "budget resolution"
+    ],
+    "excerpt": "… Services Agreement – Director, Department of Public Facilities (4) Board consideration and approval of a Budget Resolution to add staff and other costs to the Solicitors' budget to support the 3rd State Court Judge. Staff reques …",
+    "excerptTerm": "budget resolution"
+   },
+   {
+    "title": "Board of Commissioners Work Session",
     "date": "2026-11-10",
     "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5407,plainText=false)",
     "terms": [
@@ -410,12 +420,63 @@
     "excerptTerm": "budget resolution"
    }
   ],
-  "budgetCitations": 2,
+  "budgetCitations": 3,
   "landUseCitations": 21,
   "alprCitations": 2,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "441",
+   "date": "2026-11-24",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Work Session",
+   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5438,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5438,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 13500,
+   "pdfSha256": "7c3f949317831f94467823cfdd7597b9a5307a3e5bd9cd1ca2049797cf694844",
+   "topics": {
+    "budget": 1,
+    "contract": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "budget",
+    "contract",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "award of",
+    "budget resolution",
+    "contract",
+    "rezon",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "budget": {
+     "term": "budget resolution",
+     "excerpt": "… Services Agreement – Director, Department of Public Facilities (4) Board consideration and approval of a Budget Resolution to add staff and other costs to the Solicitors' budget to support the 3rd State Court Judge. Staff reques …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "task order",
+     "excerpt": "… ces Agreement – Director, Department of Capital Projects (10) Board consideration and approval of Task Order No. 01 for Design and Bid phase services to Hazen and Sawyer, Inc. in the amount not to exceed $74,340.00, …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Director, Department of Communications (2) Board consideration and possible direction of a Board generated rezoning for ZA4163, Tipton Development LLC. In accordance with UDC 8-5.5(I), if an application f …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "462",
    "date": "2026-11-19",
@@ -2067,71 +2128,6 @@
    "flags": [
     "millage-budget",
     "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "450",
-   "date": "2026-05-21",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Regular Meeting",
-   "sourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5113,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://forsythcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=5113,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 10628,
-   "pdfSha256": "fd21028362d65bbadc797ed76771a6472789370034fb4945d6c1610508a346de",
-   "topics": {
-    "contract": 1,
-    "development": 1,
-    "millage-budget": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "contract",
-    "development",
-    "millage-budget",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "budget",
-    "contract",
-    "rezon",
-    "subdivision",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… Page 2 May 21, 2026 (D) Board approval of Change Order #1 to the General Services Contract No. 25-24-5211 with Tri Scapes, LLC for additional Landscaping, Ground Main …",
-     "context": "unknown"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… 25MPH on Grand Meadow Run, Nora Court and all other property and property rights as shown on the Subdivision Plat for Glory Meadows, recorded in Plat Book 226, Pages 1-27, Forsyth County, Georgia Records - Distric …",
-     "context": "unknown"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Work Session held on May 12, 2026 (as anticipated by Board Rule 1.07.01): (A) Board approval of a Budget Resolution for the replacement of a total loss for unit #392 - Chief of Staff of Business Operatio …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… rk - Director, Department of Parks & Recreation Department (E) Board approval to County-Initiate the rezoning of Parcel 118-200 from Res3 to Res1 — District 1 - Planner II, Department of Planning and Comm …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… arking spaces on 1.881 acres zoned Restricted Industrial District (M1) with the following variance to: 1. Reduce the zoning buffer from 40 ft. to 0 ft. (UDC Table 14.2); 2. Reduce the zoning setback adja …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget"
    ],
    "dataCenterItems": []
   }

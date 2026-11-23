@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-20T12:13:20Z",
+  "generatedAt": "2026-11-23T21:03:30Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
@@ -13,9 +13,10 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-12-15",
+  "lastActivity": "2027-01-13",
   "topicTotals": {
-   "variance": 8,
+   "variance": 9,
+   "special-land-use": 6,
    "annexation": 5,
    "appointment": 7,
    "budget": 2,
@@ -23,7 +24,6 @@
    "development": 6,
    "local-taxes": 6,
    "rezoning": 5,
-   "special-land-use": 6,
    "millage-budget": 5,
    "data-center": 1
   },
@@ -39,11 +39,29 @@
   "landUseItems": [
    {
     "title": "Board of Zoning Appeals Variance Hearing",
+    "date": "2027-01-13",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10361,plainText=false)",
+    "tags": [
+     "variance"
+    ]
+   },
+   {
+    "title": "Board of Zoning Appeals Variance Hearing",
     "date": "2026-12-09",
     "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10297,plainText=false)",
     "tags": [
      "variance"
     ]
+   },
+   {
+    "title": "Planning Commission Zoning Hearing",
+    "date": "2026-12-01",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10363,plainText=false)",
+    "tags": [
+     "special-land-use"
+    ],
+    "excerpt": "… 7. Z-52-2026 District 2 - 465 Big Shanty Road 8. LUP-35-2026 District 4 - 448 Hurt Road 9. SLUP-9-2026 District 2 - 114 Townpark Drive 10. SLUP-11-2026 District 2 - 465 Big Shanty Road Regular Cases – New …",
+    "excerptTerm": "slup"
    },
    {
     "title": "BOC Regular Meeting",
@@ -173,19 +191,9 @@
     ],
     "excerpt": "… uction grant award from the Governor's Office of Planning and Budget. Community Development 21. To approve an annexation Intent to Object and the Basis of Objection per HB 489 Intergovernmental Agreement and HB 2 regarding a pet …",
     "excerptTerm": "annexation"
-   },
-   {
-    "title": "BOC Zoning Hearing",
-    "date": "2026-08-18",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10154,plainText=false)",
-    "tags": [
-     "special-land-use"
-    ],
-    "excerpt": "… trict 1 - 3917 Dallas Acworth Highway (BOC Only) 14. LUP-14-2026 District 4 - 195 Rockin Hill Drive 15. SLUP-3-2026 District 2 - 1284 Kennestone Circle AGENDA …",
-    "excerptTerm": "slup"
    }
   ],
-  "landUseMeetings": 15,
+  "landUseMeetings": 16,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
@@ -280,11 +288,43 @@
    }
   ],
   "budgetCitations": 2,
-  "landUseCitations": 14,
+  "landUseCitations": 15,
   "alprCitations": 0,
   "dataCenterCitations": 1
  },
  "meetings": [
+  {
+   "id": "1349",
+   "date": "2027-01-13",
+   "body": "Board of Zoning Appeals",
+   "title": "Board of Zoning Appeals Variance Hearing",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10361,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10361,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 2543,
+   "pdfSha256": "3066ed123205a7cc3e7713dedebf5cc4089fca697c230ea0981f45814a4cd009",
+   "topics": {
+    "variance": 1
+   },
+   "tags": [
+    "variance"
+   ],
+   "matchedTerms": [
+    "variance"
+   ],
+   "topicExcerpts": {
+    "variance": {
+     "term": "variance",
+     "excerpt": "COBB COUNTY BOARD OF ZONING APPEALS VARIANCE HEARING AGENDA January 13, 2027 AGENDA AND MINUTES HELD AND CONTINUED CASES REGULAR CASES - NEW B …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1278",
    "date": "2026-12-15",
@@ -340,17 +380,31 @@
    "date": "2026-12-01",
    "body": "Planning Commission",
    "title": "Planning Commission Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10275,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10363,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10275,plainText=false)",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10363,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1038,
-   "pdfSha256": "c7ea9a044429f550b376c654598d00b97603686e4ade59d4559d7e9fe0d0a10a",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
+   "textChars": 1725,
+   "pdfSha256": "b2dfb4e46b4da8e06bc0ecc19969f0825bc3032cb3d8407ebcc7db08df31a581",
+   "topics": {
+    "special-land-use": 1
+   },
+   "tags": [
+    "special-land-use"
+   ],
+   "matchedTerms": [
+    "slup"
+   ],
+   "topicExcerpts": {
+    "special-land-use": {
+     "term": "slup",
+     "excerpt": "… 7. Z-52-2026 District 2 - 465 Big Shanty Road 8. LUP-35-2026 District 4 - 448 Hurt Road 9. SLUP-9-2026 District 2 - 114 Townpark Drive 10. SLUP-11-2026 District 2 - 465 Big Shanty Road Regular Cases – New …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
    "dataCenterItems": []
   },
   {
@@ -1337,38 +1391,6 @@
     "land-use",
     "millage-budget",
     "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1274",
-   "date": "2026-08-18",
-   "body": "Board of Commissioners",
-   "title": "BOC Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10154,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10154,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 2141,
-   "pdfSha256": "06060a6b0c55a9a8524f57bc5ad73ac1b4b55e0652a26eab8ace16ebd1a5efbb",
-   "topics": {
-    "special-land-use": 1
-   },
-   "tags": [
-    "special-land-use"
-   ],
-   "matchedTerms": [
-    "slup"
-   ],
-   "topicExcerpts": {
-    "special-land-use": {
-     "term": "slup",
-     "excerpt": "… trict 1 - 3917 Dallas Acworth Highway (BOC Only) 14. LUP-14-2026 District 4 - 195 Rockin Hill Drive 15. SLUP-3-2026 District 2 - 1284 Kennestone Circle AGENDA …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-20T12:13:21Z",
+  "generatedAt": "2026-11-23T21:04:32Z",
   "source": "Meriwether County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Meriwether County",
   "count": 25
@@ -13,12 +13,12 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-09",
+  "lastActivity": "2026-11-24",
   "topicTotals": {
-   "appointment": 16,
-   "contract": 17,
+   "appointment": 17,
+   "contract": 18,
+   "local-taxes": 16,
    "data-center": 3,
-   "local-taxes": 15,
    "development": 1,
    "millage-budget": 17,
    "rezoning": 7,
@@ -116,6 +116,16 @@
   ],
   "alprMeetings": 1,
   "localTaxItems": [
+   {
+    "title": "Agenda November 24, 2026, Regular Meeting 6:00 p.m.",
+    "date": "2026-11-24",
+    "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_11242026-663",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… Appoint EMA Director XII. UNFINISHED BUSINESS 1. Consider Approval to Purchase a Vehicle for the Sheriff's Office - SPLOST. This was tabled at the November 9, 2026, Regular Meeting. 2. Consider Approval of E-911 Battery Backup System …",
+    "excerptTerm": "splost"
+   },
    {
     "title": "Agenda November 9, 2026, Regular Meeting 6:00 p.m.",
     "date": "2026-11-09",
@@ -256,7 +266,7 @@
     ]
    }
   ],
-  "localTaxCitations": 15,
+  "localTaxCitations": 16,
   "budgetItems": [],
   "budgetCitations": 0,
   "landUseCitations": 7,
@@ -264,6 +274,54 @@
   "dataCenterCitations": 3
  },
  "meetings": [
+  {
+   "id": "663",
+   "date": "2026-11-24",
+   "body": "Board of Commissioners",
+   "title": "Agenda November 24, 2026, Regular Meeting 6:00 p.m.",
+   "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_11242026-663",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_11242026-663",
+   "textMethod": "pdftotext",
+   "textChars": 4600,
+   "pdfSha256": "9a9b4866b3a1d788628d004fc706dc68a69f1a328737ab1718dd637d08d033b1",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… IX. MINUTES 1. Minutes, Monday, November 9, 2026, Regular Meeting at 6:00 p.m. X. PUBLIC HEARING XI. APPOINTMENTS 1. Appointment to the Pine Mountain Regional Library Board to fill an expired term. This is a three-yea …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… SPLOST 5. Consider approval of Change Order #21 — Vented Roof Hatch for Bell Tower at Courthouse — River City Contracting, Inc. 6. Consider Approval of Change Order #22 — Replace all the Receptacles, Switches, and Cover Plates — …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Appoint EMA Director XII. UNFINISHED BUSINESS 1. Consider Approval to Purchase a Vehicle for the Sheriff's Office - SPLOST. This was tabled at the November 9, 2026, Regular Meeting. 2. Consider Approval of E-911 Battery Backup System …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "662",
    "date": "2026-11-09",
@@ -1133,24 +1191,6 @@
     "millage-budget",
     "local-taxes"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "638",
-   "date": "2026-03-24",
-   "body": "Board of Commissioners",
-   "title": "Agenda March 24, 2026 Work Session 4:30 p.m.",
-   "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_03242026-638",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_03242026-638",
-   "textMethod": "pdftotext",
-   "textChars": 899,
-   "pdfSha256": "ccca1020e23f289c380c6958f3a188a34c73b915d0af38724864e38a8544a9b9",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
    "dataCenterItems": []
   }
  ]
