@@ -90,6 +90,67 @@ def hash_and_filter_cases():
           A.is_ceremonial({"identifier": "SR 7", "title": "Congress; pass the Act; urge"}), False)
 
 
+def bills_fixture():
+    return {"bills": {
+        "HB 1": {"summary": "AI one", "subjects": ["HEALTH"], "session": "2025_26",
+                 "generatedAt": "t1", "needsReview": True},
+        "HB 2": {"summary": "AI two", "subjects": [], "session": "2025_26",
+                 "generatedAt": "t2", "needsReview": False},
+    }}
+
+
+def dec(key, action, against, **kw):
+    return dict(kw, key=key, action=action, against=against, decidedAt="2026-11-23T00:00:00Z")
+
+
+def review_cases():
+    out = bills_fixture()
+    r = A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "t1")])
+    check("approve clears needsReview", out["bills"]["HB 1"]["needsReview"], False)
+    check("approve is reported as a change", r["changed"], ["2025_26|HB 1"])
+    r = A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "t1")])
+    check("replaying the same log changes nothing", (r["changed"], r["unchanged"]), ([], ["2025_26|HB 1"]))
+
+    out = bills_fixture()
+    A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "t1", summary="Edited.",
+                                subjects=["EDUCATION", "EDUCATION", "MADE UP"])],
+                      allowed={"EDUCATION", "HEALTH"})
+    e = out["bills"]["HB 1"]
+    check("edited summary is used", e["summary"], "Edited.")
+    check("model's original summary is kept", e["aiSummary"], "AI one")
+    check("edited subjects deduped and filtered", e["subjects"], ["EDUCATION"])
+    check("model's original subjects are kept", e["aiSubjects"], ["HEALTH"])
+    check("edit is marked as a person's", e["humanEdited"], True)
+    A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "t1", summary="Edited again.")])
+    check("a second edit keeps the FIRST model original", e["aiSummary"], "AI one")
+
+    out = bills_fixture()
+    r = A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "OLD")])
+    check("decision on re-drafted text is stale, not applied",
+          (r["stale"], out["bills"]["HB 1"]["needsReview"]), (["2025_26|HB 1"], True))
+    r = A.apply_decisions(out, [dec("2023_24|HB 1", "approve", "t1")])
+    check("decision for another biennium's bill is stale", r["stale"], ["2023_24|HB 1"])
+
+    out = bills_fixture()
+    r = A.apply_decisions(out, [dec("2025_26|HB 2", "revoke", "t2")])
+    check("revoke without a note is refused", (r["invalid"], out["bills"]["HB 2"]["needsReview"]),
+          (["2025_26|HB 2"], False))
+    A.apply_decisions(out, [dec("2025_26|HB 2", "revoke", "t2", note="Wrong amount")])
+    check("revoke with a note reopens review", out["bills"]["HB 2"]["needsReview"], True)
+
+    out = bills_fixture()
+    A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "t1"),
+                            dec("2025_26|HB 1", "redo", "t1", note="Misses the fee")])
+    e = out["bills"]["HB 1"]
+    check("the last decision wins", (e["needsReview"], e.get("redo"), e.get("reviewNote")),
+          (True, True, "Misses the fee"))
+    A.apply_decisions(out, [dec("2025_26|HB 1", "approve", "t1")])
+    check("approving clears redo and the note", ("redo" in e, "reviewNote" in e), (False, False))
+    check("review fields list covers what a review writes",
+          all(f in A.REVIEW_FIELDS for f in ("needsReview", "reviewedAt", "reviewNote", "redo",
+                                              "humanEdited", "aiSummary", "aiSubjects")), True)
+
+
 def committed_file_case():
     out, pub = A.load_json(A.OUT_FILE), A.load_json(A.PUBLIC_FILE)
     if out is None or pub is None:
@@ -104,6 +165,7 @@ if __name__ == "__main__":
     print("public summaries"); public_cases()
     print("model output parsing"); parse_cases()
     print("hashing and filters"); hash_and_filter_cases()
+    print("review decisions"); review_cases()
     print("committed files"); committed_file_case()
     if failures:
         print(f"\n{len(failures)} failure(s)")

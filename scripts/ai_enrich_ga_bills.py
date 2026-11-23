@@ -5,8 +5,12 @@ Runs on the maintainer's PC only. No API keys, nothing called from the live site
 
   draft   Ollama (local) first pass for every bill that's new or whose text changed.
   refine  Claude Code (`claude -p`, your subscription) rewrites key/flagged bills.
-  publish Rebuild assets/data/ga-bill-summaries.json (what /ga-bills shows) after you
-          approve entries by hand. draft/refine rebuild it automatically.
+  apply-reviews
+          Fold the decisions made in tools/ai-summary-review.html
+          (_data/ga_bill_ai_decisions.json) into ga-bill-ai.json and rebuild the public
+          summaries. The ONLY way review state should change; never hand-edit the JSON.
+  publish Rebuild assets/data/ga-bill-summaries.json (what /ga-bills shows).
+          draft/refine/apply-reviews rebuild it automatically.
   status  Read-only report of which AI subject tags the bills generator will use.
           Tags are never written to ga-bills-subjects.json (manual overrides only):
           generate_ga_bills_soap.py reads REVIEWED tags from ga-bill-ai.json directly,
@@ -18,6 +22,7 @@ Usage:
   python scripts/ai_enrich_ga_bills.py draft  [--limit 50] [--session 2026_ss] [--model qwen2.5:14b]
   python scripts/ai_enrich_ga_bills.py refine [--limit 10] [--only "SB 443"]
   python scripts/ai_enrich_ga_bills.py status
+  python scripts/ai_enrich_ga_bills.py apply-reviews
   python scripts/ai_enrich_ga_bills.py publish
 """
 
@@ -42,6 +47,13 @@ OUT_FILE = os.path.join(DATA_DIR, "ga-bill-ai.json")
 # What the site loads: REVIEWED summaries only, plus editor-written summaryOverrides,
 # which always win. Small on purpose: ga-bill-ai.json is ~1.3 MB of mostly drafts.
 PUBLIC_FILE = os.path.join(DATA_DIR, "ga-bill-summaries.json")
+# Review decisions logged by tools/ai-summary-review.html. Kept in _data/ (not served as
+# a static file) so reviewer notes stay off the public site. `apply-reviews` folds it in.
+DECISIONS_FILE = os.path.join(os.path.dirname(DATA_DIR), "..", "_data", "ga_bill_ai_decisions.json")
+DECISIONS_FILE = os.path.normpath(DECISIONS_FILE)
+# Fields a review sets. A re-draft or refine drops them: new text needs a new review.
+REVIEW_FIELDS = ("needsReview", "reviewedAt", "reviewNote", "redo", "humanEdited",
+                 "aiSummary", "aiSubjects")
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434/api/chat")
 DEFAULT_MODEL = "qwen2.5:14b"
 MAX_TEXT_CHARS = 12000  # caps Claude plan usage per bill
@@ -177,6 +189,93 @@ def build_public(out, curated):
         },
         "summaries": summaries,
     }
+
+
+def decision_key(d):
+    return (d.get("key"), d.get("against"))
+
+
+def apply_decisions(out, decisions, allowed=None):
+    """Fold the review log into ga-bill-ai.json entries. Pure; returns a report dict.
+
+    Each decision names the entry it was made on: key "<session>|<identifier>" and
+    `against`, that entry's generatedAt. Only the LAST decision per (key, against) counts,
+    so replaying the whole log is idempotent and a later decision overrides an earlier one.
+    A decision whose entry has since been re-drafted or refined (generatedAt changed) is
+    STALE: reported, never applied, so an approval cannot land on text nobody read.
+
+      approve  needsReview -> false. Optional `summary` / `subjects` are the reviewer's
+               edits; the model's originals are kept once as aiSummary / aiSubjects.
+      redo     needsReview -> true, redo -> true, with the required note. `refine` picks
+               these up first and passes the note to the model.
+      revoke   needsReview -> true on an approved entry, with the required note.
+    """
+    last = {}
+    for d in decisions:
+        last[decision_key(d)] = d
+    report = {"changed": [], "unchanged": [], "stale": [], "invalid": []}
+    for (key, against), d in last.items():
+        session, _, ident = (key or "").partition("|")
+        e = out.get("bills", {}).get(ident)
+        if not e or e.get("session") != session or e.get("generatedAt") != against:
+            report["stale"].append(key)
+            continue
+        action, note = d.get("action"), (d.get("note") or "").strip()
+        if action not in ("approve", "redo", "revoke") or (action != "approve" and not note):
+            report["invalid"].append(key)
+            continue
+        before = json.dumps(e, sort_keys=True)
+        if action == "approve":
+            text = (d.get("summary") or "").strip()
+            if text and text != e.get("summary"):
+                e.setdefault("aiSummary", e.get("summary"))
+                e["summary"], e["humanEdited"] = text, True
+            if "subjects" in d:
+                subj = [s for s in dict.fromkeys(d["subjects"] or [])
+                        if allowed is None or s in allowed][:3]
+                if subj != e.get("subjects"):
+                    e.setdefault("aiSubjects", e.get("subjects"))
+                    e["subjects"], e["humanEdited"] = subj, True
+            e["needsReview"] = False
+            e.pop("redo", None)
+            e.pop("reviewNote", None)
+        elif action == "redo":
+            e["needsReview"], e["redo"], e["reviewNote"] = True, True, note
+        elif action == "revoke":
+            e["needsReview"], e["reviewNote"] = True, note
+            e.pop("redo", None)
+        if json.dumps(e, sort_keys=True) == before:
+            report["unchanged"].append(key)
+        else:
+            e["reviewedAt"] = d.get("decidedAt") or now()
+            report["changed"].append(key)
+    return report
+
+
+def cmd_apply_reviews(args):
+    """Fold _data/ga_bill_ai_decisions.json into ga-bill-ai.json, then rebuild the public file."""
+    log = load_json(DECISIONS_FILE)
+    if log is None:
+        print(f"No decisions file at {DECISIONS_FILE}. Review in tools/ai-summary-review.html first.")
+        return 1
+    out = load_out()
+    allowed = set(taxonomy(load_json(BILLS_FILE)["bills"]))
+    r = apply_decisions(out, log.get("decisions", []), allowed)
+    if r["changed"]:
+        write_out(out)  # also rebuilds ga-bill-summaries.json
+    else:
+        save_json(PUBLIC_FILE, build_public(out, load_json(CURATED_FILE) or {}))
+    print(f"Applied {len(r['changed'])} decision(s); {len(r['unchanged'])} already applied.")
+    if r["changed"]:
+        print("  changed: " + ", ".join(r["changed"]))
+    if r["stale"]:
+        print(f"  {len(r['stale'])} STALE (bill re-drafted or refined after review; review it again): "
+              + ", ".join(r["stale"]))
+    if r["invalid"]:
+        print(f"  {len(r['invalid'])} invalid (unknown action or missing note), skipped: " + ", ".join(r["invalid"]))
+    print("Next: check `git diff`, then commit _data/ga_bill_ai_decisions.json, "
+          "assets/data/ga-bill-ai.json and assets/data/ga-bill-summaries.json together.")
+    return 0
 
 
 def cmd_publish(args):
@@ -346,9 +445,10 @@ def cmd_refine(args):
     out = load_out()
     if args.only:
         targets = args.only
-    else:  # key bills first, then low-confidence drafts
+    else:  # bills a reviewer sent back, then key bills, then low-confidence drafts
+        sent_back = [k for k, v in out["bills"].items() if v.get("redo")]
         flagged = [k for k, v in out["bills"].items() if v.get("confidence") == "low" and not v.get("refined")]
-        targets = [k for k in curated if not out["bills"].get(k, {}).get("refined")] + flagged
+        targets = sent_back + [k for k in curated if not out["bills"].get(k, {}).get("refined")] + flagged
     targets = [t for t in dict.fromkeys(targets) if t in bills][: args.limit]
     print(f"Refining {len(targets)} bill(s) with Claude Code (uses your plan's usage)…")
     for ident in targets:
@@ -367,13 +467,16 @@ def cmd_refine(args):
             f"Official caption: {b.get('abstract','')}\n\n"
             f"Bill text (may be truncated or empty): {text}"
         )
+        if draft.get("redo") and draft.get("reviewNote"):
+            prompt += f"\n\nA reviewer sent the draft back with this note; address it: {draft['reviewNote']}"
         try:
             res = clean_result(claude(prompt), allowed)
         except Exception as e:
             print(f"  ! {ident}: {e}", file=sys.stderr)
             continue
         out["bills"][ident] = {
-            **draft, **res,
+            # A new summary needs a new review: drop the old one's review state.
+            **{k: v for k, v in draft.items() if k not in REVIEW_FIELDS}, **res,
             "session": b.get("session"),
             "source": "claude-code",
             "inputHash": input_hash(b, "claude-code"),
@@ -443,9 +546,10 @@ def main():
     r = sub.add_parser("refine"); r.add_argument("--limit", type=int, default=10); r.add_argument("--only", nargs="+")
     sub.add_parser("status")
     sub.add_parser("publish")
+    sub.add_parser("apply-reviews")
     args = p.parse_args()
     sys.exit({"draft": cmd_draft, "refine": cmd_refine, "status": cmd_status,
-              "publish": cmd_publish}[args.cmd](args))
+              "publish": cmd_publish, "apply-reviews": cmd_apply_reviews}[args.cmd](args))
 
 
 if __name__ == "__main__":

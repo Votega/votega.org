@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Summary Review</title>
+  <!--
+    Reviews AI bill summaries without hand-editing JSON.
+    Reads (never writes): assets/data/ga-bill-ai.json, ga-bills.json, curated-ga-bills.json.
+    Writes only: _data/ga_bill_ai_decisions.json, an append-only log, saved after every click.
+    `python scripts/ai_enrich_ga_bills.py apply-reviews` is the ONLY writer of ga-bill-ai.json
+    and ga-bill-summaries.json; it skips any decision made on text that has since changed.
+    Open locally in Chrome or Edge (File System Access API).
+  -->
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; font-size: 14px; background: #f5f5f5; color: #222; }
+    header { background: #1e3a5f; color: #fff; padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    header h1 { font-size: 1rem; font-weight: 600; margin-right: auto; }
+    .status { font-size: 0.78rem; opacity: 0.85; }
+    .runnote { background: #fef3c7; color: #78350f; padding: 0.5rem 1.25rem; font-size: 12.5px; line-height: 1.7; border-bottom: 1px solid #fde68a; }
+    .runnote code { background: #fffbeb; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+    .runnote button { padding: 0.15rem 0.6rem; font-size: 12px; margin: 0 0.4rem; }
+    .layout { display: grid; grid-template-columns: 320px 1fr; height: calc(100vh - 52px - 62px); }
+    .sidebar { background: #fff; border-right: 1px solid #ddd; display: flex; flex-direction: column; overflow: hidden; }
+    .sidebar-top { padding: 0.6rem; border-bottom: 1px solid #eee; display: flex; flex-direction: column; gap: 0.4rem; }
+    .list { flex: 1; overflow-y: auto; }
+    .item { padding: 0.45rem 0.75rem; cursor: pointer; border-bottom: 1px solid #f0f0f0; }
+    .item:hover { background: #f0f7ff; }
+    .item.sel { background: #dbeafe; }
+    .item .nm { font-weight: 500; font-size: 13px; }
+    .item .ky { font-size: 0.7rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .badge { display: inline-block; font-size: 0.62rem; padding: 1px 5px; border-radius: 3px; margin-left: 4px; vertical-align: middle; }
+    .b-flag { background: #fef3c7; color: #92400e; }
+    .b-ok { background: #dcfce7; color: #166534; }
+    .b-no { background: #fee2e2; color: #b91c1c; }
+    .b-info { background: #e0e7ff; color: #3730a3; }
+    .main { overflow-y: auto; padding: 1.25rem; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem 1.25rem; max-width: 900px; }
+    h2 { font-size: 1.05rem; font-weight: 600; }
+    h3 { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #64748b; margin: 1rem 0 0.4rem; }
+    label { font-weight: 500; font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 2px; }
+    input, select, textarea { padding: 0.35rem 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-size: 13px; font-family: inherit; width: 100%; }
+    input:focus, select:focus, textarea:focus { outline: 2px solid #3b82f6; border-color: transparent; }
+    textarea { resize: vertical; min-height: 110px; line-height: 1.5; font-size: 14px; }
+    .src { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.7rem; font-size: 13px; line-height: 1.5; white-space: pre-wrap; }
+    .meta { font-size: 12px; color: #64748b; margin: 0.2rem 0 0.4rem; }
+    .meta a { color: #1d4ed8; margin-right: 0.8rem; }
+    .notice { font-size: 12.5px; padding: 0.45rem 0.6rem; border-radius: 5px; margin-top: 0.5rem; line-height: 1.45; }
+    .n-info { background: #eff6ff; color: #1e40af; }
+    .n-warn { background: #fffbeb; color: #92400e; }
+    .flags { list-style: none; font-size: 12.5px; color: #92400e; margin-top: 0.5rem; }
+    .flags li { margin-top: 2px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; margin-bottom: 0.4rem; }
+    .chip { background: #e0e7ff; color: #3730a3; border-radius: 999px; padding: 2px 4px 2px 10px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; }
+    .chip button { background: transparent; color: #3730a3; padding: 0 5px; font-size: 14px; line-height: 1; }
+    .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem; }
+    button { padding: 0.4rem 0.9rem; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500; }
+    .ok { background: #16a34a; color: #fff; }
+    .no { background: #fee2e2; color: #b91c1c; }
+    .sec { background: #e5e7eb; color: #333; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .hint { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+    .msg { margin-top: 0.6rem; font-size: 12px; }
+    .msg.err { color: #b91c1c; }
+    .msg.good { color: #166534; }
+    .empty { color: #64748b; padding: 2rem; line-height: 1.6; }
+    .toast { position: fixed; bottom: 1.25rem; right: 1.25rem; background: #16a34a; color: #fff; padding: 0.5rem 1rem; border-radius: 6px; font-size: 13px; display: none; z-index: 100; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>AI Summary Review</h1>
+  <span class="status" id="status">Nothing loaded</span>
+  <button class="sec" id="btn-open">Open repo folder</button>
+  <button class="sec" id="btn-reload" disabled>Reload data</button>
+</header>
+<div class="runnote">
+  <strong>When you're done reviewing:</strong> decisions are saved to <code>_data/ga_bill_ai_decisions.json</code> only. Apply them from the repo root
+  (<code>C:\Users\justi\Documents\GitHub\votega.org</code>):
+  <code id="runcmd">python scripts/ai_enrich_ga_bills.py apply-reviews</code>
+  <button class="sec" id="btn-copy">Copy command</button>
+  Then check <code>git diff</code> and commit the decisions file, <code>assets/data/ga-bill-ai.json</code> and <code>assets/data/ga-bill-summaries.json</code> together.
+</div>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <input type="text" id="search" placeholder="Search bill number, title or summary">
+      <select id="filter">
+        <option value="todo">To review</option>
+        <option value="todo-refined">To review: refined from full text</option>
+        <option value="todo-untagged">To review: bill has no other tags</option>
+        <option value="todo-flagged">To review: has warnings</option>
+        <option value="redo">Sent back for redo</option>
+        <option value="approved">Approved</option>
+        <option value="decided">Decided in this log, not yet applied</option>
+        <option value="all">Everything</option>
+      </select>
+      <div class="hint" id="count"></div>
+    </div>
+    <div class="list" id="list"></div>
+  </aside>
+  <main class="main" id="main"><div class="empty">
+    Click <strong>Open repo folder</strong> and choose <code>votega.org</code> (the repo root). The tool reads the AI drafts and bill data from
+    <code>assets/data/</code> and saves your decisions to <code>_data/ga_bill_ai_decisions.json</code> after every click.
+    It never changes the data files itself; <code>apply-reviews</code> does that, and skips any decision made on text that has since been re-drafted.
+  </div></main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const HAS_FS = typeof window.showDirectoryPicker === 'function';
+let entries = [];          // [{key, ident, session, e (ai entry), bill, editor}]
+let taxonomy = [];
+let decisions = [];        // the log, append-only
+let rootHandle = null, logHandle = null;
+let selectedKey = null;
+let draftSubjects = null;  // subjects being edited for the selected entry
+
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.style.display = 'block'; setTimeout(() => t.style.display = 'none', 2200); }
+function el(tag, props, ...kids) {
+  const e = document.createElement(tag);
+  for (const k in (props || {})) { if (k === 'class') e.className = props[k]; else if (k === 'text') e.textContent = props[k]; else e[k] = props[k]; }
+  kids.forEach(k => k != null && e.append(k));
+  return e;
+}
+function words(s) { return (s || '').trim().split(/\s+/).filter(Boolean).length; }
+function billNum(id) { const m = /^(\D+)\s*(\d+)/.exec(id || ''); return m ? [m[1], +m[2]] : [id, 0]; }
+
+// ── Decisions: the last one per (key, against) counts, exactly as apply-reviews reads them ──
+function lastDecision(x) {
+  for (let i = decisions.length - 1; i >= 0; i--) {
+    const d = decisions[i];
+    if (d.key === x.key && d.against === x.e.generatedAt) return d;
+  }
+  return null;
+}
+// State after this log is applied: 'todo' | 'approved' | 'redo'
+function effState(x) {
+  const d = lastDecision(x);
+  if (d) return d.action === 'approve' ? 'approved' : d.action === 'redo' ? 'redo' : 'todo';
+  if (x.e.needsReview === false) return 'approved';
+  return x.e.redo ? 'redo' : 'todo';
+}
+
+// ── Automatic checks. Warnings, never blocks: the reviewer decides. ──
+const AMENDS_ACT = /to amend an Act (?:providing|to provide|creating|to create|establishing)/i;
+function warningsFor(x, text) {
+  const out = [], s = text || '', b = x.bill || {};
+  const src = ((b.title || '') + ' ' + (b.abstract || '')).toLowerCase().replace(/,/g, '');
+  if (/repeal(s|ing)? conflicting|related matters|other purposes/i.test(s)) out.push('Contains legal boilerplate ("related matters", "repeal conflicting laws").');
+  const unquoted = s.replace(/["“][^"”]*["”]|'[^']*'/g, '').replace(/good standing|beneficial interest/gi, '');
+  const op = unquoted.match(/\b(controversial|landmark|unfortunately|critics|supporters|will help|would help|harmful|beneficial|important|significant|unfair|fair)\b/i);
+  if (op) out.push('Possible opinion word: "' + op[0] + '". Summaries must be neutral.');
+  if (/\b(republican|democrat|gop|partisan)/i.test(s)) out.push('Mentions a party. Summaries must not.');
+  if (/(not specified|not available|unavailable|too thin|unclear what|does not say)/i.test(s)) out.push('Says the text is missing or unclear: consider sending back for a full-text redo.');
+  if (words(s) > 90) out.push('Long: ' + words(s) + ' words (aim for under 90).');
+  if (!x.e.usedFullText) {
+    const nums = (s.match(/\$?\d[\d,.]*%?/g) || []).map(n => n.replace(/[$,%]/g, '').replace(/\.$/, '')).filter(n => n && n.length > 1);
+    const missing = nums.filter(n => !src.includes(n));
+    if (missing.length) out.push('Figures not in the title or caption: ' + [...new Set(missing)].join(', ') + '. Check the bill text.');
+    if (AMENDS_ACT.test(b.abstract || '') && /\d/.test(s)) out.push('Caption amends an existing Act: figures may describe CURRENT law, not the change. Check the bill text.');
+  }
+  if (x.e.confidence && x.e.confidence !== 'high') out.push('Model rated its own confidence "' + x.e.confidence + '".');
+  return out;
+}
+function untagged(x) { return !((x.bill || {}).subjects || []).length || (x.bill || {}).subjectsSource === 'ai'; }
+
+function visible() {
+  const q = $('search').value.trim().toLowerCase(), f = $('filter').value;
+  return entries.filter(x => {
+    const st = effState(x);
+    if (f.startsWith('todo') && st !== 'todo') return false;
+    if (f === 'todo-refined' && !x.e.refined) return false;
+    if (f === 'todo-untagged' && !untagged(x)) return false;
+    if (f === 'todo-flagged' && !warningsFor(x, x.e.summary).length) return false;
+    if (f === 'redo' && st !== 'redo') return false;
+    if (f === 'approved' && st !== 'approved') return false;
+    if (f === 'decided' && !lastDecision(x)) return false;
+    if (q && !(x.ident + ' ' + ((x.bill || {}).title || '') + ' ' + (x.e.summary || '')).toLowerCase().includes(q)) return false;
+    return true;
+  });
+}
+
+function renderList() {
+  const list = $('list'); list.textContent = '';
+  const rows = visible();
+  const todo = entries.filter(x => effState(x) === 'todo').length;
+  const pend = entries.filter(x => lastDecision(x)).length;
+  $('count').textContent = rows.length + ' shown · ' + todo + ' to review · ' + pend + ' decided, not yet applied';
+  rows.slice(0, 500).forEach(x => {
+    const st = effState(x), d = lastDecision(x);
+    const item = el('div', { class: 'item' + (x.key === selectedKey ? ' sel' : '') });
+    const nm = el('div', { class: 'nm', text: x.ident });
+    if (st === 'approved') nm.append(el('span', { class: 'badge b-ok', text: d ? 'approve*' : 'approved' }));
+    else if (st === 'redo') nm.append(el('span', { class: 'badge b-no', text: d ? 'redo*' : 'redo' }));
+    else if (d && d.action === 'revoke') nm.append(el('span', { class: 'badge b-no', text: 'revoke*' }));
+    if (x.e.refined) nm.append(el('span', { class: 'badge b-info', text: 'full text' }));
+    if (st === 'todo' && warningsFor(x, x.e.summary).length) nm.append(el('span', { class: 'badge b-flag', text: 'check' }));
+    item.append(nm, el('div', { class: 'ky', text: (x.bill || {}).title || x.session }));
+    item.onclick = () => { selectedKey = x.key; draftSubjects = null; renderList(); renderDetail(); };
+    list.append(item);
+  });
+  if (rows.length > 500) list.append(el('div', { class: 'hint', text: 'Showing the first 500. Search or filter to narrow.', style: 'padding:0.5rem 0.75rem' }));
+}
+
+function renderDetail() {
+  const main = $('main'); main.textContent = '';
+  const x = entries.find(y => y.key === selectedKey);
+  if (!x) { main.append(el('div', { class: 'empty', text: entries.length ? 'Nothing selected. Pick a bill on the left.' : 'Open the repo folder to start.' })); return; }
+  const e = x.e, b = x.bill || {}, d = lastDecision(x), st = effState(x);
+  const card = el('div', { class: 'card' });
+  card.append(el('h2', { text: x.ident + ' — ' + (b.title || '(bill not found in ga-bills.json)') }));
+  card.append(el('div', { class: 'meta', text: [x.session, e.source, 'confidence: ' + (e.confidence || '?'),
+    e.refined ? (e.usedFullText ? 'refined from full bill text' : 'refined (no full text)') : 'draft from caption only',
+    'generated ' + (e.generatedAt || '').slice(0, 10)].join(' · ') }));
+  const links = el('div', { class: 'meta' });
+  if (b.billUrl) links.append(el('a', { href: b.billUrl, target: '_blank', rel: 'noopener', text: 'legis.ga.gov page ↗' }));
+  if (b.textUrl) links.append(el('a', { href: b.textUrl, target: '_blank', rel: 'noopener', text: 'Bill text (PDF) ↗' }));
+  card.append(links);
+
+  if (x.editor) card.append(el('div', { class: 'notice n-info', text: 'This bill has your own summary (summaryOverride), which the site shows instead. Approving still records the review.' }));
+  if (untagged(x)) card.append(el('div', { class: 'notice n-warn', text: 'No other source tags this bill, so the subjects you approve here will be used on the site.' }));
+  if (e.reviewNote) card.append(el('div', { class: 'notice n-warn', text: 'Review note on file: ' + e.reviewNote }));
+  if (d) card.append(el('div', { class: 'notice n-info', text: 'Decided in this log: ' + d.action + (d.note ? ' (' + d.note + ')' : '') + '. Not applied until you run apply-reviews. Deciding again replaces it.' }));
+
+  card.append(el('h3', { text: 'Official caption' }));
+  card.append(el('div', { class: 'src', text: b.abstract || '(none)' }));
+
+  card.append(el('h3', { text: 'AI summary (edit before approving if needed)' }));
+  const ta = el('textarea', { id: 'f-summary', value: (d && d.summary) || e.summary || '' });
+  const wc = el('div', { class: 'hint' });
+  const warnBox = el('ul', { class: 'flags' });
+  const refresh = () => {
+    wc.textContent = words(ta.value) + ' words' + (ta.value.trim() !== (e.summary || '').trim() ? ' · edited' : '');
+    warnBox.textContent = '';
+    warningsFor(x, ta.value).forEach(w => warnBox.append(el('li', { text: '⚠ ' + w })));
+    const ab = $('btn-approve'); if (ab) ab.textContent = (ta.value.trim() !== (e.summary || '').trim() || subjectsChanged(x)) ? 'Approve with edits (A)' : 'Approve (A)';
+  };
+  ta.oninput = refresh;
+  card.append(ta, wc, warnBox);
+  if (e.humanEdited && e.aiSummary) card.append(el('div', { class: 'notice n-info', text: 'Model\'s original wording: ' + e.aiSummary }));
+
+  card.append(el('h3', { text: 'Subject tags (up to 3)' }));
+  if (draftSubjects === null) draftSubjects = ((d && d.subjects) || e.subjects || []).slice();
+  const chips = el('div', { class: 'chips' });
+  const drawChips = () => {
+    chips.textContent = '';
+    if (!draftSubjects.length) chips.append(el('span', { class: 'hint', text: 'No tags.' }));
+    draftSubjects.forEach(s => {
+      const rm = el('button', { type: 'button', text: '×', title: 'Remove' });
+      rm.onclick = () => { draftSubjects = draftSubjects.filter(t => t !== s); drawChips(); refresh(); };
+      chips.append(el('span', { class: 'chip' }, s, rm));
+    });
+    const add = el('select', { style: 'width:auto' });
+    add.append(el('option', { value: '', text: draftSubjects.length >= 3 ? '(3 max)' : '+ add a tag' }));
+    taxonomy.filter(t => !draftSubjects.includes(t)).forEach(t => add.append(el('option', { value: t, text: t })));
+    add.disabled = draftSubjects.length >= 3;
+    add.onchange = () => { if (add.value) { draftSubjects.push(add.value); drawChips(); refresh(); } };
+    chips.append(add);
+  };
+  drawChips();
+  card.append(chips);
+  card.append(el('div', { class: 'hint', text: 'Tags on the bill from other sources: ' + (((b.subjects || []).length && b.subjectsSource !== 'ai') ? b.subjects.join(', ') : 'none') }));
+
+  card.append(el('h3', { text: 'Note' }));
+  card.append(el('input', { id: 'f-note', type: 'text', placeholder: 'Required to send back or revoke: what is wrong or missing' }));
+
+  const actions = el('div', { class: 'actions' });
+  const btn = (cls, txt, fn, id) => { const z = el('button', { class: cls, text: txt }); if (id) z.id = id; z.onclick = fn; return z; };
+  actions.append(btn('ok', 'Approve (A)', () => decide('approve'), 'btn-approve'));
+  actions.append(btn('no', 'Send back for redo (R)', () => decide('redo'), 'btn-redo'));
+  if (st === 'approved') actions.append(btn('no', 'Revoke approval', () => decide('revoke')));
+  actions.append(btn('sec', 'Skip (S)', () => advance()));
+  card.append(actions, el('div', { class: 'msg', id: 'msg' }));
+  main.append(card);
+  refresh();
+}
+
+function subjectsChanged(x) {
+  const cur = x.e.subjects || [];
+  return draftSubjects !== null && (draftSubjects.length !== cur.length || draftSubjects.some((s, i) => s !== cur[i]));
+}
+function setMsg(text, bad) { const m = $('msg'); if (m) { m.textContent = text; m.className = 'msg ' + (bad ? 'err' : 'good'); } }
+
+async function decide(action) {
+  const x = entries.find(y => y.key === selectedKey); if (!x) return;
+  if (!logHandle) { setMsg('Open the repo folder first, so decisions can be saved.', true); return; }
+  const note = $('f-note').value.trim();
+  if ((action === 'redo' || action === 'revoke') && !note) { setMsg('Add a note saying what is wrong.', true); $('f-note').focus(); return; }
+  const d = { key: x.key, action, against: x.e.generatedAt, decidedAt: new Date().toISOString() };
+  if (note) d.note = note;
+  if (action === 'approve') {
+    const text = $('f-summary').value.trim();
+    if (!text) { setMsg('The summary is empty.', true); return; }
+    if (text !== (x.e.summary || '').trim()) d.summary = text;
+    if (subjectsChanged(x)) d.subjects = draftSubjects.slice(0, 3);
+  }
+  decisions.push(d);
+  try { await saveLog(); } catch (err) { decisions.pop(); setMsg('Could not save: ' + err.message, true); return; }
+  toast(action + ': ' + x.ident);
+  advance();
+}
+
+function advance() {
+  const rows = visible();
+  const i = rows.findIndex(y => y.key === selectedKey);
+  const next = rows.find((y, idx) => idx > i && effState(y) === 'todo') || rows.find(y => effState(y) === 'todo' && y.key !== selectedKey) || rows[i + 1] || null;
+  if (next) selectedKey = next.key;
+  draftSubjects = null;
+  renderList(); renderDetail();
+}
+
+// ── Files ──
+async function fileIn(dir, path) {
+  const parts = path.split('/');
+  let h = dir;
+  for (const p of parts.slice(0, -1)) h = await h.getDirectoryHandle(p);
+  return h.getFileHandle(parts[parts.length - 1]);
+}
+async function readJson(handle) { return JSON.parse(await (await handle.getFile()).text()); }
+async function saveLog() {
+  const w = await logHandle.createWritable();
+  await w.write(JSON.stringify({ decisions }, null, 2) + '\n');
+  await w.close();
+  updateStatus();
+}
+
+// Builds the review queue. Also the entry point for testing with plain objects.
+function install(ai, billsDoc, curatedDoc, log) {
+  const bills = {};
+  (billsDoc.bills || []).forEach(b => { if (b.identifier) bills[b.session + '|' + b.identifier] = b; });
+  taxonomy = [...new Set((billsDoc.bills || []).flatMap(b => b.subjectsSource === 'ai' ? [] : (b.subjects || [])))].sort();
+  const editor = new Set(((curatedDoc || {}).ga || []).filter(c => (c.summaryOverride || '').trim()).map(c => c.session + '|' + c.identifier));
+  entries = Object.entries(ai.bills || {}).filter(([, e]) => e && e.session && e.summary).map(([ident, e]) => {
+    const key = e.session + '|' + ident;
+    return { key, ident, session: e.session, e, bill: bills[key] || null, editor: editor.has(key) };
+  });
+  entries.sort((a, b) => (b.e.refined ? 1 : 0) - (a.e.refined ? 1 : 0)
+    || (untagged(b) ? 1 : 0) - (untagged(a) ? 1 : 0)
+    || a.session.localeCompare(b.session)
+    || billNum(a.ident)[0].localeCompare(billNum(b.ident)[0]) || billNum(a.ident)[1] - billNum(b.ident)[1]);
+  decisions = (log && log.decisions) || [];
+  const cur = entries.find(x => x.key === selectedKey);
+  selectedKey = cur ? cur.key : ((entries.find(x => effState(x) === 'todo') || entries[0] || {}).key || null);
+  draftSubjects = null;
+  $('btn-reload').disabled = false;
+  renderList(); renderDetail(); updateStatus();
+}
+
+async function loadAll() {
+  const ai = await readJson(await fileIn(rootHandle, 'assets/data/ga-bill-ai.json'));
+  const bills = await readJson(await fileIn(rootHandle, 'assets/data/ga-bills.json'));
+  let curated = {};
+  try { curated = await readJson(await fileIn(rootHandle, 'assets/data/curated-ga-bills.json')); } catch (e) { /* optional */ }
+  const dataDir = await rootHandle.getDirectoryHandle('_data');
+  logHandle = await dataDir.getFileHandle('ga_bill_ai_decisions.json', { create: true });
+  const text = await (await logHandle.getFile()).text();
+  const log = text.trim() ? JSON.parse(text) : { decisions: [] };
+  if (!text.trim()) await (async () => { decisions = []; await saveLog(); })();
+  install(ai, bills, curated, log);
+}
+
+function updateStatus() {
+  $('status').textContent = entries.length + ' summaries · ' + decisions.length + ' logged decisions'
+    + (logHandle ? ' · saving to _data/' + logHandle.name : ' · not saving');
+}
+
+$('btn-open').onclick = async () => {
+  if (!HAS_FS) { alert('This browser cannot open folders. Use Chrome or Edge.'); return; }
+  try {
+    rootHandle = await window.showDirectoryPicker({ id: 'votega-repo', mode: 'readwrite' });
+    await loadAll();
+    toast('Loaded ' + entries.length + ' summaries');
+  } catch (err) {
+    if (err.name === 'AbortError') return;
+    alert('Could not load. Choose the votega.org repo root (the folder holding assets/ and _data/).\n\n' + err.message);
+  }
+};
+$('btn-reload').onclick = async () => {
+  if (!rootHandle) return;
+  try { await loadAll(); toast('Reloaded'); } catch (err) { alert('Could not reload: ' + err.message); }
+};
+$('btn-copy').onclick = async () => {
+  try { await navigator.clipboard.writeText($('runcmd').textContent); toast('Command copied'); }
+  catch (err) { toast('Select the command and copy it by hand'); }
+};
+$('search').oninput = () => renderList();
+$('filter').onchange = () => renderList();
+document.addEventListener('keydown', ev => {
+  const t = ev.target.tagName;
+  if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT' || ev.ctrlKey || ev.metaKey || ev.altKey) return;
+  if (ev.key === 'a' || ev.key === 'A') { ev.preventDefault(); $('btn-approve') && $('btn-approve').click(); }
+  else if (ev.key === 'r' || ev.key === 'R') { ev.preventDefault(); $('f-note') && $('f-note').focus(); }
+  else if (ev.key === 's' || ev.key === 'S') { ev.preventDefault(); advance(); }
+});
+</script>
+</body>
+</html>
