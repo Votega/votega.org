@@ -62,6 +62,32 @@ Full annotated tree: `docs/project-structure.md`. Run `git ls-files` for the cur
 - **A new dataset needs a stale-stamp window** in `_data/data_freshness.yml` and a recorder call in its workflow. -> `docs/conventions-general.md`.
 - **Pages that render sibling-published data link the published `Votega/*` repo, not `assets/data/*`.** -> `docs/conventions-publishing.md`.
 
+## Hard-won traps (one line each; the linked doc has the story)
+**Data & votes** (`docs/data-schemas.md`)
+- Congress.gov member endpoints must be paged to the end; a failed page means `null`/carry-forward, never a short list published as fact.
+- A missing House roll call is HTTP 200 with an error body: decide on content, stop after consecutive misses. Never read pass/fail from one keyword ("Agreed to" passed).
+- GA vote chamber comes from the record's `chamber`, never from `motionText`. Read/write `ga-member-votes.json` only through `lib/votes_schema.py`.
+- senate.gov 403s non-browsers: Senate votes fall back to Voteview (`lib/voteview.py`), replaced when senate.gov is reachable again.
+- Executive orders: `pubDate` is not the signing date; join Register and whitehouse.gov on normalized title plus EO-number cross-check, never body-text numbers. Always date-filter Federal Register queries (10,000 is the API cap, not a count).
+- `ga-zip-districts.json` means districts *touching* a ZIP: never drop a small share. State shares are estimated from tracts; do not reintroduce the county route.
+**Identity & rosters** (`docs/data-schemas.md`, `docs/conventions-ga-legislature.md`)
+- Departures live only in `ga-members-overrides.json` (biennium-scoped by `_session`); an `_inject` for a member the source now returns is merged, not skipped.
+- A rollover is never the daily run's job: freeze (`freeze_ga_biennium.py --all`) BEFORE `--new-biennium`; federal freeze `--final` by 2 Jan (Congress number flips 00:00 UTC on 3 Jan).
+- Never key identity on a races.json candidate id (positional) or on an identifier slot (`ocdPersonId`); use `legis:<id>`, bioguide, `peachfile:`/`fec:`. Merge two vgIds with `sameAs` (forward), never rewrite; never take a vgId from `alias()`'s return value.
+- A districted seat is its census blocks, never its number; decide carry-over from the block files.
+**Elections** (`docs/conventions-elections.md`)
+- Election night: use the SoS JSON feed URL (the XLSX name carries a fresh GUID), keep `fill_missing` ON for unofficial counts. Wait for certification before updating results from unofficial exports.
+- Never drop a retired candidate from `search-entities.json` (page builders read it back and would delete the page). Share cards are generated at deploy, never committed.
+**Local government** (`docs/conventions-local-government.md`)
+- Never overwrite good data with worse: judge a re-read by lost findings, not lost characters. Meeting-topic keywords are measured against the corpus, never guessed; the scorer and probe never carry a private keyword list.
+- An `aka` is another NAME for the same organization, never a relationship (`c/o`, affiliates, individuals).
+- Read minutes with `pdftotext -raw`, never `-layout`.
+**Publishing** (`docs/conventions-publishing.md`)
+- Bot commits (GITHUB_TOKEN) fire no `on: push`: dispatch the deploy explicitly. Add a new sibling repo to `REPO_SOURCES` before publishing to it.
+- Publish a new artifact BEFORE adding its `_data/open_data.yml` entry, or the link validator goes red until the publisher runs.
+- Published schemas: `$id` built from the artifact's own path, carry `schemaVersion`; never add `required` to an existing schema.
+- Portrait cache: government hosts only, skip-if-cached (never re-download). A stamp means "content last changed", not "the job ran".
+
 ## Enforcement
 - Check for API key exposure before suggesting any code changes.
 - If proposing live API calls, suggest static/build-time alternatives first.
