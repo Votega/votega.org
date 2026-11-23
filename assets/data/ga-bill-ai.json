@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "updatedAt": "2026-11-23T15:06:51+00:00",
+  "updatedAt": "2026-11-23T16:58:56+00:00",
   "count": 2667,
   "note": "AI-generated drafts (Ollama) refined for key bills (Claude). Display with an 'AI summary' label and a link to the official bill."
  },
@@ -380,9 +380,10 @@
    "source": "claude-code",
    "inputHash": "c282812f1b2935d3",
    "generatedAt": "2026-11-23T13:44:41+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:48:07.353Z"
   },
   "HR 128": {
    "summary": "This resolution compensates Mr. Joseph Samuel Watkins.",
@@ -654,15 +655,22 @@
   "HB 103": {
    "summary": "The bill would increase the homestead exemption and raise the income cap for certain residents of Troup County's school district who are 65 years of age or older and have incomes not exceeding $22,000.",
    "subjects": [
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "LOCAL GOVERNMENT",
+    "Local / Municipal"
    ],
    "confidence": "medium",
    "session": "2025_26",
    "source": "ollama:qwen2.5:14b",
    "inputHash": "adb5ec38a7116330",
    "generatedAt": "2026-11-23T05:55:48+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "aiSubjects": [
+    "REVENUE AND TAXATION"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:05:33.847Z"
   },
   "HB 1030": {
    "summary": "This bill would require the State Board of Education to create content standards for advanced math courses in middle and high schools and mandate local education agencies to offer these courses.",
@@ -800,17 +808,20 @@
    "refined": false
   },
   "HB 104": {
-   "summary": "The bill would create the 'Equal Athletic Opportunities Act' to prevent discrimination based on sex in interscholastic athletic activities and events. It aims to ensure fair and safe competition for students.",
+   "summary": "This bill would enact the \"Equal Athletic Opportunities Act\" in Georgia's school code. It would require school teams to be designated male, female, or coed, and bar males from female teams and females from male teams. It defines \"sex\" as biological sex based on reproductive biology and genetics at birth, which a birth certificate issued near birth can show. It applies to school systems, public schools, and private schools that compete against them.",
    "subjects": [
-    "EDUCATION"
+    "EDUCATION",
+    "MINORS"
    ],
    "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "a81689ab16c28bea",
-   "generatedAt": "2026-11-23T05:00:03+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "6d0289bfc208d27a",
+   "generatedAt": "2026-11-23T16:44:17+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:49:41.452Z"
   },
   "HB 1040": {
    "summary": "This bill would prohibit smoking within 25 feet of any state and local government buildings or enclosed public places. It also bans smoking in certain workplaces that were previously exempt.",
@@ -1398,8 +1409,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "5a42a18f61f7b2bb",
    "generatedAt": "2026-11-23T05:00:59+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:07:03.248Z"
   },
   "HB 1080": {
    "summary": "The bill would create the Georgia Public Safety Support Fund to provide support to law enforcement agencies and courts. It would also establish a board of trustees for the fund.",
@@ -1578,16 +1590,22 @@
   "HB 1092": {
    "summary": "This bill extends the life of the Chehaw Park Authority, a local authority created by a 1979 law. Under the bill, the authority would continue to exist through December 31, 2036.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
    "source": "claude-code",
    "inputHash": "e0c9a14bd79e1131",
    "generatedAt": "2026-11-23T13:44:50+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "aiSubjects": [
+    "Local / Municipal"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:54:37.230Z"
   },
   "HB 1093": {
    "summary": "This bill would allow a nonbinding referendum in Ware County to ask voters if they support building a perimeter highway bypass around Waycross.",
@@ -2040,9 +2058,10 @@
    "source": "claude-code",
    "inputHash": "123b753ad68d9ce7",
    "generatedAt": "2026-11-23T13:44:59+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:54:42.944Z"
   },
   "HB 1123": {
    "summary": "This bill would require schools that offer after-school programs to make these programs available to pre-kindergarten students on the same basis as other students. It also allows for limited exceptions to this requirement.",
@@ -2522,9 +2541,10 @@
    "source": "claude-code",
    "inputHash": "ac34fd072a90b04a",
    "generatedAt": "2026-11-23T13:45:09+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:54:50.823Z"
   },
   "HB 1156": {
    "summary": "This bill would allow local governments to create grant programs to give incentives to homeowners. It also allows the establishment of local funds for these homeowner incentive grants.",
@@ -3235,16 +3255,23 @@
    "summary": "This bill changes how Chatham County homeowners get a school district property tax exemption created by a 2025 law. Anyone who, as of December 31, 2026, has applied for and is eligible for the existing 1999 homestead exemption from Chatham County and City of Savannah school district taxes would automatically qualify for the 2025 exemption. They would not need to apply separately.",
    "subjects": [
     "REVENUE AND TAXATION",
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
    "source": "claude-code",
    "inputHash": "b831bb693bd3ab18",
    "generatedAt": "2026-11-23T13:45:18+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "aiSubjects": [
+    "REVENUE AND TAXATION",
+    "Local / Municipal"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:54:58.039Z"
   },
   "HB 1204": {
    "summary": "The bill would change the age at which individuals are protected from age discrimination in employment.",
@@ -3792,16 +3819,22 @@
   "HB 1241": {
    "summary": "This bill changes the charter of the City of Decatur, rewriting the article on the city commission. The city commission has four commissioners and a mayor. Commissioners come from two election districts, and the mayor is elected citywide. Other parts of the article cover who can run for office, how terms are staggered, and how the mayor and the commission operate.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "medium",
    "session": "2025_26",
    "source": "claude-code",
    "inputHash": "e35b189ec3d95d1a",
    "generatedAt": "2026-11-23T13:45:28+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "aiSubjects": [
+    "Local / Municipal"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T15:58:05.537Z"
   },
   "HB 1242": {
    "summary": "This bill would remove the authority of the Department of Public Health and county boards of health to require vaccinations or other preventive measures against contagious or infectious diseases.",
@@ -5215,18 +5248,25 @@
   "HB 1338": {
    "summary": "This bill would change a 1999 homestead exemption from City of Savannah property taxes for city purposes. It would cap the \"adjusted base year assessed value\" of a homestead at its tax year 2025 level for later years. It would take effect only if Savannah voters approve it in the November 2026 election and the General Assembly passes it by a two-thirds vote.",
    "subjects": [
-    "Local / Municipal",
     "REVENUE AND TAXATION",
-    "PROPERTY"
+    "PROPERTY",
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
    "source": "claude-code",
    "inputHash": "9319081378cea38b",
    "generatedAt": "2026-11-23T13:45:38+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "aiSubjects": [
+    "Local / Municipal",
+    "REVENUE AND TAXATION",
+    "PROPERTY"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:55:09.274Z"
   },
   "HB 1339": {
    "summary": "The bill would revise the provisions for filling vacancies in the office of mayor or councilor in the city of Columbus, Georgia.",
@@ -5242,17 +5282,20 @@
    "refined": false
   },
   "HB 134": {
-   "summary": "The bill would revise and expand the sales tax exemption for manufactured homes. It also sets a sunset date and includes legislative findings.",
+   "summary": "This bill, the \"Keep Georgia Forested Act,\" adds forestry manufacturers to the businesses that can earn Georgia income tax credits tied to new jobs. These are businesses certified as using wood fiber or other forest-derived materials to make products such as fuels or chemicals. For tax years 2026 through 2030, they can earn a $500 credit per new job and may sell or transfer unused credits, with reporting to the state.",
    "subjects": [
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "COMMERCE AND TRADE"
    ],
    "confidence": "medium",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "6f8033faa5f46f50",
-   "generatedAt": "2026-11-23T05:07:07+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "fd55484da4d6eebc",
+   "generatedAt": "2026-11-23T16:44:31+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:49:49.161Z"
   },
   "HB 1340": {
    "summary": "This bill would raise the income limit for a homestead exemption from school district ad valorem taxes for senior citizens in Hall County. It also introduces a new exemption for residents aged 66 and older.",
@@ -5507,9 +5550,10 @@
    "source": "claude-code",
    "inputHash": "ea4e29cd5d3b3c85",
    "generatedAt": "2026-11-23T13:45:47+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:55:14.201Z"
   },
   "HB 1358": {
    "summary": "The bill would allow the Magistrate Court of Brooks County to charge a technology fee and specify how the money from this fee can be used. It also sets rules for ending the fee and handling leftover funds.",
@@ -7025,9 +7069,10 @@
    "source": "claude-code",
    "inputHash": "04c25ee393e3cea8",
    "generatedAt": "2026-11-23T13:45:58+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:55:18.366Z"
   },
   "HB 1461": {
    "summary": "The bill would change the salary provisions for the clerk of the Superior Court of Muscogee County and the chief deputy clerk.",
@@ -7618,16 +7663,22 @@
   "HB 1500": {
    "summary": "This bill changes the city limits of Suwanee in Gwinnett County. It adds about 93 acres to the city, including parcels and the unincorporated parts of McGinnis Ferry Road. It also removes about 8 acres, including a parcel and the nearby right-of-way along McGinnis Ferry Road and I-85.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
    "source": "claude-code",
    "inputHash": "d8e30632db57324c",
    "generatedAt": "2026-11-23T13:46:06+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "aiSubjects": [
+    "Local / Municipal"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:55:25.207Z"
   },
   "HB 1501": {
    "summary": "The bill would require the Environmental Protection Division to maintain a public website to monitor levels of certain contaminants in public water systems. It also requires annual reports and recommendations to the General Assembly.",
@@ -8164,16 +8215,23 @@
    "subjects": [
     "REVENUE AND TAXATION",
     "EDUCATION",
-    "Local / Municipal"
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
    "source": "claude-code",
    "inputHash": "ea57dcf333621e66",
    "generatedAt": "2026-11-23T13:46:15+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "aiSubjects": [
+    "REVENUE AND TAXATION",
+    "EDUCATION",
+    "Local / Municipal"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:55:32.934Z"
   },
   "HB 1538": {
    "summary": "This bill would provide a homestead tax exemption for residents of Macon-Bibb County. Those aged 65 to 74 would get a $17,000 exemption, and those aged 75 to 84 would get a $32,000 exemption.",
@@ -8364,16 +8422,22 @@
   "HB 1550": {
    "summary": "This bill adds an area to the City of Byron's corporate limits. The added area runs along Housers Mill Road, near the Georgia Highway 247 connector. It takes effect June 1, 2026 only if a separate act removes the same right of way from the City of Fort Valley. Otherwise, it does not take effect and is repealed that day.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
    "source": "claude-code",
    "inputHash": "7c378ef0b6420c58",
    "generatedAt": "2026-11-23T13:46:28+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "aiSubjects": [
+    "Local / Municipal"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:55:37.081Z"
   },
   "HB 1551": {
    "summary": "The bill would increase the income cap for a homestead exemption from Pickens County School District ad valorem taxes for educational purposes.",
@@ -8543,16 +8607,23 @@
    "subjects": [
     "REVENUE AND TAXATION",
     "HANDICAPPED PERSONS",
-    "Local / Municipal"
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
    "source": "claude-code",
    "inputHash": "96b5e94773563326",
    "generatedAt": "2026-11-23T13:46:36+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "aiSubjects": [
+    "REVENUE AND TAXATION",
+    "HANDICAPPED PERSONS",
+    "Local / Municipal"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:55:43.889Z"
   },
   "HB 1563": {
    "summary": "This bill would increase the homestead exemption from ad valorem taxes for senior citizens in Pike County. It also provides for increased exemptions for certain residents who have lived in the county for a specific period of time.",
@@ -8659,9 +8730,10 @@
    "source": "claude-code",
    "inputHash": "8a83b8bce6c990b9",
    "generatedAt": "2026-11-23T13:46:45+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:49:58.655Z"
   },
   "HB 1570": {
    "summary": "The bill would revise the membership of the board of the Cochran/Bleckley Airport Authority.",
@@ -8680,16 +8752,22 @@
    "summary": "This bill changes when the State Court of Bryan County, formerly the City Court of Pembroke, holds its terms. Criminal trials would be held in four regular terms a year, starting January 2 and the first day of April, July, and October. Civil trials would be held monthly, starting on the first of each month. It takes effect July 1, 2026.",
    "subjects": [
     "COURTS",
-    "Local / Municipal"
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
    "source": "claude-code",
    "inputHash": "81a1a2480d48d096",
    "generatedAt": "2026-11-23T13:46:53+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "aiSubjects": [
+    "COURTS",
+    "Local / Municipal"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:55:57.644Z"
   },
   "HB 1572": {
    "summary": "The bill would require food service establishments to take certain actions related to food allergy awareness and to post specific information in staff areas, as approved by the Department of Public Health.",
@@ -8776,16 +8854,22 @@
   "HB 1578": {
    "summary": "This bill updates the charter of the Town of Arcade. It changes the municipality's name to the \"City of Arcade\" throughout the charter and sets the council's organizational meeting for the second Monday of January after an election. It also revises rules for emergency ordinances and gives the mayor the power to veto council actions, which the council can override by a vote of four members.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
    "source": "claude-code",
    "inputHash": "0e1c8916e73b26a9",
    "generatedAt": "2026-11-23T13:47:02+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "aiSubjects": [
+    "Local / Municipal"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:56:04.304Z"
   },
   "HB 1579": {
    "summary": "This bill would change the boundaries of the City of Savannah.",
@@ -9024,9 +9108,10 @@
    "source": "claude-code",
    "inputHash": "0375c9a614153f64",
    "generatedAt": "2026-11-23T13:47:12+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:56:07.761Z"
   },
   "HB 1595": {
    "summary": "The bill would revise how the income cap is calculated for a $10,000 homestead exemption from certain ad valorem taxes in Clarke County, Georgia, for residents and the Clarke County School District.",
@@ -9266,8 +9351,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "ea76e9594d4bc69a",
    "generatedAt": "2026-11-23T05:13:25+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:09:31.169Z"
   },
   "HB 163": {
    "summary": "The bill would require food service establishments to disclose if certain food products contain cell-cultured meat or plant-based meat alternatives.",
@@ -9348,17 +9434,21 @@
    "refined": false
   },
   "HB 169": {
-   "summary": "This bill would limit exceptions to the breach of covenants for conservation use related to solar energy generation to existing contracts. It also sets a time when the provisions will no longer be in effect.",
+   "summary": "This bill would limit the exceptions to breaking a conservation-use covenant for solar energy generation so they apply only to existing contracts. The covenant rules are part of Georgia's property tax law for land kept in bona fide conservation use and forest land conservation use. The bill also sets a date on which these provisions end and addresses when the change applies.",
    "subjects": [
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "AGRICULTURE",
+    "CONSERVATION AND NATURAL RESOURCES"
    ],
    "confidence": "medium",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "cee16a679507cef6",
-   "generatedAt": "2026-11-23T05:13:34+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "608f33d167942fbb",
+   "generatedAt": "2026-11-23T16:44:38+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:50:08.955Z"
   },
   "HB 17": {
    "summary": "The bill would allow the Department of Public Health to carry out projects to educate people about valvular heart disease, raise awareness, and help with early diagnosis. It also aims to reduce sudden cardiac deaths caused by this disease.",
@@ -9376,15 +9466,21 @@
   "HB 170": {
    "summary": "The bill would require insurance benefit providers to disclose certain payments to treating healthcare providers. It also provides definitions and related matters.",
    "subjects": [
-    "INSURANCE"
+    "INSURANCE",
+    "HEALTH"
    ],
    "confidence": "medium",
    "session": "2025_26",
    "source": "ollama:qwen2.5:14b",
    "inputHash": "dc13ff2379ba33d5",
    "generatedAt": "2026-11-23T05:13:36+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "aiSubjects": [
+    "INSURANCE"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:10:26.560Z"
   },
   "HB 171": {
    "summary": "The bill would repeal and replace a section of Georgia law about obscene material and its distribution, and it would prohibit the distribution of computer-generated obscene material depicting a child. It also sets a standard for what is considered obscene and provides penalties and probation for violations.",
@@ -9462,8 +9558,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "fb6ac8bc44f3b1df",
    "generatedAt": "2026-11-23T05:13:44+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:10:39.106Z"
   },
   "HB 177": {
    "summary": "This bill would allow protective orders for family and dating violence to include protection for household pets.",
@@ -9519,17 +9616,21 @@
    "refined": false
   },
   "HB 180": {
-   "summary": "The bill would modify requirements for probate judges in Georgia.",
+   "summary": "This bill changes the rules for probate court judges in Georgia counties with a population over 90,000. Candidates must be at least 30, be a member in good standing of the State Bar, and have been admitted to practice law for seven years before the election. They must also file a sworn statement saying they meet these rules. Judges already in office on or after June 30, 2000, may stay and run again.",
    "subjects": [
-    "COURTS"
+    "COURTS",
+    "PUBLIC OFFICERS AND EMPLOYEES",
+    "ELECTIONS"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "012842b0376fe539",
-   "generatedAt": "2026-11-23T05:13:49+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "199d7e729bbf9715",
+   "generatedAt": "2026-11-23T16:44:45+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:50:17.563Z"
   },
   "HB 181": {
    "summary": "This bill would allow the state registrar to issue a 'Certificate of Foreign Birth' without a judicial order if certain criteria are met.",
@@ -9569,8 +9670,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "a366b2304ebd1724",
    "generatedAt": "2026-11-23T05:13:54+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:11:14.292Z"
   },
   "HB 184": {
    "summary": "The bill would create the Georgia Consumer Protection Towing Act, setting rules for towing vehicles in emergencies, at the request of the vehicle owner, and from private property. It covers requirements for estimates and invoices, notice to vehicle owners, and the release of towed vehicles.",
@@ -9613,19 +9715,21 @@
    "refined": false
   },
   "HB 187": {
-   "summary": "The bill would change certain provisions related to professions practicing in Georgia, including electrical contractors, plumbers, and others involved in building and housing work.",
+   "summary": "This bill creates rules for vehicle value protection agreements, optional contracts sold to car buyers that provide a benefit toward a replacement vehicle if the covered vehicle is damaged, totaled, or stolen. Providers must disclose key terms, give at least a 30-day cancellation period with refunds, and meet financial-security requirements. A vehicle loan or purchase cannot require the agreement. The Attorney General can enforce the rules and seek civil penalties of up to $2,500 per violation.",
    "subjects": [
-    "BUILDINGS AND HOUSING",
     "COMMERCE AND TRADE",
-    "PROFESSIONS AND BUSINESSES"
+    "INSURANCE",
+    "MOTOR VEHICLES AND TRAFFIC"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "080bbd536cbb8b33",
-   "generatedAt": "2026-11-23T05:13:59+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "63c0d70d78b03479",
+   "generatedAt": "2026-11-23T16:44:52+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:50:31.389Z"
   },
   "HB 188": {
    "summary": "The bill would extend protections for victims of family violence and stalking when it comes to residential leases.",
@@ -9643,17 +9747,21 @@
    "refined": false
   },
   "HB 189": {
-   "summary": "The bill would amend laws related to notaries public, setting limitations on certain notarial acts.",
+   "summary": "This bill adds a new rule for Georgia notaries public. A notary's commission would not allow them to give legal advice, draft legal documents, act as an immigration consultant, represent anyone in immigration cases, charge for those services, or make certified copies of public records. Notaries also could not advertise falsely, sign a certificate they know is false, or hold back a person's original records. Non-attorney notaries could not use the term \"notario.\"",
    "subjects": [
-    "PUBLIC OFFICERS AND EMPLOYEES"
+    "PUBLIC OFFICERS AND EMPLOYEES",
+    "PROFESSIONS AND BUSINESSES",
+    "COMMERCE AND TRADE"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "df9f422c0bf8b940",
-   "generatedAt": "2026-11-23T05:14:01+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "194c5dbf3aaba412",
+   "generatedAt": "2026-11-23T16:45:00+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:50:41.864Z"
   },
   "HB 19": {
    "summary": "The bill would require the Department of Behavioral Health and Developmental Disabilities to create and maintain an electronic registry for inpatient psychiatric beds.",
@@ -9774,7 +9882,7 @@
    "refined": false
   },
   "HB 198": {
-   "summary": "The bill would allow certain youth groups to use school facilities. It also provides a definition and related matters.",
+   "summary": "The bill would allow certain youth groups designated as \"patriotic society\" by US Code Title 36, to use school facilities. If a local school system denies the use of facilities by a patriotic society, the principal of the school shall provide reasons in writing for the denial to the requesting entity.",
    "subjects": [
     "EDUCATION"
    ],
@@ -9783,8 +9891,11 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "b4245bb91c3f9b32",
    "generatedAt": "2026-11-23T05:14:14+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "aiSummary": "The bill would allow certain youth groups to use school facilities. It also provides a definition and related matters.",
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:15:06.491Z"
   },
   "HB 199": {
    "summary": "The bill would modify provisions related to protecting the personally identifiable information of judges and their spouses. It also abolishes the requirement for the Administrative Office of the Courts to maintain a database of protected persons and information.",
@@ -9918,21 +10029,23 @@
    "refined": false
   },
   "HB 207": {
-   "summary": "This bill would provide rules for storing firearms in motor vehicles or vessels. It also sets penalties and exceptions for carrying weapons in certain school-related areas.",
+   "summary": "This bill changes Georgia's weapons law so that a lawful weapons carrier may transport a handgun or long gun in a private passenger vehicle only in a locked compartment, a locked container, or a locked firearms rack on the vehicle. In a private vessel, it must be in a locked compartment or locked container. Violating the vehicle rule would count as unlawful carrying of a weapon. It also updates school safety zone exceptions to refer to this storage rule.",
    "subjects": [
     "CRIMES AND OFFENSES (CRIMINAL CODE)",
     "EDUCATION"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "94b29befa0ff8f8c",
-   "generatedAt": "2026-11-23T05:14:28+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "1e5643847866790f",
+   "generatedAt": "2026-11-23T16:45:07+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:50:57.895Z"
   },
   "HB 208": {
-   "summary": "The bill would create special license plates that support the state parks and historic sites division of the Department of Natural Resources. It also aims to establish a specialty license plate promoting conservation, but the caption is cut off before fully explaining this part.",
+   "summary": "The bill would create special license plates that support organizations such as the Department of Natural Resources, Shepherd Center, Southern University Alumni, and others. Additionally it provides for the issuance of two free license plates for veterans who are totally disabled or disabled.",
    "subjects": [
     "CONSERVATION AND NATURAL RESOURCES",
     "MOTOR VEHICLES AND TRAFFIC"
@@ -9942,8 +10055,11 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "a144bd3302b2071e",
    "generatedAt": "2026-11-23T05:14:29+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "aiSummary": "The bill would create special license plates that support the state parks and historic sites division of the Department of Natural Resources. It also aims to establish a specialty license plate promoting conservation, but the caption is cut off before fully explaining this part.",
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:19:52.623Z"
   },
   "HB 209": {
    "summary": "The bill would designate emergency medical services, including ambulance service, as essential services in Georgia.",
@@ -9994,8 +10110,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "83c611ea924e7d93",
    "generatedAt": "2026-11-23T05:14:34+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:21:18.927Z"
   },
   "HB 212": {
    "summary": "The bill would create a tax credit for the production of clean energy. It would also set rules for calculating the credit amount and allow the credit to be transferred.",
@@ -10046,8 +10163,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "a6064b66fcfd874b",
    "generatedAt": "2026-11-23T05:14:39+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:25:39.637Z"
   },
   "HB 216": {
    "summary": "The bill would create a new commission called the Georgia CHIPS and Advanced Technology Commission within the Department of Economic Development. It would also abolish the Georgia CHIPS and Advanced Technology Consortium and replace its advisory panel and executive committee.",
@@ -10059,8 +10177,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "3bbb9e8eef58c19c",
    "generatedAt": "2026-11-23T05:14:40+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:25:49.236Z"
   },
   "HB 217": {
    "summary": "The bill would make the Dual Achievement Program a permanent state-wide program in Georgia.",
@@ -10116,17 +10235,20 @@
    "refined": false
   },
   "HB 220": {
-   "summary": "The bill would allow an insurer under a liability policy to pay a third party and a senior lienholder under certain circumstances.",
+   "summary": "House Bill 220 changes a Georgia law about how auto insurers pay for damage to a third party's car. When an insurer under a liability policy pays for that damage, it would pay both the third party and the senior lienholder of record, if there is one, as their interests appear. If the insurer prepares the loss estimate in Georgia, the estimate must carry a printed warning about misusing the insurance money. It would apply to policies issued or renewed on or after July 1, 2025.",
    "subjects": [
-    "INSURANCE"
+    "INSURANCE",
+    "MOTOR VEHICLES AND TRAFFIC"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "33c36d1ca43b5100",
-   "generatedAt": "2026-11-23T05:14:46+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "0d2ca1b9825fe91b",
+   "generatedAt": "2026-11-23T16:45:13+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:51:08.500Z"
   },
   "HB 221": {
    "summary": "The bill would provide for equal athletic opportunities for public school students in Georgia.",
@@ -10205,9 +10327,10 @@
    "source": "claude-code",
    "inputHash": "ae133c1fb20591f3",
    "generatedAt": "2026-11-23T13:47:20+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:51:12.850Z"
   },
   "HB 227": {
    "summary": "The bill would rename low THC oil as medical cannabis and clarify and revise criminal penalties related to offenses against public health and morals, regulation of controlled substances, and general provisions relative to the Department of Public Health.",
@@ -10221,8 +10344,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "fc352d0d5ee18a81",
    "generatedAt": "2026-11-23T05:14:55+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:26:10.071Z"
   },
   "HB 228": {
    "summary": "This bill would allow and set rules for the production of farmstead products for human consumption, providing relief from regulatory burdens for small dairy farmers and producers. It also sets standards for safety, cleanliness, and health for these products.",
@@ -10422,8 +10546,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "5fe02c3ef40b5760",
    "generatedAt": "2026-11-23T05:15:15+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:26:19.241Z"
   },
   "HB 241": {
    "summary": "The bill would revise provisions regarding convenience fees for payment by electronic means in contracts.",
@@ -10461,8 +10586,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "5d1fe6818d9b2825",
    "generatedAt": "2026-11-23T05:15:18+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:26:25.891Z"
   },
   "HB 244": {
    "summary": "This bill would allow local governments to request and receive extensions for filing their annual audits with the state auditor under certain circumstances.",
@@ -10505,17 +10631,19 @@
    "refined": false
   },
   "HB 247": {
-   "summary": "This bill would allow written consent for the release of certain information to be obtained and transferred electronically. It also requires training for clinical evaluators performing assessment components and revises the fees related to defensive driving courses or alcohol and drug programs.",
+   "summary": "This bill changes Georgia's rules for DUI risk reduction programs and defensive driving courses used to restore licenses. Written consent for releasing a program participant's records could be obtained and transferred electronically. It also raises fees: defensive driving courses from $95 to $125, assessments from $100 to $150, and the intervention component from $235 to $350.",
    "subjects": [
     "MOTOR VEHICLES AND TRAFFIC"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "fdd55b8c5da9d09a",
-   "generatedAt": "2026-11-23T05:15:24+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "dbf5d08d4ddb9361",
+   "generatedAt": "2026-11-23T16:45:20+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:51:21.633Z"
   },
   "HB 248": {
    "summary": "This bill would create a tax credit for Georgia residents who install geothermal machinery in their homes.",
@@ -10531,17 +10659,21 @@
    "refined": false
   },
   "HB 249": {
-   "summary": "The bill would revise provisions related to solar power facility agreements and the waiver of certain requirements for these agreements.",
+   "summary": "This bill changes Georgia's rules for solar power facility leases between landowners and the companies that operate the solar facilities. It requires the operator to remove equipment, including buried foundations and cables to at least three feet deep, and to provide financial assurance, such as a surety bond, to cover removal costs. It lets landowners and operators change some lease terms in a written, notarized agreement, but not the duty to remove the equipment. It also lets the Environmental Protection Division issue cease and desist orders and civil penalties.",
    "subjects": [
-    "PUBLIC UTILITIES AND TRANSPORTATION"
+    "PUBLIC UTILITIES AND TRANSPORTATION",
+    "PROPERTY",
+    "CONSERVATION AND NATURAL RESOURCES"
    ],
    "confidence": "medium",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "7e9eb9e271c116fb",
-   "generatedAt": "2026-11-23T05:15:26+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "f3f25f66bef87266",
+   "generatedAt": "2026-11-23T16:45:27+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:51:52.366Z"
   },
   "HB 25": {
    "summary": "This bill would allow the Department of Human Services to request a waiver from the United States Department of Agriculture Food and Nutrition Service to permit recipients of certain public assistance benefits to use those benefits to purchase diapers or menstrual hygiene products.",
@@ -10598,18 +10730,21 @@
    "refined": false
   },
   "HB 253": {
-   "summary": "HB 253, known as Ethan's Law, would limit when a child can be ordered to participate in a family reunification program. It also defines certain terms related to child custody proceedings.",
+   "summary": "HB 253, known as Ethan's Law, bars a judge in a child custody case from ordering family reunification programs that require no contact between a child and a parent or guardian, break a no-contact court order, use private transporters who use force or put the child at risk, or involve an out-of-state stay. It also lets ambulance services accept newborns left under Georgia's Safe Place for Newborns law and lets facilities install monitored newborn safety devices.",
    "subjects": [
+    "DOMESTIC RELATIONS",
     "COURTS",
-    "DOMESTIC RELATIONS"
+    "MINORS"
    ],
    "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "89c7c428f9bf4c23",
-   "generatedAt": "2026-11-23T05:15:33+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "a32f3170e1bde5b3",
+   "generatedAt": "2026-11-23T16:45:33+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:51:57.764Z"
   },
   "HB 254": {
    "summary": "This bill would place a Revolutionary War Patriots marker on the grounds of the state capitol building and the state archives building in Georgia.",
@@ -10772,15 +10907,21 @@
   "HB 265": {
    "summary": "The bill would set limits on the amount of THC and other intoxicating cannabinoids in consumable hemp products. It would also revise the certificate of analysis for these products and establish criminal penalties.",
    "subjects": [
-    "AGRICULTURE"
+    "AGRICULTURE",
+    "FOOD, DRUGS, AND COSMETICS"
    ],
    "confidence": "medium",
    "session": "2025_26",
    "source": "ollama:qwen2.5:14b",
    "inputHash": "8324dcdc00d9ea08",
    "generatedAt": "2026-11-23T05:15:48+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "aiSubjects": [
+    "AGRICULTURE"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:27:48.440Z"
   },
   "HB 266": {
    "summary": "This bill would exempt from Georgia state income tax the personal compensation received by individuals for full-time duty in the active military service of the United States.",
@@ -10820,8 +10961,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "d252b7c2b9a37760",
    "generatedAt": "2026-11-23T05:15:52+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:27:57.505Z"
   },
   "HB 269": {
    "summary": "The bill would revise the requirements for child care learning centers and family child care learning homes, and require these centers and homes to maintain commercial general liability insurance.",
@@ -10873,9 +11015,10 @@
    "source": "claude-code",
    "inputHash": "78b7772e2052c565",
    "generatedAt": "2026-11-23T13:47:31+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:52:02.700Z"
   },
   "HB 272": {
    "summary": "The bill would change certain provisions regarding definitions in Georgia's revenue and taxation laws.",
@@ -10887,11 +11030,12 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "121d628995fb1951",
    "generatedAt": "2026-11-23T05:15:58+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:37:11.859Z"
   },
   "HB 273": {
-   "summary": "The bill would change certain definitions related to title ad valorem tax on motor vehicles.",
+   "summary": "The bill would change certain definitions related to title ad valorem tax on motor vehicles. It adds \"Immediate family member as spouse, parent, child, sibling, grandparent, or grandchild.\"",
    "subjects": [
     "REVENUE AND TAXATION"
    ],
@@ -10900,8 +11044,11 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "47ff7e275483ad8e",
    "generatedAt": "2026-11-23T05:15:59+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "aiSummary": "The bill would change certain definitions related to title ad valorem tax on motor vehicles.",
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:38:10.328Z"
   },
   "HB 274": {
    "summary": "The bill would change certain definitions related to the alternative ad valorem tax on motor vehicles.",
@@ -10913,21 +11060,26 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "f7c4f1edcd58a94e",
    "generatedAt": "2026-11-23T05:16:00+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:38:19.673Z"
   },
   "HB 275": {
-   "summary": "The bill would change certain definitions related to income taxes.",
+   "summary": "This version of the bill deals with property taxes, not income taxes. It lets the state revenue commissioner accept a county's tax digest if a newspaper publication error was not the county's fault. It changes what property tax bills and annual assessment notices must show, including a bold notice from local governments that opted out of HB 581 homestead relief. It also repeals the yearly estimated roll-back rate certification.",
    "subjects": [
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "PROPERTY",
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "medium",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "2a8d5aa6192dce0f",
-   "generatedAt": "2026-11-23T05:16:01+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "02df3024d8487196",
+   "generatedAt": "2026-11-23T16:45:44+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:52:10.077Z"
   },
   "HB 276": {
    "summary": "This bill creates a state income tax credit for buying, installing, and preparing a power generator that runs on woody biomass (such as land-clearing residue and wood pellets) and has at least 50 megawatts of capacity. It also changes a sales tax exemption on computer equipment for high-technology companies and data centers, adding companies that use such generators on site to those eligible from 2029 through 2034.",
@@ -10939,9 +11091,10 @@
    "source": "claude-code",
    "inputHash": "02df3024d8487196",
    "generatedAt": "2026-11-23T13:47:41+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T15:56:33.189Z"
   },
   "HB 277": {
    "summary": "The bill would change certain definitions related to the excise tax on rooms, lodgings, and accommodations.",
@@ -10953,8 +11106,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "604d07d4e659895e",
    "generatedAt": "2026-11-23T05:16:03+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:36:46.999Z"
   },
   "HB 278": {
    "summary": "The bill would change certain definitions related to the excise tax on rooms, lodgings, and accommodations.",
@@ -10966,8 +11120,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "604d07d4e659895e",
    "generatedAt": "2026-11-23T05:16:04+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:36:45.774Z"
   },
   "HB 279": {
    "summary": "The bill would change certain definitions related to sales and use taxes.",
@@ -10979,8 +11134,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "9e43d8051818eff0",
    "generatedAt": "2026-11-23T05:16:05+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:36:42.844Z"
   },
   "HB 28": {
    "summary": "This bill would provide a $10,000 homestead exemption from Colquitt County ad valorem taxes for county purposes to residents of the county.",
@@ -11006,8 +11162,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "f7b7398543025f41",
    "generatedAt": "2026-11-23T05:16:07+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:36:41.226Z"
   },
   "HB 281": {
    "summary": "The bill would change certain definitions related to ad valorem taxation of property.",
@@ -11019,21 +11176,30 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "3b3a0fe15f548a40",
    "generatedAt": "2026-11-23T05:16:08+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:36:35.494Z"
   },
   "HB 282": {
-   "summary": "The bill would change certain definitions related to ad valorem taxation of property.",
+   "summary": "The bill revises Chapter 5, Tital 48, of the Official Code of Georgia Annotated relating to ad valorem taxation of property. Specifically, it amends the definition of \"current use value\" of bona fide conservation use property.",
    "subjects": [
-    "REVENUE AND TAXATION"
+    "REVENUE AND TAXATION",
+    "CONSERVATION AND NATURAL RESOURCES",
+    "PROPERTY"
    ],
    "confidence": "medium",
    "session": "2025_26",
    "source": "ollama:qwen2.5:14b",
    "inputHash": "cf32db3a22f489ec",
    "generatedAt": "2026-11-23T05:16:09+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "aiSummary": "The bill would change certain definitions related to ad valorem taxation of property.",
+   "humanEdited": true,
+   "aiSubjects": [
+    "REVENUE AND TAXATION"
+   ],
+   "reviewedAt": "2026-11-23T16:36:16.085Z"
   },
   "HB 283": {
    "summary": "This bill would allow for the issuance of a refusal to sign citation for drivers who fail to sign a citation, and it would provide a penalty for this refusal.",
@@ -11072,8 +11238,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "3cb6a613a39b4dd4",
    "generatedAt": "2026-11-23T05:16:13+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:34:40.121Z"
   },
   "HB 286": {
    "summary": "The bill would create a subfund within the Seed-Capital Fund to provide startup capital to small businesses that are majority owned by students or graduates of a small business program at the Technical College System of Georgia.",
@@ -11103,19 +11270,21 @@
    "refined": false
   },
   "HB 288": {
-   "summary": "This bill would allow for declaratory judgments when a prosecuting attorney makes accusations about the credibility of a peace officer.",
+   "summary": "This bill requires a prosecutor who puts a peace officer on a \"Giglio list\" (officers whose credibility is in question as trial witnesses) to send written notice to the officer's employer and the state's Peace Officer Standards and Training Council. The officer or employer may ask for reconsideration within 30 days. It also requires sheriff candidates to be certified peace officers, with a six-month window after taking office for some candidates, such as former law enforcement officers, to certify.",
    "subjects": [
-    "APPEAL AND ERROR",
+    "LAW ENFORCEMENT OFFICERS AND AGENCIES",
     "CRIMINAL PROCEDURE",
-    "LAW ENFORCEMENT OFFICERS AND AGENCIES"
+    "COURTS"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "b30db62b5bab11db",
-   "generatedAt": "2026-11-23T05:16:17+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "a01a6f38baa454b6",
+   "generatedAt": "2026-11-23T16:45:52+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:52:22.310Z"
   },
   "HB 289": {
    "summary": "The bill would allow remote online notarizations and set requirements for electronic journaling. It affects notaries public and those using their services.",
@@ -11223,9 +11392,10 @@
    "source": "claude-code",
    "inputHash": "69631c9a0b3e0e24",
    "generatedAt": "2026-11-23T13:47:50+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:52:50.434Z"
   },
   "HB 296": {
    "summary": "This bill would allow people to show a driver's license in an electronic format when driving, instead of needing a physical license. It also says that law enforcement cannot force someone to show their license on a wireless device.",
@@ -11384,8 +11554,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "96012509fbe53f94",
    "generatedAt": "2026-11-23T05:16:42+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:34:16.565Z"
   },
   "HB 306": {
    "summary": "The bill would create a cause of action for workplace harassment and retaliation, allowing employees to sue for such issues.",
@@ -11676,8 +11847,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "dbbb7811b0be622c",
    "generatedAt": "2026-11-23T05:17:10+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:33:44.214Z"
   },
   "HB 326": {
    "summary": "This bill would require the state health benefit plan to provide the same level of coverage for nonopioid pain management drugs as it does for opioid pain management drugs, including similar annual deductibles, coinsurance, copayments, exclusions, and reductions.",
@@ -11693,19 +11865,21 @@
    "refined": false
   },
   "HB 327": {
-   "summary": "The bill would amend laws related to financial institutions, power of attorney, court jurisdiction, domestic relations, and the disclosure of AIDS confidential information.",
+   "summary": "This bill updates Georgia laws on trusts, estates, and family matters. It sets rules for trust directors, trustees, and estate representatives, and it covers how children born outside marriage or through assisted reproduction are treated for inheritance, parental rights, and wrongful death claims. It also raises the amount of money probate courts can distribute in cases involving minors and incapacitated people.",
    "subjects": [
-    "BANKING AND FINANCE",
+    "WILLS, TRUSTS, AND ADMINISTRATION OF ESTATES",
     "DOMESTIC RELATIONS",
-    "EVIDENCE"
+    "BANKING AND FINANCE"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "fdda99e0f3eeb61e",
-   "generatedAt": "2026-11-23T05:17:13+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "7581bb10c63ce5a4",
+   "generatedAt": "2026-11-23T16:46:00+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:52:59.245Z"
   },
   "HB 328": {
    "summary": "The bill would increase the annual limit for tax credits available for contributions to student scholarship organizations and extend the time allowed after preapproval to make these contributions.",
@@ -11761,17 +11935,21 @@
    "refined": false
   },
   "HB 331": {
-   "summary": "The bill would prohibit the transfer of certain domestic animals at specific locations and provide exceptions, enforcement, and penalties. It also includes definitions.",
+   "summary": "House Bill 331 would make it unlawful to sell, trade, or otherwise exchange a dog, cat, or domestic rabbit for something of value at roadsides, parking lots, parks, fairs, flea markets, and similar outdoor locations. Exceptions include licensed animal shelters, transfers at a home or inside a business, certain breed or 4-H shows, and prearranged transfers at law enforcement facilities. Officers may impound animals and enforce the law. Fines are up to $100, $250, then $500 for repeat violations.",
    "subjects": [
-    "ANIMALS"
+    "ANIMALS",
+    "COMMERCE AND TRADE",
+    "LAW ENFORCEMENT OFFICERS AND AGENCIES"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "cd5f0c0002ae896b",
-   "generatedAt": "2026-11-23T05:17:19+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "b1d1202e7c072f31",
+   "generatedAt": "2026-11-23T16:46:07+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:53:04.592Z"
   },
   "HB 332": {
    "summary": "The bill would create an advisory working group to review tools and protocols for screening children for trauma within a specific program.",
@@ -11824,8 +12002,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "71ae540d0bf25d80",
    "generatedAt": "2026-11-23T05:17:24+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:32:40.426Z"
   },
   "HB 336": {
    "summary": "This bill would require local school systems to provide information about sickle cell disease to parents and guardians of students in grades six through twelve when other health information is given.",
@@ -12015,15 +12194,21 @@
   "HB 349": {
    "summary": "The bill would change the provisions for filling vacancies on the Board of Commissioners of Douglas County.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "medium",
    "session": "2025_26",
    "source": "ollama:qwen2.5:14b",
    "inputHash": "278b39f0148124b1",
    "generatedAt": "2026-11-23T05:57:03+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "aiSubjects": [
+    "Local / Municipal"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:32:31.421Z"
   },
   "HB 35": {
    "summary": "The bill would change the pay for private attorneys who temporarily act as district attorneys. These attorneys would be paid $250 per hour for each hour certified by the Prosecuting Attorneys' Council of Georgia.",
@@ -12054,15 +12239,21 @@
   "HB 351": {
    "summary": "The bill would change the powers and duties of the Board of Natural Resources, revise definitions, and modify solid waste permitting requirements. It also requires written verification of compliance with local zoning and land use regulations.",
    "subjects": [
-    "CONSERVATION AND NATURAL RESOURCES"
+    "CONSERVATION AND NATURAL RESOURCES",
+    "STATE GOVERNMENT"
    ],
    "confidence": "medium",
    "session": "2025_26",
    "source": "ollama:qwen2.5:14b",
    "inputHash": "1440435121f402d0",
    "generatedAt": "2026-11-23T05:17:46+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "aiSubjects": [
+    "CONSERVATION AND NATURAL RESOURCES"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:32:21.988Z"
   },
   "HB 352": {
    "summary": "This bill would revise coverage criteria to include Medicaid recipients with gestational diabetes for continuous glucose monitors.",
@@ -12087,8 +12278,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "05dd2672761d318f",
    "generatedAt": "2026-11-23T05:17:48+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:31:53.657Z"
   },
   "HB 354": {
    "summary": "The bill would exclude from evidence certain communications between an attorney and a client when the client is in a penal institution.",
@@ -12144,17 +12336,24 @@
    "refined": false
   },
   "HB 358": {
-   "summary": "The bill would amend a law to add a definition related to prohibiting foreign persons and entities from acquiring certain land in Georgia.",
+   "summary": "The bill would amend a law to add a definition related to prohibiting foreign persons and entities from acquiring certain land in Georgia. Specifically, it adds \"Military Installation\" as a new definition.",
    "subjects": [
-    "AGRICULTURE"
+    "AGRICULTURE",
+    "PROPERTY"
    ],
    "confidence": "medium",
    "session": "2025_26",
    "source": "ollama:qwen2.5:14b",
    "inputHash": "76b0089d57775434",
    "generatedAt": "2026-11-23T05:17:54+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "aiSummary": "The bill would amend a law to add a definition related to prohibiting foreign persons and entities from acquiring certain land in Georgia.",
+   "humanEdited": true,
+   "aiSubjects": [
+    "AGRICULTURE"
+   ],
+   "reviewedAt": "2026-11-23T16:31:46.516Z"
   },
   "HB 359": {
    "summary": "The bill would allow the City of Cedartown to hold a referendum to exercise redevelopment and other powers under the Georgia Constitution and Chapter 44 of Title 36 of the O.C.G.A., the 'Redevelopment Powers Law'.",
@@ -12502,17 +12701,24 @@
    "refined": false
   },
   "HB 382": {
-   "summary": "The bill would revise a provision in Georgia law related to Schedule I controlled substances, specifically regarding psilocybin.",
+   "summary": "The bill would revise a provision in Georgia law related to Schedule I controlled substances, specifically regarding crystalline polymorph\npsilocybin and lysergide tartrate.",
    "subjects": [
-    "CRIMES AND OFFENSES (CRIMINAL CODE)"
+    "CRIMES AND OFFENSES (CRIMINAL CODE)",
+    "FOOD, DRUGS, AND COSMETICS"
    ],
    "confidence": "medium",
    "session": "2025_26",
    "source": "ollama:qwen2.5:14b",
    "inputHash": "460fc4fa6969c0a9",
    "generatedAt": "2026-11-23T05:18:28+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "aiSummary": "The bill would revise a provision in Georgia law related to Schedule I controlled substances, specifically regarding psilocybin.",
+   "humanEdited": true,
+   "aiSubjects": [
+    "CRIMES AND OFFENSES (CRIMINAL CODE)"
+   ],
+   "reviewedAt": "2026-11-23T16:30:41.869Z"
   },
   "HB 383": {
    "summary": "This bill would allow high school student athletes and prospective student athletes to receive compensation for the use of their name, image, or likeness. It also sets a rule that contracts for such compensation automatically expire when the student athlete graduates or is no longer enrolled.",
@@ -12636,17 +12842,19 @@
    "refined": false
   },
   "HB 391": {
-   "summary": "The bill would change certain provisions related to boxing, wrestling, and martial art associations and federations in Georgia.",
+   "summary": "This bill updates Georgia's rules for boxing, wrestling, and martial arts events. It changes the definition of an \"amateur\" and the list of organizations whose events are exempt from the state's regulation of these sports. The list drops the International Sport Combat Federation and the International Kick Boxing Federation. It keeps the rest, including USA Wrestling and the Georgia High School Athletic Association, and the Professional Karate Commission stays on it.",
    "subjects": [
     "PROFESSIONS AND BUSINESSES"
    ],
    "confidence": "medium",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "6d95445fbd528608",
-   "generatedAt": "2026-11-23T05:18:41+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "e096cb6c413f8020",
+   "generatedAt": "2026-11-23T16:46:13+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:53:08.625Z"
   },
   "HB 392": {
    "summary": "The bill changes the dates for certain events related to the Georgia Tax Court, including when the chief court judge starts their duties and when the court begins accepting cases. It also deals with the transfer and handling of cases currently pending before the Georgia Tax Tribunal.",
@@ -12791,8 +12999,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "0f3b2dcf0caaf0d1",
    "generatedAt": "2026-11-23T05:18:54+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:29:02.273Z"
   },
   "HB 401": {
    "summary": "This bill would stop insurance companies from including advertising costs when setting or using insurance rates.",
@@ -12831,8 +13040,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "1abcf58275344e09",
    "generatedAt": "2026-11-23T05:18:58+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:28:53.943Z"
   },
   "HB 404": {
    "summary": "This bill changes the boundaries of the City of Conyers. It adds nine listed properties, mostly along Milstead Avenue (Highway 20) and one on Old Covington Highway, in Rockdale County, to the city limits. Each parcel is described by its address and legal land description.",
@@ -12845,9 +13055,10 @@
    "source": "claude-code",
    "inputHash": "6a0a979f8c697dcf",
    "generatedAt": "2026-11-23T13:47:59+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:53:16.107Z"
   },
   "HB 405": {
    "summary": "This bill would require insurance adjusters to also be licensed as contractors. It limits the type of adjuster license based on the contractor's license type and allows licensed contractors to become licensed adjusters.",
@@ -12969,9 +13180,10 @@
    "source": "claude-code",
    "inputHash": "5c8dc9e41c2e00ab",
    "generatedAt": "2026-11-23T13:48:08+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:53:23.123Z"
   },
   "HB 413": {
    "summary": "This bill would stop local governments from making rules that ban mobile sawmills on agricultural land.",
@@ -13366,8 +13578,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "40e9b04f8708306a",
    "generatedAt": "2026-11-23T05:19:48+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:02:44.462Z"
   },
   "HB 440": {
    "summary": "The bill would rename low THC oil as medical cannabis and revise criminal penalties related to offenses against public health and morals, regulation of controlled substances, and general provisions relative to the Department of Public Health.",
@@ -13778,9 +13991,10 @@
    "source": "claude-code",
    "inputHash": "1c48992c9e2f8091",
    "generatedAt": "2026-11-23T13:48:18+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:53:27.752Z"
   },
   "HB 469": {
    "summary": "The bill would repeal certain provisions that allow personnel to carry weapons within school safety zones and at school functions.",
@@ -14464,9 +14678,10 @@
    "source": "claude-code",
    "inputHash": "91d9a5e49d0dbf75",
    "generatedAt": "2026-11-23T13:48:27+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:53:31.523Z"
   },
   "HB 515": {
    "summary": "This bill would add a sixth judge to the superior courts in the Augusta Judicial Circuit and allow the Governor to appoint this additional judge.",
@@ -14689,8 +14904,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "c5281fdce6e88bc1",
    "generatedAt": "2026-11-23T05:21:50+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:02:56.336Z"
   },
   "HB 530": {
    "summary": "This bill would allow pleadings to be filed electronically in probate court. It also sets rules for fees and access to these electronic filings for certain staff and litigants.",
@@ -14955,9 +15171,10 @@
    "source": "claude-code",
    "inputHash": "ec3b70bdb5c67073",
    "generatedAt": "2026-11-23T13:48:37+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T15:56:51.029Z"
   },
   "HB 549": {
    "summary": "The bill would extend the time frame for which a subsequent employer of a peace officer must reimburse the officer for total training expenses. It also specifies the types of training eligible for reimbursement.",
@@ -15688,9 +15905,10 @@
    "source": "claude-code",
    "inputHash": "d6ad286a5898a953",
    "generatedAt": "2026-11-23T13:48:47+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:53:45.454Z"
   },
   "HB 599": {
    "summary": "The bill would allow public school systems to hire certain beneficiaries of the Teachers Retirement System of Georgia as full-time classroom teachers until June 30, 2030.",
@@ -15706,17 +15924,21 @@
    "refined": false
   },
   "HB 6": {
-   "summary": "The bill would revise the provisions for filling vacancies on the Board of Commissioners of Mitchell County.",
+   "summary": "This bill changes how vacancies on the Mitchell County Board of Commissioners are filled, unless the vacancy comes from a term expiring. If a seat opens in the first 21 months of a term, the board directs the county election superintendent to call a special election, and the chief judge of the judicial circuit appoints someone to serve until it is held. If a seat opens in the last 27 months, the chief judge appoints a person to serve out the term.",
    "subjects": [
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT",
+    "ELECTIONS"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "3a4c4528255b56d4",
-   "generatedAt": "2026-11-23T05:57:19+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "0e23bf8a141e5877",
+   "generatedAt": "2026-11-23T16:46:21+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:49:07.966Z"
   },
   "HB 60": {
    "summary": "The bill would provide for school lunch and breakfast programs for public school students in Georgia, offering these meals at no cost to students who qualify for reduced-price meals under federal and state guidelines.",
@@ -16060,9 +16282,10 @@
    "source": "claude-code",
    "inputHash": "faeab56c0494d9bf",
    "generatedAt": "2026-11-23T13:48:56+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:53:48.850Z"
   },
   "HB 623": {
    "summary": "This bill would allow the Probate Court of Carroll County to charge a technology fee and specify how the money can be used. It also sets rules for ending the fee and handling leftover funds.",
@@ -16756,8 +16979,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "847989e85c20cdbc",
    "generatedAt": "2026-11-23T05:25:03+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:03:10.582Z"
   },
   "HB 670": {
    "summary": "This bill would create comprehensive state civil rights laws to protect individuals from discrimination in housing, public accommodations, and employment based on race, color, religion, sex, sexual orientation, and age.",
@@ -17054,8 +17278,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "847989e85c20cdbc",
    "generatedAt": "2026-11-23T05:25:32+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:03:21.617Z"
   },
   "HB 690": {
    "summary": "The bill would add a duty of care for pharmacy benefits managers to insured individuals, health plans, and providers. It also provides for definitions, rules and regulations, a priority of duties, and a private right of action.",
@@ -17173,9 +17398,10 @@
    "source": "claude-code",
    "inputHash": "1ab965f63254cdcd",
    "generatedAt": "2026-11-23T13:49:04+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:53:58.485Z"
   },
   "HB 699": {
    "summary": "This bill would change the terms of the board of elections and registration for Dawson County to be staggered.",
@@ -17213,8 +17439,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "847989e85c20cdbc",
    "generatedAt": "2026-11-23T05:25:49+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:03:33.961Z"
   },
   "HB 700": {
    "summary": "The bill would limit the amount of surcharges that merchants can charge for purchases made with credit cards. It affects merchants and consumers.",
@@ -17357,8 +17584,9 @@
    "source": "ollama:qwen2.5:14b",
    "inputHash": "4ff115781d66975a",
    "generatedAt": "2026-11-23T05:26:03+00:00",
-   "needsReview": true,
-   "refined": false
+   "needsReview": false,
+   "refined": false,
+   "reviewedAt": "2026-11-23T16:03:46.151Z"
   },
   "HB 710": {
    "summary": "The bill would set limits on how much landlords can increase rental amounts for residential properties. It would also make charging rental amounts above these limits an unlawful, unfair, and deceptive trade practice.",
@@ -17490,9 +17718,10 @@
    "source": "claude-code",
    "inputHash": "929c577581dbbf0b",
    "generatedAt": "2026-11-23T13:49:13+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:54:00.935Z"
   },
   "HB 72": {
    "summary": "The bill would provide funding for the operation of state government and its departments, boards, bureaus, commissions, institutions, and other agencies, as well as for the university system, common schools, counties, municipalities, and political subdivisions for the State Fiscal Year beginning July 1, 2025, and ending June 30, 2026.",
@@ -17785,18 +18014,21 @@
    "refined": false
   },
   "HB 74": {
-   "summary": "The bill would correct a reference in the Georgia Lottery for Education Act and apply certain provisions of the Georgia Administrative Procedure Act to bona fide coin-operated amusement machines.",
+   "summary": "This bill changes how the Georgia Administrative Procedure Act applies to the Georgia Lottery Corporation. Rules, licensing, and hearings for licensees under Article 3 of the lottery law, which covers bona fide coin operated amusement machines, would follow that Act. Other lottery rules stay exempt, and hearings under Code Section 50-27-102 would follow the Georgia Arbitration Code. It also corrects a reference.",
    "subjects": [
-    "EDUCATION",
-    "STATE GOVERNMENT"
+    "STATE GOVERNMENT",
+    "COMMERCE AND TRADE",
+    "PROFESSIONS AND BUSINESSES"
    ],
    "confidence": "medium",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "21251dcf046e85d7",
-   "generatedAt": "2026-11-23T05:26:44+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "f7680504eba20542",
+   "generatedAt": "2026-11-23T16:46:27+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:49:17.380Z"
   },
   "HB 740": {
    "summary": "The bill would create standards for first grade readiness and policies for placement and promotion in kindergarten and grades one and two. It also sets a timetable for these policies to be implemented.",
@@ -18081,18 +18313,21 @@
    "refined": false
   },
   "HB 76": {
-   "summary": "This bill would require the Department of Transportation to hold public hearings for local transportation projects that have a significant impact.",
+   "summary": "This bill would require the Georgia Department of Transportation to hold public hearings for \"local transportation projects of significant impact.\" These are road or other transportation projects the department helps with for a county, city, or private group that make major changes, such as new roads, extensions, or a rebuilt major intersection. The hearings would follow rules similar to those for the department's other planning hearings.",
    "subjects": [
     "HIGHWAYS, BRIDGES, AND FERRIES",
-    "PUBLIC UTILITIES AND TRANSPORTATION"
+    "PUBLIC UTILITIES AND TRANSPORTATION",
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "f96266929f3bf8df",
-   "generatedAt": "2026-11-23T05:27:12+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "8ac3bf5c130047e4",
+   "generatedAt": "2026-11-23T16:46:34+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:49:30.006Z"
   },
   "HB 760": {
    "summary": "The bill would change the annual salary of the chairperson and members of the Glynn County Board of Commissioners. It also provides for withholding compensation for certain meeting absences.",
@@ -18265,9 +18500,10 @@
    "source": "claude-code",
    "inputHash": "ec6be8e3fbd4e3e4",
    "generatedAt": "2026-11-23T13:49:22+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:54:04.933Z"
   },
   "HB 772": {
    "summary": "The bill would increase the homestead exemption from city ad valorem taxes for residents of Norcross who own and occupy their residences, and for those who are 62 years old or older and own and occupy their residences.",
@@ -19238,9 +19474,10 @@
    "source": "claude-code",
    "inputHash": "0ed0f320a75c4494",
    "generatedAt": "2026-11-23T13:49:31+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:54:08.696Z"
   },
   "HB 837": {
    "summary": "This bill would allow the Probate Court of Richmond County to charge a technology fee and specify how the money collected can be used. It also outlines what happens to any leftover funds once the fee is no longer collected.",
@@ -19333,9 +19570,10 @@
    "source": "claude-code",
    "inputHash": "86d5624293fc24e1",
    "generatedAt": "2026-11-23T13:49:40+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:54:10.211Z"
   },
   "HB 843": {
    "summary": "The bill would increase the homestead exemption from City of Dalton ad valorem taxes for municipal purposes for residents aged 70 or older. It also revises provisions for grandfathering certain residents and ensures compliance with constitutional requirements.",
@@ -19362,9 +19600,10 @@
    "source": "claude-code",
    "inputHash": "e567bc38b42e3254",
    "generatedAt": "2026-11-23T13:49:50+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:54:12.345Z"
   },
   "HB 845": {
    "summary": "The bill would require the Cherokee County Board of Education to have an internal audit function and establish a position of internal auditor. It also provides for the selection, powers, and duties of the internal auditor and sets a sunset date for the provisions governing the internal auditor.",
@@ -19433,9 +19672,10 @@
    "source": "claude-code",
    "inputHash": "d64c204a5c7b3c15",
    "generatedAt": "2026-11-23T13:49:59+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:54:14.175Z"
   },
   "HB 85": {
    "summary": "This bill would modify the compensation received by superior court judges and revise the method for calculating and setting their salaries.",
@@ -19583,9 +19823,10 @@
    "source": "claude-code",
    "inputHash": "05d1de090ceb4417",
    "generatedAt": "2026-11-23T13:50:12+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:54:18.349Z"
   },
   "HB 86": {
    "summary": "This bill would revise how the salaries of certain state officials are calculated and set, including Justices of the Supreme Court, Judges of the Court of Appeals, the judge of the Georgia State-wide Business Court, and the judge of the Georgia State Tax Court.",
@@ -19625,9 +19866,10 @@
    "source": "claude-code",
    "inputHash": "57db121d1a435249",
    "generatedAt": "2026-11-23T13:50:21+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:54:21.394Z"
   },
   "HB 862": {
    "summary": "The bill sets the salary for the sheriff of Fulton County.",
@@ -21390,16 +21632,23 @@
    "summary": "This bill changes how the City of Barnesville's five city council districts are described, using a new map labeled \"barnesville-p1-2025.\" The districts keep their numbers (1 through 5). Current council members stay in office until their terms end and are treated as serving from the newly described districts. It affects voters and council members in Barnesville.",
    "subjects": [
     "ELECTIONS",
-    "Local / Municipal"
+    "Local / Municipal",
+    "LOCAL GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
    "source": "claude-code",
    "inputHash": "4453df49c36d9375",
    "generatedAt": "2026-11-23T13:50:30+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "aiSubjects": [
+    "ELECTIONS",
+    "Local / Municipal"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:54:31.018Z"
   },
   "HB 983": {
    "summary": "The bill would clarify that prescribed burning for silviculture purposes is exempt from certain burning notice and permit requirements. It also revises requirements for prescribed burning.",
@@ -25709,9 +25958,10 @@
    "source": "claude-code",
    "inputHash": "8cb5c95aa5629ec2",
    "generatedAt": "2026-11-23T13:44:19+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:56:15.304Z"
   },
   "SB 19": {
    "summary": "The bill would require a ten-day waiting period for the purchase or transfer of certain firearms, with some exceptions, and set criminal penalties for violations.",
@@ -26383,9 +26633,10 @@
    "source": "claude-code",
    "inputHash": "f53885fed5e8f8f9",
    "generatedAt": "2026-11-23T13:44:28+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:56:18.629Z"
   },
   "SB 234": {
    "summary": "This bill would provide a homestead exemption from City of Dalton independent school district ad valorem taxes for educational purposes. The exemption amount would be the difference between the current year's assessed value and the adjusted base year's assessed value of a homestead.",
@@ -28059,9 +28310,10 @@
    "source": "claude-code",
    "inputHash": "0798cc1fd6d1ffbb",
    "generatedAt": "2026-11-23T13:50:40+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:56:22.934Z"
   },
   "SB 347": {
    "summary": "The bill would change the way members of the Brunswick and Glynn County Development Authority are appointed, alter the term of their office, and set new qualifications for membership.",
@@ -28079,7 +28331,6 @@
   "SB 348": {
    "summary": "This bill changes how Hancock County's four commissioner districts are described, using a new map named in the bill. The chairperson is still elected by the whole county. Current commissioners stay in office until their terms end, and districts 1 through 4 keep their numbers under the new descriptions. The bill takes effect July 1, 2025.",
    "subjects": [
-    "Local / Municipal",
     "LOCAL GOVERNMENT",
     "ELECTIONS"
    ],
@@ -28088,9 +28339,16 @@
    "source": "claude-code",
    "inputHash": "bfbfbf50a2ec2a5f",
    "generatedAt": "2026-11-23T13:50:49+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "aiSubjects": [
+    "Local / Municipal",
+    "LOCAL GOVERNMENT",
+    "ELECTIONS"
+   ],
+   "humanEdited": true,
+   "reviewedAt": "2026-11-23T16:56:27.053Z"
   },
   "SB 349": {
    "summary": "This bill would allow the governing authority of Hancock County to levy an excise tax as specified in a certain section of the O.C.G.A.",
@@ -28131,9 +28389,10 @@
    "source": "claude-code",
    "inputHash": "b3ae435b6b2c336d",
    "generatedAt": "2026-11-23T13:50:59+00:00",
-   "needsReview": true,
+   "needsReview": false,
    "refined": true,
-   "usedFullText": true
+   "usedFullText": true,
+   "reviewedAt": "2026-11-23T16:56:31.026Z"
   },
   "SB 351": {
    "summary": "The bill would change the salary of the judge and solicitor-general for the State Court of Treutlen in Treutlen County.",
@@ -33307,17 +33566,20 @@
    "refined": false
   },
   "SR 4": {
-   "summary": "The resolution addresses matters related to officials, employees, and committees in the Georgia Senate.",
+   "summary": "This Senate resolution sets how the Senate runs for the 2025-2026 term. It lets the Senate Committee on Administrative Affairs, the Secretary of the Senate, and the President of the Senate hire staff and set their pay within available funds. It also lets senators claim expense, mileage, and travel allowances for official days when the General Assembly is not in session, with limits set by the committee. The Majority and Minority Leaders get extra annual salary of $2,400.",
    "subjects": [
-    "GENERAL ASSEMBLY"
+    "GENERAL ASSEMBLY",
+    "PUBLIC OFFICERS AND EMPLOYEES"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "c0f8425ca7679853",
-   "generatedAt": "2026-11-23T05:50:43+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "ca901a68381524a5",
+   "generatedAt": "2026-11-23T16:46:42+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:48:21.885Z"
   },
   "SR 410": {
    "summary": "This resolution urges the Federal Railroad Administration to deny CSX's request to use a new feature called Trip Optimizer's Zero-to-Zero.",
@@ -33333,17 +33595,21 @@
    "refined": false
   },
   "SR 424": {
-   "summary": "The bill creates a Senate Study Committee to examine franchise fees.",
+   "summary": "This resolution creates a five-member Senate study committee on franchise fees. Franchise fees are what electric utilities pay cities to use public rights of way; the resolution says people in unincorporated areas pay these city fees through their electric bills, and that counties get no similar payment. The committee will study how these fees are assessed and divided, including for large electricity customers in unincorporated areas, and may recommend legislation. It ends December 1, 2025.",
    "subjects": [
-    "LOCAL GOVERNMENT"
+    "LOCAL GOVERNMENT",
+    "PUBLIC UTILITIES AND TRANSPORTATION",
+    "REVENUE AND TAXATION"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "bf9b25d967708f3d",
-   "generatedAt": "2026-11-23T05:50:45+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "caf0e3d0e6f03951",
+   "generatedAt": "2026-11-23T16:46:49+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:48:37.785Z"
   },
   "SR 427": {
    "summary": "This resolution creates a Senate Study Committee to examine intoxicating cannabinoids in consumable hemp products.",
@@ -33940,18 +34206,21 @@
    "refined": false
   },
   "SR 890": {
-   "summary": "This resolution creates a Senate Study Committee to examine issues related to protecting free and fair markets in Georgia.",
+   "summary": "This resolution creates the Senate Study Committee on Protecting Free and Fair Markets in Georgia, made up of five senators appointed by the President of the Senate. The committee will study Georgia's antitrust laws and enforcement, how concentrated economic power affects housing, technology, agriculture, healthcare, and retail, and how other states handle antitrust and merger review. It will also look at possible changes to protect consumers and small businesses. The committee ends December 1, 2026.",
    "subjects": [
     "COMMERCE AND TRADE",
+    "GENERAL ASSEMBLY",
     "STATE GOVERNMENT"
    ],
    "confidence": "high",
    "session": "2025_26",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "ff71670ea4db1875",
-   "generatedAt": "2026-11-23T05:51:36+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "be76a08888d09031",
+   "generatedAt": "2026-11-23T16:46:56+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:48:49.756Z"
   },
   "SR 907": {
    "summary": "The resolution urges the Department of Insurance and the Department of Community Health to meet with stakeholders to explore best practices in the medical surveillance of patients after primary therapy for breast cancer and to provide recommendations.",
@@ -35603,17 +35872,19 @@
    "refined": false
   },
   "SR 3EX": {
-   "summary": "The resolution addresses meetings and adjournments of the Georgia General Assembly.",
+   "summary": "This Senate resolution sets the meeting schedule for the 2026 special session of the General Assembly from June 17 to June 22, 2026. It lists Special Session Days 1 through 4 on June 17, 18, 20 and 22, with no meetings on June 19 and 21. After June 22, adjournments follow later resolutions, and the General Assembly stays adjourned on Saturdays and Sundays unless another resolution says otherwise. It also lets the House Speaker and Senate President jointly move meetings during an emergency or disaster.",
    "subjects": [
     "GENERAL ASSEMBLY"
    ],
-   "confidence": "medium",
+   "confidence": "high",
    "session": "2026_ss",
-   "source": "ollama:qwen2.5:14b",
-   "inputHash": "0703b5398dd1506f",
-   "generatedAt": "2026-11-23T05:54:27+00:00",
-   "needsReview": true,
-   "refined": false
+   "source": "claude-code",
+   "inputHash": "1b5c7827e7f3abd1",
+   "generatedAt": "2026-11-23T16:47:05+00:00",
+   "refined": true,
+   "usedFullText": true,
+   "needsReview": false,
+   "reviewedAt": "2026-11-23T16:48:57.657Z"
   },
   "SR 4EX": {
    "summary": "This resolution proposes to amend the Georgia Constitution to specify that only U.S. citizens have the right to vote in Georgia elections.",
