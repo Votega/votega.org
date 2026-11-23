@@ -14,6 +14,8 @@ Rules:
     only if the entry is in that status. If the entry is already in the status the
     revise moves it to, the line is a replay and does nothing; any other mismatch is
     reported, never applied. A revise may reopen an entry (`status: pending`).
+  * A revise is also the only way to take an aka off (`removeAka`): an aka is a claim
+    about identity, and removing a wrong one removes the items it pulled in.
   * Applying is idempotent: replaying the same log yields the same queue.
   * An `aka` (another name for the same organization, e.g. a dba) is recorded only
     when the agenda item text itself states it, and only with a note saying where.
@@ -80,9 +82,14 @@ def _revise(entry, d, label, applied, skipped):
         entry["displayName"] = name
     if role:
         entry["role"] = role
-    if akas:
-        have = list(entry.get("aka") or [])
-        entry["aka"] = have + [a for a in akas if a not in have]
+    drop = [a.strip() for a in d.get("removeAka") or [] if isinstance(a, str) and a.strip()]
+    if akas or drop:
+        have = [a for a in (entry.get("aka") or []) if a not in drop]
+        have += [a for a in akas if a not in have]
+        if have:
+            entry["aka"] = have
+        else:
+            entry.pop("aka", None)
     if target is not None:
         entry["status"] = target
     entry["reviewNote"] = note

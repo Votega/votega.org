@@ -159,6 +159,26 @@ q, a, s = run([{"key": "scs", "action": "revise", "from": "approved", "aka": ["S
               {"scs": dict(scs()["scs"], status="approved")})
 check(q["scs"]["aka"] == ["SCS Engineers"] and q["scs"]["status"] == "approved", "a revise can add a stated aka to an approved entry")
 
+print("revise removes a wrong aka")
+def with_aka(*akas):
+    e = scs()["scs"]; e["status"] = "approved"; e["aka"] = list(akas)
+    return {"scs": e}
+q, a, s = run([{"key": "scs", "action": "revise", "from": "approved", "removeAka": ["SCS Engineers"], "note": "c/o, not a dba"}],
+              with_aka("SCS Engineers", "Other"))
+check(q["scs"]["aka"] == ["Other"] and q["scs"]["status"] == "approved", "removeAka drops only the named aka")
+q, a, s = run([{"key": "scs", "action": "revise", "from": "approved", "removeAka": ["SCS Engineers"], "note": "c/o"}],
+              with_aka("SCS Engineers"))
+check("aka" not in q["scs"], "removing the last aka removes the field")
+q, a, s = run([{"key": "scs", "action": "revise", "from": "approved", "removeAka": ["Nope"], "note": "x"}], with_aka("SCS Engineers"))
+check(q["scs"]["aka"] == ["SCS Engineers"], "removing an aka that is not there changes nothing")
+q, a, s = run([{"key": "scs", "action": "revise", "from": "approved", "removeAka": ["SCS Engineers"]}], with_aka("SCS Engineers"))
+check(q["scs"]["aka"] == ["SCS Engineers"] and len(s) == 1, "removing an aka needs a note")
+log = [{"key": "scs", "action": "revise", "from": "approved", "removeAka": ["SCS Engineers"], "note": "c/o"}]
+q1, _, _ = run(log, with_aka("SCS Engineers"))
+q2 = copy.deepcopy(q1)
+apply_decisions(q2, log, G.entity_id, G.normalize)
+check(q1 == q2, "replaying a removal is a no-op")
+
 print()
 if failures:
     print("%d FAILED" % len(failures))

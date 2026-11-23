@@ -121,6 +121,17 @@ function flagsFor(e) {
   return out;
 }
 
+function akaContext(text, aka) {
+  const t = (text || '').toLowerCase().split(/\s+/).join(' ');
+  const a = (aka || '').toLowerCase().split(/\s+/).join(' ');
+  const i = t.indexOf(a);
+  if (i < 0) return null;
+  const before = t.slice(Math.max(0, i - 28), i);
+  if (/(c\/o|care of|attorney|represented by|agent)[^a-z0-9]*$/.test(before)) return 'a representative (c/o), not another name for the organization';
+  if (/(affiliate of|affiliate|subsidiary of|parent|a [a-z]+ company)[^a-z0-9]*$/.test(before) || /^[^a-z0-9]*(company|affiliate)/.test(t.slice(i + a.length, i + a.length + 12))) return 'an affiliate relationship, not another name';
+  return null;
+}
+
 function akaCandidates(text) {
   const out = [], re = /\b(?:dba|d\/b\/a|a\/k\/a|aka|doing business as|formerly)\s+([A-Z0-9][\w&'.\-]*(?:\s+[A-Z0-9][\w&'.\-]*){0,5}?(?:\s+(?:L\.?L\.?C\.?|Inc\.?|Corp\.?|Co\.?|L\.?P\.?|P\.?C\.?))?)(?=\s*(?:[,;.]|\s(?:and|for|to|c\/o|dba)\b|$))/g;
   let m; while ((m = re.exec(text))) { const v = m[1].replace(/[.,]+$/, '').trim(); if (v && !out.includes(v)) out.push(v); }
@@ -221,7 +232,20 @@ function renderDetail() {
   }
   card.append(el('div', { style: 'margin-top:0.6rem' }, el('label', { text: 'Also known as (aka / dba): only names the agenda text states' }), akaIn, sug,
     el('div', { class: 'hint', text: 'Adding one requires a note. No aka means the display name is the name.' })));
-  const noteIn = el('input', { id: 'f-note', type: 'text', placeholder: 'Note (required to reject, split, or add an aka)' });
+  const have = e.aka || [];
+  if (have.length) {
+    const box = el('div', { style: 'margin-top:0.6rem' }, el('label', { text: 'Current akas (tick to remove; removing is a revision and needs a note)' }));
+    have.forEach(a => {
+      const cb = el('input', { type: 'checkbox', class: 'aka-rm', value: a });
+      cb.style.cssText = 'width:auto;margin-right:6px';
+      const warn = akaContext(e.itemName || '', a);
+      const row = el('label', { style: 'display:block;text-transform:none;font-size:13px;color:#222;letter-spacing:0' }, cb, a);
+      if (warn) row.append(el('span', { style: 'color:#92400e;margin-left:8px;font-size:12px', text: 'Looks like ' + warn + '.' }));
+      box.append(row);
+    });
+    card.append(box);
+  }
+  const noteIn = el('input', { id: 'f-note', type: 'text', placeholder: 'Note (required to reject, split, or add or remove an aka)' });
   card.append(el('div', { style: 'margin-top:0.6rem' }, el('label', { text: 'Note' }), noteIn));
 
   const parts = el('div', { class: 'parts', id: 'parts' });
@@ -276,11 +300,18 @@ async function decide(action, reviseTo) {
     const text = (e.itemName || '').toLowerCase().split(/\s+/).join(' ');
     const missing = akas.filter(a => !text.includes(a.toLowerCase().split(/\s+/).join(' ')));
     if (missing.length) { setMsg('Not in the agenda text, so not recorded: ' + missing.join('; '), true); return; }
+    const bad = akas.map(a => [a, akaContext(e.itemName || '', a)]).filter(x => x[1]);
+    if (bad.length) { setMsg(bad[0][0] + ' appears in the text as ' + bad[0][1] + '. Add it as its own organization instead.', true); return; }
     d.aka = akas;
+  }
+  const rm = [...document.querySelectorAll('.aka-rm:checked')].map(x => x.value);
+  if (rm.length) {
+    if (action !== 'revise') { setMsg('Removing an aka is a revision: use the buttons on a decided entry.', true); return; }
+    d.removeAka = rm;
   }
   if (action === 'revise') {
     if (!note) { setMsg('A revision needs a note saying why.', true); return; }
-    if (!d.status && !d.displayName && !d.role && !d.aka) { setMsg('Nothing changed.', true); return; }
+    if (!d.status && !d.displayName && !d.role && !d.aka && !d.removeAka) { setMsg('Nothing changed.', true); return; }
   }
   if ((action === 'reject' || action === 'split') && !note) { setMsg('Add a note saying why.', true); return; }
   if (action === 'edit' && !d.displayName && !d.role && !d.aka) { setMsg('Nothing changed.', true); return; }

@@ -102,6 +102,53 @@ def normalize(name):
     return re.sub(r"\s+", " ", s).strip()
 
 
+def match_form(name):
+    """normalize() for matching item text, with runs of single letters joined, so the
+    initials in "Home Depot U.S.A." and "Home Depot USA" (or "D.H. Pace" and "DH Pace")
+    compare equal. Padded with spaces so a match must start and end on a word."""
+    out, run = [], []
+    for tok in normalize(name).split():
+        if len(tok) == 1 and tok.isalpha():
+            run.append(tok)
+            continue
+        if run:
+            out.append("".join(run))
+            run = []
+        out.append(tok)
+    if run:
+        out.append("".join(run))
+    return " " + " ".join(out) + " "
+
+
+def _collapse_initials(tokens):
+    out, run = [], []
+    for tok in tokens:
+        if len(tok) == 1 and tok.isalpha():
+            run.append(tok)
+            continue
+        if run:
+            out.append("".join(run))
+            run = []
+        out.append(tok)
+    if run:
+        out.append("".join(run))
+    return out
+
+
+def match_needle(name):
+    """The padded form of a name to look for in item text. A name that is a single word
+    once its corporate suffix is stripped ("Via, Inc." -> "via") is also an ordinary
+    English word, so for those the suffix is kept ("via inc") and "Grant, via the
+    Council" cannot match it."""
+    stripped = _collapse_initials(normalize(name).split())
+    if len(stripped) >= 2:
+        toks = stripped
+    else:
+        raw = re.sub(r"[^a-z0-9& ]", " ", name.lower().replace("&", " and "))
+        toks = _collapse_initials(raw.split())
+    return " " + " ".join(toks) + " " if toks else ""
+
+
 def entity_id(norm):
     return re.sub(r"\s+", "-", norm)
 
@@ -334,7 +381,8 @@ def main():
         akas = list(entry.get("aka") or [])
         if key in grouped and not akas:
             continue
-        norms = [n for n in (normalize(x) for x in [entry.get("displayName") or ""] + akas) if n]
+        norms = [n for n in (match_needle(x) for x in [entry.get("displayName") or ""] + akas)
+                 if n.strip()]
         if not norms:
             continue
         hits = []
@@ -342,7 +390,7 @@ def main():
             if meeting.get("body") not in ELECTED_BODIES:
                 continue
             for item in meeting.get("items") or []:
-                text = normalize(item.get("name") or "")
+                text = match_form(item.get("name") or "")
                 if any(n in text for n in norms):
                     hits.append({
                         "meetingId": str(meeting.get("id")),
