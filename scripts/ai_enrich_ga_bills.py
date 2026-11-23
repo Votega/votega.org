@@ -293,7 +293,10 @@ def claude(prompt):
 def cmd_refine(args):
     bills = {b["identifier"]: b for b in load_json(BILLS_FILE)["bills"] if b.get("identifier")}
     allowed = taxonomy(bills.values())
-    curated = {e["identifier"] for e in (load_json(CURATED_FILE) or {}).get("ga", [])}
+    # Match curated entries on session too: bill numbers restart each biennium, so a
+    # 2023_24 curated "SB 189" is not the 2025_26 SB 189 in ga-bills.json.
+    curated = {e["identifier"] for e in (load_json(CURATED_FILE) or {}).get("ga", [])
+               if e["identifier"] in bills and bills[e["identifier"]].get("session") == e.get("session")}
     out = load_out()
     if args.only:
         targets = args.only
