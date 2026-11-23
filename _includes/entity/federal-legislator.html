@@ -90,6 +90,11 @@
     font-size: 0.9rem;
     line-height: 1.5;
   }
+  .running-badge.departing {
+    background: var(--color-warning-tint);
+    border-color: var(--color-warning-line);
+    color: inherit;
+  }
   .running-badge.reelection {
     background: var(--color-success-tint);
     border-color: var(--color-success);
@@ -416,6 +421,7 @@
 <link rel="stylesheet" href="{{ '/assets/css/votes-table.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 <script src="{{ '/assets/scripts/votega-votes-table.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/departure-label.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/entity-news.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
@@ -467,6 +473,10 @@
         fetch(DATA_URL),
         FROZEN_CONGRESS ? Promise.resolve({ ok: false }) : fetch(RACES_URL)
       ]);
+      // Lame-duck label (D6/D12): only a sitting member's live page asks for it. Non-fatal.
+      const labelsPromise = (!FROZEN_CONGRESS && !FORMER && window.VotegaDeparture)
+        ? fetch(dataUrl('federal-departure-labels.json')).then(r => r.ok ? r.json() : null).catch(() => null)
+        : Promise.resolve(null);
       if (!membersRes.ok) throw new Error(`HTTP ${membersRes.status}`);
 
       const data = await membersRes.json();
@@ -505,7 +515,13 @@
       }
 
       if (window.VotegaPortraits) await VotegaPortraits.load(getBasePath());
-      displayMemberDetails(member, electionInfo, seatRace);
+      const labelsDoc = await labelsPromise;
+      const lameDuck = labelsDoc
+        ? VotegaDeparture.lameDuckLabel(labelsDoc, member.bioguideId,
+            { live: !FROZEN_CONGRESS, former: !!FORMER, session: null, now: new Date() })
+        : null;
+      displayMemberDetails(member, lameDuck ? null : electionInfo, lameDuck ? null : seatRace,
+                           lameDuck, lameDuck ? labelsDoc.metadata.termEnds : null);
       displaySidebar(member, allMembers);
       // Neither Sponsored Legislation nor Voting History is loaded eagerly. The
       // sponsorship slice can run to six figures of bytes for a heavy cosponsor
@@ -1847,7 +1863,7 @@
     return '';
   }
 
-  function displayMemberDetails(member, electionInfo, seatRace) {
+  function displayMemberDetails(member, electionInfo, seatRace, lameDuck, termEnds) {
     const detailsDiv = document.getElementById('memberDetails');
 
     const honorific = member.honorificName || '';
@@ -1929,7 +1945,14 @@
 
     // Running for office badge
     let runningBadgeHtml = '';
-    if (electionInfo) {
+    if (lameDuck) {
+      // Replaces the election badge for a member leaving at the Jan 3 turnover (D6, 11-23).
+      runningBadgeHtml = `
+        <div class="running-badge departing">
+          <strong>${escHtml(lameDuck.label)}</strong>
+          Their current term ends ${escHtml(VotegaDeparture.longDate(termEnds))}.
+        </div>`;
+    } else if (electionInfo) {
       const race = electionInfo.race;
       const distLabel = race.district ? ` District ${race.district}` : '';
       const raceLabel = escHtml(`${race.chamber}${distLabel}`);
