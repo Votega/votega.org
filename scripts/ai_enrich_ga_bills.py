@@ -20,7 +20,7 @@ Output: assets/data/ga-bill-ai.json  (separate file — no workflow ever overwri
 
 Usage:
   python scripts/ai_enrich_ga_bills.py draft  [--limit 50] [--session 2026_ss] [--model qwen2.5:14b]
-  python scripts/ai_enrich_ga_bills.py refine [--limit 10] [--only "SB 443"]
+  python scripts/ai_enrich_ga_bills.py refine [--limit 10] [--only "SB 443"] [--redo-only]
   python scripts/ai_enrich_ga_bills.py status
   python scripts/ai_enrich_ga_bills.py apply-reviews
   python scripts/ai_enrich_ga_bills.py publish
@@ -443,13 +443,18 @@ def cmd_refine(args):
     curated = {e["identifier"] for e in (load_json(CURATED_FILE) or {}).get("ga", [])
                if e["identifier"] in bills and bills[e["identifier"]].get("session") == e.get("session")}
     out = load_out()
-    if args.only:
+    sent_back = [k for k, v in out["bills"].items() if v.get("redo")]
+    if args.only:  # exactly the bills named
         targets = args.only
+    elif args.redo_only:  # only what a reviewer sent back
+        targets = sent_back
     else:  # bills a reviewer sent back, then key bills, then low-confidence drafts
-        sent_back = [k for k, v in out["bills"].items() if v.get("redo")]
         flagged = [k for k, v in out["bills"].items() if v.get("confidence") == "low" and not v.get("refined")]
         targets = sent_back + [k for k in curated if not out["bills"].get(k, {}).get("refined")] + flagged
-    targets = [t for t in dict.fromkeys(targets) if t in bills][: args.limit]
+    # --only and --redo-only do every bill they select unless --limit says otherwise;
+    # the open-ended default stays capped at 10 because each bill uses plan usage.
+    limit = args.limit if args.limit is not None else (None if (args.only or args.redo_only) else 10)
+    targets = [t for t in dict.fromkeys(targets) if t in bills][:limit]
     print(f"Refining {len(targets)} bill(s) with Claude Code (uses your plan's usage)…")
     for ident in targets:
         b = bills[ident]
@@ -543,7 +548,10 @@ def main():
     d.add_argument("--untagged-first", action="store_true", help="do bills with no subjects before tagged ones")
     d.add_argument("--include-ceremonial", action="store_true",
                    help="also draft honorary resolutions (commend/condolences/recognize), skipped by default")
-    r = sub.add_parser("refine"); r.add_argument("--limit", type=int, default=10); r.add_argument("--only", nargs="+")
+    r = sub.add_parser("refine"); r.add_argument("--limit", type=int, help="max bills (default 10; with --only or --redo-only, all of them)")
+    r.add_argument("--only", nargs="+")
+    r.add_argument("--redo-only", action="store_true",
+                   help="refine only bills sent back in the review tool (after apply-reviews)")
     sub.add_parser("status")
     sub.add_parser("publish")
     sub.add_parser("apply-reviews")
