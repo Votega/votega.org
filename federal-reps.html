@@ -6,6 +6,9 @@ share-description: "Georgia's delegation to the U.S. Congress - both U.S. senato
 ---
 
 <h1>Federal Elected Officials</h1>
+{%- if site.data.former_congress.groups and site.data.former_congress.groups.size > 0 %}
+<p class="former-jump">Looking for someone who has left Congress? See <a href="#former">former members from Georgia</a>.</p>
+{%- endif %}
 
 Georgia is represented in Congress by 2 U.S. Senators and 14 U.S. Representatives. Senators serve six-year terms and represent the entire state. Representatives serve two-year terms and represent individual congressional districts.
 
@@ -153,6 +156,36 @@ Select a Chamber (House or Senate), search your address, ZIP code, or select a c
 <div id="membersOutput"></div>
 
 <p id="dataStamp" class="data-stamp"></p>
+
+{%- comment -%}
+  Former members: the human path to their pages (the footer directory is the crawl path).
+  _data/former_congress.json is a build artifact of scripts/build_entity_pages.py, one row per
+  built former-member page; absent until the 120th is seated, then the section is omitted.
+{%- endcomment -%}
+{%- assign former_groups = site.data.former_congress.groups -%}
+{%- if former_groups and former_groups.size > 0 %}
+<style>
+  .former-members { margin-top: 2.5rem; border-top: 1px solid var(--color-border); padding-top: 1.25rem; }
+  .former-members h3 { font-size: 1.05rem; margin: 1rem 0 0.5rem; }
+  .former-intro { color: var(--color-text-secondary); }
+  .former-list { list-style: none; padding: 0; margin: 0; }
+  .former-list li { padding: 0.35rem 0; border-bottom: 1px solid var(--color-border); }
+  .former-meta { display: block; font-size: 0.85rem; color: var(--color-text-secondary); }
+</style>
+<section class="former-members" id="former" aria-labelledby="formerHeading">
+  <h2 id="formerHeading">Former members from Georgia</h2>
+  <p class="former-intro">Members of Georgia&rsquo;s delegation who have left Congress keep their pages, with their voting record and sponsored bills from the years they served.</p>
+  {%- for group in former_groups %}
+  <h3>{{ group.congress }} Congress</h3>
+  <ul class="former-list">
+    {%- for m in group.members %}
+    <li><a href="{{ m.url | relative_url }}">{{ m.name }}</a>
+      <span class="former-meta">{% if m.chamber == "Senate" %}U.S. Senate{% else %}U.S. House District {{ m.district }}{% endif %}{% if m.party %} &middot; {{ m.party }}{% endif %}{% if m.left %} &middot; {{ m.left }}{% endif %}</span></li>
+    {%- endfor %}
+  </ul>
+  {%- endfor %}
+</section>
+{%- endif %}
 
 
 <!-- ga-districts.js supplies the full GA seat list so vacant districts still render -->
