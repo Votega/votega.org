@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-24T07:36:50.108803+00:00",
+    "generatedAt": "2026-11-24T19:49:04.931968+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -28,21 +28,24 @@
     "windowDays": 45,
     "entityTagged": 80,
     "topicCounts": {
-      "elections": 50,
-      "education": 10,
+      "courts": 8,
+      "ethics": 4,
+      "budget": 8,
+      "elections": 47,
+      "education": 8,
       "healthcare": 17,
-      "courts": 7,
-      "budget": 7,
-      "ethics": 3,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
-    "vg-ga-p-000263": {
-      "name": "Raphael G. Warnock",
+    "vg-ga-p-000253": {
+      "name": "Mike Collins",
       "url": null,
-      "bioguideId": "W000790"
+      "bioguideId": "C001129",
+      "candidateIds": [
+        "challenger-mike-collins-senate-2026"
+      ]
     },
     "vg-ga-p-000264": {
       "name": "Jon Ossoff",
@@ -56,6 +59,11 @@
       "candidateIds": [
         "challenger-chris-carr-gov-2026"
       ]
+    },
+    "vg-ga-p-000263": {
+      "name": "Raphael G. Warnock",
+      "url": null,
+      "bioguideId": "W000790"
     },
     "vg-ga-p-000335": {
       "name": "Keisha Lance Bottoms",
@@ -147,14 +155,6 @@
       "name": "Peter Hubbard",
       "url": null
     },
-    "vg-ga-p-000253": {
-      "name": "Mike Collins",
-      "url": null,
-      "bioguideId": "C001129",
-      "candidateIds": [
-        "challenger-mike-collins-senate-2026"
-      ]
-    },
     "vg-ga-p-000368": {
       "name": "Rick Jackson",
       "url": null,
@@ -166,6 +166,104 @@
   "mergedEntities": {},
   "items": [
     {
+      "id": "964b9a821374",
+      "title": "Georgia immigrants file lawsuit challenging DHS re-detention policy",
+      "url": "https://georgiarecorder.com/2026/11/24/georgia-immigrants-file-lawsuit-challenging-dhs-re-detention-policy/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-24T18:41:10+00:00",
+      "snippet": "Two Georgia men are at the center of a lawsuit filed by the ACLU seeking to halt a new federal policy that allows immigrants who have previously been released by U.S. Immigration and Customs Enforceme",
+      "entityIds": [],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
+      "id": "dd99ddb3f7da",
+      "title": "Collins agrees to pay $2,880 after ethics probe concludes his office improperly paid intern",
+      "url": "https://georgiarecorder.com/2026/11/24/collins-agrees-to-pay-2880-after-ethics-probe-concludes-his-office-improperly-paid-intern/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-24T18:13:48+00:00",
+      "snippet": "Republican Congressman Mike Collins’ office broke House rules in paying more than $10,000 to an intern who was romantically involved with Collins’ then-chief of staff, according to a U.S. House Ethics",
+      "entityIds": [
+        "vg-ga-p-000253"
+      ],
+      "topics": [
+        "ethics"
+      ]
+    },
+    {
+      "id": "9af6ae28c890",
+      "title": "Sen. Ossoff Cosponsoring Bipartisan Legislation to Expand Cancer Screenings for Women Across Georgia",
+      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-cosponsoring-bipartisan-legislation-to-expand-cancer-screenings-for-women-across-georgia/",
+      "source": "Sen. Jon Ossoff (press)",
+      "publishedAt": "2026-11-24T15:23:17+00:00",
+      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is working across the aisle to expand cancer screenings for women across Georgia. Sen. Ossoff recently cosponsored the bipartisan Screening for Communities t",
+      "entityIds": [
+        "vg-ga-p-000264"
+      ],
+      "topics": []
+    },
+    {
+      "id": "e8e8e72e13c4",
+      "title": "Nearly 25% of Georgians are unpaid caregivers; federal law could provide tax credit",
+      "url": "https://www.gpb.org/news/2026/11/24/nearly-25-of-georgians-are-unpaid-caregivers-federal-law-could-provide-tax-credit",
+      "source": "GPB News",
+      "publishedAt": "2026-11-24T15:13:00+00:00",
+      "snippet": "New data from the AARP suggests about a quarter of adults in Georgia are family caregivers, providing largely unpaid and unsupported care to older parents, spouses and other loved ones.",
+      "entityIds": [],
+      "topics": [
+        "budget"
+      ]
+    },
+    {
+      "id": "c8a6b3faaccd",
+      "title": "GPB morning headlines for November 24, 2026",
+      "url": "https://www.gpb.org/news/2026/11/24/gpb-morning-headlines-for-november-24-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-24T13:40:49+00:00",
+      "snippet": "Early voting started Monday for a special election in Southwest Georgia that could influence the final balance of power in the state House; New data from the AARP suggests about a quarter of adults in",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "b97ed1acb5a4",
+      "title": "Carr Joins Multistate Suit Against Dollar General for Deceptive Product Advertising",
+      "url": "https://law.georgia.gov/press-releases/2026-11-24/carr-joins-multistate-suit-against-dollar-general-deceptive-product",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-24T12:00:00+00:00",
+      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr has joined the Federal Trade Commission (FTC) and 29 states in filing a lawsuit against Dollar General Corporation (Dollar General) for engaging in lo",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
+      "id": "7323486a10ee",
+      "title": "Once seen as long shots, these Democrats in historically red districts helped turn Georgia blue",
+      "url": "https://georgiarecorder.com/2026/11/24/once-seen-as-long-shots-these-democrats-in-historically-red-districts-helped-turn-georgia-blue/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-24T09:00:47+00:00",
+      "snippet": "One grassroots political action committee played an outsized role in establishing a Democratic majority in the Georgia House of Representatives for the first time in more than 20 years. The Fighting F",
+      "entityIds": [],
+      "topics": []
+    },
+    {
+      "id": "dcd7bf8b0cf7",
+      "title": "Board of Regents Names Dr. Timothy C. Lieuwen President of Georgia Tech",
+      "url": "https://www.usg.edu/news/release/board-of-regents-names-lieuwen-gt-president-2026/",
+      "source": "University System of Georgia",
+      "publishedAt": "2026-11-24T00:00:00+00:00",
+      "snippet": "The Board of Regents of the University System of Georgia named Dr. Timothy C. Lieuwen president of the Georgia Institute of Technology, effective Nov. 25, 2026.",
+      "entityIds": [],
+      "topics": [
+        "education"
+      ]
+    },
+    {
       "id": "9ab206b321de",
       "title": "Discursive Verses: Can a trap revivalist resolve Atlanta street rap's authenticity crisis?",
       "url": "https://www.gpb.org/news/2026/11/23/discursive-verses-can-trap-revivalist-resolve-atlanta-street-raps-authenticity",
@@ -174,54 +272,6 @@
       "snippet": "NPR Music culture critic and reporter Rodney Carmichael ruminates on the latest in rap culture. This week: Belly Gang Kushington epitomizes an ongoing battle in the city's local scene.",
       "entityIds": [],
       "topics": []
-    },
-    {
-      "id": "38a26dca4884",
-      "title": "Voters head to the polls in Southwest Georgia for state House runoff",
-      "url": "https://www.gpb.org/news/2026/11/23/voters-head-the-polls-in-southwest-georgia-for-state-house-runoff",
-      "source": "GPB News",
-      "publishedAt": "2026-11-23T20:28:00+00:00",
-      "snippet": "Early voting started Monday for a special election in Southwest Georgia that could influence the final balance of power in the state House.",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "5f3e5852d58c",
-      "title": "GPB evening headlines for November 23, 2026",
-      "url": "https://www.gpb.org/news/2026/11/23/gpb-evening-headlines-for-november-23-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-23T20:25:21+00:00",
-      "snippet": "Delays continued for Delta Air Lines today after the Atlanta-based company reported a problem with an automation system.\nEarly voting has started in a runoff election in southwest Georgia that could i",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "236c1e67c0c2",
-      "title": "Georgia Today: SPLC hunger study; Delta delays; FIFA Women's World Cup",
-      "url": "https://www.gpb.org/news/2026/11/23/georgia-today-splc-hunger-study-delta-delays-fifa-womens-world-cup",
-      "source": "GPB News",
-      "publishedAt": "2026-11-23T19:51:01+00:00",
-      "snippet": "On today's Nov. 23 edition: Delta Air Lines experienced flight delays earlier today; early voting for a special election in southwest Georgia started today; and a fire ant study has found a 'super gen",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "6bb845aec6e1",
-      "title": "Queen of the hill: Ants' genes may determine who gets to rule, according to new research",
-      "url": "https://www.gpb.org/news/2026/11/23/queen-of-the-hill-ants-genes-may-determine-who-gets-rule-according-new-research",
-      "source": "GPB News",
-      "publishedAt": "2026-11-23T17:16:00+00:00",
-      "snippet": "New research from the University of Georgia suggests that so-called \"supergenes\" select which fire ants become the queens of their colonies.",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
     },
     {
       "id": "c34456e98f51",
@@ -237,16 +287,16 @@
       "topics": []
     },
     {
-      "id": "ea9870ab4c11",
-      "title": "After 15 years at No.1 for business, Georgia aims to be tops in workforce talent",
-      "url": "https://www.gpb.org/news/2026/11/23/after-15-years-at-no1-for-business-georgia-aims-be-tops-in-workforce-talent",
-      "source": "GPB News",
-      "publishedAt": "2026-11-23T15:58:00+00:00",
-      "snippet": "The new Office of Education and Workforce Strategy connects students and industry with strategic data and collaboration.",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
+      "id": "04b7eb4bd38f",
+      "title": "UPDATE: Carr’s Gang Prosecution Unit Secures Life Sentence for Athens Murder",
+      "url": "https://law.georgia.gov/press-releases/2026-11-23/update-carrs-gang-prosecution-unit-secures-life-sentence-athens-murder",
+      "source": "Attorney General Chris Carr (press)",
+      "publishedAt": "2026-11-23T12:00:00+00:00",
+      "snippet": "ATHENS, GA – Georgia Attorney General Chris Carr today announced that Keanthony Sorrells, 17, has been sentenced to life in prison with the possibility of parole, plus 90 years, for his involvement in",
+      "entityIds": [
+        "vg-ga-p-000039"
+      ],
+      "topics": []
     },
     {
       "id": "75dc4795f733",
@@ -436,11 +486,10 @@
       "url": "https://www.usg.edu/news/release/board-of-regents-elects-new-chair-vice-chair-2027/",
       "source": "University System of Georgia",
       "publishedAt": "2026-11-20T00:00:00+00:00",
-      "snippet": "The Board of Regents of the University System of Georgia has elected current Vice Chair Deep J. Shah to a one-year term as the Board’s new chair and Regent Mat Swift to a one-year term as the Board’s ",
+      "snippet": null,
       "entityIds": [],
       "topics": [
-        "elections",
-        "education"
+        "elections"
       ]
     },
     {
@@ -1120,18 +1169,6 @@
       "topics": []
     },
     {
-      "id": "2208db059f80",
-      "title": "Sen. Ossoff Cosponsoring Bipartisan Legislation to Protect Georgia Veterans from Addiction",
-      "url": "https://www.ossoff.senate.gov/press-releases/sen-ossoff-cosponsoring-bipartisan-legislation-to-protect-georgia-veterans-from-addiction/",
-      "source": "Sen. Jon Ossoff (press)",
-      "publishedAt": "2026-11-10T16:22:16+00:00",
-      "snippet": "Washington, D.C. — U.S. Senator Jon Ossoff is supporting bipartisan legislation to protect Georgia veterans from opioid addiction. Sen. Ossoff cosponsored the NOPAIN for Veterans Act to expand access ",
-      "entityIds": [
-        "vg-ga-p-000264"
-      ],
-      "topics": []
-    },
-    {
       "id": "3aeff8d85289",
       "title": "Attorneys General Jeff Jackson and Chris Carr Announce North Carolina and Georgia Will Lead National Medicaid Fraud Control Association",
       "url": "https://law.georgia.gov/press-releases/2026-11-10/attorneys-general-jeff-jackson-and-chris-carr-announce-north-carolina-and",
@@ -1179,20 +1216,6 @@
       ],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "6b7c34c67a79",
-      "title": "Carr Secures Court Order Terminating All Georgia Contracts with Home Saver 911",
-      "url": "https://law.georgia.gov/press-releases/2026-11-09/carr-secures-court-order-terminating-all-georgia-contracts-home-saver-911",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-11-09T12:00:00+00:00",
-      "snippet": "ATLANTA, GA – Georgia Attorney General Chris Carr has secured a court order that provides critical relief to more than 70 Georgia homeowners who were tricked into transferring ownership of their homes",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": [
-        "courts"
       ]
     },
     {
@@ -1246,18 +1269,6 @@
       "topics": [
         "courts"
       ]
-    },
-    {
-      "id": "b5c318b9aaba",
-      "title": "Carr’s Gang Prosecution Unit Secures New Murder Conviction in Athens",
-      "url": "https://law.georgia.gov/press-releases/2026-11-06/carrs-gang-prosecution-unit-secures-new-murder-conviction-athens",
-      "source": "Attorney General Chris Carr (press)",
-      "publishedAt": "2026-11-06T12:00:00+00:00",
-      "snippet": "ATHENS, GA – Georgia Attorney General Chris Carr today announced that his Gang Prosecution Unit has secured the conviction of Keanthony Sorrells, 17, in connection with the May 27, 2024, fatal shootin",
-      "entityIds": [
-        "vg-ga-p-000039"
-      ],
-      "topics": []
     },
     {
       "id": "b4d83b4377a4",
@@ -1735,20 +1746,6 @@
         "vg-ga-p-000024"
       ],
       "topics": []
-    },
-    {
-      "id": "8e227f6f9151",
-      "title": "Jackson will skip this weekend’s Trump rally in Perry",
-      "url": "https://georgiarecorder.com/2026/10/19/jackson-will-skip-this-weekends-trump-rally-in-macon/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-19T22:53:23+00:00",
-      "snippet": "Republican candidate for governor Rick Jackson will skip President Donald Trump’s upcoming rally in middle Georgia this weekend, opting instead to campaign in suburban Atlanta as as the race, which po",
-      "entityIds": [
-        "vg-ga-p-000368"
-      ],
-      "topics": [
-        "elections"
-      ]
     },
     {
       "id": "54cff17a8704",
