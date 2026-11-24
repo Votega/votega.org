@@ -212,6 +212,22 @@ def test_slug_collision_with_a_sitting_member_fails_loudly():
     check("collision raises", bool(err) and "L000002" in err, True)
 
 
+def test_former_list_data_for_federal_reps_page():
+    rows = [{"congress": "119th", "name": "B", "chamber": "House", "district": 11, "party": None, "left": None, "url": "/b/"},
+            {"congress": "119th", "name": "A", "chamber": "House", "district": 1, "party": "Republican", "left": "x", "url": "/a/"},
+            {"congress": "119th", "name": "S", "chamber": "Senate", "district": None, "party": None, "left": None, "url": "/s/"},
+            {"congress": "117th", "name": "Z", "chamber": "House", "district": 2, "party": None, "left": None, "url": "/z/"}]
+    got = B.former_federal(rows)
+    check("newest Congress first", [g["congress"] for g in got["groups"]], ["119th", "117th"])
+    check("Senate, then district", [m["name"] for m in got["groups"][0]["members"]], ["S", "A", "B"])
+    check("empty input -> no groups", B.former_federal([]), {"groups": []})
+    B._FORMER_FEDERAL[:] = []
+    run(AFTER_TURNOVER, FROZEN)
+    check("builder collects the former member", [(r["name"], r["url"]) for r in B._FORMER_FEDERAL],
+          [("Lee Leaves", "/us-congress/lee-leaves-ga-1/")])
+    B._FORMER_FEDERAL[:] = []
+
+
 def test_include_reads_every_frozen_file_through_dataurl():
     html = open(os.path.join(ROOT, "_includes", "entity", "federal-legislator.html"), encoding="utf-8").read()
     bare = re.findall(r"assets/data/(federal-[a-z\-]+|current-members|curated-federal-bills)", html)

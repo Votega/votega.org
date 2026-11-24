@@ -856,6 +856,9 @@ _DIRECTORY = []
 # /ga-state-reps (the human path to these pages; the directory is the crawl path).
 _FORMER = []
 FORMER_LEGISLATORS_PATH = os.path.join(ROOT, "_data", "former_legislators.json")
+# The federal counterpart (D12), for the server-rendered list on /federal-reps.
+_FORMER_FEDERAL = []
+FORMER_FEDERAL_PATH = os.path.join(ROOT, "_data", "former_congress.json")
 
 
 def _dir_add(section, group, group_order, sort_key, name, url, group_url=None):
@@ -907,6 +910,20 @@ def former_legislators(rows):
             r["chamber"] != "Senate", r["district"] if isinstance(r["district"], int) else 9999,
             r["name"]))
         groups.append({"biennium": session_slug(tag).replace("-", "–"), "members": members})
+    return {"groups": groups}
+
+
+def former_federal(rows):
+    """{"groups": [{"congress": "119th", "members": [{name, chamber, district, party, left, url}]}]}:
+    newest Congress first, Senate before House, then district."""
+    by = {}
+    for r in rows:
+        by.setdefault(r["congress"], []).append({k: v for k, v in r.items() if k != "congress"})
+    groups = []
+    for c in sorted(by, key=lambda s: int("".join(ch for ch in s if ch.isdigit())), reverse=True):
+        ms = sorted(by[c], key=lambda r: (r["chamber"] != "Senate",
+                                          r["district"] if isinstance(r["district"], int) else 9999, r["name"]))
+        groups.append({"congress": c, "members": ms})
     return {"groups": groups}
 
 
@@ -1327,6 +1344,9 @@ def _build_former_federal(former, frozen, data, urls, seen, prior, new_state):
                  fact="Votes, sponsored bills & committees",
                  photo=_portrait((m.get("depiction") or {}).get("imageUrl")),
                  stamp=data_date, source="congress.gov")
+        _FORMER_FEDERAL.append({"congress": slug, "name": name, "chamber": "Senate" if sen else "House",
+                                "district": district, "party": party or None,
+                                "left": label["label"] if label else None, "url": permalink})
         count += 1
     # Every URL a freeze promised must resolve: a sitting member's moved page redirects.
     missing = []
@@ -2013,6 +2033,7 @@ def main():
         records, load("races.json").get("races", [])))
     _DIRECTORY[:] = []  # reset the cross-builder directory accumulator
     _FORMER[:] = []
+    _FORMER_FEDERAL[:] = []
     _CARDS[:] = []
     failed = []
     for label, builder in CATEGORY_BUILDERS:
@@ -2041,6 +2062,7 @@ def main():
     write_json_atomic(FEATURED_RACES_PATH, featured_races(_DIRECTORY), separators=(",", ":"))
     write_json_atomic(FORMER_LEGISLATORS_PATH, former_legislators(_FORMER),
                       separators=(",", ":"))
+    write_json_atomic(FORMER_FEDERAL_PATH, former_federal(_FORMER_FEDERAL), separators=(",", ":"))
     if not degraded:
         write_json_atomic(LASTMOD_STATE_PATH, new_state, separators=(",", ":"))
     os.makedirs(os.path.dirname(SHARE_MANIFEST_PATH), exist_ok=True)
