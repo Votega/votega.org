@@ -6,11 +6,10 @@
     "batches": [
       {
         "batch": 1,
-        "approvedOn": "2026-11-23",
+        "approvedOn": "2026-11-24",
         "draft": "docs/federal-departure-labels-draft.md",
-        "notApproved": [
-          "G000596 (Marjorie Taylor Greene): no page; resignation date not in the repo",
-          "S001157 (David Scott): no page; date not in the repo"
+        "pending": [
+          "G000596 (Greene) and S001157 (D. Scott): no page; dates not sourced"
         ]
       }
     ],
@@ -27,7 +26,7 @@
       "label": "Ran for U.S. Senate in 2026 (lost the Republican primary on May 19, 2026).",
       "results": [
         {
-          "title": "Georgia 2026 Primary Results",
+          "title": "Georgia 2026 primary results",
           "url": "/ga-primary-results/"
         }
       ],
@@ -43,13 +42,12 @@
       "label": "Did not run for re-election in 2026.",
       "results": [
         {
-          "title": "Georgia 2026 Primary Results",
+          "title": "Georgia 2026 primary results",
           "url": "/ga-primary-results/"
         }
       ],
       "sources": [
-        "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05); absent from every contest in the certified primary and primary runoff files",
-        "races.json Open Seat note (did not file for re-election); not checked against the Secretary of State federal qualifying export"
+        "Absent from every contest in the certified 2026 primary and runoff results; races.json note"
       ]
     },
     "C001129": {
@@ -60,7 +58,7 @@
       "label": "Ran for U.S. Senate in 2026 (lost the general election on November 3, 2026).",
       "results": [
         {
-          "title": "Georgia 2026 General Election Results",
+          "title": "Georgia 2026 general election results",
           "url": "/ga-general-2026-results/"
         }
       ],
@@ -72,21 +70,20 @@
       "name": "Everton \"EJ\" Blair",
       "chamber": "House of Representatives",
       "district": 13,
-      "type": "lost-primary",
+      "type": "special-winner-lost-primary",
       "label": "Won the August 25, 2026 special election runoff to fill the remainder of the term. Ran for the full term in 2026 (lost the Democratic primary on May 19, 2026).",
       "results": [
         {
-          "title": "Georgia 2026 Special Election Runoff Results — U.S. House District 13",
+          "title": "Georgia 2026 special election runoff results",
           "url": "/ga-special-2026-runoff-results/"
         },
         {
-          "title": "Georgia 2026 Primary Results",
+          "title": "Georgia 2026 primary results",
           "url": "/ga-primary-results/"
         }
       ],
       "sources": [
-        "Georgia Secretary of State certified results (special runoff 2026-08-25, certified 2026-09-04)",
-        "Georgia Secretary of State certified results (primary 2026-05-19, certified 2026-06-05)"
+        "Georgia Secretary of State certified results (special runoff 2026-08-25, certified 2026-09-04; primary 2026-05-19)"
       ]
     }
   }
