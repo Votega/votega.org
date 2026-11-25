@@ -85,6 +85,8 @@ datasets:
     files:
       - { name: "data/members.json", desc: "GA delegation roster", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/members.json" }
       - { name: "data/votes.json",   desc: "Voting history on signed legislation", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/votes.json" }
+      - { name: "data/en-bloc-nominees.csv", desc: "Every nomination behind each en bloc Senate vote (one vote on a whole group), one row per nomination per vote", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/en-bloc-nominees.csv" }
+      - { name: "data/en-bloc-nominees.json", desc: "The same en bloc nomination lists as JSON", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/en-bloc-nominees.json" }
       - { name: "sessions/119th/members.json", desc: "119th Congress delegation roster (frozen)", url: "https://github.com/Votega/ga-federal-legislators/blob/main/sessions/119th/members.json" }
       - { name: "sessions/119th/votes.json", desc: "119th Congress roll-call record (frozen)", url: "https://github.com/Votega/ga-federal-legislators/blob/main/sessions/119th/votes.json" }
       - { name: "sessions/119th/scorecard.csv", desc: "Party-unity + participation per member, 119th (derived)", url: "https://github.com/Votega/ga-federal-legislators/blob/main/sessions/119th/scorecard.csv" }
