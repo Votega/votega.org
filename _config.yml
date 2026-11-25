@@ -385,6 +385,14 @@ exclude:
   - "*-README.md"
   # Archived sample content — was being published and listed in sitemap.xml
   - "not in use/"
+  # Brand working files (logo drafts, style guide): design references, not pages.
+  # jekyll-sitemap lists any .html/.pdf, so they were being indexed.
+  - assets/img/brand/logo-explorations.html
+  - assets/img/brand/logo-set.html
+  - assets/img/brand/style-guide-peach.html
+  - assets/img/brand/style-guide-peach.pdf
+  # Local build inputs; only its README is committed, and it published as /data-inputs/
+  - data-inputs/
   # Build-time data generation; has no place in the served site
   - scripts/
   - tools/
