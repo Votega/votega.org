@@ -468,6 +468,33 @@
   function showContact(isLive, former) { return !!isLive && !former; }
   // A former member's title reads "Former Senator", so an indexed page never loses it.
   function pageTitleRole(role, former) { return former ? 'Former ' + role : role; }
+  // True when a roll call fell outside the member's service, so a missing vote is not an
+  // absence. False whenever the record cannot show it: calling a sitting member "not in
+  // office" is the worse error. termStart is the start in the CURRENT chamber and is wrong
+  // or missing for some members, so termStartSession (the earliest session served in either
+  // chamber) decides across bienniums, and termStart only inside that first one.
+  // `bills` are the curated bills: a recorded vote in either chamber on or before the date
+  // proves service.
+  function notInOffice(member, voteDate, bills) {
+    const date = String(voteDate || '').slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return false;
+    const left = String(member.statusDate || '').slice(0, 10);
+    if (['Resigned', 'Removed', 'Deceased'].indexOf(member.status) !== -1 && left && date > left) return true;
+    const first = /^(\d{4})/.exec(member.termStartSession || '');
+    if (!first) return false;
+    const bienniumOf = y => (y % 2 ? y : y - 1);
+    const voteBiennium = bienniumOf(+date.slice(0, 4));
+    const firstBiennium = bienniumOf(+first[1]);
+    if (firstBiennium < voteBiennium) return false;
+    const served = (bills || []).some(b => Object.keys(b.votes || {}).some(ch => {
+      const v = b.votes[ch];
+      return v && v.memberVotes && v.memberVotes[member.id] && String(v.date || '').slice(0, 10) <= date;
+    }));
+    if (served) return false;
+    if (firstBiennium > voteBiennium) return true;
+    const start = String(member.termStart || '').slice(0, 10);
+    return !!start && date < start && bienniumOf(+start.slice(0, 4)) === voteBiennium;
+  }
   // END biennium-helpers
   const ENTITY_BIENNIUMS = (window.VOTEGA_ENTITY && window.VOTEGA_ENTITY.bienniums) || [];
   const SELECTED_BIENNIUM = pickBiennium(ENTITY_BIENNIUMS, new URLSearchParams(window.location.search).get('biennium'));
@@ -1381,7 +1408,7 @@
       const voteInfo = myOption ? VOTE_DISPLAY[myOption] : null;
       const voteBadge = voteInfo
         ? `<span class="bill-vote-badge ${voteInfo.cls}">${voteInfo.label}</span>`
-        : `<span class="bill-vote-badge badge-other">No vote recorded</span>`;
+        : `<span class="bill-vote-badge badge-other">${voteData && notInOffice(member, voteData.date, bills) ? 'Not in office' : 'No vote recorded'}</span>`;
 
       const statusDate = bill.statusDate
         ? new Date(String(bill.statusDate).slice(0, 10) + 'T00:00:00').toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'})

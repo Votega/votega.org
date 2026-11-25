@@ -900,17 +900,19 @@ def _natural_key(text):
 
 def former_legislators(rows):
     """{"groups": [{"biennium": "2025–2026", "members": [{name, chamber, district, party,
-    left, url}]}]}: newest biennium first, Senate before House, then district."""
+    left, url}]}], "pastBiennium": bool}: newest biennium first, Senate before House, then
+    district. `pastBiennium` is True once anyone listed is off the live roster (`frozen`
+    rows), i.e. after a rollover; find-my-reps.html's Former Legislators card reads it."""
     by_tag = {}
     for r in rows:
-        by_tag.setdefault(r["tag"], []).append({k: v for k, v in r.items() if k != "tag"})
+        by_tag.setdefault(r["tag"], []).append({k: v for k, v in r.items() if k not in ("tag", "frozen")})
     groups = []
     for tag in sorted(by_tag, reverse=True):
         members = sorted(by_tag[tag], key=lambda r: (
             r["chamber"] != "Senate", r["district"] if isinstance(r["district"], int) else 9999,
             r["name"]))
         groups.append({"biennium": session_slug(tag).replace("-", "–"), "members": members})
-    return {"groups": groups}
+    return {"groups": groups, "pastBiennium": any(r.get("frozen") for r in rows)}
 
 
 def former_federal(rows):
@@ -1051,7 +1053,7 @@ def build_ga_legislators(records, urls, prior, new_state):
             _dir_add("legislators", f"Former Georgia Legislators ({session_slug(real_tag)})", 2,
                      (district if isinstance(district, int) else 9999, name),
                      (f"District {district} — {name}" if district else name), permalink)
-            _FORMER.append({"tag": real_tag, "name": name,
+            _FORMER.append({"tag": real_tag, "frozen": former_tag != "current", "name": name,
                             "chamber": "Senate" if is_senate else "House",
                             "district": district, "party": party or None,
                             "left": departure_note(m), "url": permalink})
