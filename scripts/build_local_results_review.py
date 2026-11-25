@@ -30,10 +30,23 @@ STATUS (per results seat; see STATUSES)
     no-roster          county has no curated roster yet
     not-up             (roster-only) a current seat with no contest in this election
 
+SEATING MODE (--later-results)
+    For an EARLIER election (2024) checked against today's roster: a winner who no
+    longer holds the seat is only a problem if the seat was not re-contested since.
+      matches      the current holder is the winner (and last_elected agrees)
+      mismatch     holder differs, or last_elected disagrees, and no later contest explains it
+      superseded   the seat was re-contested in the later election (expected change)
+      not-covered  a current roster seat in neither election (pre-2024 cohort, odd label)
+
 USAGE
     python scripts/build_local_results_review.py \\
         --results data-inputs/sos-results-2026-general/results-2026-general.json \\
         --out data-inputs/local-results-review/review-2026.json
+    # seating mode:
+    python scripts/build_local_results_review.py \
+        --results data-inputs/sos-results-2024/results-2024-general.json \
+        --later-results data-inputs/sos-results-2026-general/results-2026-general.json \
+        --out data-inputs/local-results-review/review-2024.json
 """
 
 import argparse
@@ -54,7 +67,9 @@ from lib import local_terms  # noqa: E402
 
 ROSTER = "_data/local_officials.yml"
 STATUSES = ["turnover-unstaged", "runoff-check", "name-variant", "staged",
-            "retained", "no-roster", "not-up"]
+            "retained", "no-roster", "not-up",
+            # seating mode (an earlier election vs today's roster):
+            "mismatch", "not-covered", "superseded", "matches"]
 
 
 def _surname(name):
@@ -113,7 +128,59 @@ def _results_seats(county_short, county):
     return seats
 
 
-def build(results_path, roster_path=ROSTER, today=None):
+def _seat_keys_by_county(results_path):
+    res = json.load(open(results_path, encoding="utf-8"))
+    out = {}
+    for short, county in res["counties"].items():
+        out[slug_of(short)] = {_seat_key(s["seat"]): s for s in _results_seats(short, county)}
+    return out
+
+
+def _to_seating(rows, later, later_label, year):
+    """Re-label an election-mode build for an EARLIER election ("the seating election")
+    against today's roster. A winner who no longer holds the seat is only a problem
+    if the seat was not re-contested since; `later` is the later election's seats."""
+    out = []
+    for r in rows:
+        later_seats = later.get(r["county"], {})
+        res = r["results"]
+        key = _seat_key(res["seat"]) if res else _seat_key((r["roster"][0] or {}).get("seat"))
+        later_seat = later_seats.get(key)
+        st = r["status"]
+        if st == "not-up":
+            if later_seat:
+                continue  # covered by the later election's review
+            r["status"] = "not-covered"
+            r["detail"] = "current seat in neither election: elected before the earliest results on the portal, or labelled differently"
+        elif st in ("retained", "staged"):
+            r["status"] = "matches"
+            le = r["roster"][0].get("lastElected") if r["roster"] else None
+            if le and str(le) != str(year) and not later_seat:
+                r["status"] = "mismatch"
+                r["detail"] = f"holder matches the {year} winner but the roster says last_elected {le}"
+        elif st == "no-roster":
+            pass
+        elif st == "turnover-unstaged" and any(
+                str(m.get("lastElected") or "").isdigit() and int(m["lastElected"]) > int(year)
+                for m in r["roster"]):
+            # The roster already records a later election for the seat (typically a
+            # special after the winner left), so the change is accounted for.
+            m = next(m for m in r["roster"] if str(m.get("lastElected") or "").isdigit()
+                     and int(m["lastElected"]) > int(year))
+            r["status"] = "superseded"
+            r["detail"] = f"roster holder {m['name']} was elected {m['lastElected']} (after the {year} winner left): confirm the source on the roster row"
+        elif later_seat:
+            w = later_seat["candidates"][0]
+            r["status"] = "superseded"
+            r["detail"] = f"seat re-contested in {later_label}: winner {w['name']} ({w['pct']}%)"
+        elif st == "turnover-unstaged":
+            r["status"] = "mismatch"
+            r["detail"] = "winner is not on the roster for this seat and it was not re-contested: left office, replaced by a special, or roster out of date"
+        out.append(r)
+    return out
+
+
+def build(results_path, roster_path=ROSTER, today=None, later_results=None, later_label=None):
     today = today or date.today()
     res = json.load(open(results_path, encoding="utf-8"))
     roster = yaml.safe_load(open(roster_path, encoding="utf-8")) or {}
@@ -188,8 +255,11 @@ def build(results_path, roster_path=ROSTER, today=None):
                         "results": None, "roster": [m], "former": [],
                         "sourceUrl": None, "official": None, "asOf": None,
                     })
+    if later_results:
+        rows = _to_seating(rows, _seat_keys_by_county(later_results), later_label or "the later election", meta["electionDate"][:4])
     return {
         "metadata": {
+            "mode": "seating" if later_results else "election",
             "election": meta["electionSlug"], "electionDate": meta["electionDate"],
             "resultsFetchedAt": meta["fetchedAt"], "builtAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "rosterAsOf": today.isoformat(), "statuses": STATUSES, "rows": len(rows),
@@ -204,8 +274,11 @@ def main():
     ap.add_argument("--results", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--roster", default=ROSTER)
+    ap.add_argument("--later-results", help="a LATER election's results file: switches to seating mode, "
+                    "where a seat re-contested later is 'superseded', not a mismatch")
+    ap.add_argument("--later-label", default="2026")
     a = ap.parse_args()
-    out = build(a.results, a.roster)
+    out = build(a.results, a.roster, later_results=a.later_results, later_label=a.later_label)
     p = Path(a.out)
     p.parent.mkdir(parents=True, exist_ok=True)
     from collections import Counter

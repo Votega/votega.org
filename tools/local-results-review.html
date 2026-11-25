@@ -49,6 +49,10 @@
   .s-retained { border-left-color: #8aa; } .s-retained .badge { background: #eef2f4; color: #456; }
   .s-no-roster { border-left-color: #bbb; } .s-no-roster .badge { background: #eee; color: #666; }
   .s-not-up { border-left-color: #ddd; } .s-not-up .badge { background: #f1f1f1; color: #888; }
+  .s-mismatch { border-left-color: #b3261e; } .s-mismatch .badge { background: #fbe9e7; color: #b3261e; }
+  .s-not-covered { border-left-color: #c77700; } .s-not-covered .badge { background: #fcf1dd; color: #8a5300; }
+  .s-superseded { border-left-color: #8aa; } .s-superseded .badge { background: #eef2f4; color: #456; }
+  .s-matches { border-left-color: #1b7a3a; } .s-matches .badge { background: #e6f4e7; color: #1b5e20; }
   .col h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin-bottom: 3px; font-weight: 600; }
   .person { margin-bottom: 3px; }
   .person .nm { font-weight: 600; }
@@ -88,7 +92,7 @@
 </div>
 
 <script>
-const STATUS_ORDER = ['turnover-unstaged','runoff-check','name-variant','staged','retained','no-roster','not-up'];
+const STATUS_ORDER = ['mismatch','turnover-unstaged','runoff-check','name-variant','not-covered','superseded','staged','retained','matches','no-roster','not-up'];
 const STATUS_LABEL = {
   'turnover-unstaged': 'Turnover, not staged',
   'runoff-check': 'Runoff check',
@@ -96,11 +100,18 @@ const STATUS_LABEL = {
   'staged': 'Already staged',
   'retained': 'Incumbent retained',
   'no-roster': 'County has no roster',
-  'not-up': 'Roster only (not on ballot)'
+  'not-up': 'Roster only (not on ballot)',
+  'mismatch': 'Holder differs from winner',
+  'not-covered': 'Seat in neither election',
+  'superseded': 'Re-contested later',
+  'matches': 'Holder matches winner'
 };
 const DECISIONS = [['stage','Stage'],['skip','Skip'],['check','Needs check'],['ok','Looks right']];
 // Hidden by default: informational statuses nobody has to act on.
 const DEFAULT_ON = new Set(['turnover-unstaged','runoff-check','name-variant','staged']);
+// Seating mode (an earlier election checked against today's roster): matching holders are the
+// quiet case; what needs a look is a holder who differs, and seats neither election covers.
+const SEATING_ON = new Set(['mismatch','name-variant','runoff-check','not-covered','superseded']);
 
 let data = null, storeKey = '', decisions = {}, on = new Set(DEFAULT_ON), q = '', county = '', onlyUndecided = false;
 
@@ -112,7 +123,7 @@ function load(obj, fname) {
   data = obj;
   storeKey = 'localResultsReview:' + (obj.metadata.election || fname);
   try { decisions = JSON.parse(localStorage.getItem(storeKey) || '{}'); } catch { decisions = {}; }
-  on = new Set(DEFAULT_ON);
+  on = new Set(obj.metadata.mode === 'seating' ? SEATING_ON : DEFAULT_ON);
   $('#impBtn').disabled = $('#expBtn').disabled = false;
   $('#title').textContent = 'Local Results Review - ' + obj.metadata.election;
   render();
