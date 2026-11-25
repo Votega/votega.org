@@ -41,6 +41,7 @@ from html.parser import HTMLParser
 from urllib.parse import quote, urljoin, urlsplit, urlunsplit
 
 from lib.http import fetch_bytes
+from lib.month_dates import parse_month_name_date
 
 _HIDDEN_DATE = re.compile(r'^\d{8}$')
 _SLASH_DATE = re.compile(r'(\d{1,2})/(\d{1,2})/(\d{4})')
@@ -150,6 +151,12 @@ def _row_date(cell):
             break
     if hidden and visible and hidden != visible:
         return None
+    if not (visible or hidden):
+        # "January 13, 2026" (Lee County's nimbleCMS tables): a full month-name date only.
+        for src in [t for _, t in cell['links']] + [text]:
+            visible = parse_month_name_date(src)
+            if visible:
+                break
     return visible or hidden
 
 
