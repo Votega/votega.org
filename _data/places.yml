@@ -2166,11 +2166,13 @@ places:
     region:                         # optional hub grouping label
     domains:
       meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/dougherty/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # Municode PublishPage portal (meetings.municode.com), same adapter as Paulding.
+        # Not yet validated: Municode challenged the machine that wrote this entry
+        # (Cloudflare 403), so check the first CI/--slug run for body names and add body_map if
+        # the portal mixes bodies. Meeting day/time not yet confirmed.
+        platform: municode
+        agendas_url: "https://meetings.municode.com/PublishPage/index?cid=DOUGHERTY&ppid=8eef0464-395e-4aa7-8fda-0cda139a3d01"
+        body_label: "Board of Commissioners"
         schedule:
           - body: Board of Commissioners
             when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
