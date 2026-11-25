@@ -2133,3 +2133,183 @@ places:
           board-commissioners: Board of Commissioners
         recent_url: "https://montcoga.gov/meetings/recent"
         agendas_url: "https://montcoga.gov/meetings"
+
+  - slug: glynn
+    name: Glynn County
+    type: county
+    fips: "13127"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/glynn/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: ""            # optional
+
+  - slug: dougherty
+    name: Dougherty County
+    type: county
+    fips: "13095"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/dougherty/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: ""            # optional
+
+  - slug: lee
+    name: Lee County
+    type: county
+    fips: "13177"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/lee/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: ""            # optional
+
+  - slug: bryan
+    name: Bryan County
+    type: county
+    fips: "13029"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/bryan/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: ""            # optional
+
+  - slug: habersham
+    name: Habersham County
+    type: county
+    fips: "13137"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/habersham/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: ""            # optional
+
+  - slug: harris
+    name: Harris County
+    type: county
+    fips: "13145"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/harris/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: ""            # optional
+
+  - slug: polk
+    name: Polk County
+    type: county
+    fips: "13233"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/polk/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: ""            # optional
+
+  - slug: gilmer
+    name: Gilmer County
+    type: county
+    fips: "13123"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/gilmer/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: ""            # optional
+
+  - slug: union
+    name: Union County
+    type: county
+    fips: "13291"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/union/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: ""            # optional
+
+  - slug: monroe
+    name: Monroe County
+    type: county
+    fips: "13207"
+    parentCounty: null
+    region:                         # optional hub grouping label
+    domains:
+      meetings:
+        # Curated recurring schedule -> the "When they meet" note on /local/monroe/.
+        # Fill when: (and optional location:) per body. No scraper adapter needed
+        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
+        # auto-aggregate agendas/minutes (see the places.yml header).
+        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        schedule:
+          - body: Board of Commissioners
+            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
+            location: ""            # optional
