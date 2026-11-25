@@ -48,6 +48,8 @@ _BASE_RE = re.compile(r'<base\b[^>]*?href\s*=\s*["\']([^"\']+)["\']', re.I)
 # M-D-YYYY or M/D/YYYY, 1-2 digit month/day (Bartow uses 9-2-2026, Fayette 09-10-2026).
 _DATE_RE = re.compile(r'(\d{1,2})[-/](\d{1,2})[-/](\d{4})')
 _PDF_RE = re.compile(r'\.pdf(?:$|[?#])', re.I)
+# "Public Works Committee" at the start of a file name (see split_committees).
+_COMMITTEE_RE = re.compile(r"^\s*([A-Za-z][A-Za-z&' ]*?\s+Committee)\b", re.I)
 
 
 def _clean(text):
@@ -90,8 +92,12 @@ def _classify(haystack):
     return None, False
 
 
-def parse_page(html, base):
-    """Parse a Revize agendas page into normalized meeting dicts (newest first)."""
+def parse_page(html, base, split_committees=False):
+    """Parse a Revize agendas page into normalized meeting dicts (newest first).
+
+    With `split_committees`, a file named "<Name> Committee ..." belongs to that
+    committee: it gets its own body and record, so it never merges with (or is
+    labelled as) a board meeting on the same date."""
     by_date = {}
     order = []
     for href, inner in _ANCHOR_RE.findall(html):
@@ -108,20 +114,27 @@ def parse_page(html, base):
             continue
         url = _stable_url(base, href)
 
-        rec = by_date.get(date)
+        body, key = 'Board of Commissioners', date
+        if split_committees:
+            name = href.split('?', 1)[0].rsplit('/', 1)[-1].replace('%20', ' ').replace('_', ' ')
+            c = _COMMITTEE_RE.match(name)
+            if c:
+                body = ' '.join(c.group(1).split()).title()
+                key = '%s-%s' % (date, body.lower().replace(' ', '-'))
+        rec = by_date.get(key)
         if rec is None:
             rec = {
-                'body': 'Board of Commissioners',
+                'body': body,
                 'date': date,
-                'id': date,
+                'id': key,
                 'title': text or date,
                 'agendaUrl': None,
                 'minutesUrl': None,
                 'videoUrl': None,
                 'hasPreviousVersions': False,
             }
-            by_date[date] = rec
-            order.append(date)
+            by_date[key] = rec
+            order.append(key)
 
         if kind == 'minutes':
             if not rec['minutesUrl']:
@@ -143,7 +156,7 @@ def parse_page(html, base):
     return meetings
 
 
-def fetch_revize_meetings(agendas_url, base_url=None, timeout=40):
+def fetch_revize_meetings(agendas_url, base_url=None, timeout=40, split_committees=False):
     """Fetch and normalize a Revize county agendas page.
 
     `agendas_url` is the county's Agendas & Minutes page (registry key). Links are
@@ -161,6 +174,6 @@ def fetch_revize_meetings(agendas_url, base_url=None, timeout=40):
     base_tag = _BASE_RE.search(html)
     base = _unescape(base_tag.group(1)) if base_tag else (base_url or agendas_url)
 
-    meetings = parse_page(html, base)
+    meetings = parse_page(html, base, split_committees=split_committees)
     bodies_seen = sorted({m['body'] for m in meetings})
     return meetings, bodies_seen

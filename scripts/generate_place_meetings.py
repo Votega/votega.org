@@ -151,7 +151,8 @@ def fetch_meetings(cfg, previous=None):
         return fetch_agendaplus_meetings(cfg['agendas_url'])
     if platform == 'revize':
         return fetch_revize_meetings(cfg['agendas_url'],
-                                     base_url=cfg.get('base_url'))
+                                     base_url=cfg.get('base_url'),
+                                     split_committees=bool(cfg.get('split_committees')))
     if platform == 'pdflinks':
         return fetch_pdflinks_meetings(cfg['agendas_url'],
                                        extra_urls=cfg.get('extra_urls'),
