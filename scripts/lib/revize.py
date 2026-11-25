@@ -37,6 +37,7 @@ import re
 from urllib.parse import urljoin, urldefrag
 
 from lib.http import fetch_bytes
+from lib.month_dates import parse_month_name_date
 
 # <a ... href="..."> inner </a>. Tolerant of the `href = "..."` spacing Revize
 # emits and of single quotes; inner text captured non-greedily across newlines.
@@ -62,7 +63,7 @@ def _parse_date(text):
     """First M-D-YYYY / M/D/YYYY in `text` -> ISO date, or None if implausible."""
     m = _DATE_RE.search(text or '')
     if not m:
-        return None
+        return parse_month_name_date(text)
     month, day, year = int(m.group(1)), int(m.group(2)), int(m.group(3))
     if not (1 <= month <= 12 and 1 <= day <= 31 and 2000 <= year <= 2100):
         return None

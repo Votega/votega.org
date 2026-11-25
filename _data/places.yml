@@ -2184,11 +2184,12 @@ places:
     region:                         # optional hub grouping label
     domains:
       meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/lee/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # nimbleCMS table (Meeting Date | Session Type | Agenda | Agenda Packet | Minutes) with
+        # month-name dates (lib/month_dates.py). One page per year: this reads the 2026 page only.
+        platform: htmltable
+        base_url: https://www.leecountyga.gov
+        agendas_url: "https://www.leecountyga.gov/government/meeting-agendas-minutes/boc-2026"
+        body_label: "Board of Commissioners"
         schedule:
           - body: Board of Commissioners
             when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
@@ -2255,11 +2256,12 @@ places:
     region:                         # optional hub grouping label
     domains:
       meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/polk/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # Revize page of agenda/minutes PDFs dated in the file name as "November 03, 2026"
+        # (month-name dates, lib/month_dates.py).
+        platform: revize
+        base_url: https://www.polkga.org/
+        agendas_url: "https://www.polkga.org/government/agendas_and_minutes.php"
+        body_label: "Board of Commissioners"
         schedule:
           - body: Board of Commissioners
             when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
