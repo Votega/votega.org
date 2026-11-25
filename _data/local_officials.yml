@@ -1003,14 +1003,35 @@ jurisdictions:
         next_election: 2030
         voting: true
         source: "https://results.sos.ga.gov/results/public/api/elections/newton-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, unofficial at staging (100.0%)
+      - name: "Stephanie R. Lindsey"
+        role: Commissioner
+        title: "Commissioner (suspended)"
+        replacedBy: "Andre Cooper"            # interim appointee, March 7, 2025
+        replacedDate: 2025-03-07
+        seat: "District 3"
+        seat_id: district-3
+        party:
+        email: ""
+        phone: ""
+        last_elected: 2024                    # won the Nov 2024 general (SoS results); suspended since
+        term_end: 2028
+        next_election: 2028
+        voting: false
+        tie_break_only: false
+        status: Suspended           # still holds the seat; Cooper serves as interim
+        statusDate: 2025-03-07      # Executive Order 03.07.25.02
+        statusNote: "Suspended by Gov. Brian Kemp by executive order following the indictment review commission (EO 01.23.25.02); Gov. Kemp appointed Andre Cooper to fill the temporary vacancy the same day (EO 03.07.25.04). Awaiting a federal retrial scheduled for December 7, 2026."
+        statusSource: "https://gov.georgia.gov/document/2025-executive-order/03072502/download"
+        source: "https://results.sos.ga.gov/results/public/api/elections/newton-county-ga/2024NovGen/data"   # 2024 winner; confirm against the county page
       - name: "Andre Cooper"
         role: Commissioner
         seat: "District 3"                    # e.g. "District 1"
         seat_id: district-3
+        title: "Interim Commissioner"
         party: 
         email: "acooper@co.newton.ga.us"
         phone: "678-625-1200"
-        last_elected: 2024
+        last_elected:   # appointed, not elected; the 2024 winner of this seat was Stephanie R. Lindsey
         term_end: 2028
         next_election: 2028
         voting: true
@@ -1492,12 +1513,12 @@ jurisdictions:
         role: Commissioner
         seat: "District 2"                    # e.g. "District 1"
         seat_id: district-2
-        party: 
+        party: Republican           # per SoS results (Rep)
         email: "bob.ellis@fultoncountyga.gov"
         phone: "404-612-8216"
-        last_elected: 2025
+        last_elected: 2024          # won the Nov 2024 general (54.5% over Megan Harris); term 1/1/2025 - 12/31/2028 per the county page
         term_end: 2028
-        next_election: 2027
+        next_election: 2028
         voting: true
         tie_break_only: false
         photo: "https://www.fultoncountyga.gov/-/media/Commissioners/Ellis/Ellis-02-01.jpg"
@@ -2228,7 +2249,7 @@ jurisdictions:
         term_end: 2030
         next_election: 2029
         voting: true
-        source: "https://www.bankscountyga.org/1227/Board-of-Commissioners"   # SoS results — CONFIRM before merge
+        source: "https://www.bankscountyga.org/1227/Board-of-Commissioners"   # D4 filled by a Nov 4, 2025 SPECIAL (Keith Gardiner, the 2024 winner, left in 2025): SoS MunicipalGeneralSpecialElectionPSC11042025 shows Roberts first with 46.6% of 5 candidates, so a runoff decided it and the runoff is not on the SoS portal. CONFIRM the runoff result and Gardiner's departure from a county source
   
   - id: barrow
     name: Barrow County
@@ -2739,12 +2760,13 @@ jurisdictions:
         role: Commissioner
         seat: "4th District"
         seat_id: 4th-district
-        party: 
+        takes_office: 2026-05-29    # sworn in May 29, 2026 (Chatham County / WTOC)
+        party: Nonpartisan
         email: "district4@chathamcounty.org"
         phone: ""
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2026          # won the nonpartisan May 19, 2026 special (SoS GeneralPrimary51926: 58.9% over Joe Welch) for the seat vacated by Pat Farrell, the 2024 winner
+        term_end: 2028              # remainder of Farrell's term (per Chatham County)
+        next_election: 2028
         voting: true
         source: "https://www.chathamcountyga.gov/Commission/Detail/4th"
       - name: "Tanya Milton"
@@ -3175,11 +3197,11 @@ jurisdictions:
         role: Commissioner
         seat: "District 2"
         seat_id: district-2
-        party: 
+        party: Republican           # per SoS results (Rep)
         email: "commissioners@columbiacountyga.gov"
         phone: "706-868-3379"
-        last_elected: 2026
-        term_end: 2028
+        last_elected: 2025          # won the Nov 4, 2025 SPECIAL (SoS MunicipalGeneralSpecialElectionPSC11042025: Steed 54.0% over Howard W. Johnson V); Trey Allen, the 2024 winner, resigned Aug 2025 for a HUD appointment (WJBF, Aug 5, 2025)
+        term_end: 2028              # verify: presumably the unexpired term
         next_election: 2028
         voting: true
         source: "https://www.columbiacountyga.gov/304/Board-of-Commissioners" 
@@ -4036,11 +4058,11 @@ jurisdictions:
         title: County Commission Chairperson
         seat: "At-Large"
         seat_id: at-large
-        party: 
+        party: Republican           # per SoS results (Rep) and Ballotpedia
         email: "rhett.stringer@lumpkincounty.gov"
         phone: "770-540-2436"
-        last_elected: 2024
-        term_end: 2028
+        last_elected: 2026          # won the May 19, 2026 special for Chairperson (SoS: GeneralPrimary51926, 52.9% over Katherine James); the 2024 winner was Chris Dockery
+        term_end: 2028              # verify: presumably the unexpired term
         next_election: 2028
         voting: true
         source: "https://www.lumpkincounty.gov/188/Board-of-Commissioners"   
@@ -4249,9 +4271,9 @@ jurisdictions:
         party: 
         email: "nathan.park@morgancountyga.gov"
         phone: "706-342-0725"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025          # won the March 18, 2025 special election and was sworn in the following week (Morgan County Citizen, Mar 31, 2025); the 2024 winner, Bill Kurtz, resigned Jan 9, 2025
+        term_end: 2028              # the remainder of Kurtz's term: verify
+        next_election: 2028
         voting: true
         source: "https://www.morgancountyga.gov/m/directory/department?did=7"
 
@@ -5633,6 +5655,18 @@ jurisdictions:
     official_url: "https://www.tiftcounty.org/county_commissionersgovernment/county_commissioners/index.php"            # TODO: county government site
     related_pages:
     members:
+      - name: "Tony McBrayer"
+        role: Chair
+        seat: "At-Large"
+        seat_id: at-large
+        party: Republican           # per SoS results (Rep)
+        email: "tony.mcbrayer@tiftcounty.org"
+        phone: "229-339-3042"
+        last_elected: 2024          # SoS 2024NovGen lists the countywide seat as "County Commission District 7" (14,026 votes, unopposed); the county has 6 districts + a Chairman, so this is the Chairman seat
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://www.tiftcounty.org/county_commissionersgovernment/county_commissioners/index.php"   # chair confirmed and contact supplied from the county Board of Commissioners page
       - name: "Donnie Hester"
         role: Commissioner
         seat: "District 1"
@@ -5701,15 +5735,16 @@ jurisdictions:
         photo: "https://www.tiftcounty.org/Stalnaker%20-%20Copy%20(3).jpg"
         source: "https://www.tiftcounty.org/county_commissioners/commissioner_stan_stalnaker.php"
       - name: "Tyler Riddle"
+        full_name: "Thomas Tyler Riddle"   # authoritative full name (Tifton Gazette, Jul 2, 2025)
         role: Commissioner
         seat: "District 5"
         seat_id: district-5
         party: 
         email: "tyler.riddle@tiftcounty.org"
         phone: "229-402-8096"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025          # unopposed in the special for D5, which was cancelled (Tifton Gazette, Jul 2, 2025), so it never reached the SoS portal; the 2024 winner, Buck Rigdon, died May 12, 2025
+        term_end: 2028              # the remainder of Rigdon's term: verify
+        next_election: 2028
         voting: true
         photo: "https://www.tiftcounty.org/Commissioner%20Pictures/TA4_4075%20(1)%20-%20Copy%20-%20Copy%20(4)%20-%20Copy%20-%20Copy.JPG?t=202510291206400"
         source: "https://www.tiftcounty.org/county_commissioners/commissioner_tyler_riddle.php"  
@@ -6917,13 +6952,13 @@ jurisdictions:
         title: "Chairman"
         seat: "At-Large"
         seat_id: at-large
-        party:
+        party: Republican       # per SoS results (Rep)
         email:
         phone: "912-526-3311"   # county office
-        last_elected:    # sworn in as Chairman June 18 2026 (county minutes), finishing the term David Sikes won in 2024; how he was chosen not yet confirmed
+        last_elected: 2026   # won the May 19, 2026 special for Chairman unopposed (SoS GeneralPrimary51926, 3,628 votes); sworn in June 18, 2026 (county minutes), finishing the term David Sikes won in 2024; Sikes resigned Feb 20, 2026 to run for the state Senate (Southeast Georgia Today, Feb 18, 2026)
         term_end: 2028
         next_election: 2028
-        term_provenance: assumed
+        term_provenance: verified   # special for the unexpired term through 2028 (per your source, Feb 2026 resignations)
         voting: true
         source: "https://toombscountyga.gov/county-commission-2/"   # drafted 2026-11-19 - CONFIRM before merge
       - name: "Alfred Cason"
