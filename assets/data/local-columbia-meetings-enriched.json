@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-25T01:03:27Z",
+  "generatedAt": "2026-11-25T18:29:25Z",
   "source": "Columbia County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbia County",
   "count": 25
@@ -12,12 +12,12 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-19",
+  "lastActivity": "2026-12-03",
   "topicTotals": {
+   "rezoning": 17,
+   "variance": 19,
    "development": 3,
-   "rezoning": 16,
    "special-land-use": 7,
-   "variance": 18,
    "appointment": 3,
    "contract": 12,
    "alpr": 2,
@@ -26,6 +26,17 @@
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Planning Commission",
+    "date": "2026-12-03",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13969,plainText=false)",
+    "tags": [
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… . Commission District 2. Staff Assignment Will Butler. b. Public Hearing 1. (H1b1) RZ26-12-01, Rezoning from R-3 (Single Family Residential) to P-1 (Professional), 244 Flowing Wells Road, Tax Map …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Planning Commission",
     "date": "2026-11-19",
@@ -222,19 +233,9 @@
     "tags": [
      "variance"
     ]
-   },
-   {
-    "title": "Planning Commission",
-    "date": "2026-07-02",
-    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13672,plainText=false)",
-    "tags": [
-     "variance"
-    ],
-    "excerpt": "… Commission District 2. Staff Assignment Will Butler. b. Public Hearing 1. (H1b1) VA26-07-01, Variance to Section 90-53 List of lot and Structure Requirements, 618 Millstone Drive, Tax Map 077 Parc …",
-    "excerptTerm": "variance"
    }
   ],
-  "landUseMeetings": 21,
+  "landUseMeetings": 22,
   "alprItems": [
    {
     "title": "Board of Commissioners Meeting",
@@ -282,11 +283,51 @@
   "localTaxCitations": 2,
   "budgetItems": [],
   "budgetCitations": 0,
-  "landUseCitations": 21,
+  "landUseCitations": 22,
   "alprCitations": 2,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "2630",
+   "date": "2026-12-03",
+   "body": "Planning Commission",
+   "title": "Planning Commission",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13969,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13969,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 5494,
+   "pdfSha256": "62b512ded11245805a2849c071f9781eef66cddfb4ceb592192603d96b7b61d5",
+   "topics": {
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "rezon",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… . Commission District 2. Staff Assignment Will Butler. b. Public Hearing 1. (H1b1) RZ26-12-01, Rezoning from R-3 (Single Family Residential) to P-1 (Professional), 244 Flowing Wells Road, Tax Map …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… mission District 2. Staff Assignment Danielle Montgomery. 2. (H1b2) VA26-12-04, Variance to Sections 90-98 List of Lot and Structure Requirements and 90-139 Buffers and Screening, 244 …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2629",
    "date": "2026-11-19",
@@ -1390,24 +1431,6 @@
      "context": "unknown"
     }
    },
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2600",
-   "date": "2026-06-04",
-   "body": "Planning Commission",
-   "title": "Planning Commission",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13606,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13606,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 2983,
-   "pdfSha256": "8c653c45cb0043605aac64ae4b6df88d5123f790e362f50db376875d0e950087",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []
   }

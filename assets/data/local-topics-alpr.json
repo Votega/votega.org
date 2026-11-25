@@ -115,6 +115,12 @@
    "region": "Northwest Georgia"
   },
   {
+   "placeId": "habersham",
+   "placeName": "Habersham County",
+   "placeType": "county",
+   "region": ""
+  },
+  {
    "placeId": "hall",
    "placeName": "Hall County",
    "placeType": "county",
@@ -131,6 +137,12 @@
    "placeName": "Laurens County",
    "placeType": "county",
    "region": "Middle Georgia"
+  },
+  {
+   "placeId": "lee",
+   "placeName": "Lee County",
+   "placeType": "county",
+   "region": ""
   },
   {
    "placeId": "liberty",
@@ -185,6 +197,12 @@
    "placeName": "Toombs County",
    "placeType": "county",
    "region": "South Georgia"
+  },
+  {
+   "placeId": "union",
+   "placeName": "Union County",
+   "placeType": "county",
+   "region": ""
   },
   {
    "placeId": "walker",
@@ -507,6 +525,27 @@
   },
   {
    "body": "Board of Commissioners",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-11-05",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13127",
+   "placeId": "glynn",
+   "placeName": "Glynn County",
+   "placeType": "county",
+   "region": "",
+   "sourceType": "granicus",
+   "sourceUrl": "https://glynncounty.granicus.com/AgendaViewer.php?view_id=1&clip_id=1029",
+   "tags": [],
+   "terms": [
+    "axon enterprise"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
    "date": "2026-11-05",
@@ -641,6 +680,29 @@
     "axon enterprise"
    ],
    "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-10-19",
+   "docType": "minutes",
+   "excerpt": "… ve an update on Police Department operations. County Manager Denton mentioned that maintenance payments are due for the FLOCK cameras that were installed last year noting that funds were not included in the budget as an oversight so this will re …",
+   "excerptTerm": "flock",
+   "fips": "13233",
+   "placeId": "polk",
+   "placeName": "Polk County",
+   "placeType": "county",
+   "region": "",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.polkga.org/Documents/Government/Minutes%20and%20Agendas/Public%20Safety%20Committee%20Minutes%20October%2019,%202026.pdf",
+   "tags": [],
+   "terms": [
+    "flock"
+   ],
+   "vendors": [
+    "Flock Safety"
+   ]
   },
   {
    "body": "Board of Commissioners",
@@ -1972,30 +2034,6 @@
    "body": "Board of Commissioners",
    "confidence": "medium",
    "context": null,
-   "date": "2026-03-18",
-   "docType": "agenda",
-   "excerpt": null,
-   "excerptTerm": null,
-   "fips": "13021",
-   "followThrough": "not-in-minutes",
-   "meetingId": "2355",
-   "outcomes": [],
-   "placeId": "bibb",
-   "placeName": "Macon-Bibb County",
-   "placeType": "consolidated",
-   "region": "Middle Georgia",
-   "sourceType": "ocr",
-   "sourceUrl": "https://maconbibbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=3428,plainText=false)",
-   "tags": [],
-   "terms": [
-    "surveillance equipment"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "medium",
-   "context": null,
    "date": "2026-03-13",
    "docType": "agenda",
    "excerpt": null,
@@ -2129,13 +2167,13 @@
  "metadata": {
   "citiesScanned": 10,
   "consolidatedScanned": 4,
-  "countiesScanned": 49,
+  "countiesScanned": 54,
   "emoji": "📷",
-  "generatedAt": "2026-11-25T01:25:39Z",
+  "generatedAt": "2026-11-25T18:58:18Z",
   "label": "ALPR / surveillance",
   "mentionsWithOutcomes": 4,
-  "placesScanned": 63,
-  "placesWithMentions": 29,
+  "placesScanned": 68,
+  "placesWithMentions": 31,
   "topic": "alpr",
   "universeCities": 537,
   "universeConsolidated": 9,

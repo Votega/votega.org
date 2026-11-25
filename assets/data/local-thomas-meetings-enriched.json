@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-25T01:03:30Z",
+  "generatedAt": "2026-11-25T18:32:45Z",
   "source": "Thomas County (nimblecal agenda/minutes PDFs, poppler+OCR)",
   "place": "Thomas County",
   "count": 25
@@ -13,22 +13,31 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-16",
+  "lastActivity": "2026-12-01",
   "topicTotals": {
-   "budget": 2,
-   "comprehensive-plan": 3,
+   "budget": 3,
    "contract": 8,
-   "development": 3,
-   "rezoning": 3,
+   "development": 4,
+   "rezoning": 4,
+   "comprehensive-plan": 3,
    "special-land-use": 3,
    "local-taxes": 6,
    "millage-budget": 9,
    "variance": 1,
    "alpr": 3,
-   "appointment": 3
+   "appointment": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Commission Board Meeting",
+    "date": "2026-11-24",
+    "sourceUrl": "https://thomascountyboc.org/uploads/files/96/82/9682968b146ad9fcd80fac65f371a22d.pdf",
+    "tags": [
+     "development",
+     "rezoning"
+    ]
+   },
    {
     "title": "Commissioners' Board Meeting",
     "date": "2026-11-10",
@@ -64,7 +73,7 @@
     ]
    }
   ],
-  "landUseMeetings": 3,
+  "landUseMeetings": 4,
   "alprItems": [
    {
     "title": "Commission Board Meeting",
@@ -150,6 +159,14 @@
   "localTaxCitations": 6,
   "budgetItems": [
    {
+    "title": "Commission Board Meeting",
+    "date": "2026-11-24",
+    "sourceUrl": "https://thomascountyboc.org/uploads/files/96/82/9682968b146ad9fcd80fac65f371a22d.pdf",
+    "terms": [
+     "annual budget"
+    ]
+   },
+   {
     "title": "Budget Public Hearing and Budget Work Session",
     "date": "2026-11-16",
     "sourceUrl": "https://thomascountyboc.org/uploads/files/0c/75/0c7580a00df3850ea2298fdc02675159.pdf",
@@ -170,12 +187,68 @@
     ]
    }
   ],
-  "budgetCitations": 2,
-  "landUseCitations": 3,
+  "budgetCitations": 3,
+  "landUseCitations": 4,
   "alprCitations": 3,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "2026-12-01-purchasing-committee",
+   "date": "2026-12-01",
+   "body": "Purchasing Committee",
+   "title": "Purchasing Committee",
+   "sourceUrl": "https://thomascountyboc.org/uploads/files/7e/66/7e66f26dbc62987c020f01248d59fadf.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://thomascountyboc.org/uploads/files/7e/66/7e66f26dbc62987c020f01248d59fadf.pdf",
+   "textMethod": "ocr",
+   "textChars": 401,
+   "pdfSha256": "76f1ef5107625927e7b01d256ef5e96e82491045db5fa666b06fcd4c4cccb8e2",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "2026-11-24-board-of-commissioners",
+   "date": "2026-11-24",
+   "body": "Board of Commissioners",
+   "title": "Commission Board Meeting",
+   "sourceUrl": "https://thomascountyboc.org/uploads/files/96/82/9682968b146ad9fcd80fac65f371a22d.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://thomascountyboc.org/uploads/files/96/82/9682968b146ad9fcd80fac65f371a22d.pdf",
+   "textMethod": "ocr",
+   "textChars": 23476,
+   "pdfSha256": "63474c4104c855a038192490ecb45dd7de593aa5253f6a97c06c62a2e3ba5558",
+   "topics": {
+    "budget": 1,
+    "contract": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "budget",
+    "contract",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "annual budget",
+    "apartment",
+    "contract",
+    "multi-family",
+    "rezon",
+    "subdivision"
+   ],
+   "topicExcerpts": {},
+   "flags": [
+    "land-use",
+    "budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2026-11-16-board-of-commissioners",
    "date": "2026-11-16",
@@ -806,51 +879,6 @@
    "topics": {},
    "tags": [],
    "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-08-05-public-property",
-   "date": "2026-08-05",
-   "body": "Public Property",
-   "title": "Public Property Committee",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/14/21/14219e42213d26939ef0f0939d9b8869.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/14/21/14219e42213d26939ef0f0939d9b8869.pdf",
-   "textMethod": "ocr",
-   "textChars": 480,
-   "pdfSha256": "db4326219c52228b5987aa4d41046e69c132999ba1df9ffb32046663fa2d13ef",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2026-08-04-purchasing-committee",
-   "date": "2026-08-04",
-   "body": "Purchasing Committee",
-   "title": "Purchasing Committee",
-   "sourceUrl": "https://thomascountyboc.org/uploads/files/fe/a8/fea8eaa614a78fafa76be938e4b8e14c.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://thomascountyboc.org/uploads/files/fe/a8/fea8eaa614a78fafa76be938e4b8e14c.pdf",
-   "textMethod": "ocr",
-   "textChars": 522,
-   "pdfSha256": "e20033b9fb94bd9246f79b9aa07bc6238452689cb1eabee6c83012b79b79cdf0",
-   "topics": {
-    "appointment": 1,
-    "contract": 1
-   },
-   "tags": [
-    "appointment",
-    "contract"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract"
-   ],
    "topicExcerpts": {},
    "flags": [],
    "dataCenterItems": []

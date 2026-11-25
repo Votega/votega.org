@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-25T01:03:03Z",
+  "generatedAt": "2026-11-25T18:29:12Z",
   "source": "Fulton County (Legistar structured API)",
   "place": "Fulton County",
-  "count": 20
+  "count": 21
  },
  "summary": {
   "flags": [
@@ -13,13 +13,13 @@
    "land-use",
    "local-taxes"
   ],
-  "lastActivity": "2026-11-18",
+  "lastActivity": "2026-12-02",
   "topicTotals": {
-   "appointment": 51,
-   "contract": 208,
-   "development": 76,
+   "contract": 228,
+   "budget": 8,
+   "appointment": 52,
+   "development": 77,
    "annexation": 1,
-   "budget": 6,
    "local-taxes": 23,
    "data-center": 3,
    "alpr": 1
@@ -48,6 +48,16 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners",
+    "date": "2026-12-02",
+    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6401&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+    "tags": [
+     "development"
+    ],
+    "excerpt": "… y neighborhood by approving a grant from funds previously set aside to aid in the construction of a 200-unit affordable multifamily development, and for other purposes. (Barrett) (HELD ON 11/18/26) Commissioners Action Item",
+    "excerptTerm": "multifamily"
+   },
    {
     "title": "Board of Commissioners",
     "date": "2026-11-18",
@@ -170,7 +180,7 @@
     "excerptTerm": "subdivision"
    }
   ],
-  "landUseMeetings": 14,
+  "landUseMeetings": 15,
   "alprItems": [
    {
     "title": "Board of Commissioners",
@@ -321,6 +331,17 @@
   "budgetItems": [
    {
     "title": "Board of Commissioners",
+    "date": "2026-12-02",
+    "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6401&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+    "terms": [
+     "decision-then-budget",
+     "operating budget"
+    ],
+    "excerpt": "Public Hearing for the FY2027 Proposed Operating Budget. Public Hearings",
+    "excerptTerm": "decision-then-budget"
+   },
+   {
+    "title": "Board of Commissioners",
     "date": "2026-11-18",
     "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6400&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
     "terms": [
@@ -365,12 +386,72 @@
     "excerptTerm": "annual budget"
    }
   ],
-  "budgetCitations": 4,
-  "landUseCitations": 12,
+  "budgetCitations": 5,
+  "landUseCitations": 13,
   "alprCitations": 1,
   "dataCenterCitations": 3
  },
  "meetings": [
+  {
+   "eventId": 6401,
+   "date": "2026-12-02",
+   "body": "Board of Commissioners",
+   "sourceUrl": "https://fulton.legistar.com/MeetingDetail.aspx?LEGID=6401&GID=817&G=197058BF-F352-4423-BE44-04DFABBD8188",
+   "itemCount": 83,
+   "topics": {
+    "contract": 20,
+    "budget": 2,
+    "appointment": 1,
+    "development": 1
+   },
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "decision-then-budget",
+    "multifamily",
+    "operating budget"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "Request approval to renew an existing contract - Human Resources Management, 24RFP1325481B-PS, Family and Medical Leave Act (FMLA) Administration Services in an amoun …",
+     "context": "agenda-action"
+    },
+    "budget": {
+     "term": "decision-then-budget",
+     "excerpt": "Public Hearing for the FY2027 Proposed Operating Budget. Public Hearings",
+     "context": "agenda-action"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… tion to modify the membership of the Board of Trustees of the Fulton County Employees Retirement System; to provide for appointment by full Board of Commissioners; to amend the governing plan and trust; and for other purposes. (Abdur-Rahman) (HELD …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "multifamily",
+     "excerpt": "… y neighborhood by approving a grant from funds previously set aside to aid in the construction of a 200-unit affordable multifamily development, and for other purposes. (Barrett) (HELD ON 11/18/26) Commissioners Action Item",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget"
+   ],
+   "dataCenterItems": [],
+   "landUseItems": [
+    {
+     "title": "Request approval of a Resolution to support affordable housing in the Vine City neighborhood by approving a grant from funds previously set aside to aid in the construction of a 20",
+     "matterFile": "26-0819",
+     "matterType": "Commissioners Action Item",
+     "tags": [
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null
+    }
+   ]
+  },
   {
    "eventId": 6400,
    "date": "2026-11-18",

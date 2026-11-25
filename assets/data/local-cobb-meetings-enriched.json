@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-25T01:03:25Z",
+  "generatedAt": "2026-11-25T18:29:24Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
@@ -15,7 +15,8 @@
   ],
   "lastActivity": "2027-01-13",
   "topicTotals": {
-   "variance": 9,
+   "variance": 10,
+   "rezoning": 6,
    "special-land-use": 6,
    "annexation": 5,
    "appointment": 7,
@@ -23,7 +24,6 @@
    "contract": 10,
    "development": 6,
    "local-taxes": 6,
-   "rezoning": 5,
    "millage-budget": 5,
    "data-center": 1
   },
@@ -56,12 +56,14 @@
    {
     "title": "Planning Commission Zoning Hearing",
     "date": "2026-12-01",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10363,plainText=false)",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10371,plainText=false)",
     "tags": [
-     "special-land-use"
+     "rezoning",
+     "special-land-use",
+     "variance"
     ],
-    "excerpt": "… 7. Z-52-2026 District 2 - 465 Big Shanty Road 8. LUP-35-2026 District 4 - 448 Hurt Road 9. SLUP-9-2026 District 2 - 114 Townpark Drive 10. SLUP-11-2026 District 2 - 465 Big Shanty Road Regular Cases – New …",
-    "excerptTerm": "slup"
+    "excerpt": "… COBB COUNTY PLANNING COMMISSION ZONING HEARING CONSENT AGENDA December 1, 2026 Rezoning Cases Z-54 KIRKWOOD PRESBYTERIAN CHURCH, INC. (Kirkwood Presbyterian Church, Inc., Owner) reques …",
+    "excerptTerm": "rezon"
    },
    {
     "title": "BOC Regular Meeting",
@@ -380,25 +382,42 @@
    "date": "2026-12-01",
    "body": "Planning Commission",
    "title": "Planning Commission Zoning Hearing",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10363,plainText=false)",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10371,plainText=false)",
    "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10363,plainText=false)",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10371,plainText=false)",
    "textMethod": "pdftotext",
-   "textChars": 1725,
-   "pdfSha256": "b2dfb4e46b4da8e06bc0ecc19969f0825bc3032cb3d8407ebcc7db08df31a581",
+   "textChars": 10623,
+   "pdfSha256": "dd1484f2969abed0f6362562b8474dcd594161a9e2cb846fddf2c259240b0eec",
    "topics": {
-    "special-land-use": 1
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
    },
    "tags": [
-    "special-land-use"
+    "rezoning",
+    "special-land-use",
+    "variance"
    ],
    "matchedTerms": [
-    "slup"
+    "land use permit",
+    "rezon",
+    "slup",
+    "variance"
    ],
    "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… COBB COUNTY PLANNING COMMISSION ZONING HEARING CONSENT AGENDA December 1, 2026 Rezoning Cases Z-54 KIRKWOOD PRESBYTERIAN CHURCH, INC. (Kirkwood Presbyterian Church, Inc., Owner) reques …",
+     "context": "agenda-action"
+    },
     "special-land-use": {
      "term": "slup",
-     "excerpt": "… 7. Z-52-2026 District 2 - 465 Big Shanty Road 8. LUP-35-2026 District 4 - 448 Hurt Road 9. SLUP-9-2026 District 2 - 114 Townpark Drive 10. SLUP-11-2026 District 2 - 465 Big Shanty Road Regular Cases – New …",
+     "excerpt": "… 2026 and the December 1, 2026 PC hearings until the February 2, 2027 PC hearing.) 2 SLUP-11-2026 GIP BIG SHANTY, LLC (Continued by staff from the November 3, 2026 and December 1, 2 …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… n received October 1, 2026, with the District Commissioner approving minor modifications; 2. Variances as stated in the Zoning comments; 3. Fire Department comments and recommendations; 4. Stormwat …",
      "context": "agenda-action"
     }
    },
