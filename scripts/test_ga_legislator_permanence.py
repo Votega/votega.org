@@ -259,7 +259,15 @@ def test_former_legislators_data_for_state_reps_page():
                                  "url": "/ga-legislators/bob-resigned-house-5/"})
     check("no departure status -> left is None", rows[0]["left"], None)
     check("sitting members excluded", "Ann Sitting" in [r["name"] for r in rows], False)
-    check("empty input -> no groups", B.former_legislators([]), {"groups": []})
+    check("empty input -> no groups", B.former_legislators([]),
+          {"groups": [], "pastBiennium": False})
+    check("someone only in the frozen biennium -> pastBiennium", got["pastBiennium"], True)
+    B._FORMER[:] = []
+    run([SITTING, RESIGNED], {}, {k: v for k, v in ledger3().items() if k in ("1", "2")})
+    got = B.former_legislators(B._FORMER)
+    check("only live resignations -> listed, but not pastBiennium",
+          ([r["name"] for g in got["groups"] for r in g["members"]], got["pastBiennium"]),
+          (["Bob Resigned"], False))
 
 
 if __name__ == "__main__":

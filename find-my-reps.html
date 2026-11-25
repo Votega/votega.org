@@ -139,6 +139,31 @@ css:
     </div>
     <span class="rep-card-cta">Find my GA state reps →</span>
   </a>
+{%- comment -%}
+  Decision D14, both levels. Hidden until the first turnover: the 120th Congress seated
+  (former_congress has groups) or the General Assembly rolled over (pastBiennium). Both files
+  come from scripts/build_entity_pages.py, so the card appears by itself at the next deploy.
+  Each link needs its own list, rendered on the target page from the same file. A div, not
+  a link like the cards above: it holds two links.
+{%- endcomment -%}
+{%- assign former_ga = site.data.former_legislators -%}
+{%- assign former_fed = site.data.former_congress -%}
+{%- assign has_former_fed = false -%}
+{%- if former_fed.groups and former_fed.groups.size > 0 -%}{%- assign has_former_fed = true -%}{%- endif -%}
+{%- if has_former_fed or former_ga.pastBiennium %}
+
+  <div class="rep-card rep-card-local">
+    <div class="rep-card-icon"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i></div>
+    <p class="rep-card-title">Former Legislators</p>
+    <p class="rep-card-desc">Georgia members who have left Congress or the General Assembly keep their pages, with their votes and sponsored bills from the years they served.</p>
+    {%- if has_former_fed %}
+    <a class="rep-card-cta" href="{{ '/federal-reps' | relative_url }}#former">See former members of Congress →</a>
+    {%- endif %}
+    {%- if former_ga.groups and former_ga.groups.size > 0 %}
+    <a class="rep-card-cta" href="{{ '/ga-state-reps' | relative_url }}#former">See former GA legislators →</a>
+    {%- endif %}
+  </div>
+{%- endif %}
 </div>
 
 <!-- Reuses the tested Census geocoder from the sample-ballot module (address ->
