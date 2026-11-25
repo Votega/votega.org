@@ -322,6 +322,19 @@ def counted_votes(path):
                for c in race.get('contests', []))
 
 
+def signal_results_loaded():
+    """Tell the workflow the writer refused, so it skips the placeholder-only steps.
+
+    validate_general_placeholder.py rejects any file carrying votes. That is right for
+    a file this writer produced and wrong for real results it declined to touch, and
+    running it on the latter failed the daily job from 4 November 2026 on.
+    """
+    out = os.environ.get('GITHUB_OUTPUT')
+    if out:
+        with open(out, 'a', encoding='utf-8') as f:
+            f.write('results_loaded=true\n')
+
+
 def report_drift(committed, fresh):
     """Print how the committed preview differs from what races.json says now."""
     a, b = ballots(committed), ballots(fresh)
@@ -381,6 +394,7 @@ if __name__ == '__main__':
     if counted:
         print(f"{out_path} holds {counted:,} votes — real results, not a "
               f"placeholder. Refusing to overwrite it with zeros.")
+        signal_results_loaded()
         sys.exit(0)
 
     write_json_atomic(out_path, sections, separators=(',', ':'))

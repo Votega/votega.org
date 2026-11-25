@@ -17,6 +17,10 @@ name: Refresh general-election ballot preview (daily, 07:30 UTC)
 # because the file it was handed had already been zeroed and committed. Keep
 # the guard on the write path, not just the check: this job runs daily and on
 # every races.json push, including the morning after polls close.
+# When it refuses it sets the `results_loaded` output, and the validate, commit and
+# report steps are skipped: the validator rejects any file carrying votes, so running
+# it on real results failed this job daily after the 2026 general. races.json is still
+# validated on every run.
 # Pinned by scripts/test_general_placeholder_guard.py.
 
 permissions:
@@ -81,6 +85,7 @@ jobs:
       # every races.json push. See docs/audits/2026-10-13-data-pipeline-audit.md
       # 2.6.
       - name: Validate the rebuild
+        if: steps.generate.outputs.results_loaded != 'true'
         run: |
           set -e
           python scripts/validate_general_placeholder.py             _data/election_results/ga-general-2026-results.json             --baseline-ref HEAD             --report-out "$RUNNER_TEMP/general-placeholder-changes.md"
@@ -88,6 +93,7 @@ jobs:
           python scripts/build_general_placeholder.py --check
 
       - name: Commit and push the refreshed preview
+        if: steps.generate.outputs.results_loaded != 'true'
         run: |
           set -e
           git config user.name "github-actions[bot]"
@@ -113,6 +119,7 @@ jobs:
       # shipped. One issue, refreshed in place; because this runs daily and on
       # every races.json push, a comment is only added when the body CHANGED.
       - name: Report what changed
+        if: steps.generate.outputs.results_loaded != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_TITLE: "General-election preview: material changes"
