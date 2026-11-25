@@ -2142,15 +2142,21 @@ places:
     region:                         # optional hub grouping label
     domains:
       meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/glynn/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # Glynn's site (a headless CMS from Interpersonal Frequency, "Powered by" in the footer: the
+        # web vendor, not a meeting platform) embeds a Granicus ViewPublisher on its agendas page,
+        # which the lib.granicus adapter scrapes (validated 356 meetings). The Name cell carries
+        # "Name, Glynn County Board of Commissioners" plus a type suffix (Special Called, Joint
+        # Meeting): one rule folds them all into the Board of Commissioners. The lone "Special
+        # Called Joint Planning Commission Work Session" is dropped (no board match).
+        platform: granicus
+        base_url: https://www.glynncounty.org/
+        agendas_url: "https://glynncounty.granicus.com/ViewPublisher.php?view_id=1"
+        body_map:
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
         schedule:
           - body: Board of Commissioners
-            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
-            location: ""            # optional
+            when: "1st and 3rd Thursday of every month, 6:00 p.m."   # county notice
+            location: "Historic Courthouse, 701 G Street, Brunswick"
 
   - slug: dougherty
     name: Dougherty County
