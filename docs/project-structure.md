@@ -110,6 +110,7 @@ votega.org/
 │   ├── ga-member-overrides-editor.html   # Simpler per-field member overrides editor (loads ga-members.json for context)
 │   ├── ga-finance-overrides-editor.html  # Resolve ambiguous/no-filing PeachFile finance matches → candidate finance overrides
 │   ├── counterparty-review-editor.html   # Review the local counterparty queue (_data/counterparty_review.yml, read-only) and log approve/reject/edit/split decisions to _data/counterparty_decisions.json; scripts/generate_local_counterparties.py applies the log (see the counterparty bullet in Project-Specific Conventions)
+│   ├── local-results-review.html         # Seat-by-seat review of a county-commission election against _data/local_officials.yml. Loads a review JSON (open/drop; no File System Access write) built by scripts/build_local_results_review.py from a saved SoS results pull; keeps decisions in localStorage + export. Writes nothing to the repo
 │   └── race-candidate-editor.html        # Curate candidate profiles directly in races.json (federal & other non-regenerated races have no override layer — edited in place). Syncs a candidate's edits across every phase they appear in (e.g. special + runoff); warns off ga-house-*/ga-senate-* (regenerated — use the overrides file); preserves CRLF/2-space/no-trailing-newline for byte-identical diffs
 ├── .claude/settings.local.json          # Tool permissions (Congress.gov, GitHub, Python)
 ├── .vscode/settings.json

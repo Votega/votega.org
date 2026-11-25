@@ -1019,6 +1019,7 @@ jurisdictions:
         source: "https://www.newtoncountyga.gov/703/Andre-Cooper"
         notes: "Appointed as Interim Commissioner by Gov. Brian Kemp, March 7, 2025"
       - name: "JC Henderson"
+        full_name: "J.C. Henderson"   # authoritative full name (SoS results); site shows `name`
         role: Commissioner
         seat: "District 4"                    # e.g. "District 1"
         seat_id: district-4
@@ -1536,17 +1537,31 @@ jurisdictions:
         role: Commissioner
         seat: "District 4"                    # e.g. "District 1"
         seat_id: district-4
-        party: 
+        leaves_office: 2027-01-01           # DRAFT: seat filled by a Nov 2026 SPECIAL; actual swearing-in may be earlier - verify
+        party:
         email: ""
         phone: ""
-        last_elected: 
-        term_end: 
+        last_elected:
+        term_end:
         next_election: 2026
         voting: true
         tie_break_only: false
         photo: ""
         source: "https://www.fultoncountyga.gov/Commissioners"
         notes: ""
+      - name: "Rohit Malhotra"
+        role: Commissioner
+        seat: "District 4"
+        seat_id: district-4
+        takes_office: 2027-01-01           # DRAFT: SPECIAL election, may be sworn in earlier than Jan 1 - verify
+        party: Democratic
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end:
+        next_election:
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/fulton-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, certified (66.7% in the special, Aaron Sampson 24.6%); confirm term end
       - name: "Marvin S. Arrington, Jr."
         role: Commissioner
         seat: "District 5"                    # e.g. "District 1"
@@ -1706,6 +1721,7 @@ jurisdictions:
     related_pages:
     members:
       - name: "Benjamin Liles"
+        full_name: "Benjamin Parker Liles"   # authoritative full name (SoS qualified-candidate data); SoS results show "Parker Liles"
         role: Chair
         seat: "At-Large"
         seat_id: at-large
@@ -1794,14 +1810,28 @@ jurisdictions:
         role: Chair
         seat: "At-Large"
         seat_id: at-large
+        leaves_office: 2027-01-01           # DRAFT: Chair seat decided by a Nov 2026 SPECIAL; confirm Taylor's departure + reason and actual swearing-in date
         party:
         email: ""
         phone: "912-632-5214"
-        last_elected: 
+        last_elected:
         term_end:
-        next_election: 
+        next_election:
         voting: true
         source: "https://baconcounty.org/administration.php"
+      - name: "Mary Lee Sweat"
+        role: Chair
+        seat: "At-Large"
+        seat_id: at-large
+        takes_office: 2027-01-01           # DRAFT: SPECIAL election, may be sworn in earlier than Jan 1 - verify
+        party: Nonpartisan   # per Ballotpedia (nonpartisan special for Chair)
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end:
+        next_election:
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/bacon-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results, certified (59.7% over Mark Lemley, special for Commission Chair); confirm term end
       - name: "Lee Hagans"
         full_name: "Lee A. Hagans"   # authoritative full name (matching); site shows `name`
         role: Commissioner
@@ -4829,6 +4859,7 @@ jurisdictions:
         voting: true
         source: "https://thomascountyboc.org/about-us/county-commissioners"                # REQUIRED - primary-source URL
       - name: "Kenneth Hickey"
+        full_name: "Kenneth \"Ken\" Hickey"   # SoS results show "Ken Hickey"; site shows `name`
         role: Commissioner               # Chair | Vice Chair | Commissioner
         seat: "District 3"                  # "District 4"
         seat_id: district-3
