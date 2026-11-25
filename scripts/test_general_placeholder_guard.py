@@ -84,9 +84,38 @@ def cases():
               bool(B.counted_votes(partial)), True)
 
 
+def workflow_cases():
+    """Real results must skip the placeholder-only steps, and nothing else."""
+    with tempfile.TemporaryDirectory() as tmp:
+        out = os.path.join(tmp, "output")
+        old = os.environ.get("GITHUB_OUTPUT")
+        try:
+            os.environ["GITHUB_OUTPUT"] = out
+            B.signal_results_loaded()
+        finally:
+            if old is None:
+                os.environ.pop("GITHUB_OUTPUT", None)
+            else:
+                os.environ["GITHUB_OUTPUT"] = old
+        with open(out, encoding="utf-8") as fh:
+            check("a refusal sets results_loaded", fh.read(), "results_loaded=true\n")
+
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".github",
+                        "workflows", "refresh-general-placeholder.yml")
+    with open(path, encoding="utf-8") as fh:
+        steps = fh.read().split("      - name: ")[1:]
+    gated = [s.split("\n", 1)[0] for s in steps
+             if "\n        if: steps.generate.outputs.results_loaded != 'true'\n" in s]
+    check("only the placeholder-only steps are skipped", gated,
+          ["Validate the rebuild", "Commit and push the refreshed preview",
+           "Report what changed"])
+
+
 if __name__ == "__main__":
     print("counted_votes guard:")
     cases()
+    print("workflow gating:")
+    workflow_cases()
     if failures:
         print(f"\n{len(failures)} failure(s)")
         sys.exit(1)
