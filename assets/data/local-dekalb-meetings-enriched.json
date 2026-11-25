@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-23T21:03:16Z",
+  "generatedAt": "2026-11-25T01:03:16Z",
   "source": "DeKalb County (Legistar structured API)",
   "place": "DeKalb County",
   "count": 25
@@ -12,17 +12,17 @@
    "land-use",
    "local-taxes"
   ],
-  "lastActivity": "2026-11-19",
+  "lastActivity": "2026-12-03",
   "topicTotals": {
-   "rezoning": 73,
-   "special-land-use": 48,
-   "comprehensive-plan": 8,
-   "appointment": 92,
-   "contract": 711,
-   "alpr": 11,
+   "contract": 730,
+   "appointment": 95,
    "development": 22,
-   "local-taxes": 27,
-   "data-center": 37
+   "local-taxes": 26,
+   "alpr": 10,
+   "special-land-use": 50,
+   "rezoning": 70,
+   "comprehensive-plan": 8,
+   "data-center": 33
   },
   "dataCenterItems": [
    {
@@ -76,6 +76,17 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Committee of the Whole",
+    "date": "2026-12-03",
+    "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4499&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+    "tags": [
+     "development",
+     "special-land-use"
+    ],
+    "excerpt": "… obtain various material-handling units, including forklifts and narrow aisle equipment, for use at treatment plants and warehouse. Awarded to HD Hyundai Construction Equipment North America, Inc. Amount Not To Exceed: $600,000.00. Resolution",
+    "excerptTerm": "warehouse"
+   },
    {
     "title": "Board of Commissioners - Zoning Meeting",
     "date": "2026-11-19",
@@ -191,6 +202,16 @@
   "landUseMeetings": 23,
   "alprItems": [
    {
+    "title": "Committee of the Whole",
+    "date": "2026-12-03",
+    "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4499&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+    "terms": [
+     "crime center"
+    ],
+    "excerpt": "Commission District(s): All CO - Change Order No. 1 to Contract No. 2000433, Accurint Virtual Crime Center Database Software for Investigative Intelligence and Crime Reporting (Sole Source). For use by Police Services to obtai …",
+    "excerptTerm": "crime center"
+   },
+   {
     "title": "Board of Commissioners",
     "date": "2026-11-17",
     "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4498&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
@@ -273,21 +294,20 @@
     ],
     "excerpt": "… (CEW). Ratifying increase in contract funds for 100 additional tasers and previously issued purchase order. Awarded to Axon Enterprise, Inc. Amount Not To Exceed: $1,442,514.00. Resolution",
     "excerptTerm": "axon enterprise"
-   },
-   {
-    "title": "Committee of the Whole",
-    "date": "2026-06-18",
-    "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4477&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-    "terms": [
-     "axon enterprise",
-     "body cam"
-    ],
-    "excerpt": "… (CEW). Ratifying increase in contract funds for 100 additional tasers and previously issued purchase order. Awarded to Axon Enterprise, Inc. Amount Not To Exceed: $1,442,514.00. Resolution",
-    "excerptTerm": "axon enterprise"
    }
   ],
   "alprMeetings": 9,
   "localTaxItems": [
+   {
+    "title": "Committee of the Whole",
+    "date": "2026-12-03",
+    "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4499&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… tenance, repair, and replacement services at County-owned facilities. Seeking increase in contract funds and to release SPLOST funds previously allocated in the amount of $924,399.30. Awarded to Hawk Construction Company, LLC. Total Amount Not To …",
+    "excerptTerm": "splost"
+   },
    {
     "title": "Board of Commissioners",
     "date": "2026-11-17",
@@ -400,28 +420,118 @@
     ],
     "excerpt": "Commission District(s): Commission District(s): All 2026 Ad Valorem Tax Millage Rates; Budget Revisions Resolution",
     "excerptTerm": "ad valorem"
-   },
-   {
-    "title": "Committee of the Whole",
-    "date": "2026-06-18",
-    "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4477&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-    "terms": [
-     "ad valorem",
-     "millage",
-     "splost"
-    ],
-    "excerpt": "Commission District(s): 4 & 6 To Allocate $500,000.00 of Category B3 - Bicycle Paths/Lanes/Multi-use Trails1 SPLOST II Funding for the Laredo Drive Bicycle Facility Resolution",
-    "excerptTerm": "splost"
    }
   ],
   "localTaxCitations": 12,
   "budgetItems": [],
   "budgetCitations": 0,
-  "landUseCitations": 9,
+  "landUseCitations": 10,
   "alprCitations": 9,
   "dataCenterCitations": 7
  },
  "meetings": [
+  {
+   "eventId": 4499,
+   "date": "2026-12-03",
+   "body": "Committee of the Whole",
+   "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4499&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+   "itemCount": 164,
+   "topics": {
+    "contract": 81,
+    "appointment": 5,
+    "development": 1,
+    "local-taxes": 1,
+    "alpr": 1,
+    "special-land-use": 2
+   },
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "crime center",
+    "land use permit",
+    "slup",
+    "special land use",
+    "splost",
+    "warehouse"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "Purchasing & Contracting",
+     "context": "agenda-action"
+    },
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "APPOINTMENTS NOT REQUIRING BOARD ACTION - FOR INFORMATION ONLY",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "warehouse",
+     "excerpt": "… obtain various material-handling units, including forklifts and narrow aisle equipment, for use at treatment plants and warehouse. Awarded to HD Hyundai Construction Equipment North America, Inc. Amount Not To Exceed: $600,000.00. Resolution",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… tenance, repair, and replacement services at County-owned facilities. Seeking increase in contract funds and to release SPLOST funds previously allocated in the amount of $924,399.30. Awarded to Hawk Construction Company, LLC. Total Amount Not To …",
+     "context": "agenda-action"
+    },
+    "alpr": {
+     "term": "crime center",
+     "excerpt": "Commission District(s): All CO - Change Order No. 1 to Contract No. 2000433, Accurint Virtual Crime Center Database Software for Investigative Intelligence and Crime Reporting (Sole Source). For use by Police Services to obtai …",
+     "context": "agenda-action"
+    },
+    "special-land-use": {
+     "term": "special land use",
+     "excerpt": "COMMISSION DISTRICT(S): 3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow an accessory alcohol outlet Tier 1 of the Bouldercrest Overlay District and in the C-1 (Local Co …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "alpr",
+    "local-taxes"
+   ],
+   "dataCenterItems": [],
+   "landUseItems": [
+    {
+     "title": "Commission District(s): All CA - Cooperative Agreement - Forklifts, Lift Trucks with Related Products and Services (Sourcewell Contract No. 053024-HCE). For use by Department of Wa",
+     "matterFile": "2026-1365",
+     "matterType": "Resolution",
+     "tags": [
+      "contract",
+      "development"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "All CA - Cooperative Agreement - Forklifts, Lift Trucks with Related Products and Services (Sourcewell Contract No. 053024-HCE). For use by Department of Watershed Management (DWM) to obtain various material-handling units, including forklifts and narrow aisle equipment, for use at treatment plants and warehouse. Awarded to HD Hyundai Construction Equipment North America, Inc. Amount Not To Exceed: $600,000.00"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): 3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow an accessory alcohol outlet Tier 1 of the Bouldercrest Overlay District and",
+     "matterFile": "2026-1270",
+     "matterType": "Ordinance",
+     "tags": [
+      "special-land-use"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow an accessory alcohol outlet Tier 1 of the Bouldercrest Overlay District and in the C-1 (Local Commercial) zoning district, at 2510 Bouldercrest Road"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): 3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow fuel pumps in Tier 1 of the Bouldercrest Overlay District and the C-1 (Loca",
+     "matterFile": "2026-1269",
+     "matterType": "Ordinance",
+     "tags": [
+      "special-land-use"
+     ],
+     "passed": null,
+     "action": null,
+     "mover": null,
+     "districts": "3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow fuel pumps in Tier 1 of the Bouldercrest Overlay District and the C-1 (Local Commercial) zoning district, at 2510 Bouldercrest Road"
+    }
+   ]
+  },
   {
    "eventId": 4541,
    "date": "2026-11-19",
@@ -429,8 +539,8 @@
    "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4541&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
    "itemCount": 33,
    "topics": {
-    "rezoning": 9,
-    "special-land-use": 9,
+    "rezoning": 8,
+    "special-land-use": 10,
     "comprehensive-plan": 1
    },
    "matchedTerms": [
@@ -493,9 +603,9 @@
      "tags": [
       "rezoning"
      ],
-     "passed": null,
-     "action": null,
-     "mover": null,
+     "passed": "Pass",
+     "action": "Deferred",
+     "mover": "Chakira Johnson",
      "districts": "4 and 6 Application of Jared Samples to rezone property from C-1 (Local Commercial) zoning district to MR-2 (Medium Density Residential-2) zoning district to allow residential development, at 5561-5567 Memorial Drive"
     },
     {
@@ -590,7 +700,7 @@
       "rezoning"
      ],
      "passed": null,
-     "action": null,
+     "action": "Approved with conditions",
      "mover": null,
      "districts": "5 and 7 Application of Reginald Crayton to rezone property from RSM (Small Lot Residential Mix) zoning district to the R-85 (Residential Medium Lot-85) zoning district to allow the expansion of an existing place of worship, at 4710 Mandy Wicker Lane"
     },
@@ -613,9 +723,9 @@
      "tags": [
       "special-land-use"
      ],
-     "passed": null,
-     "action": null,
-     "mover": null,
+     "passed": "Pass",
+     "action": "Denied",
+     "mover": "Nicole Massiah",
      "districts": "3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow fuel pumps in Tier 1 of the Bouldercrest Overlay District and the C-1 (Local Commercial) zoning district, at 2510 Bouldercrest Road"
     },
     {
@@ -625,22 +735,10 @@
      "tags": [
       "special-land-use"
      ],
-     "passed": "Fail",
+     "passed": "Pass",
      "action": "Denied",
      "mover": "Nicole Massiah",
      "districts": "3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow an accessory alcohol outlet Tier 1 of the Bouldercrest Overlay District and in the C-1 (Local Commercial) zoning district, at 2510 Bouldercrest Road"
-    },
-    {
-     "title": "Commission District(s): 4 and 6 Application of Jared Samples to rezone property from C-1 (Local Commercial) zoning district to MR-2 (Medium Density Residential-2) zoning district t",
-     "matterFile": "2026-1100",
-     "matterType": "Ordinance",
-     "tags": [
-      "rezoning"
-     ],
-     "passed": "Pass",
-     "action": "Deferred",
-     "mover": "Chakira Johnson",
-     "districts": "4 and 6 Application of Jared Samples to rezone property from C-1 (Local Commercial) zoning district to MR-2 (Medium Density Residential-2) zoning district to allow residential development, at 5561-5567 Memorial Drive"
     },
     {
      "title": "COMMISSION DISTRICT(S): 3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow an accessory alcohol outlet Tier 1 of the Bouldercrest Overlay District and",
@@ -689,6 +787,18 @@
      "action": "Approved",
      "mover": "Nicole Massiah",
      "districts": "All Districts Application of the Director of Planning and Sustainability to adopt the 2027-28 Zoning, Special Land Use Permit (SLUP), and Land Use Calendar and Resolution. This text amendment is County-wide"
+    },
+    {
+     "title": "COMMISSION DISTRICT(S): 3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow fuel pumps in Tier 1 of the Bouldercrest Overlay District and the C-1 (Loca",
+     "matterFile": "2026-1269",
+     "matterType": "Ordinance",
+     "tags": [
+      "special-land-use"
+     ],
+     "passed": "Pass",
+     "action": "Deferred",
+     "mover": "Nicole Massiah",
+     "districts": "3 and 6 Application of Rohail Hada for a Special Land Use Permit (SLUP) to allow fuel pumps in Tier 1 of the Bouldercrest Overlay District and the C-1 (Local Commercial) zoning district, at 2510 Bouldercrest Road"
     }
    ]
   },
@@ -3962,214 +4072,6 @@
      "action": "Deferred to the next meeting",
      "mover": "Ted Terry",
      "districts": "Commission District 03 Super District 06 Application of the Director of Planning & Sustainability to amend Section 27-3.39 to update the Bouldercrest-Cedar Grove-Moreland Overlay District to allow limited office uses, when subject to a Special Land Use Permit and additional criteria with Tier V of the overlay"
-    }
-   ]
-  },
-  {
-   "eventId": 4477,
-   "date": "2026-06-18",
-   "body": "Committee of the Whole",
-   "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4477&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-   "itemCount": 170,
-   "topics": {
-    "data-center": 4,
-    "rezoning": 2,
-    "special-land-use": 1,
-    "contract": 62,
-    "local-taxes": 2,
-    "alpr": 2,
-    "appointment": 2,
-    "development": 1
-   },
-   "matchedTerms": [
-    "ad valorem",
-    "appoint",
-    "axon enterprise",
-    "body cam",
-    "contract",
-    "data center",
-    "land use permit",
-    "millage",
-    "multifamily",
-    "purchase order",
-    "rezon",
-    "special land use",
-    "splost"
-   ],
-   "topicExcerpts": {
-    "data-center": {
-     "term": "data center",
-     "excerpt": "… and Sustainability to amend Chapter 27 to Establish a Definition, Regulatory Guidelines, and Development Standards for Data Centers in M (Industrial), M-2 (Heavy Industrial), O-I (Office-Institutional), and O-D (Office-Distribution) zoning districts. …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "COMMISSION DISTRICT(S): 3 & 7 Application of Optimal Consulting, LLC to rezone property from R-75 (Residential Medium Lot-75) to RSM (Small Lot Residential Mix) zoning district to allow residential …",
-     "context": "agenda-action"
-    },
-    "special-land-use": {
-     "term": "special land use",
-     "excerpt": "… 7-3.39 to update the Bouldercrest-Cedar Grove-Moreland Overlay District to allow limited office uses, when subject to a Special Land Use Permit and additional criteria with Tier V of the overlay. Ordinance",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "Purchasing & Contracting",
-     "context": "agenda-action"
-    },
-    "local-taxes": {
-     "term": "splost",
-     "excerpt": "Commission District(s): 4 & 6 To Allocate $500,000.00 of Category B3 - Bicycle Paths/Lanes/Multi-use Trails1 SPLOST II Funding for the Laredo Drive Bicycle Facility Resolution",
-     "context": "agenda-action"
-    },
-    "alpr": {
-     "term": "axon enterprise",
-     "excerpt": "… (CEW). Ratifying increase in contract funds for 100 additional tasers and previously issued purchase order. Awarded to Axon Enterprise, Inc. Amount Not To Exceed: $1,442,514.00. Resolution",
-     "context": "agenda-action"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "Commission District(s): All Commission Districts Appoint Ms. Deborah Jackson to Post 3 of the DeKalb County Community Service Board. Resolution",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "multifamily",
-     "excerpt": "… implementation of the DeKalb County Housing Investment Bond Program by approving the creation and implementation of the Multifamily Acquisition Fund, DeKalb Housing Catalyst Multifamily Gap Financing Program, DeKalb HomeStart Down Payment Assistance P …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "data-center",
-    "alpr",
-    "local-taxes"
-   ],
-   "dataCenterItems": [
-    {
-     "title": "COMMISSION DISTRICT(S): All Districts Application of the Director of Planning and Sustainability to amend Chapter 27 to Establish a Definition, Regulatory Guidelines, and Developme",
-     "date": "2026-06-18",
-     "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4477&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-     "excerpt": "… and Sustainability to amend Chapter 27 to Establish a Definition, Regulatory Guidelines, and Development Standards for Data Centers in M (Industrial), M-2 (Heavy Industrial), O-I (Office-Institutional), and O-D (Office-Distribution) zoning districts. …",
-     "excerptTerm": "data center"
-    },
-    {
-     "title": "Commission District(s): All Commission Districts A Resolution Requiring an Independent, Third-Party Health and Environmental Study of Data Centers and Their Possible Impact on DeKa",
-     "date": "2026-06-18",
-     "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4477&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-     "excerpt": "… and Sustainability to amend Chapter 27 to Establish a Definition, Regulatory Guidelines, and Development Standards for Data Centers in M (Industrial), M-2 (Heavy Industrial), O-I (Office-Institutional), and O-D (Office-Distribution) zoning districts. …",
-     "excerptTerm": "data center"
-    },
-    {
-     "title": "Commission District(s): All Commission Districts To Request an Allocation Split Evenly Across All Commission Districts To Support A Countywide Independent, Third-Party Health And E",
-     "date": "2026-06-18",
-     "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4477&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-     "excerpt": "… and Sustainability to amend Chapter 27 to Establish a Definition, Regulatory Guidelines, and Development Standards for Data Centers in M (Industrial), M-2 (Heavy Industrial), O-I (Office-Institutional), and O-D (Office-Distribution) zoning districts. …",
-     "excerptTerm": "data center"
-    },
-    {
-     "title": "Commission District(s): All Commission Districts A Resolution Of The DeKalb County Board Of Commissioners Requesting The Administration And Planning Department To Update The Recomm",
-     "date": "2026-06-18",
-     "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4477&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-     "excerpt": "… and Sustainability to amend Chapter 27 to Establish a Definition, Regulatory Guidelines, and Development Standards for Data Centers in M (Industrial), M-2 (Heavy Industrial), O-I (Office-Institutional), and O-D (Office-Distribution) zoning districts. …",
-     "excerptTerm": "data center"
-    }
-   ],
-   "landUseItems": [
-    {
-     "title": "COMMISSION DISTRICT(S): All Districts Application of the Director of Planning and Sustainability to amend Chapter 27 to Establish a Definition, Regulatory Guidelines, and Developme",
-     "matterFile": "2025-0972",
-     "matterType": "Ordinance",
-     "tags": [
-      "data-center"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null,
-     "districts": "All Districts Application of the Director of Planning and Sustainability to amend Chapter 27 to Establish a Definition, Regulatory Guidelines, and Development Standards for Data Centers in M (Industrial), M-2 (Heavy Industrial), O-I (Office-Institutional), and O-D (Office-Distribution) zoning districts. This text amendment is County-wide"
-    },
-    {
-     "title": "COMMISSION DISTRICT(S): 3 & 7 Application of Optimal Consulting, LLC to rezone property from R-75 (Residential Medium Lot-75) to RSM (Small Lot Residential Mix) zoning district to ",
-     "matterFile": "2026-0443",
-     "matterType": "Ordinance",
-     "tags": [
-      "rezoning"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null,
-     "districts": "3 & 7 Application of Optimal Consulting, LLC to rezone property from R-75 (Residential Medium Lot-75) to RSM (Small Lot Residential Mix) zoning district to allow residential homes"
-    },
-    {
-     "title": "COMMISSION DISTRICT(S): Commission District 03 Super District 06 Application of Tori Engineering c/o Amber Lee to rezone property from R-75 (Residential Medium Lot-75) zoning distr",
-     "matterFile": "2026-0452",
-     "matterType": "Ordinance",
-     "tags": [
-      "rezoning"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null,
-     "districts": "Commission District 03 Super District 06 Application of Tori Engineering c/o Amber Lee to rezone property from R-75 (Residential Medium Lot-75) zoning district to R-60 (Residential Small Lot-60) zoning district to allow twelve (12) single-family homes, at 2697 Kelly Lake Road"
-    },
-    {
-     "title": "COMMISSION DISTRICT(S): Commission District 03 Super District 06 Application of the Director of Planning & Sustainability to amend Section 27-3.39 to update the Bouldercrest-Cedar ",
-     "matterFile": "2026-0630",
-     "matterType": "Ordinance",
-     "tags": [
-      "special-land-use"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null,
-     "districts": "Commission District 03 Super District 06 Application of the Director of Planning & Sustainability to amend Section 27-3.39 to update the Bouldercrest-Cedar Grove-Moreland Overlay District to allow limited office uses, when subject to a Special Land Use Permit and additional criteria with Tier V of the overlay"
-    },
-    {
-     "title": "Commission District(s): All Commission Districts A Resolution Requiring an Independent, Third-Party Health and Environmental Study of Data Centers and Their Possible Impact on DeKa",
-     "matterFile": "2026-0244",
-     "matterType": "Resolution",
-     "tags": [
-      "data-center"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null,
-     "districts": "All Commission Districts A Resolution Requiring an Independent, Third-Party Health and Environmental Study of Data Centers and Their Possible Impact on DeKalb County and Board of Commissioners Review of the Study Before DeKalb County’s Data Center Moratorium Can Be Lifted"
-    },
-    {
-     "title": "Commission District(s): All Commission Districts To Request an Allocation Split Evenly Across All Commission Districts To Support A Countywide Independent, Third-Party Health And E",
-     "matterFile": "2026-0245",
-     "matterType": "Resolution",
-     "tags": [
-      "data-center"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null,
-     "districts": "All Commission Districts To Request an Allocation Split Evenly Across All Commission Districts To Support A Countywide Independent, Third-Party Health And Environmental Study Of Data Centers And Their Possible Impact On The County Not To Exceed $150,000"
-    },
-    {
-     "title": "Commission District(s): All Commission Districts A Resolution Of The DeKalb County Board Of Commissioners Requesting The Administration And Planning Department To Update The Recomm",
-     "matterFile": "2026-0341",
-     "matterType": "Resolution",
-     "tags": [
-      "data-center"
-     ],
-     "passed": null,
-     "action": null,
-     "mover": null,
-     "districts": "All Commission Districts A Resolution Of The DeKalb County Board Of Commissioners Requesting The Administration And Planning Department To Update The Recommended Substitute For Text Amendment 2025-0972 Regarding Data Center Regulations"
-    },
-    {
-     "title": "Commission District(s): All Commission Districts A resolution authorizing the initial implementation of the DeKalb County Housing Investment Bond Program by approving the creation ",
-     "matterFile": "2026-1044",
-     "matterType": "Resolution",
-     "tags": [
-      "development"
-     ],
-     "passed": null,
-     "action": "Accepted to the BOC agenda and assigned",
-     "mover": null,
-     "districts": "All Commission Districts A resolution authorizing the initial implementation of the DeKalb County Housing Investment Bond Program by approving the creation and implementation of the Multifamily Acquisition Fund, DeKalb Housing Catalyst Multifamily Gap Financing Program, DeKalb HomeStart Down Payment Assistance Program, DeKalb BrighterHome Owner-Occupied Rehabilitation Program, Revive DeKalb Multifamily Blight Redevelopment Program, the Transitional Housing and Homelessness Program, and Housing Capacity Seed Fund Program (collectively, the “HIB Initial Programs”). The resolution further approves the initial allocation of Affordable Housing Fund resources to support these initiatives; authorizes delegated approval authority, where applicable, to the Primary Program Administrator and designated Sub-Program Administrators for administration and project approvals consistent with adopted guidelines regarding the HIB Initial Programs; and authorizes initial expenditures from the Affordable Housing Fund to support operational capacity, systems development, technical services, legal services, advisory services, and homelessness services necessary to advance affordable housing production, preservation, neighborhood stabilization, and homelessness response efforts throughout DeKalb County"
     }
    ]
   }

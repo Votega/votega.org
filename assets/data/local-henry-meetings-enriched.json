@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-23T21:03:29Z",
+  "generatedAt": "2026-11-25T01:03:24Z",
   "source": "Henry County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Henry County",
   "count": 25
@@ -13,23 +13,35 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-19",
+  "lastActivity": "2026-12-01",
   "topicTotals": {
-   "comprehensive-plan": 3,
-   "development": 10,
-   "rezoning": 10,
+   "appointment": 6,
+   "budget": 2,
+   "comprehensive-plan": 4,
+   "contract": 15,
+   "development": 11,
+   "local-taxes": 17,
+   "rezoning": 11,
    "special-land-use": 2,
    "variance": 4,
    "annexation": 4,
-   "contract": 14,
-   "local-taxes": 17,
-   "appointment": 5,
-   "budget": 1,
-   "millage-budget": 13,
+   "millage-budget": 12,
    "alpr": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-12-01",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2716,plainText=false)",
+    "tags": [
+     "comprehensive-plan",
+     "development",
+     "rezoning"
+    ],
+    "excerpt": "… IC HEARING) Hecht Walker Jordan, PC of Stockbridge, GA requests an amendment to the Comprehensive Plan for property located at 3485 Highway 155 South in Land Lots 174 & 179 of the 2nd District. The proper …",
+    "excerptTerm": "comprehensive plan"
+   },
    {
     "title": "Zoning Advisory Board  Meeting",
     "date": "2026-11-19",
@@ -193,7 +205,7 @@
     ]
    }
   ],
-  "landUseMeetings": 15,
+  "landUseMeetings": 16,
   "alprItems": [
    {
     "title": "Board of Commissioners Meeting (Meeting rescheduled from July 21, 2026)",
@@ -218,6 +230,16 @@
   ],
   "alprMeetings": 2,
   "localTaxItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-12-01",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2716,plainText=false)",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… Transportation (GDOT) Supplemental Agreement. Local Match funding available through SPLOST VI. (Presenter: Lynn Planchon, Airport Director)(Exhibit 1) …",
+    "excerptTerm": "splost"
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-11-17",
@@ -381,20 +403,20 @@
     ],
     "excerpt": "… ions. (Strategic Plan #3.3.2) (Presenter: Holly Lafontaine, Chief Strategy Officer)(Exhibit 6) Resolution 26-226 SPLOST A. Resolution approving a Budget Amendment to reallocate available SPLOST IV project funds to the Bill Gardner Park …",
     "excerptTerm": "splost"
-   },
-   {
-    "title": "Called BOC Joint Meeting w Cities, re: FLOST",
-    "date": "2026-04-15",
-    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2514,plainText=false)",
-    "terms": [
-     "floating local option",
-     "flost",
-     "local option sales tax"
-    ]
    }
   ],
   "localTaxCitations": 17,
   "budgetItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-12-01",
+    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2716,plainText=false)",
+    "terms": [
+     "decision-then-budget"
+    ],
+    "excerpt": "… nty to make reasonable accommodations for those persons. XI. Finance Services A. Resolution amending the Fiscal Year 2026 budget to reflect year-end adjustments necessary to finalize the County’s FY2026 audit.(Presenter: Joy …",
+    "excerptTerm": "decision-then-budget"
+   },
    {
     "title": "Board of Commissioners Meeting",
     "date": "2026-11-03",
@@ -406,12 +428,114 @@
     "excerptTerm": "budget amendment"
    }
   ],
-  "budgetCitations": 1,
-  "landUseCitations": 15,
+  "budgetCitations": 2,
+  "landUseCitations": 16,
   "alprCitations": 2,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "863",
+   "date": "2026-12-01",
+   "body": "Board of Commissioners",
+   "title": "Called Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2708,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2708,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 2468,
+   "pdfSha256": "07a935f9a5c9344bea80c109e26b998bdc24309a5a9faae8dd81822b721be1da",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "824",
+   "date": "2026-12-01",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2716,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2716,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 17871,
+   "pdfSha256": "6f388ac11e0a03dbe9b4169b1c74a7ac9fcbcb21f78857e52535aa9f025ec039",
+   "topics": {
+    "appointment": 1,
+    "budget": 1,
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "development": 1,
+    "local-taxes": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "appointment",
+    "budget",
+    "comprehensive-plan",
+    "contract",
+    "development",
+    "local-taxes",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "comprehensive plan",
+    "contract",
+    "decision-then-budget",
+    "future land use",
+    "rezon",
+    "splost",
+    "subdivision",
+    "task order"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… Director) D. Community Resources Update (Presenter: Amanda Reeves, Director) VI. Appointments A. Georgia Department of Behavioral Health and Developmental Disabilities (DBHDD …",
+     "context": "agenda-action"
+    },
+    "budget": {
+     "term": "decision-then-budget",
+     "excerpt": "… nty to make reasonable accommodations for those persons. XI. Finance Services A. Resolution amending the Fiscal Year 2026 budget to reflect year-end adjustments necessary to finalize the County’s FY2026 audit.(Presenter: Joy …",
+     "context": "agenda-action"
+    },
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… IC HEARING) Hecht Walker Jordan, PC of Stockbridge, GA requests an amendment to the Comprehensive Plan for property located at 3485 Highway 155 South in Land Lots 174 & 179 of the 2nd District. The proper …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "task order",
+     "excerpt": "… 7-18 to Southeastern Site Development for the Airport Hangar Site Development project, approving Croy Task Order #23, and authorizing execution of a Georgia Department of Transportation (GDOT) Sup …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… Horton, Inc., of Atlanta, GA requests a modification to zoning conditions for the Garden Lakes Subdivision located north of Highway 81 East, east of Lovejoy Road, south of Old Highway 3, west of North Steel …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… Transportation (GDOT) Supplemental Agreement. Local Match funding available through SPLOST VI. (Presenter: Lynn Planchon, Airport Director)(Exhibit 1) …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… B. RZ-26-04 (NOT A PUBLIC HEARING) Hecht Walker Jordan, PC of Stockbridge, GA requests a rezoning from R-A (Residential Agricultural) to C-1 (Neighborhood Commercial) for property …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "832",
    "date": "2026-11-19",
@@ -1661,72 +1785,6 @@
    },
    "flags": [
     "millage-budget",
-    "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "834",
-   "date": "2026-04-28",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Called Budget Workshop Meeting",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2499,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2499,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 4421,
-   "pdfSha256": "74ef0b3d7fc8f33972fbdbacda01678a4b4c9da0f541012ba4ef053ef71c2676",
-   "topics": {
-    "millage-budget": 1
-   },
-   "tags": [
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "budget"
-   ],
-   "topicExcerpts": {
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… Lewis, District V Henry County Board of Commissioners Called Budget Workshop Meeting 4:00 PM, Tuesday, April 28, 2026 NOTICE: This is a public in-person meetin …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "millage-budget"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "835",
-   "date": "2026-04-15",
-   "body": "Board of Commissioners",
-   "title": "Called BOC Joint Meeting w Cities, re: FLOST",
-   "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2514,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2514,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 3889,
-   "pdfSha256": "e278c721aa9a3ab17b21dcf3d46756ce301ecd9fb9f78445e24c5dd72935ef73",
-   "topics": {
-    "local-taxes": 1
-   },
-   "tags": [
-    "local-taxes"
-   ],
-   "matchedTerms": [
-    "floating local option",
-    "flost",
-    "local option sales tax"
-   ],
-   "topicExcerpts": {
-    "local-taxes": {
-     "term": "floating local option",
-     "excerpt": "… County Board of Commissioners Called Joint Meeting with Cities, re: Floating Local Option Sales Tax (FLOST) 8:30 AM, Wednesday, April 15, 2026 BOC Present: Chair Carlotta Harrell and …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
     "local-taxes"
    ],
    "dataCenterItems": []

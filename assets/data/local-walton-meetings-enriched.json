@@ -1,22 +1,24 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-23T21:03:39Z",
+  "generatedAt": "2026-11-25T01:03:27Z",
   "source": "Walton County (teammunicode agenda/minutes PDFs, poppler+OCR)",
   "place": "Walton County",
-  "count": 24
+  "count": 25
  },
  "summary": {
   "flags": [
+   "budget",
    "land-use",
    "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-12-15",
   "topicTotals": {
-   "contract": 11,
-   "rezoning": 13,
+   "contract": 12,
+   "rezoning": 14,
    "variance": 13,
-   "development": 8,
+   "budget": 1,
+   "development": 9,
    "appointment": 4,
    "millage-budget": 6,
    "annexation": 2,
@@ -35,6 +37,15 @@
     ],
     "excerpt": "… ce 2. APPROVAL OF MINUTES 2.1. Additions/Deletions 3. OLD BUSINESS 4. NEW BUSINESS 4.1. Z26-0317 – Rezone 0.73 acres from R1 to OI and Variance to reduce transitional buffer from 50’ to 25’ for a general contractor …",
     "excerptTerm": "rezon"
+   },
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-12-01",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/waltonco-pubu/MEET-Agenda-0fd20e5f0b134420abc91ca49ab5822c.pdf",
+    "tags": [
+     "development",
+     "rezoning"
+    ]
    },
    {
     "title": "Board of Appeals Regular Meeting",
@@ -229,7 +240,7 @@
     ]
    }
   ],
-  "landUseMeetings": 19,
+  "landUseMeetings": 20,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
@@ -256,9 +267,21 @@
    }
   ],
   "localTaxCitations": 2,
-  "budgetItems": [],
-  "budgetCitations": 0,
-  "landUseCitations": 19,
+  "budgetItems": [
+   {
+    "title": "Board of Commissioners Regular Meeting",
+    "date": "2026-12-01",
+    "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/waltonco-pubu/MEET-Agenda-0fd20e5f0b134420abc91ca49ab5822c.pdf",
+    "terms": [
+     "budget calendar",
+     "decision-then-budget"
+    ],
+    "excerpt": "… 12/1/2026 7.8. Williams Pipeline - 911 Tower Site Agreement 8. FINANCE 8.1. Proposed FY2028 Budget Calendar 9. ACCEPTANCE OF BIDS/PROPOSALS 9.1. Meridian Park - Fine Grading, Base and Asphalt Paving for Pickle …",
+    "excerptTerm": "decision-then-budget"
+   }
+  ],
+  "budgetCitations": 1,
+  "landUseCitations": 20,
   "alprCitations": 0,
   "dataCenterCitations": 0
  },
@@ -326,6 +349,64 @@
    },
    "flags": [
     "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "66",
+   "date": "2026-12-01",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Regular Meeting",
+   "sourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/waltonco-pubu/MEET-Agenda-0fd20e5f0b134420abc91ca49ab5822c.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://mccmeetings.blob.core.usgovcloudapi.net/waltonco-pubu/MEET-Agenda-0fd20e5f0b134420abc91ca49ab5822c.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 5111,
+   "pdfSha256": "2679c0deffedea42f4cbd68450c970d2ba325ed21b05dc154d3900ab57af7e1c",
+   "topics": {
+    "budget": 1,
+    "contract": 1,
+    "development": 1,
+    "rezoning": 1
+   },
+   "tags": [
+    "budget",
+    "contract",
+    "development",
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "budget calendar",
+    "contract",
+    "decision-then-budget",
+    "rezon",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "budget": {
+     "term": "decision-then-budget",
+     "excerpt": "… 12/1/2026 7.8. Williams Pipeline - 911 Tower Site Agreement 8. FINANCE 8.1. Proposed FY2028 Budget Calendar 9. ACCEPTANCE OF BIDS/PROPOSALS 9.1. Meridian Park - Fine Grading, Base and Asphalt Paving for Pickle …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… entrance monument, shrubs, bushes, sod and fencing. 5.6. Acceptance of Right of Way - River Trail Estates 6. CONTRACTS 6.1. OpenGov End User Licence Agreement 7. ADMINISTRATIVE CONSENT AGENDA | All items listed below are voted o …",
+     "context": "unknown"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… property. 5.2. Z26-0288 - Rezone 86.83 acres from A2OSC to R1OSC to create a 71-lot residential subdivision - Applicant: K and M Home Builders, LLC/Owner: Pleasant Valley Developers, LLC - Property located on Pleasant …",
+     "context": "unknown"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… Deletions 4. DISCUSSION 4.1. County Manager's Report/Update 5. PLANNING & DEVELOPMENT 5.1. Z26-0072 - Rezone 2.00 acres from B2/M1 to B2 to allow motor vehicle sales and car rental - Applicant/Owner: Gloria Linton - p …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "budget"
    ],
    "dataCenterItems": []
   },

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-23T21:05:15Z",
+  "generatedAt": "2026-11-25T01:04:04Z",
   "source": "Cherokee County (granicus agenda HTML)",
   "place": "Cherokee County",
   "count": 25
@@ -14,18 +14,18 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-17",
+  "lastActivity": "2026-12-01",
   "topicTotals": {
-   "annexation": 6,
-   "budget": 2,
-   "comprehensive-plan": 1,
    "development": 11,
    "rezoning": 12,
    "variance": 10,
+   "annexation": 6,
+   "budget": 2,
+   "comprehensive-plan": 1,
    "alpr": 4,
    "appointment": 5,
-   "contract": 7,
-   "local-taxes": 7,
+   "contract": 6,
+   "local-taxes": 6,
    "millage-budget": 6,
    "data-center": 1
   },
@@ -39,6 +39,18 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Meeting Name, Planning Commission Public Hearing",
+    "date": "2026-12-01",
+    "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&event_id=1140",
+    "tags": [
+     "development",
+     "rezoning",
+     "variance"
+    ],
+    "excerpt": "… 26.621 +/- acres of property from AG (General Agriculture) to R-40 (Single Family Residential) for a 25-lot residential subdivision. 2.3 Case #26-12-049 Angel Quintano for 6843 Investments, LLC (BOC Dist. 1) Applicant is pursuing a rezoning from GC to …",
+    "excerptTerm": "subdivision"
+   },
    {
     "title": "Board of Commissioners Regular Meeting",
     "date": "2026-11-17",
@@ -197,18 +209,6 @@
     ],
     "excerpt": "… CASES 1.1 Case #26-08-017 - J. Ethan Underwood for EC New Vision Georgia, LLC (BOC Dist. 4). Applicant is requesting to rezone 110.74 +/- acres from General Agriculture (AG) to Single-Family Residential (R-20) for a Conservation Design Community …",
     "excerptTerm": "rezon"
-   },
-   {
-    "title": "Board of Commissioners Regular Meeting",
-    "date": "2026-08-04",
-    "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&clip_id=1587",
-    "tags": [
-     "development",
-     "rezoning",
-     "variance"
-    ],
-    "excerpt": "… Co., LLC (BOC Dist. 4). Applicant is requesting to rezone 2.0 +/- acres from R-40 to R-20 for a four-lot single family subdivision. 10.2 Case #26-07-015 - Parks F. Huff for Midway Electrical Contracting, Inc. (BOC Dist. 4). Applicant is requesting to …",
-    "excerptTerm": "subdivision"
    }
   ],
   "landUseMeetings": 16,
@@ -313,21 +313,9 @@
     ],
     "excerpt": "… min Complex 1130 Bluffs Pkwy, Canton, GA 30114 11:00 AM CALL TO ORDER 1. Conduct a Public Hearing for input on the 2026 Millage Rate. ADJOURN",
     "excerptTerm": "millage"
-   },
-   {
-    "title": "Board of Commissioners Regular Meeting",
-    "date": "2026-08-04",
-    "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&clip_id=1587",
-    "terms": [
-     "millage",
-     "referendum",
-     "splost"
-    ],
-    "excerpt": "… Session, Executive Session, and Regular Meeting Minutes from July 21, 2026. 8. PUBLIC HEARING 8.1 Public Hearing - 2026 Millage Rate. Conduct a public hearing to receive input on the 2026 Millage Rate; followed by adoption of the Millage Rates for …",
-    "excerptTerm": "millage"
    }
   ],
-  "localTaxCitations": 7,
+  "localTaxCitations": 6,
   "budgetItems": [
    {
     "title": "Board of Commissioners Regular Meeting",
@@ -358,6 +346,54 @@
   "dataCenterCitations": 1
  },
  "meetings": [
+  {
+   "id": "1140",
+   "date": "2026-12-01",
+   "body": "Planning Commission",
+   "title": "Meeting Name, Planning Commission Public Hearing",
+   "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&event_id=1140",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&event_id=1140",
+   "textMethod": "html",
+   "textChars": 2876,
+   "contentSha256": "23142d4826ef9b759180a18874d0b2cbad07469f5938c522b2217e85609d4871",
+   "topics": {
+    "development": 1,
+    "rezoning": 1,
+    "variance": 1
+   },
+   "tags": [
+    "development",
+    "rezoning",
+    "variance"
+   ],
+   "matchedTerms": [
+    "rezon",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… 26.621 +/- acres of property from AG (General Agriculture) to R-40 (Single Family Residential) for a 25-lot residential subdivision. 2.3 Case #26-12-049 Angel Quintano for 6843 Investments, LLC (BOC Dist. 1) Applicant is pursuing a rezoning from GC to …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… o 150 feet. 2.2 Case #26-10-028 Ethan Underwood for Grand Communities, LLC (BOC Dist. 2) The applicant is requesting to rezone 26.621 +/- acres of property from AG (General Agriculture) to R-40 (Single Family Residential) for a 25-lot residentia …",
+     "context": "agenda-action"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… essory convenience retail on a 2.2 +/- acre General Commercial (GC) site. The applicant is also requesting a concurrent variance to Article 10, Table 10.1: Minimum Buffer Width Between Abutting Districts, to allow the required buffer between Commer …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1643",
    "date": "2026-11-17",
@@ -1462,76 +1498,6 @@
    },
    "flags": [
     "land-use"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1587",
-   "date": "2026-08-04",
-   "body": "Board of Commissioners",
-   "title": "Board of Commissioners Regular Meeting",
-   "sourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&clip_id=1587",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cherokeega.granicus.com/AgendaViewer.php?view_id=1&clip_id=1587",
-   "textMethod": "html",
-   "textChars": 7485,
-   "contentSha256": "68227ab81b1d8637aed0c8e484a4f84a9d781048313e3463528f6dcbedc1884d",
-   "topics": {
-    "contract": 1,
-    "development": 1,
-    "local-taxes": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "contract",
-    "development",
-    "local-taxes",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "award of",
-    "contract",
-    "millage",
-    "mixed-use",
-    "multi-family",
-    "referendum",
-    "rezon",
-    "splost",
-    "subdivision",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… from R-40 to R-20 for a four-lot single family subdivision. 10.2 Case #26-07-015 - Parks F. Huff for Midway Electrical Contracting, Inc. (BOC Dist. 4). Applicant is requesting to rezone 1.45 +/- acres of property from R-40 (Single-Family Residenti …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "subdivision",
-     "excerpt": "… Co., LLC (BOC Dist. 4). Applicant is requesting to rezone 2.0 +/- acres from R-40 to R-20 for a four-lot single family subdivision. 10.2 Case #26-07-015 - Parks F. Huff for Midway Electrical Contracting, Inc. (BOC Dist. 4). Applicant is requesting to …",
-     "context": "agenda-action"
-    },
-    "local-taxes": {
-     "term": "millage",
-     "excerpt": "… Session, Executive Session, and Regular Meeting Minutes from July 21, 2026. 8. PUBLIC HEARING 8.1 Public Hearing - 2026 Millage Rate. Conduct a public hearing to receive input on the 2026 Millage Rate; followed by adoption of the Millage Rates for …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… AND ZONING 10.1 Case #26-07-013 - David Menna for Menna Development Co., LLC (BOC Dist. 4). Applicant is requesting to rezone 2.0 +/- acres from R-40 to R-20 for a four-lot single family subdivision. 10.2 Case #26-07-015 - Parks F. Huff for Mid …",
-     "context": "agenda-action"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… s requesting a Special Use Permit for an electrical contracting business. The applicant is also requesting a concurrent variance to Development Ordinance 4.07.B to reduce the driveway spacing for the proposed entrance and a variance to Standard Det …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "local-taxes"
    ],
    "dataCenterItems": []
   }

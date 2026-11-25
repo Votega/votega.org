@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-23T21:03:28Z",
+  "generatedAt": "2026-11-25T01:03:23Z",
   "source": "Douglas County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Douglas County",
   "count": 25
@@ -13,15 +13,15 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-17",
+  "lastActivity": "2026-12-01",
   "topicTotals": {
+   "rezoning": 4,
    "appointment": 5,
-   "contract": 14,
+   "contract": 13,
    "local-taxes": 17,
    "development": 5,
    "variance": 6,
    "comprehensive-plan": 2,
-   "rezoning": 4,
    "millage-budget": 15,
    "annexation": 5,
    "data-center": 2,
@@ -40,6 +40,16 @@
    }
   ],
   "landUseItems": [
+   {
+    "title": "Planning Zoning and BOC",
+    "date": "2026-12-01",
+    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7696,plainText=false)",
+    "tags": [
+     "rezoning"
+    ],
+    "excerpt": "… ned by Kimberly Frank. Commission District #4. Z2026- Brownstone Equities, LLC – a request for a rezoning from R-LD 95/S2026-96 (residential low density) to C-G (general commercial) and a Special Use Perm …",
+    "excerptTerm": "rezon"
+   },
    {
     "title": "Planning Zoning Variance",
     "date": "2026-11-16",
@@ -145,16 +155,6 @@
     "tags": [
      "annexation"
     ]
-   },
-   {
-    "title": "Planning Zoning and BOC",
-    "date": "2026-08-04",
-    "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7445,plainText=false)",
-    "tags": [
-     "rezoning"
-    ],
-    "excerpt": "… tes from the July 7, 2026 Zoning Meeting. AGENDA Z2026- Terry Boomer/GA 5 Land Holdings, LLC – a request for a rezoning 47/S2026-48 from C-G(general commercial) to C-H(heavy commercial) and a Special Use Permit to allo …",
-    "excerptTerm": "rezon"
    }
   ],
   "landUseMeetings": 14,
@@ -357,6 +357,38 @@
   "dataCenterCitations": 2
  },
  "meetings": [
+  {
+   "id": "1380",
+   "date": "2026-12-01",
+   "body": "Planning & Zoning",
+   "title": "Planning Zoning and BOC",
+   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7696,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7696,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 3192,
+   "pdfSha256": "afa303a2b4cee78974b577ee0e3ea99f503cabd3d6a3bf69c916b5b9b72ea35c",
+   "topics": {
+    "rezoning": 1
+   },
+   "tags": [
+    "rezoning"
+   ],
+   "matchedTerms": [
+    "rezon"
+   ],
+   "topicExcerpts": {
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… ned by Kimberly Frank. Commission District #4. Z2026- Brownstone Equities, LLC – a request for a rezoning from R-LD 95/S2026-96 (residential low density) to C-G (general commercial) and a Special Use Perm …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1180",
    "date": "2026-11-17",
@@ -1581,46 +1613,6 @@
    "flags": [
     "millage-budget",
     "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1309",
-   "date": "2026-08-04",
-   "body": "Planning & Zoning",
-   "title": "Planning Zoning and BOC",
-   "sourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7445,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://douglascountyga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=7445,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 2646,
-   "pdfSha256": "0cbf69dbf26a5817333a0bf587eb5b06129d767f2e36e5a5d5cf8082baca28c1",
-   "topics": {
-    "contract": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "contract",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "contract",
-    "rezon"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… (planned unit development w/conditions) to LI (light industrial) and a Special Use Permit to allow a contractor’s office with outdoor storage and equipment rental located at 1340 N. County Line Road, Lithia …",
-     "context": "agenda-action"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… tes from the July 7, 2026 Zoning Meeting. AGENDA Z2026- Terry Boomer/GA 5 Land Holdings, LLC – a request for a rezoning 47/S2026-48 from C-G(general commercial) to C-H(heavy commercial) and a Special Use Permit to allo …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use"
    ],
    "dataCenterItems": []
   }
