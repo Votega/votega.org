@@ -165,19 +165,31 @@ def tier2(new, old=None):
             "emptied on purpose that is fine; otherwise check the generate step's log."]))
 
     unres = meta.get("unresolvedVoterRows") or 0
-    ghosts = meta.get("ghostVoterIds") or 0
-    if unres or ghosts:
-        sections.append(("Roll-call rows that could not be attributed", [
-            f"- {unres} row(s) with no usable member id, {ghosts} ghost id(s). Their "
-            f"votes are omitted, so the affected legislators show no key vote on that bill.",
-            "- Fix by extending id-crosswalk.json (or the roster) for the member ids named "
-            "in the generate step's log."]))
+    unattributed = meta.get("unattributedVoterIds") or []
+    if unres or unattributed:
+        ids = ", ".join(str(i) for i in unattributed) or "not recorded"
+        sections.append(("Roll-call rows with no id in id-crosswalk.json", [
+            f"- {unres} row(s) on the published roll calls carry a legisGaGovId that "
+            f"id-crosswalk.json does not know (ids: {ids}). Their votes are omitted, and "
+            f"they are missing from partyTally, so the party bars undercount.",
+            "- Fix by adding these people to id-crosswalk.json (legisGaGovId is the key; "
+            "a former member needs no roster id)."]))
+
+    partyless = meta.get("partylessVoterIds") or []
+    if partyless:
+        sections.append(("Votes with no known party", [
+            f"- legisGaGovId {', '.join(str(i) for i in partyless)}: the vote is "
+            f"published, but neither id-crosswalk.json nor the session's member listing "
+            f"gives a party, so it is missing from partyTally. A party is never guessed."]))
 
     sitting, covered = meta.get("sittingLegislators"), meta.get("legislatorsWithVotes")
     if isinstance(sitting, int) and isinstance(covered, int) and covered < sitting:
-        sections.append(("Sitting legislators with no key vote", [
-            f"- {sitting - covered} of {sitting} sitting legislators appear in no curated "
-            f"roll call; a legislator missing from every key vote reads as one who never voted."]))
+        lines = [f"- {sitting - covered} of {sitting} sitting legislators appear in no curated "
+                 f"roll call; a legislator missing from every key vote reads as one who "
+                 f"never voted."]
+        for m in meta.get("legislatorsWithoutVotes") or []:
+            lines.append(f"  - {m.get('name')}: {m.get('note')}")
+        sections.append(("Sitting legislators with no key vote", lines))
 
     retained = len(bills) - (meta.get("fromLocalRecord") or 0) - (meta.get("fromSoapFetch") or 0)
     if retained > 0:

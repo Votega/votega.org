@@ -151,9 +151,25 @@ def tier2_cases():
     check("no baseline, clean file -> nothing to report", V.tier2(sound(), None), [])
 
     new = sound()
-    new["metadata"].update(unresolvedVoterRows=78)
+    new["metadata"].update(unresolvedVoterRows=2, unattributedVoterIds=[111, 222])
+    sec = dict(V.tier2(new, old))
     check("unresolved voter rows are reported",
-          "Roll-call rows that could not be attributed" in heads(V.tier2(new, old)), True)
+          "Roll-call rows with no id in id-crosswalk.json" in sec, True)
+    check("the report names the unresolved ids",
+          any("111, 222" in line for line in sec["Roll-call rows with no id in id-crosswalk.json"]), True)
+
+    new = sound()
+    new["metadata"].update(partylessVoterIds=[5043])
+    check("a vote with no known party is reported, with the id",
+          any("5043" in line for _, ls in V.tier2(new, old) for line in ls), True)
+
+    new = sound()
+    new["metadata"].update(legislatorsWithVotes=234, legislatorsWithoutVotes=[
+        {"name": "Sheila Nelson", "id": "x",
+         "note": "roster term start 2026-03-15; no recorded vote on any curated roll call"}])
+    text = " ".join(l for h, ls in V.tier2(new, old) if h.startswith("Sitting") for l in ls)
+    check("a silent legislator is listed with the roster's own facts", "Sheila Nelson" in text, True)
+    check("the report never claims a cause it cannot show", "seated after" in text, False)
 
     new = sound()
     new["metadata"]["legislatorsWithVotes"] = 230

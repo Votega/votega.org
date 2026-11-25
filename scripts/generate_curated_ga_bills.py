@@ -40,8 +40,8 @@ from datetime import datetime, timezone
 from lib.atomic_io import write_json_atomic
 from lib.ga_passage import native_is_passage, normalize_bill
 from lib.ga_sessions import legis_session_id
-from lib.ga_soap import (CHAMBERS, VACANT_ID, RollCallNotPublished, get_text_url, get_title_index,
-                         get_vote_detail, get_vote_listings)
+from lib.ga_soap import (CHAMBERS, VACANT_ID, RollCallNotPublished, get_members_by_session,
+                         get_text_url, get_title_index, get_vote_detail, get_vote_listings)
 from lib.ga_voters import VOTING_CHAMBERS, MemberIndex, new_stats, summarize
 from lib.votes_schema import member_votes_map
 
@@ -80,19 +80,55 @@ def build_party_lookup():
 
 
 def build_crosswalk():
-    """legisGaGovId(int) -> roster id, for the SOAP fallback path. Same canonical
-    join generate_ga_votes_soap.py uses — collision- and turnover-proof. The value is the
-    roster's opaque `id` (`ids.rosterId`), not necessarily an OCD id."""
-    with open(CROSSWALK_FILE, encoding="utf-8") as f:
+    """legisGaGovId(int) -> roster id. Only people with a roster id; kept for callers and
+    tests that want exactly that. The SOAP path uses build_voter_index() instead."""
+    return {lid: v["key"] for lid, v in build_voter_index().items() if v["rostered"]}
+
+
+#: legis.ga.gov's party strings -> the names the rest of the site publishes. An unlisted
+#: string maps to None: a party is never guessed.
+LISTING_PARTY = {"Democrat": "Democratic", "Democratic": "Democratic",
+                 "Republican": "Republican", "Independent": "Independent"}
+
+
+def voter_key(legis_id):
+    """The memberVotes key for a member who has no roster id (a former member). Same
+    `legis:<id>` form the identity docs use; never an OCD id, never a surname."""
+    return f"legis:{legis_id}"
+
+
+def build_voter_index(path=CROSSWALK_FILE):
+    """legisGaGovId(int) -> {key, party, rostered, name} for every person the crosswalk knows.
+
+    A sitting or recent member keeps their roster id as the key, exactly as before, so no
+    sitting member's vote moves. Someone with a legisGaGovId but no roster id (a 2023-24
+    member who is not on the 2025-26 roster) is keyed `legis:<id>` instead of being
+    dropped. `party` is the crosswalk role's party, or None when the role is missing.
+    """
+    with open(path, encoding="utf-8") as f:
         data = json.load(f)
     out = {}
     for p in data.get("people", []):
         ids = p.get("ids") or {}
         legis_id = ids.get("legisGaGovId")
+        if not legis_id:
+            continue
         roster_id = ids.get("rosterId") or ids.get("ocdPersonId")
-        if legis_id and roster_id:
-            out[int(legis_id)] = roster_id
+        role = p.get("role") or {}
+        out[int(legis_id)] = {
+            "key": roster_id or voter_key(int(legis_id)),
+            "rostered": bool(roster_id),
+            "party": LISTING_PARTY.get(role.get("party")),
+            "name": (p.get("name") or {}).get("full"),
+        }
     return out
+
+
+def listing_parties(legis_session):
+    """{legisGaGovId: party} from the session's own member listing, for people whose
+    crosswalk role carries no party. {} when the listing cannot be fetched."""
+    return {m["id"]: LISTING_PARTY.get(m.get("party"))
+            for m in get_members_by_session(legis_session)}
 
 
 def select_final_vote(candidates):
@@ -173,6 +209,23 @@ def pick_summary(entry, reviewed, caption=""):
     if ai.get("source") == "ai" and (ai.get("text") or "").strip():
         return ai["text"].strip(), "ai"
     return (caption, "caption") if caption else ("", None)
+
+
+def describe_silent(member, last_roll):
+    """Facts about a sitting member who is on no curated roll call, without guessing why.
+
+    "Seated after every curated roll call" is only said when the roster carries a
+    termStart later than the last one; otherwise the entry states what is known, and the
+    absence stays visible rather than being explained away.
+    """
+    start = str(member.get("termStart") or "")[:10]
+    if start and last_roll and start > last_roll:
+        note = f"seated {start}, after the last curated roll call ({last_roll})"
+    elif start:
+        note = f"roster term start {start}; no recorded vote on any curated roll call"
+    else:
+        note = "no term start on the roster; no recorded vote on any curated roll call"
+    return {"name": member["name"], "id": member["id"], "note": note}
 
 
 # --------------------------------------------------------------------------- local
@@ -261,10 +314,12 @@ def local_bill_record(entry, local, party_lookup, reviewed=None):
 
 # ---------------------------------------------------------------------------- SOAP
 
-def soap_bill_record(entry, crosswalk, party_lookup, stats=None, reviewed=None):
+def soap_bill_record(entry, voters, party_lookup, report=None, reviewed=None):
     """Fetch one bill's passage votes straight from SOAP.
 
-    For a curated bill older than the committed artifacts. Walks the session's listings
+    `voters` is build_voter_index(); `report` collects what could not be attributed, counted
+    on the PUBLISHED roll call only (a superseded passage vote that is fetched and thrown
+    away is not a loss). For a curated bill older than the committed artifacts. Walks the session's listings
     (one call per chamber), keeps the ones naming this bill, and fetches detail only for
     those — so cost is 2 + (a handful) calls, not one per roll call in the session.
     """
@@ -277,6 +332,13 @@ def soap_bill_record(entry, crosswalk, party_lookup, stats=None, reviewed=None):
 
     want = normalize_bill(identifier)
     votes, legislation_id = {}, None
+    _parties = {}
+
+    def session_parties():
+        if "m" not in _parties:
+            _parties["m"] = listing_parties(legis_session)
+        return _parties["m"]
+
     for branch in CHAMBERS:
         listings = get_vote_listings(legis_session, branch)
         if not listings:
@@ -296,7 +358,8 @@ def soap_bill_record(entry, crosswalk, party_lookup, stats=None, reviewed=None):
             if detail is None:
                 continue
             caption, date10, legislation, rows = detail
-            member_votes = {}
+            member_votes, extra_party = {}, {}
+            unattributed, partyless, former = [], [], []
             yea = nay = 0
             for mid, option in rows:
                 if mid == VACANT_ID:
@@ -305,11 +368,20 @@ def soap_bill_record(entry, crosswalk, party_lookup, stats=None, reviewed=None):
                     yea += 1
                 elif option == "Nay":
                     nay += 1
-                ocd = crosswalk.get(mid)
-                if ocd:
-                    member_votes[ocd] = OPTION.get(option, "other")
-                elif stats is not None:
-                    stats["unresolved"] += 1
+                voter = voters.get(mid)
+                if not voter:
+                    unattributed.append(mid)
+                    continue
+                member_votes[voter["key"]] = OPTION.get(option, "other")
+                if not voter["rostered"]:
+                    former.append(mid)
+                    party = voter["party"]
+                    if party is None:
+                        party = session_parties().get(mid)
+                    if party:
+                        extra_party[voter["key"]] = party
+                    else:
+                        partyless.append(mid)
             for item in legislation:
                 if normalize_bill(item.get("description")) == want:
                     legislation_id = legislation_id or item.get("legislationId")
@@ -317,12 +389,19 @@ def soap_bill_record(entry, crosswalk, party_lookup, stats=None, reviewed=None):
                 "rollNumber": l.get("number"), "date": date10 or l.get("date") or "",
                 "time": l.get("time"), "motionText": caption,
                 "result": "pass" if yea > nay else "fail",
-                "_memberVotes": member_votes,
+                "_memberVotes": member_votes, "_extraParty": extra_party,
+                "_unattributed": unattributed, "_partyless": partyless, "_former": former,
             })
         chosen = select_final_vote(candidates)
         if chosen and chosen["_memberVotes"]:
             key = "senate" if branch == "Senate" else "house"
-            votes[key] = vote_record(chosen, chosen["_memberVotes"], party_lookup)
+            votes[key] = vote_record(chosen, chosen["_memberVotes"],
+                                     {**party_lookup, **chosen["_extraParty"]})
+            if report is not None:
+                where = f"{identifier} {key}"
+                report["formerRows"] += len(chosen["_former"])
+                report["unattributed"] += [(where, m) for m in chosen["_unattributed"]]
+                report["partyless"] += [(where, m) for m in chosen["_partyless"]]
 
     if not votes:
         print(f"  WARNING: No passage votes found over SOAP for {identifier} ({session})")
@@ -383,7 +462,8 @@ def main():
     member_index = MemberIndex(GA_MEMBERS_FILE)
     print(f"  Loaded {len(member_index)} members for coverage reporting")
     stats = new_stats()
-    crosswalk = None
+    voters = None
+    report = {"formerRows": 0, "unattributed": [], "partyless": []}
 
     results, failed, retained, by_source = [], [], [], {"local": 0, "soap": 0}
     for entry in bill_list:
@@ -395,10 +475,10 @@ def main():
         else:
             # Outside the committed artifacts (an older session): go to the source.
             print(f"  Not in the local record — fetching {entry['session']} over SOAP")
-            if crosswalk is None:
-                crosswalk = build_crosswalk()
-                print(f"  Loaded crosswalk: {len(crosswalk)} legisGaGovId -> OCD ids")
-            record = soap_bill_record(entry, crosswalk, party_lookup, stats, reviewed)
+            if voters is None:
+                voters = build_voter_index()
+                print(f"  Loaded crosswalk: {len(voters)} legisGaGovId -> roster id or legis:<id>")
+            record = soap_bill_record(entry, voters, party_lookup, report, reviewed)
             if record:
                 print(f"  OK — {len(record['votes'])} chamber vote(s) over SOAP")
 
@@ -423,7 +503,13 @@ def main():
              for mid in (v.get("memberVotes") or {})}
     sitting = [m for m in member_index.by_id.values()
                if not m.get("status") and m.get("chamber") in VOTING_CHAMBERS]
-    silent = sorted(m["name"] for m in sitting if m["id"] not in voted)
+    silent_members = sorted((m for m in sitting if m["id"] not in voted), key=lambda m: m["name"])
+    silent = [m["name"] for m in silent_members]
+    last_roll = max((str(v.get("date") or "")[:10] for rec in results
+                     for v in rec.get("votes", {}).values()), default="")
+    without_votes = [describe_silent(m, last_roll) for m in silent_members]
+    stats["unresolved"] = len(report["unattributed"])
+    stats["formerMember"] = report["formerRows"]
 
     output = {
         "metadata": {
@@ -441,6 +527,13 @@ def main():
             # absent from id-crosswalk.json still means a dropped row.
             "voterResolution":     dict(stats),
             "unresolvedVoterRows": stats["unresolved"],
+            # Counted on the published roll calls only. `formerMemberRows` are rows kept
+            # under `legis:<id>` for people with no roster id (not lost); the two id lists
+            # name anyone still not fully attributed, so nobody drops out silently.
+            "formerMemberRows":     report["formerRows"],
+            "unattributedVoterIds": sorted({m for _, m in report["unattributed"]}),
+            "partylessVoterIds":    sorted({m for _, m in report["partyless"]}),
+            "legislatorsWithoutVotes": without_votes,
         },
         "bills": results,
     }
@@ -456,10 +549,18 @@ def main():
         print(f"  {len(silent)} with none: {', '.join(silent[:10])}"
               + (" ..." if len(silent) > 10 else ""))
 
-    if stats["unresolved"]:
-        print(f"WARNING: {stats['unresolved']} SOAP row(s) carried a member id absent from "
-              f"{CROSSWALK_FILE}; those votes are omitted, so the affected legislators "
-              f"will show no key vote on that bill.")
+    print(f"Former members kept under legis:<id>: {report['formerRows']} row(s)")
+    if report["unattributed"]:
+        ids = sorted({m for _, m in report["unattributed"]})
+        print(f"WARNING: {len(report['unattributed'])} published SOAP row(s) carried a "
+              f"legisGaGovId absent from {CROSSWALK_FILE}; those votes are omitted: "
+              f"{', '.join(map(str, ids))}")
+        for where, m in report["unattributed"]:
+            print(f"    {where}: legisGaGovId {m}")
+    if report["partyless"]:
+        ids = sorted({m for _, m in report["partyless"]})
+        print(f"WARNING: {len(report['partyless'])} published row(s) have a vote but no known "
+              f"party, so they are missing from partyTally: {', '.join(map(str, ids))}")
 
     # Tolerate the odd transient miss, fail on a real outage.
     if failed:
