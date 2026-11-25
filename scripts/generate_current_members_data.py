@@ -165,7 +165,7 @@ def get_sponsorship(bioguideId, name):
         'cosponsored': len(lists['cosponsored']),
     }
     print(f"  {name}: {summary['sponsored']} sponsored, "
-          f"{summary['cosponsored']} cosponsored in the {CURRENT_CONGRESS}th")
+          f"{summary['cosponsored']} cosponsored in the {congress_ordinal(CURRENT_CONGRESS)}")
     recent = [as_recent_sponsored(b) for b in most_recent(lists['sponsored'], 20)]
     return recent, summary
 

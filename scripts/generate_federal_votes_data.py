@@ -65,7 +65,7 @@ from datetime import date, datetime, timezone
 from lib.atomic_io import write_json_atomic
 from lib.http import fetch_bytes
 from lib import voteview, senate_drop, senate_nominations
-from lib.congress_session import current_congress, congress_years
+from lib.congress_session import congress_ordinal, current_congress, congress_years
 from lib import federal_turnover
 
 LEGISLATORS_BASE = "https://raw.githubusercontent.com/unitedstates/congress-legislators/main"
@@ -217,7 +217,7 @@ def bill_fields(bill_type, bill_number):
     prefix = TYPE_LABEL.get(bill_type, bill_type.upper())
     slug = TYPE_SLUG.get(bill_type, bill_type)
     return (f"{prefix} {bill_number}",
-            f"https://www.congress.gov/bill/{CURRENT_CONGRESS}th-congress/{slug}/{bill_number}")
+            f"https://www.congress.gov/bill/{congress_ordinal(CURRENT_CONGRESS)}-congress/{slug}/{bill_number}")
 
 
 def clean_text(raw):
@@ -706,7 +706,7 @@ def main():
             nominee_lists[vote_key] = senate_nominations.nominees(ET.fromstring(raw))
 
     # -- Senate: two index fetches enumerate the whole universe ---------------
-    print(f"\nSenate roll calls, {CURRENT_CONGRESS}th Congress...")
+    print(f"\nSenate roll calls, {congress_ordinal(CURRENT_CONGRESS)} Congress...")
     indexes = {session: senate_vote_numbers(CURRENT_CONGRESS, session) for session in (1, 2)}
     new_provisional = set()
 
@@ -808,7 +808,7 @@ def main():
               f"{len(new_provisional)} provisional in total")
 
     # -- House: no index, so walk the roll numbers per calendar year ----------
-    print(f"\nHouse roll calls, {CURRENT_CONGRESS}th Congress...")
+    print(f"\nHouse roll calls, {congress_ordinal(CURRENT_CONGRESS)} Congress...")
     for year in active_years(CURRENT_CONGRESS):
         misses = 0
         found = 0
@@ -873,7 +873,7 @@ def main():
         "metadata": {
             "generatedAt": datetime.now(timezone.utc).isoformat(),
             "congress":    CURRENT_CONGRESS,
-            "sessionName": f"{CURRENT_CONGRESS}th Congress",
+            "sessionName": f"{congress_ordinal(CURRENT_CONGRESS)} Congress",
             "source":      "Clerk of the House + Senate.gov roll-call XML"
                            + (" (some Senate roll calls from Voteview while senate.gov "
                               "is unreachable; replaced by the official record on the "

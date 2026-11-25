@@ -39,8 +39,56 @@ def test_years_and_ordinals():
     assert cs.congress_years(119) == (2025, 2026)
     assert cs.congress_years(120) == (2027, 2028)
     for n, want in ((1, "1st"), (2, "2nd"), (3, "3rd"), (11, "11th"), (12, "12th"),
-                    (13, "13th"), (21, "21st"), (119, "119th"), (120, "120th")):
+                    (13, "13th"), (21, "21st"), (111, "111th"), (112, "112th"), (113, "113th"),
+                    (119, "119th"), (120, "120th"), (121, "121st"), (122, "122nd"),
+                    (123, "123rd"), (124, "124th")):
         assert cs.congress_ordinal(n) == want, (n, cs.congress_ordinal(n))
+
+
+def test_ordinal_or_unknown():
+    assert cs.ordinal_or_unknown(121) == "121st"
+    assert cs.ordinal_or_unknown(None) == "?"
+    assert cs.ordinal_or_unknown("bad") == "bad"
+
+
+def test_bill_urls_after_the_120th():
+    from lib.federal_sponsorship import bill_url
+    import generate_federal_votes_data as votes
+    import generate_presidential_laws as laws
+    import validate_presidential_laws as vlaws  # noqa: F401  (must import cleanly)
+    for n, slug in ((119, "119th"), (121, "121st"), (122, "122nd"), (123, "123rd")):
+        want = f"https://www.congress.gov/bill/{slug}-congress/house-bill/1"
+        assert bill_url(n, "HR", "1") == want, bill_url(n, "HR", "1")
+        for mod, call in ((votes, lambda: votes.bill_fields("hr", "1")[1]),
+                          (laws, lambda: laws.build_congress_url("hr", "1"))):
+            saved, mod.CURRENT_CONGRESS = mod.CURRENT_CONGRESS, n
+            try:
+                assert call() == want, (mod.__name__, call())
+            finally:
+                mod.CURRENT_CONGRESS = saved
+
+
+def test_no_hardcoded_th_suffix():
+    """A computed Congress number followed by a literal "th" is wrong from the 121st on."""
+    import re
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    bad = re.compile(r"\}th(?:-congress| Congress|\b(?=[\"'`.]))")
+    ordinal_helper = re.compile(r"return `\$\{n\}th`|f\"\{n\}th\"")
+    found = []
+    for top, exts in (("scripts", (".py",)), ("_includes", (".html",)),
+                      ("assets/scripts", (".js",)), ("mcp/src", (".ts",))):
+        for folder, _dirs, files in os.walk(os.path.join(root, top)):
+            if "archive" in folder.replace(os.sep, "/").split("/"):
+                continue
+            for name in files:
+                if not name.endswith(exts) or name.startswith("test_"):
+                    continue
+                path = os.path.join(folder, name)
+                with open(path, encoding="utf-8") as f:
+                    for i, line in enumerate(f, 1):
+                        if bad.search(line) and not ordinal_helper.search(line):
+                            found.append(f"{os.path.relpath(path, root)}:{i}: {line.strip()[:90]}")
+    assert not found, "use congress_ordinal()/ordinal():\n" + "\n".join(found)
 
 
 def test_env_override_and_refusals():

@@ -1102,7 +1102,7 @@
         date:       row[FV_DATE] || '',
         bill:       (type && num) ? `${FED_BILL_LABEL[type] || String(type).toUpperCase()} ${num}` : null,
         billUrl:    (type && num)
-          ? `https://www.congress.gov/bill/${encodeURIComponent(congress)}th-congress/${encodeURIComponent(slug)}/${encodeURIComponent(num)}`
+          ? `https://www.congress.gov/bill/${encodeURIComponent(ordinal(congress))}-congress/${encodeURIComponent(slug)}/${encodeURIComponent(num)}`
           : null,
         title:      row[FV_TITLE] || null,
         motionText: motions[row[FV_MOTION]] || '',
@@ -1237,7 +1237,7 @@
         </p>`;
   }
 
-  // 1 -> "1st". Used for ranks, which are small integers.
+  // 1 -> "1st". Used for ranks and Congress numbers (the 121st, 122nd and 123rd are not "th").
   function ordinal(n) {
     if (n === null || n === undefined) return '';
     const mod100 = n % 100;
@@ -1449,7 +1449,7 @@
     }).join('');
 
     container.innerHTML = `
-      <h2>Key Votes <small style="font-weight:normal;font-size:0.75rem;color:var(--color-text-secondary);">curated · 119th Congress</small></h2>
+      <h2>Key Votes <small style="font-weight:normal;font-size:0.75rem;color:var(--color-text-secondary);">curated${voteIdx.metadata?.sessionName ? ` · ${escHtml(voteIdx.metadata.sessionName)}` : ''}</small></h2>
       <p style="font-size:0.8rem;color:var(--color-text-secondary);margin:0 0 1rem 0;">This member's votes on a selection of significant federal legislation.</p>
       ${cards}`;
   }
@@ -1590,7 +1590,7 @@
     function itemHtml(row, hidden) {
       const type = row[R_TYPE] || '', number = String(row[R_NUM] || '');
       const slug = BILL_TYPE_SLUG[type] || type.toLowerCase();
-      const href = `https://www.congress.gov/bill/${encodeURIComponent(congress || '')}th-congress/`
+      const href = `https://www.congress.gov/bill/${encodeURIComponent(ordinal(congress))}-congress/`
         + `${encodeURIComponent(slug)}/${encodeURIComponent(number)}`;
       const policy = policies[row[R_POLICY]] || '';
       const policyBadge = policy
@@ -1675,7 +1675,7 @@
       + `, and is published as open data in the `
       + `<a href="https://github.com/Votega/ga-federal-legislators" target="_blank" rel="noopener">Votega/ga-federal-legislators</a> repository.</p>`;
 
-    const congressLabel = congress ? `${congress}th Congress` : 'current Congress';
+    const congressLabel = congress ? `${ordinal(congress)} Congress` : 'current Congress';
 
     container.innerHTML = `
       <h2>Sponsored Legislation${congress ? ` <small style="font-weight:normal;font-size:0.75rem;color:var(--color-text-secondary);">${escHtml(congressLabel)}</small>` : ''}</h2>

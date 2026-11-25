@@ -19,7 +19,7 @@ import urllib.parse
 from datetime import datetime, timezone
 
 from lib.http import fetch_json
-from lib.congress_session import current_congress
+from lib.congress_session import congress_ordinal, current_congress
 
 CONGRESS_API_KEY  = os.environ.get('CONGRESS_API_KEY')
 CONGRESS_API_BASE = "https://api.congress.gov/v3"
@@ -78,7 +78,7 @@ def congress_api(path, params=None):
 
 def build_congress_url(bill_type, bill_number):
     slug = TYPE_SLUG.get(bill_type.lower(), bill_type.lower())
-    return f"https://www.congress.gov/bill/{CURRENT_CONGRESS}th-congress/{slug}/{bill_number}"
+    return f"https://www.congress.gov/bill/{congress_ordinal(CURRENT_CONGRESS)}-congress/{slug}/{bill_number}"
 
 
 def fetch_all_laws():
@@ -160,7 +160,7 @@ def main():
         print("Error: CONGRESS_API_KEY environment variable not set")
         sys.exit(1)
 
-    print(f"Fetching enacted public laws for {CURRENT_CONGRESS}th Congress...")
+    print(f"Fetching enacted public laws for {congress_ordinal(CURRENT_CONGRESS)} Congress...")
     all_bills = fetch_all_laws()
     print(f"  Total from API: {len(all_bills)}")
 

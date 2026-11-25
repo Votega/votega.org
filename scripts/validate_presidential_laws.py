@@ -46,6 +46,9 @@ import os
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib.congress_session import ordinal_or_unknown  # noqa: E402
+
 REQUIRED = ("billLabel", "type", "number", "title", "signingDate", "congressUrl")
 
 
@@ -93,7 +96,7 @@ def tier1(d):
         seen.add(key(law))
         if term and (law.get("signingDate") or "") < term:
             early.append(key(law))
-        if congress and f"/{congress}th-congress/" not in (law.get("congressUrl") or ""):
+        if congress and f"/{ordinal_or_unknown(congress)}-congress/" not in (law.get("congressUrl") or ""):
             wrong_cong.append(key(law))
         if law.get("govinfoPackageId") and not (law.get("officialTextUrl")
                                                 and law.get("officialPdfUrl")):
@@ -106,7 +109,7 @@ def tier1(d):
         errors.append(f"{len(early)} law(s) signed before termStart {term}: {early[:3]}")
     if wrong_cong:
         errors.append(f"{len(wrong_cong)} law(s) whose congressUrl is not the "
-                      f"{congress}th Congress: {wrong_cong[:3]}")
+                      f"{ordinal_or_unknown(congress)} Congress: {wrong_cong[:3]}")
     if half:
         errors.append(f"{len(half)} law(s) carry a govinfoPackageId without the links "
                       f"built from it: {half[:3]}")
@@ -190,7 +193,7 @@ def main():
     n = len(new["laws"])
     enriched = sum(1 for x in new["laws"] if x.get("govinfoPackageId"))
     print(f"Tier 1 passed: {n} laws ({enriched} with GovInfo provenance), "
-          f"{new['metadata'].get('congress')}th Congress.")
+          f"{ordinal_or_unknown(new['metadata'].get('congress'))} Congress.")
 
     old = baseline(args.path, args.baseline_ref)
     lost = collapse(new, old)

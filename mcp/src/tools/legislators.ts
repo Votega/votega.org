@@ -21,6 +21,13 @@ const COUNTY_KEY: Record<Chamber, "state-senate" | "state-house" | "us-house"> =
   us_house: "us-house",
 };
 
+/** 119 -> "119th", 121 -> "121st". */
+export function ordinal(n: number): string {
+  const tens = n % 100;
+  const suffix = tens >= 11 && tens <= 13 ? "th" : (["th", "st", "nd", "rd"][n % 10] ?? "th");
+  return `${n}${suffix}`;
+}
+
 export const DEFAULT_LIMIT = 10;
 export const MAX_LIMIT = 25;
 
@@ -154,7 +161,7 @@ export async function getLegislator(loader: Loader, input: { id: string }): Prom
   const covers =
     m.level === "state"
       ? `the ${(idx.metadata.state.session ?? "current").replace("_", "-")} General Assembly`
-      : `the ${idx.metadata.federal.congress ?? "current"}th Congress`;
+      : `the ${idx.metadata.federal.congress ? ordinal(idx.metadata.federal.congress) : "current"} Congress`;
   const office =
     ch === "us_senate"
       ? "U.S. Senator for Georgia"

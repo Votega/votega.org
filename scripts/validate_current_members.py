@@ -61,6 +61,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib import federal_turnover  # noqa: E402
+from lib.congress_session import ordinal_or_unknown  # noqa: E402
 
 # 435 representatives + 100 senators + the 6 non-voting delegates and the
 # resident commissioner that Congress.gov's current-members list includes.
@@ -401,7 +402,7 @@ def tier2(roster, index, old_roster=None, old_index=None):
         sections.append(("Delegation sponsorship record is thin", [
             f"- {total_s} sponsored (reporting under {SPONSORED_FLOOR}) and {total_c} "
             f"cosponsored (under {COSPONSORED_FLOOR}) across the delegation in the "
-            f"{imeta.get('congress', '?')}th Congress.",
+            f"{ordinal_or_unknown(imeta.get('congress'))} Congress.",
             "",
             "Worth a look, but NOT a failure: a Congress that convened weeks ago "
             "legitimately has almost nothing introduced yet, and gating on this "
@@ -433,8 +434,8 @@ def tier2(roster, index, old_roster=None, old_index=None):
         was, now = o.get("congress"), imeta.get("congress")
         if was and now and was != now:
             sections.append(("Congress rolled over", [
-                f"- the sponsorship record now covers the {now}th Congress, was the "
-                f"{was}th. Every member's record starts near zero again."]))
+                f"- the sponsorship record now covers the {ordinal_or_unknown(now)} Congress, was the "
+                f"{ordinal_or_unknown(was)}. Every member's record starts near zero again."]))
         for bid, c in sorted((old_index.get("members") or {}).items()):
             new_c = (index or {}).get("members", {}).get(bid)
             if new_c is None:
