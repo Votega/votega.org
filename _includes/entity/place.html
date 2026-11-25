@@ -521,6 +521,8 @@
 
 {% include entity/place-tabs.html %}
 
+{% include report-correction.html place_slug=e.slug kind="place" %}
+
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/local-subjects.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
