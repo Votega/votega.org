@@ -2,9 +2,9 @@
 """assets/data/ga-departure-labels.json: the approved departure labels.
 
 The labels are approved wording, recorded as data ahead of the January 2027
-rollover; no page reads them yet. What must hold:
+rollover. What must hold:
 
-  * every key is a legisGaGovId on the roster, and the recorded name, chamber and
+  * every key is a legisGaGovId on that biennium's roster, and the recorded name, chamber and
     district still match that member (a label attached to the wrong person is the
     failure this guards);
   * metadata.count is the number of labels;
@@ -44,8 +44,20 @@ def load(name):
 
 doc = load("ga-departure-labels.json")
 labels = doc["labels"]
-roster = {str(m["legisGaGovId"]): m for m in load("ga-members.json")["members"]
-          if m.get("legisGaGovId") is not None}
+
+
+def by_gid(members):
+    return {str(m["legisGaGovId"]): m for m in members if m.get("legisGaGovId") is not None}
+
+
+# The roster these labels describe. Once the rollover replaces the live one, that is the
+# frozen copy: every departing member is off the live roster by design, and a member who
+# changed chambers is on it under another seat.
+live, tag = load("ga-members.json"), doc["metadata"]["session"]
+if live["metadata"].get("session") == tag:
+    roster = by_gid(live["members"])
+else:
+    roster = by_gid(load(os.path.join("ga-bienniums", tag, "ga-members.json"))["members"])
 
 check("count matches", doc["metadata"]["count"] == len(labels), f"{doc['metadata']['count']} vs {len(labels)}")
 check("every key is on the roster", all(k in roster for k in labels),

@@ -47,12 +47,13 @@ from lib.ga_leadership import committee_index, normalize_title
 from lib.ga_roster import (EXECUTIVE_CHAMBER, apply_member_overrides, biennium_slug, convening_date,
                            detect_rollover, display_committee, listing_is_too_short,
                            normalize_address, out_of_scope_entries, split_for_rollover,
-                           untagged_departures)
+                           unresolved_departures, untagged_departures)
 from lib.ga_sessions import SESSION_NAMES, all_session_ids, legis_session_id
 from lib.ga_soap import (get_committees_by_session, get_member, get_members_by_session)
 
 MEMBERS_FILE    = "assets/data/ga-members.json"
 OVERRIDES_FILE  = "assets/data/ga-members-overrides.json"
+DEPARTURE_LABELS_FILE = "assets/data/ga-departure-labels.json"
 IDENTITY_SIDECAR = "assets/data/ga-openstates-crosswalk.json"
 
 DELAY = 0.1           # politeness between GetMember calls; there is no quota
@@ -406,6 +407,17 @@ def main(argv=None):
     in_listing = {l["id"] for l in listings}
     if rollover:
         preserved, departing = split_for_rollover(existing, in_listing)
+        # The hard gate (decision D6). Before the per-member fetches: it needs only the
+        # listing, and a refusal must cost nothing. No flag skips it; approve the labels.
+        unresolved = unresolved_departures(departing, DEPARTURE_LABELS_FILE,
+                                           rollover["from"]["session"])
+        if unresolved:
+            print(f"Error: {len(unresolved)} unresolved among {len(departing)} members absent "
+                  f"from the {tag} listing. Each needs an approved departure label in "
+                  f"{DEPARTURE_LABELS_FILE} before the roster drops them (if someone named "
+                  f"here is returning, the listing is incomplete: wait and re-run). Refusing "
+                  f"to write:\n  " + "\n  ".join(unresolved), file=sys.stderr)
+            return 1
     else:
         preserved = [m for m in existing if m.get("legisGaGovId") not in in_listing
                      and m.get("chamber") != EXECUTIVE_CHAMBER]

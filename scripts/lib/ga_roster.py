@@ -199,6 +199,37 @@ def split_for_rollover(existing, in_listing):
     return preserved, departing
 
 
+def unresolved_departures(departing, labels_file, session):
+    """Why each departing member is unresolved; [] when every one has an approved label.
+
+    Decision D6's hard gate: a rollover drops these people from the roster, so how each
+    one's service ended must be settled first. Resolved means an entry with text in the
+    approved labels file, which must describe the OUTGOING biennium. Keyed on
+    legisGaGovId only. A Vacant placeholder is a seat, not a person.
+    """
+    people = [m for m in departing if m.get("status") != "Vacant"]
+    if not people:
+        return []
+    try:
+        with open(labels_file, encoding="utf-8") as fh:
+            doc = json.load(fh)
+        labels, described = doc["labels"], (doc.get("metadata") or {}).get("session")
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        return [f"{labels_file} is missing or unreadable ({type(exc).__name__}), so none of "
+                f"the {len(people)} departing members is resolved"]
+    if described != session:
+        return [f"{labels_file} describes {described!r}, but the outgoing biennium is {session!r}"]
+    out = []
+    for m in people:
+        gid = m.get("legisGaGovId")
+        who = f"{m.get('name')} ({m.get('chamber')} {m.get('district')}, legisGaGovId {gid})"
+        if gid is None:
+            out.append(f"{who}: no legisGaGovId to key a label to")
+        elif not str((labels.get(str(gid)) or {}).get("label") or "").strip():
+            out.append(f"{who}: no approved label")
+    return out
+
+
 def apply_member_overrides(members, overrides_file, session=None):
     """Apply the editorial layer in place; return (patched, injected) counts.
 
