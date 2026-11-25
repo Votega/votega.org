@@ -50,6 +50,9 @@ import os
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib.congress_session import ordinal_or_unknown  # noqa: E402
+
 PREFIX_CHAMBER = {"H": "House", "S": "Senate"}
 
 
@@ -151,7 +154,7 @@ def tier2(new, old):
     meta = new.get("metadata") or {}
     if not new.get("votes"):
         sections.append(("No roll calls yet", [
-            f"- The {meta.get('congress')}th Congress has no recorded roll call in "
+            f"- The {ordinal_or_unknown(meta.get('congress'))} Congress has no recorded roll call in "
             "this file. Expected in the first days of a Congress; check the "
             "run log if not."]))
     missing = meta.get("sittingMembersMissingVotes") or []

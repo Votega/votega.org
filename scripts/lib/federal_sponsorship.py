@@ -49,8 +49,9 @@ import os
 import time
 
 from lib.atomic_io import write_json_atomic
+from lib.congress_session import congress_ordinal
 
-#: Congress.gov bill type -> congress.gov/bill/<congress>th-congress/<slug>/<n>.
+#: Congress.gov bill type -> congress.gov/bill/<ordinal>-congress/<slug>/<n>.
 BILL_TYPE_SLUG = {
     'HR':      'house-bill',
     'S':       'senate-bill',
@@ -77,7 +78,7 @@ KINDS = {
 def bill_url(congress, bill_type, number):
     """Public congress.gov permalink for a bill. Derived, never stored per row."""
     slug = BILL_TYPE_SLUG.get(bill_type, str(bill_type or '').lower())
-    return f"https://www.congress.gov/bill/{congress}th-congress/{slug}/{number}"
+    return f"https://www.congress.gov/bill/{congress_ordinal(congress)}-congress/{slug}/{number}"
 
 
 def normalize_bill(raw, congress):
@@ -414,5 +415,5 @@ def write_sponsorship_artifacts(data_dir, congress, records, *,
         f"{stats['members']} member slices (median "
         f"{stats['medianSliceBytes'] / 1024:.1f}KB, max "
         f"{stats['maxSliceBytes'] / 1024:.1f}KB) from {total_primary} sponsored "
-        f"+ {total_co} cosponsored records in the {congress}th Congress.")
+        f"+ {total_co} cosponsored records in the {congress_ordinal(congress)} Congress.")
     return stats

@@ -43,6 +43,9 @@ import os
 import subprocess
 import sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib.congress_session import ordinal_or_unknown  # noqa: E402
+
 REQUIRED = ("voteNumber", "congress", "session", "date", "vpVote", "yeas", "nays")
 
 
@@ -179,7 +182,7 @@ def main():
               "uploaded as a workflow artifact.", file=sys.stderr)
         return 1
     print(f"Tier 1 passed: {len(new['votes'])} tie-breaking vote(s), "
-          f"{new['metadata'].get('congress')}th Congress.")
+          f"{ordinal_or_unknown(new['metadata'].get('congress'))} Congress.")
 
     old = baseline(args.path, args.baseline_ref)
     lost = collapse(new, old)

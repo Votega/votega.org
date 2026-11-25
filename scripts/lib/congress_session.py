@@ -76,3 +76,8 @@ def congress_ordinal(congress):
     else:
         suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(congress % 10, 'th')
     return f"{congress}{suffix}"
+
+
+def ordinal_or_unknown(congress):
+    """congress_ordinal() for a number read from a file; anything but an int is shown as it is."""
+    return congress_ordinal(congress) if isinstance(congress, int) else str(congress if congress is not None else '?')
