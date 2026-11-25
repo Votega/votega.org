@@ -2286,15 +2286,18 @@ places:
     region:                         # optional hub grouping label
     domains:
       meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/union/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # CivicPlus Agenda Center (populated; validated 157 meetings across six bodies). Union has a sole
+        # commissioner, not a board, so the body is labelled "Sole Commissioner". Only that office's own feed is shown here; the other bodies on the Agenda Center (registrars,
+        # elections, short-term rental board, development authority) are not the county commission.
+        platform: civicplus
+        base_url: https://www.unioncountyga.gov
+        agendas_url: "https://www.unioncountyga.gov/AgendaCenter"
+        body_map:
+          - { match: "Commission Meeting Agendas", label: "Sole Commissioner" }
         schedule:
-          - body: Board of Commissioners
-            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
-            location: ""            # optional
+          - body: Sole Commissioner
+            when: "3rd Thursday of every month, 9:30 a.m."   # county notice for the rest of 2026: Sept 22, Oct 15, Nov 19, Dec 17 (September is the exception)
+            location: "Union County Sports Center, 519 Industrial Blvd., Blairsville, GA 30512"
 
   - slug: monroe
     name: Monroe County
