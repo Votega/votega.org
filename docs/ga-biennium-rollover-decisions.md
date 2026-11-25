@@ -20,7 +20,7 @@ The 159th General Assembly convenes on **2027-01-11**, and the 120th Congress in
 
 ## Decisions
 
-### D1. Preservation model (the umbrella decision) — Proposed
+### D1. Preservation model (the umbrella decision) — **Decided 2026-11-24: keep members' pages, freeze bills and the party-unity scorecard, no other snapshots, no site-wide session selector (as proposed below)**
 Options: (1) fresh start, archives only in the repos; (2) keep the people, archive the sessions; (3) add frozen "final 2025-2026" snapshot pages; (4) full on-site archive with a site-wide session selector (150k+ tokens, heavy).
 **Proposed:** option 2 for members, the bills proposal in D2 for bills, plus option 3 for the party-unity scorecard only. Defer option 4. Questions that settle it: who uses past sessions (journalists and researchers vs ordinary readers), how much old URLs staying in search matters, whether a returning member's page shows several bienniums.
 
@@ -64,7 +64,7 @@ Not verified: whether the generators delete those per-member files for members d
 ### D4. Indexing — **Reversed 2026-11-13: former-member pages are indexed and in the sitemap** (Georgia Commons links them; see the page-permanence spec). Original proposal kept below for the record
 Former-member pages `noindex`, out of the sitemap, until we decide (avoids a thin-content risk; legislator pages already carry a per-member record summary from the thin-content SEO work). Revisit after the rollover.
 
-### D5. Contact details on former members' pages — Proposed
+### D5. Contact details on former members' pages — **Decided 2026-11-24: hidden; built** (showContact() in _includes/entity/ga-legislator.html)
 Hide phone, address and email. Today the legacy shell for a resigned member still shows them. Also fix the "This seat is up for election in 2026" banner, which belongs to the seat, not the person.
 
 ### D6. Departure classification and wording — Proposed; label wording decided 2026-10-29 (process still open)
@@ -106,7 +106,7 @@ Hide phone, address and email. Today the legacy shell for a resigned member stil
 
 **Amended 2026-11-23, placement:** labels also show on a sitting member's own live page during the lame-duck window (certification to the end of the term), for GA and the federal delegation. They drop off automatically: `departure-label.js` hides a label from the file's `metadata.termEnds` (GA 2027-01-11, federal 2027-01-03), and a GA label shows only while the live roster's session matches the file's `session`. Former members' index and pages are unchanged.
 
-**Decided 2026-10-30, hard gate:** the rollover refuses to run while any departing member is unresolved.
+**Decided 2026-10-30, hard gate:** the rollover refuses to run while any departing member is unresolved. **Reaffirmed and built 2026-11-24** (`unresolved_departures()` in `lib/ga_roster.py`, called by `generate_ga_members_soap.py --new-biennium`): every voting-chamber member absent from the new listing needs an approved label in `ga-departure-labels.json`, whose session must be the outgoing one; no flag skips it.
 
 **Qualifying export:** the site owner downloads it from the Secretary of State when needed. The May 19 primary report's candidate list closed with that primary, and the 2026-10-30 re-download matched the committed file, so no further pull is expected for the primary-based labels. The November report is the one that may need pulling, after certification, for any label that depends on it.
 
@@ -140,7 +140,7 @@ Build the classifier and queue now against the primary and runoff data; finish a
 
 **Page behavior to fix alongside (found 2026-10-29, not yet scheduled).** The member page's "Running for…" banner (`_includes/entity/ga-legislator.html`) does not read results, so Henderson and Gooch, who lost their primaries, still show it; it appears for only 6 of the 18 members who ran for another office, because the races builder links a candidate to a roster member only for the seat's own incumbent and cross-office links are hand-added; and the seat banner ("This seat is up for election in 2026") describes the seat, not the person. The Senate 7 special election has no race record in `races.json`. Alvin Payton's candidate link was fixed on 2026-10-29 (the incumbent name rule failed on "Jr").
 
-### D7. Scope: which bienniums — Proposed 2026-10-30
+### D7. Scope: which bienniums — **Decided 2026-11-24: 2025-2026 only, as proposed below**
 Keep former members for any biennium Georgia Commons covers, or only the one just ended?
 
 **Proposed: the biennium just ended (2025-2026) only, and make the scope a property of the former-members index (D3) rather than of the page builder**, so widening it later is a data change rather than a code change.
@@ -185,7 +185,7 @@ Cheaper than it looks: `assets/data/ga-party-unity.json` is 117 KB, already carr
 
 **A returning member's page shows the current biennium's score with a link to the frozen one, and never an average across bienniums** — different chamber, different colleagues and a different universe of votes make a combined figure a number with no referent.
 
-### D11. Roster and votes across the rollover — Proposed 2026-10-30
+### D11. Roster and votes across the rollover — **Decided 2026-11-24: the current biennium by default, earlier ones through the page's biennium switch; built** (the switch replaces the archive link proposed below; returning members get it once RECURRING-TASKS §3 step 2b has run)
 `ga-member-votes.json` (4.0 MB) is replaced at the rollover. Decide whether a returning member's page shows only the current biennium's votes with a link to the archive, or several.
 
 **Proposed: the current biennium only, with a link to the archive.**
@@ -228,7 +228,7 @@ The 120th Congress convenes **January 3, 2027**, eight days before the General A
 
 **Still open:** who curates the 120th's key votes.
 
-### D13. Georgia Commons — Proposed 2026-10-30. **Update 2026-11-12: their sponsor links are already live**, so the ordering below is moot; tell them URLs are preserved once the page-permanence spec's rollout step 1 ships
+### D13. Georgia Commons — **Deferred by the owner 2026-11-24.** Proposed 2026-10-30. **Update 2026-11-12: their sponsor links are already live**, so the ordering below is moot; tell them URLs are preserved once the page-permanence spec's rollout step 1 ships
 Tell them that links to members who leave office will be preserved, or hold the sponsor-link request until D1-D4 are settled. Include the licensing questions from `docs/georgia-civic-data-collaboration.md`.
 
 **Proposed: tell them the URLs will be preserved, with two caveats, and ask the licensing questions in the same message — but do not ask them to launch the sponsor links until D3 is BUILT, not merely agreed.**
@@ -239,7 +239,7 @@ D1-D4 now have proposals, and D3 keeps `/ga-legislators/<slug>/` serving for a f
 
 The ordering matters more than the message. A preserved-URL promise that 404s in January is worse for them than no link at all, and the mirror-image mistake is already recorded in `claude.md`: advertise an artifact only once it exists.
 
-### D14. Entry points to former members and past sessions — Proposed
+### D14. Entry points to former members and past sessions — **Decided 2026-11-24: the Former Legislators card on /find-my-reps, linking to the existing list on /ga-state-reps; no lookup row and no Past sessions hub unless asked for. Card not built yet; can wait until after 2027-01-11**
 - **A "Former Legislators" card on `/find-my-reps`.** The page is a hub of entry cards (Federal Representatives, Georgia State Representatives) in a two-column grid, so a third card would be a full-width strip. Name it for what is behind it (people, not sessions); it is accurate today because 11 members have already resigned. It links to a directory of former members grouped by session and chamber (name, party, district, term dates, how they left, successor, page link).
 - **A "Previously held by …" row in the address lookup**, per district, linking to that seat's former member. The lookup shows only sitting members today ("No sitting … found" for an empty seat). It relies on district numbers staying the same, which holds under the 2023 plans; label it with the plan if Georgia redraws.
 - **Optional "Past sessions" hub** for 2025-2026: former members, the final scorecard (D10), bills (`ga-bills` with its session dropdown, D2), and the roster as frozen at sine die.
@@ -254,7 +254,7 @@ What this needs, checked 2026-11-04 against the code (nothing run):
 - **Page change (the real work):** `_includes/entity/ga-legislator.html` renders the Key Votes button unconditionally and makes it the default tab (`DEFAULT_TAB = 'curatedBills'`). `loadCuratedBills()` returns silently on an empty list, which today would leave a blank default tab. Built: it (1) hide the button and panel when the file has no bills, (2) fall back to Voting History as the default tab, and (3) make a `#curatedBills` deep link fall through rather than activate a hidden panel. The existing hidden In the News tab (`hidden` until it has content) is the pattern to copy.
 - **The 2025-26 key votes are not lost:** freeze the current `curated-ga-bill-votes.json` at the final freeze (Timing step 5), and the D3 biennium selector shows it for 2025-26 only, so the key votes appear only against a biennium whose members were in office.
 - **Same rule on the federal side:** the 120th has no curated key votes either (D12), so `federal-legislator.html` should hide its Key Votes tab on an empty list for the same reason.
-- **Mid-biennium has the same risk, smaller:** a member seated by special election after a curated vote shows a vote they did not have the chance to cast. Worth deciding separately whether a curated row should show "Not in office" for a member seated after the vote date; the roster has `termStart` to drive it.
+- **Mid-biennium has the same risk, smaller:** a member seated by special election after a curated vote shows a vote they did not have the chance to cast. **Decided 2026-11-24:** a curated row shows "Not in office" for a member seated after the vote date (the roster has `termStart` to drive it). Not built yet.
 
 ## Timing: when to run the final freeze
 
@@ -281,9 +281,9 @@ What this needs, checked 2026-11-04 against the code (nothing run):
 4. **Done 2026-11-21: strengthen the guard.** replace the existence check with a freshness check, for example the frozen roster's member IDs and statuses must equal the live roster's, and fail with the differences. It also makes the final freeze impossible to forget.
 5. **Freeze the on-site copies before the `lib/ga_sessions.py` bump (new, 2026-11-04).** `docs/RECURRING-TASKS.md` §3 freezes only the roster; the producers then drop the outgoing biennium from the live files, and the slice builders delete stale slices. If the D2, D3, D10 and D12 selectors are built, the frozen sets must exist first: the 2025-26 bills file (D2), the vote index and per-member vote and sponsorship slices (D3), `ga-party-unity.json` (D10), and, for the federal side, the 119th set under `assets/data/federal-119th/` (D12, due by 2 January 2027). Put them under per-biennium paths the builders do not clear, and never re-run the party-vote enricher on a frozen bills file. Add this as step 2b of `RECURRING-TASKS.md` §3 when it is built.
 6. Fold two items from `docs/RECURRING-TASKS.md` §3 step 5 into the same plan: work `newMemberNameReview` before the first entity-page build of the new biennium (a newcomer's URL is slugged from the formal legis.ga.gov name, and fixing it later moves the URL), and confirm or replace the carried-forward Lt. Governor record, since a new Lt. Governor takes office in January 2027.
-7. Assign an owner and a calendar reminder for steps 2-3 and 5.
+7. **Decided 2026-11-24:** the site owner owns steps 2-3 and 5; the December 15 scheduled reminder covers them. One more roster freeze after the House 151 runoff is certified; votes are not added to it (`freeze_ga_biennium.py --all` saves each member's).
 
-Open: the exact dates (certification and runoff dates are not verified), whether another special session could still be called before January, and whether the final freeze should also snapshot votes.
+Open: the runoff's certification date (not verified) and whether another special session could still be called before January.
 
 ## Timeline
 

@@ -107,7 +107,7 @@ class Env:
     """One temp dir with a committed roster, an overrides file and a patched producer."""
 
     def __init__(self, session=(NEW_TAG, NEW_SID), overrides=None, archived=True,
-                 listing=None, first_term_ids=(), special_ids=()):
+                 listing=None, first_term_ids=(), special_ids=(), labels=True):
         self.d = tempfile.TemporaryDirectory()
         self.committed = committed_roster()
         self.members_path = os.path.join(self.d.name, "ga-members.json")
@@ -122,10 +122,23 @@ class Env:
         self.first_term_ids, self.special_ids = set(first_term_ids), set(special_ids)
         self.before = open(self.members_path, "rb").read()
         self.saved = {k: getattr(G, k) for k in (
-            "MEMBERS_FILE", "OVERRIDES_FILE", "IDENTITY_SIDECAR", "DELAY", "regular_session",
+            "MEMBERS_FILE", "OVERRIDES_FILE", "DEPARTURE_LABELS_FILE", "IDENTITY_SIDECAR", "DELAY", "regular_session",
             "get_members_by_session", "get_member", "get_committees_by_session",
             "load_pin_overrides", "fetch_archived_roster")}
         G.MEMBERS_FILE, G.OVERRIDES_FILE = self.members_path, self.overrides_path
+        # The approved departure labels: True = one for everybody leaving, False = no file, a
+        # callable = a doctored copy.
+        G.DEPARTURE_LABELS_FILE = os.path.join(self.d.name, "labels.json")
+        listed = {r["id"] for r in self.rows}
+        doc = {"metadata": {"session": OLD_TAG},
+               "labels": {str(m["legisGaGovId"]): {"name": m["name"], "label": "Did not run."}
+                          for m in self.committed
+                          if m["chamber"] != "executive" and m["legisGaGovId"] not in listed}}
+        if callable(labels):
+            doc = labels(doc)
+        if labels:
+            with open(G.DEPARTURE_LABELS_FILE, "w", encoding="utf-8") as f:
+                json.dump(doc, f)
         G.IDENTITY_SIDECAR = os.path.join(self.d.name, "none.json")
         G.DELAY = 0
         G.regular_session = lambda: session
@@ -331,6 +344,60 @@ def refusal_cases():
         env.close()
 
 
+def departure_gate_cases():
+    print("the rollover refuses while a departing member has no approved label")
+
+    def drop_one(doc):
+        del doc["labels"]["1001"]
+        return doc
+
+    def blank_one(doc):
+        doc["labels"]["1001"]["label"] = "  "
+        return doc
+
+    def wrong_session(doc):
+        doc["metadata"]["session"] = "2023_24"
+        return doc
+
+    for label, doctor in (("one label missing", drop_one), ("one label blank", blank_one),
+                          ("labels are for another biennium", wrong_session),
+                          ("no labels file", False)):
+        env = Env(labels=doctor, overrides=tagged_overrides())
+        try:
+            check(f"{label} -> exits 1", env.run("--new-biennium"), 1)
+            check(f"{label} -> writes nothing", env.untouched(), True)
+            check(f"{label} -> --archive-confirmed does not skip it",
+                  env.run("--new-biennium", "--archive-confirmed"), 1)
+        finally:
+            env.close()
+
+    print("unresolved_departures names who and why")
+    with tempfile.TemporaryDirectory() as d:
+        path = os.path.join(d, "labels.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump({"metadata": {"session": OLD_TAG}, "labels": {"1": {"label": "Died."}}}, f)
+        person = {"name": "A", "chamber": "Senate", "district": 1, "legisGaGovId": 1}
+        check("a labelled member is resolved", R.unresolved_departures([person], path, OLD_TAG), [])
+        got = R.unresolved_departures([dict(person, name="B", legisGaGovId=2)], path, OLD_TAG)
+        check("an unlabelled one is named with their seat and id",
+              got, ["B (Senate 1, legisGaGovId 2): no approved label"])
+        got = R.unresolved_departures([dict(person, name="C", legisGaGovId=None)], path, OLD_TAG)
+        check("so is one no label can be keyed to", len(got) == 1 and "no legisGaGovId" in got[0], True)
+        check("a Vacant placeholder is a seat, not a person",
+              R.unresolved_departures([dict(person, status="Vacant", legisGaGovId=None)], path, OLD_TAG), [])
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("{not json")
+        check("an unreadable file refuses", len(R.unresolved_departures([person], path, OLD_TAG)), 1)
+
+    print("an ordinary daily run never reads the labels")
+    env = Env(session=(OLD_TAG, OLD_SID), labels=False)
+    try:
+        env.rows = [listing_row(m) for m in env.committed if m["chamber"] != "executive"]
+        check("exits 0 with no labels file", env.run(), 0)
+    finally:
+        env.close()
+
+
 def rollover_cases():
     print("--new-biennium builds the new class and drops the outgoing one")
     env = Env(overrides=tagged_overrides())
@@ -422,6 +489,7 @@ def validator_cases():
 helper_cases()
 plain_run_cases()
 refusal_cases()
+departure_gate_cases()
 rollover_cases()
 validator_cases()
 
