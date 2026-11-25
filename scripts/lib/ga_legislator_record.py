@@ -10,6 +10,9 @@ Numbers are rounded (whole percents, integer counts) so a page's content hash,
 and therefore its sitemap lastmod, does not churn on every data refresh.
 Each sentence is emitted only when its data exists; a missing figure is left
 out, never rendered as zero.
+
+`past` is None for a sitting member and the biennium's label ("2025–2026") for a former
+one, whose sentences are then in the past tense and name that General Assembly.
 """
 from __future__ import annotations
 
@@ -36,7 +39,7 @@ def _committee_roles(m):
     return [t for _, t in sorted(out)]
 
 
-def voting_sentences(m, unity):
+def voting_sentences(m, unity, past=None):
     """Participation and party-unity sentences from one ga-party-unity.json row."""
     if not unity or unity.get("presidingOfficer"):
         return []
@@ -44,7 +47,7 @@ def voting_sentences(m, unity):
     total, cast = unity.get("totalRollCalls"), unity.get("cast")
     rate = unity.get("participationRate")
     if total and cast is not None and rate is not None:
-        out.append(f"In the current General Assembly, {name} cast a Yea or Nay on "
+        out.append(f"In the {past or 'current'} General Assembly, {name} cast a Yea or Nay on "
                    f"{cast:,} of {total:,} passage roll calls in their own chamber "
                    f"({_pct(rate)} participation).")
     plv, with_party = unity.get("partyLineVotes"), unity.get("votedWithParty")
@@ -57,44 +60,46 @@ def voting_sentences(m, unity):
     return out
 
 
-def sponsorship_sentence(m, counts):
+def sponsorship_sentence(m, counts, past=None):
     """counts is the [primary, cosponsored] pair from ga-sponsorship-index.json."""
     if not counts or len(counts) != 2 or counts[0] + counts[1] <= 0:
         return None
     primary, co = counts
     name = m.get("name") or "This member"
+    verb = "was" if past else "is"
+    when = f"in the {past} General Assembly" if past else "in the current biennium"
     if primary and co:
-        return (f"{name} is the primary sponsor of {_count(primary, 'bill or resolution', 'bills and resolutions')} "
-                f"and a cosponsor of {_count(co, 'other measure', 'other measures')} in the current biennium.")
+        return (f"{name} {verb} the primary sponsor of {_count(primary, 'bill or resolution', 'bills and resolutions')} "
+                f"and a cosponsor of {_count(co, 'other measure', 'other measures')} {when}.")
     if primary:
-        return (f"{name} is the primary sponsor of {_count(primary, 'bill or resolution', 'bills and resolutions')} "
-                "in the current biennium.")
-    return f"{name} is a cosponsor of {_count(co, 'bill or resolution', 'bills and resolutions')} in the current biennium."
+        return (f"{name} {verb} the primary sponsor of {_count(primary, 'bill or resolution', 'bills and resolutions')} "
+                f"{when}.")
+    return f"{name} {verb} a cosponsor of {_count(co, 'bill or resolution', 'bills and resolutions')} {when}."
 
 
-def leadership_sentence(m):
+def leadership_sentence(m, past=None):
     name = m.get("name") or "This member"
     bits = []
     if (m.get("leadershipRole") or "").strip():
-        bits.append(f"holds the position of {m['leadershipRole'].strip()}")
+        bits.append(f"{'held' if past else 'holds'} the position of {m['leadershipRole'].strip()}")
     roles = _committee_roles(m)
     if roles:
-        bits.append("serves as " + "; ".join(roles))
+        bits.append(("served as " if past else "serves as ") + "; ".join(roles))
     if not bits:
         return None
-    return f"{name} " + ", and ".join(bits) + "."
+    return f"{name} " + ", and ".join(bits) + (f" in the {past} General Assembly." if past else ".")
 
 
-def legislator_record(m, unity, sponsorship_counts):
+def legislator_record(m, unity, sponsorship_counts, past=None):
     """Paragraphs (list of str) summarising the member's record; [] if no data."""
     paras = []
-    lead = leadership_sentence(m)
+    lead = leadership_sentence(m, past)
     if lead:
         paras.append(lead)
-    v = voting_sentences(m, unity)
+    v = voting_sentences(m, unity, past)
     if v:
         paras.append(" ".join(v))
-    s = sponsorship_sentence(m, sponsorship_counts)
+    s = sponsorship_sentence(m, sponsorship_counts, past)
     if s:
         paras.append(s)
     return paras

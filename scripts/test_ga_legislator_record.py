@@ -51,6 +51,15 @@ lead = " ".join(legislator_record(
 check("leadership + committee roles",
       "holds the position of Governor's Floor Leader, and serves as Chairman of Rules; Secretary of Ethics." in lead)
 
+past = " ".join(legislator_record(
+    dict(M, leadershipRole="Majority Whip", committeeRoles=[{"name": "Rules", "role": "Chairman"}]),
+    U, [2, 3], "2025–2026"))
+check("former: past tense throughout",
+      "held the position of Majority Whip, and served as Chairman of Rules in the 2025–2026 General Assembly." in past
+      and "In the 2025–2026 General Assembly, Jane Roe cast" in past
+      and "was the primary sponsor of 2" in past)
+check("former: nothing in the present", not any(w in past for w in ("holds", "serves", " is ", "current")))
+
 if failures:
     sys.exit(1)
 print("ok")

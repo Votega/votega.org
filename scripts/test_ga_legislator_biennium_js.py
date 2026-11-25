@@ -72,7 +72,11 @@ def main():
         "function getBasePath(){return '/';}\n" + helpers +
         "\nconst cases = " + json.dumps(PICK_CASES) + ";\n"
         "const office = " + json.dumps([c[1:4] for c in OFFICE_CASES]) + ";\n"
-        "const out = {office: office.map(c => notInOffice(c[0], c[1], c[2])), pick: cases.map(c => pickBiennium(c[0], c[1])),"
+        "const H = {chamber: 'House of Representatives', termStart: '2025-12-18', termStartSession: '2025-2026 Regular Session'};\n"
+        "const Y = (status, statusDate, shown) => yearsCountedTo({status, statusDate}, shown, 2029);\n"
+        "const out = {years: [Y(null, null, 'current'), Y('Resigned', '2026-01-01', 'current'), Y('Deceased', '2025-10-12', '2025_26'),"
+        " Y('Suspended', '2026-01-22', 'current'), Y(null, null, '2025_26'), yearsCountedTo({}, '2025_26', 2026)], label: [noVoteLabel(H, undefined, []), noVoteLabel({chamber: 'Senate'}, undefined, []),"
+        " noVoteLabel(H, {date: '2025-04-04'}, []), noVoteLabel(H, {date: '2026-03-01'}, [])], office: office.map(c => notInOffice(c[0], c[1], c[2])), pick: cases.map(c => pickBiennium(c[0], c[1])),"
         " live: dataRoot('current'), frozen: dataRoot('2025_26'),"
         " contact: [showContact(true,null), showContact(true,{biennium:'current'}), showContact(false,null)],"
         " role: [pageTitleRole('Senator',null), pageTitleRole('Senator',{biennium:'current'})]};\n"
@@ -86,6 +90,9 @@ def main():
         assert got == want, f"pickBiennium({avail}, {param!r}) = {got!r}, want {want!r}"
     for (label, *_rest, want), got in zip(OFFICE_CASES, out["office"]):
         assert got is want, f"notInOffice, {label}: got {got!r}, want {want!r}"
+    assert out["label"] == ["No House floor vote recorded", "No Senate floor vote recorded",
+                            "Not in office", "No vote recorded"], out["label"]
+    assert out["years"] == [2029, 2026, 2025, 2029, 2027, 2026], out["years"]
     assert out["live"].endswith("assets/data/") and "ga-bienniums" not in out["live"], out["live"]
     assert out["frozen"].endswith("assets/data/ga-bienniums/2025_26/"), out["frozen"]
     assert out["contact"] == [True, False, False], out["contact"]
