@@ -2203,11 +2203,16 @@ places:
     region:                         # optional hub grouping label
     domains:
       meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/bryan/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # Granicus govAccess site: agendas and minutes are dated "showpublisheddocument" links
+        # ("November 10, 2026 Agenda") that lib.pdflinks should read. The site 403s every
+        # non-browser client, so nothing is scraped yet; bot_protected keeps the run green and
+        # shows visitors a "check the official source" notice. Remove it once the 403s stop
+        # (needs a county allowlist) and run generate_place_meetings.py --slug bryan.
+        # Meeting day/time not yet confirmed.
+        platform: pdflinks
+        base_url: https://www.bryancountyga.gov/
+        agendas_url: "https://www.bryancountyga.gov/government/board-of-commissioners/agendas"
+        bot_protected: true
         schedule:
           - body: Board of Commissioners
             when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
@@ -2275,11 +2280,10 @@ places:
     region:                         # optional hub grouping label
     domains:
       meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/gilmer/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # No scraper adapter fits: the county's Meeting Documents page links minutes that live on
+        # Municode MuniDocs. This entry only links the page and shows the schedule.
+        # Meeting day/time not yet confirmed.
+        agendas_url: "https://gilmercounty-ga.gov/meeting-documents/"
         schedule:
           - body: Board of Commissioners
             when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
