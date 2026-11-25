@@ -1024,6 +1024,9 @@ places:
         # paginates it. (Paulding's old CivicClerk instance is dead — last meeting
         # 2024-03 — so do NOT use civicclerk here.) All rows are BOC meeting types.
         platform: municode
+        # meetings.municode.com answered CI with a Cloudflare 403 challenge (2026-11-25).
+        # Remove this flag once the 403s stop.
+        bot_protected: true
         agendas_url: "https://meetings.municode.com/PublishPage/index?cid=PAULDINGGA&ppid=a023d971-d971-44ac-a411-85d5afa307e1"
         body_label: "Board of Commissioners"
         schedule:
@@ -1199,6 +1202,9 @@ places:
     domains:
       meetings:
         platform: municode
+        # meetings.municode.com answered CI with a Cloudflare 403 challenge (2026-11-25).
+        # Remove this flag once the 403s stop.
+        bot_protected: true
         agendas_url: "https://meetings.municode.com/PublishPage/index?cid=DAGA&ppid=d6a9cb0f-51b2-4f2b-9c12-76e9ed0e66e5"
         body_map:
           - match: "Planning Commission"          # also catches "Special Called Planning Commission"
@@ -1746,6 +1752,9 @@ places:
         # row is a Board of Commissioners item (regular, work session, called, retreat,
         # each listed as a Tentative and a FINAL agenda), so one body_label covers them.
         platform: municode
+        # meetings.municode.com answered CI with a Cloudflare 403 challenge (2026-11-25).
+        # Remove this flag once the 403s stop.
+        bot_protected: true
         agendas_url: "https://meetings.municode.com/PublishPage/index?cid=EFFINGHAM&ppid=9639c19d-1d1f-4201-b8ff-163a28a35f08"
         body_label: "Board of Commissioners"
         # From the county's Board of Commissioners page (the 2026 schedule PDF is a
@@ -2171,6 +2180,9 @@ places:
         # (Cloudflare 403), so check the first CI/--slug run for body names and add body_map if
         # the portal mixes bodies.
         platform: municode
+        # meetings.municode.com answered CI with a Cloudflare 403 challenge (2026-11-25).
+        # Remove this flag once the 403s stop.
+        bot_protected: true
         agendas_url: "https://meetings.municode.com/PublishPage/index?cid=DOUGHERTY&ppid=8eef0464-395e-4aa7-8fda-0cda139a3d01"
         body_label: "Board of Commissioners"
         schedule:
