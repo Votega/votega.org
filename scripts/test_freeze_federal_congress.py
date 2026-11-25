@@ -165,6 +165,42 @@ def test_a_promised_url_cannot_be_dropped():
     check("only with --overwrite", bool(F.freeze("119th", d, out, overwrite=True)), True)
 
 
+NOMINEES = "federal-en-bloc-nominees.json"
+
+
+def test_en_bloc_nominee_lists_are_frozen_when_present():
+    d, out = live(), tempfile.mkdtemp()
+    write(d, NOMINEES, {"metadata": {"congress": 119, "count": 0}, "batches": {}, "votes": {}, "pending": []})
+    F.freeze("119th", d, out)
+    frozen = os.path.join(out, "119th", NOMINEES)
+    check("the nominee file is copied byte for byte",
+          os.path.isfile(frozen)
+          and open(os.path.join(d, NOMINEES), "rb").read() == open(frozen, "rb").read(), True)
+    # A replacement freeze taken without it must not leave the old copy behind.
+    os.remove(os.path.join(d, NOMINEES))
+    F.freeze("119th", d, out)
+    check("a freeze without the file works and keeps no stale copy", os.path.exists(frozen), False)
+
+
+def test_another_congress_nominee_file_is_refused():
+    d, out = live(), tempfile.mkdtemp()
+    write(d, NOMINEES, {"metadata": {"congress": 120}, "batches": {}, "votes": {}, "pending": []})
+    try:
+        F.freeze("119th", d, out)
+        refused = False
+    except SystemExit:
+        refused = True
+    check("the 120th's nominee lists are not filed under 119th", (refused, os.listdir(out)), (True, []))
+
+
+def test_unreadable_nominee_file_stops_the_freeze():
+    d, out = live(), tempfile.mkdtemp()
+    with open(os.path.join(d, NOMINEES), "w", encoding="utf-8") as f:
+        f.write("{truncated")
+    check("a damaged file is not silently left out",
+          (raises(lambda: F.freeze("119th", d, out)), os.listdir(out)), (True, []))
+
+
 if __name__ == "__main__":
     for name, fn in sorted(globals().items()):
         if name.startswith("test_") and callable(fn):

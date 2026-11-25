@@ -143,6 +143,54 @@ check("manifest kind and congress", (man["kind"], man["congress"], man["slug"]),
 check("manifest counts", man["counts"]["sponsored"], 1)
 check("a final freeze says final", json.loads(freeze(kind="final")["sessions/119th/freeze.json"])["kind"], "final")
 
+# --- en bloc nominee table: one row per roll call per nominee, no per-senator column
+NOM = {"metadata": {"congress": 119, "generatedAt": "2026-12-30T00:00:00+00:00", "source": "Senate.gov"},
+       "batches": {"b1": [{"pn": "PN55-25", "name": "Ann Alpha", "state": "Ohio", "position": "Judge",
+                           "title": "Ann Alpha, of Ohio, to be Judge"},
+                          {"pn": "PN18", "name": None, "state": None, "position": None, "title": "A list"}]},
+       "votes": {"S119_1_00526": "b1", "S119_1_00525": "b1", "S119_9_99999": "b1"}, "pending": []}
+NOM_VOTES = {"metadata": VOTES["metadata"], "memberVotes": VOTES["memberVotes"],
+             "votes": dict(VOTES["votes"], S119_1_00526={"date": "2025-09-18"},
+                           S119_1_00525={"date": "2025-09-17"})}
+with_nom = P.build_freeze("119th", "final", MEMBERS, NOM_VOTES, UNITY, SP_INDEX, {"W000790": SLICE},
+                          nominees_doc=NOM)
+base = "sessions/119th/en-bloc-nominees"
+check("the freeze carries the table, its CSV and its schema",
+      [f"{base}.json" in with_nom, f"{base}.csv" in with_nom, f"{base}.schema.json" in with_nom],
+      [True, True, True])
+table = json.loads(with_nom.get(f"{base}.json", b'{"metadata": {}, "nominees": []}'))
+check("one row per roll call and nominee, only for roll calls in votes.json",
+      [(r["voteId"], r["pn"]) for r in table["nominees"]],
+      [("S119_1_00525", "PN55-25"), ("S119_1_00525", "PN18"),
+       ("S119_1_00526", "PN55-25"), ("S119_1_00526", "PN18")])
+check("the columns are exactly the nominee fields",
+      list(table["nominees"][0]) if table["nominees"] else None,
+      ["voteId", "pn", "name", "state", "position", "title"])
+check("the table names its Congress and count",
+      (table["metadata"].get("congress"), table["metadata"].get("count")), (119, 4))
+ncsv = rows(with_nom[f"{base}.csv"]) if f"{base}.csv" in with_nom else [[], []]
+check("CSV header ends with congress",
+      ncsv[0], ["voteId", "pn", "name", "state", "position", "title", "congress"])
+nschema = json.loads(with_nom.get(f"{base}.schema.json", b"{}"))
+check("the schema says one vote covers the whole batch",
+      "one vote" in nschema.get("description", "").lower(), True)
+check("schema $id is its own path", nschema.get("$id", "").endswith(f"/{base}.schema.json"), True)
+check("the README lists the table", b"en-bloc-nominees" in with_nom["sessions/119th/README.md"], True)
+check("a freeze taken without the file still works, with no table",
+      any("en-bloc" in p for p in freeze()), False)
+check("and its README does not claim one", b"en-bloc" in freeze()["sessions/119th/README.md"], False)
+check("another Congress's nominee file is refused",
+      exits(lambda: P.build_freeze("119th", "final", MEMBERS, NOM_VOTES, UNITY, SP_INDEX, {"W000790": SLICE},
+                                   nominees_doc=dict(NOM, metadata={"congress": 120}))), True)
+empty = P.nominee_artifacts("data", {"metadata": {"congress": 120}, "batches": {}, "votes": {}}, {}, 120)
+check("an empty file at a turnover publishes an empty table",
+      (json.loads(empty["data/en-bloc-nominees.json"])["nominees"],
+       len(rows(empty["data/en-bloc-nominees.csv"]))), ([], 1))
+votes_schema = P.votes_schema()["properties"]["votes"]["additionalProperties"]
+check("votes schema describes the new fields, requiring neither",
+      ("documentType" in votes_schema["properties"], "nomineeCount" in votes_schema["properties"],
+       "required" in votes_schema), (True, True, False))
+
 if failures:
     print(f"\n{len(failures)} failed")
     sys.exit(1)

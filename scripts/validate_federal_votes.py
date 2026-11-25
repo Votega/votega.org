@@ -21,14 +21,18 @@ What it enforces:
   * the Key Votes sidecar resolves every voteId curated-federal-bills.json names,
     and its `indices` really are positions in the full voteIds list — Key Votes is
     the default tab and reads the sidecar alone, so an off-by-one there would show
-    every visitor one roll call's tally under another's heading.
+    every visitor one roll call's tally under another's heading;
+  * the en bloc nominee file agrees with the monolith: every Senate row carries
+    documentType and nomineeCount, every en bloc roll call has a complete list or
+    is pending, and no list is partial (lib/senate_nominations.problems).
 
 Usage:
     python scripts/validate_federal_votes.py \
         assets/data/federal-member-votes.json \
         assets/data/federal-votes-index.json \
         assets/data/federal-votes \
-        [assets/data/federal-votes-keyvotes.json assets/data/curated-federal-bills.json]
+        [assets/data/federal-votes-keyvotes.json assets/data/curated-federal-bills.json
+         [assets/data/federal-en-bloc-nominees.json]]
 
 Exit 0 when every check passes, 1 otherwise (the caller must not commit).
 """
@@ -36,6 +40,10 @@ Exit 0 when every check passes, 1 otherwise (the caller must not commit).
 import json
 import os
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from lib import senate_nominations  # noqa: E402
 
 #: A Congress whose recorded votes are *all* attached to bills would be
 #: unprecedented: nominations, procedural motions and quorum calls are a large,
@@ -115,6 +123,20 @@ def check_keyvotes(keyvotes_path, curated_path, vote_ids, rows, index):
              "the page decodes both with one set of positions")
     notes.append(f"key-votes sidecar: {len(side_ids)} curated roll calls, "
                  f"{os.path.getsize(keyvotes_path) / 1024:.1f}KB")
+
+
+def check_nominees(nominees_path, data):
+    """The en bloc lists a senator's page shows under a vote must be that vote's, whole."""
+    try:
+        with open(nominees_path, encoding="utf-8") as fh:
+            doc = json.load(fh)
+    except (OSError, ValueError) as exc:
+        fail(f"cannot read the en bloc nominee file {nominees_path}: {exc}")
+        return
+    for error in senate_nominations.problems(data, doc):
+        fail(f"en bloc nominees: {error}")
+    notes.append(f"en bloc nominee lists: {len(doc.get('votes') or {})} roll call(s), "
+                 f"{len(doc.get('pending') or [])} pending")
 
 
 def main():
@@ -237,6 +259,8 @@ def main():
     if len(sys.argv) >= 6:
         keyvotes_path, curated_path = sys.argv[4:6]
         check_keyvotes(keyvotes_path, curated_path, vote_ids, rows, index)
+    if len(sys.argv) >= 7:
+        check_nominees(sys.argv[6], data)
 
     for note in notes:
         print(f"note: {note}")

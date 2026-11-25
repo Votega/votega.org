@@ -45,7 +45,19 @@
   min-width: 14rem;
   flex: 1 1 14rem;
 }
-.vote-filter-row select { font-size: 0.85rem; padding: 0.25rem 0.4rem; }
+.vote-filter-row select { font-size: 0.85rem; padding: 0.25rem 0.4rem; max-width: 100%; }
+/* One-line description of the selected Type (opt-in; see votega-votes-table.js). */
+.vote-type-note { font-size: 0.8rem; color: var(--color-text-secondary); margin: 0 0 0.6rem 0; }
+/* With three controls a wrapped row parts a label from its control on a phone, so
+   each pair takes its own line. */
+@media (max-width: 540px) {
+  .vote-filter-row-typed { display: grid; grid-template-columns: auto minmax(0, 1fr); }
+  .vote-filter-row-typed input[type="search"] { min-width: 0; }
+  .vote-filter-row-typed select { justify-self: start; }
+}
+/* A full-width line belonging to the row above it (opt-in; see rowAfter). */
+.vote-table tr:has(+ tr.vote-extra-row) td { border-bottom: none; }
+.vote-table tr.vote-extra-row td { padding-top: 0; }
 .vote-page-foot {
   display: flex;
   flex-wrap: wrap;

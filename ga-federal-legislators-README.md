@@ -12,6 +12,7 @@ Files are updated automatically whenever the source data changes in the [votega.
 |------|-------------|
 | `data/members.json` | Georgia's current U.S. Senators and Representatives |
 | `data/votes.json` | Roll-call vote records for Georgia's federal delegation, current Congress |
+| `data/en-bloc-nominees.json`, `.csv` | The nominees covered by each Senate en bloc roll call (`voteId, pn, name, state, position, title`). The Senate took one vote on each whole group, so a senator's vote does not show a view on any one nominee |
 
 ---
 
@@ -142,6 +143,8 @@ Published as-is from votega.org's `federal-member-votes.json` — no filtering n
 ```
 
 `yea`/`nay` are chamber-wide totals (all voting members, not just Georgia's). `chamber` is `"House"` or `"Senate"`. `result` is `"Pass"` or `"Fail"`.
+
+Senate records also carry `documentType` (e.g. `"PN"` for a nomination; `null` when the roll call names no document) and `nomineeCount` (nominations covered by the one vote; `null` when not a nomination or not yet known). An en bloc record's `title` reads `En bloc: N nominees, including …`; join its `voteId` to `data/en-bloc-nominees.json` for the names.
 
 #### Vote ID format
 

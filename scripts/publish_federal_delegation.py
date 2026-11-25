@@ -10,6 +10,8 @@ Reads votega.org's source data and emits a full set of consumer-friendly artifac
   data/member-votes.csv     Long/tidy one-row-per-(member,vote) table for pivots & joins
   data/members.schema.json  JSON Schema for members.json
   data/votes.schema.json    JSON Schema for votes.json
+  data/en-bloc-nominees.{json,csv,schema.json}
+                            The nominees covered by each Senate en bloc roll call
   ROSTER.md                 Human-readable roster that renders on GitHub
 
 Normalization applied to members (vs. the raw Congress.gov shape):
@@ -50,6 +52,8 @@ SRC_VOTES = os.environ.get("SRC_VOTES", "assets/data/federal-member-votes.json")
 SRC_UNITY = os.environ.get("SRC_UNITY", "assets/data/federal-party-unity.json")
 SRC_SPONSOR_INDEX = os.environ.get("SRC_SPONSOR_INDEX", "assets/data/federal-sponsorship-index.json")
 SRC_SPONSOR_DIR = os.environ.get("SRC_SPONSOR_DIR", "assets/data/federal-sponsorship")
+SRC_NOMINEES = os.environ.get("SRC_NOMINEES", "assets/data/federal-en-bloc-nominees.json")
+NOMINEE_COLUMNS = ("voteId", "pn", "name", "state", "position", "title")
 
 
 # --------------------------------------------------------------------------- #
@@ -129,6 +133,59 @@ def member_votes_csv(members, votes, member_votes, congress=None):
                         r.get("voteId"), v.get("date"), v.get("bill"), v.get("title"),
                         r.get("vote"), _cell(congress)])
     return buf.getvalue().encode()
+
+
+# --------------------------------------------------------------------------- #
+# En bloc nominees: one vote on a group, flattened to one row per roll call per nominee
+# --------------------------------------------------------------------------- #
+def nominee_rows(nominees_doc, votes):
+    """Only roll calls votes.json carries, so a table can never outlive its Congress."""
+    batches = nominees_doc.get("batches") or {}
+    return [dict({"voteId": vote_id}, **{c: entry.get(c) for c in NOMINEE_COLUMNS[1:]})
+            for vote_id, batch in sorted((nominees_doc.get("votes") or {}).items())
+            if vote_id in votes
+            for entry in batches.get(batch) or []]
+
+
+def nominees_csv(table, congress=None):
+    buf = io.StringIO()
+    w = csv.writer(buf, lineterminator="\n")
+    w.writerow(list(NOMINEE_COLUMNS) + ["congress"])
+    for row in table:
+        w.writerow([_cell(row[c]) for c in NOMINEE_COLUMNS] + [_cell(congress)])
+    return buf.getvalue().encode()
+
+
+def nominee_artifacts(base, nominees_doc, votes, congress):
+    """{path: bytes} for the nominee table under `base` ("data" or "sessions/<slug>")."""
+    table = nominee_rows(nominees_doc, votes)
+    source = nominees_doc.get("metadata") or {}
+    meta = {
+        # When the lists last changed, not when this was published.
+        "generatedAt": source.get("generatedAt"),
+        "source": source.get("source"),
+        "congress": congress,
+        "count": len(table),
+        "schemaVersion": SCHEMA_VERSION,
+    }
+    schema_path = f"{base}/en-bloc-nominees.schema.json"
+    return {
+        f"{base}/en-bloc-nominees.json": build_json({"metadata": meta, "nominees": table}),
+        f"{base}/en-bloc-nominees.csv": nominees_csv(table, congress),
+        schema_path: build_json(nominees_schema(schema_path)),
+    }
+
+
+def load_nominees():
+    """The source nominee file, or None when there is none. A damaged one is fatal."""
+    if not os.path.exists(SRC_NOMINEES):
+        print(f"WARNING: {SRC_NOMINEES} not found; publishing without the en bloc nominee table")
+        return None
+    try:
+        with open(SRC_NOMINEES, encoding="utf-8") as fh:
+            return json.load(fh)
+    except (OSError, ValueError) as exc:
+        sys.exit(f"FATAL: cannot read {SRC_NOMINEES}: {exc}")
 
 
 # --------------------------------------------------------------------------- #
@@ -298,7 +355,9 @@ def votes_schema(path="data/votes.schema.json"):
                        "SCOPE: every recorded roll call both chambers held, enumerated from the "
                        "Clerk of the House's per-year roll files and the Senate's per-session vote "
                        "index - including measures that failed, amendments, procedural motions and "
-                       "Senate nominations. A vote on anything other than a measure (a quorum call, "
+                       "Senate nominations. A Senate en bloc roll call is one vote on a group of "
+                       "nominees: its title gives the number, and its nominees are listed in "
+                       "en-bloc-nominees.json. A vote on anything other than a measure (a quorum call, "
                        "a motion to adjourn, a nomination) has bill and billUrl null. Voice votes "
                        "and unanimous-consent agreements are not recorded by name and cannot appear. "
                        "yea/nay are chamber-wide totals.",
@@ -330,6 +389,17 @@ def votes_schema(path="data/votes.schema.json"):
                         "nay": {"type": "integer"},
                         "chamber": {"type": "string", "enum": ["House", "Senate"]},
                         "result": {"type": "string", "enum": ["Pass", "Fail"]},
+                        "documentType": {
+                            "type": ["string", "null"],
+                            "description": "Senate rows only: the document the official roll call "
+                                           "names first, e.g. 'PN' (a nomination), 'S.', 'S.Amdt.'; "
+                                           "null when it names none."},
+                        "nomineeCount": {
+                            "type": ["integer", "null"],
+                            "description": "Senate rows only: how many nominations this one vote "
+                                           "covers. Above 1 for an en bloc vote (see "
+                                           "en-bloc-nominees.json). null when not a nomination, or "
+                                           "when the number is not yet known."},
                     },
                 },
             },
@@ -345,6 +415,55 @@ def votes_schema(path="data/votes.schema.json"):
                             "voteId": {"type": "string"},
                             "vote": {"type": "string", "enum": ["Yea", "Nay", "Not Voting", "Absent"]},
                         },
+                    },
+                },
+            },
+        },
+    }
+
+
+def nominees_schema(path="data/en-bloc-nominees.schema.json"):
+    text = {"type": ["string", "null"]}
+    return {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": schema_url(path),
+        "schemaVersion": SCHEMA_VERSION,
+        "schemaStability": SCHEMA_STABILITY,
+        "title": "Georgia Federal Delegation — Nominees in Senate En Bloc Votes",
+        "description": "The nominees covered by each Senate en bloc roll call of the Congress, one "
+                       "row per roll call per nominee. The Senate took one vote on the whole group: "
+                       "a senator's vote in votes.json applies to every nominee listed under that "
+                       "voteId and does not show a view on any one of them. The table holds no "
+                       "per-senator columns; join voteId to votes.json. Procedural votes on a group "
+                       "and its confirmation vote list the same nominees. A list is complete or "
+                       "absent: a roll call whose names are not yet available has no rows.",
+        "type": "object",
+        "required": ["metadata", "nominees"],
+        "properties": {
+            "metadata": {
+                "type": "object",
+                "properties": {
+                    "generatedAt": {"type": ["string", "null"],
+                                    "description": "When the source lists last changed."},
+                    "source": text,
+                    "congress": {"type": ["integer", "null"]},
+                    "count": {"type": "integer", "description": "Number of rows."},
+                    "schemaVersion": {"type": "string"},
+                },
+            },
+            "nominees": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "voteId": {"type": "string", "description": "Join key into votes.json."},
+                        "pn": {"type": "string",
+                               "description": "Senate nomination number, e.g. PN55-25."},
+                        "name": dict(text, description="null when the title does not read "
+                                                       "'name, of state, to be position'."),
+                        "state": text,
+                        "position": text,
+                        "title": dict(text, description="The Senate's own wording; always kept."),
                     },
                 },
             },
@@ -405,7 +524,11 @@ def build_artifacts():
     }
 
     congress = meta["congress"]
+    nominees_doc = load_nominees()
+    nominees = (nominee_artifacts("data", nominees_doc, votes, congress)
+                if nominees_doc is not None else {})
     return {
+        **nominees,
         "data/members.json": build_json({"metadata": meta, "members": ga}),
         "data/votes.json": build_json(votes_doc),
         "data/members.csv": members_csv(ga, congress),
@@ -537,7 +660,7 @@ def sponsorship_csv(slices, congress):
     return buf.getvalue().encode()
 
 
-def freeze_readme(slug, congress, kind, meta, counts):
+def freeze_readme(slug, congress, kind, meta, counts, has_nominees=False):
     first, second = congress_years(congress)
     L = [f"# {slug} Congress: Georgia delegation (frozen record)", "",
          f"The Georgia federal delegation's record for the {slug} Congress "
@@ -555,6 +678,9 @@ def freeze_readme(slug, congress, kind, meta, counts):
           f"- `votes.json`: every recorded roll call ({counts['votes']}) joined to the "
           "delegation, in the same shape as the live file (`votes.schema.json`). `votes.csv` "
           "and `member-votes.csv` are flat versions.",
+          *(["- `en-bloc-nominees.json`, `en-bloc-nominees.csv`: the nominees covered by each "
+             "Senate en bloc roll call, one row per roll call per nominee; the Senate took one "
+             "vote on each whole group (`en-bloc-nominees.schema.json`)."] if has_nominees else []),
           "- `scorecard.json`, `scorecard.csv`: party-unity and participation per member.",
           f"- `sponsorship/`: each member's complete sponsored and cosponsored record "
           f"({counts['sponsored']} sponsored, {counts['cosponsored']} cosponsored) in the compact "
@@ -572,7 +698,8 @@ def freeze_readme(slug, congress, kind, meta, counts):
     return ("\n".join(L) + "\n").encode()
 
 
-def build_freeze(slug, kind, src_members_doc, votes_doc, unity_doc, sponsor_index, slices, now=None):
+def build_freeze(slug, kind, src_members_doc, votes_doc, unity_doc, sponsor_index, slices, now=None,
+                 nominees_doc=None):
     """The whole sessions/<slug>/ artifact set. Pure: no network, no disk."""
     congress = (votes_doc.get("metadata") or {}).get("congress")
     sources = {
@@ -586,6 +713,8 @@ def build_freeze(slug, kind, src_members_doc, votes_doc, unity_doc, sponsor_inde
     roster_congress = (src_members_doc.get("metadata") or {}).get("congress")
     if roster_congress is not None:
         sources["current-members.json"] = roster_congress
+    if nominees_doc is not None:
+        sources["federal-en-bloc-nominees.json"] = (nominees_doc.get("metadata") or {}).get("congress")
     assert_same_congress(slug, sources)
     ga = [normalize_member(m) for m in src_members_doc.get("members", [])
           if m.get("state") == "Georgia"]
@@ -630,11 +759,14 @@ def build_freeze(slug, kind, src_members_doc, votes_doc, unity_doc, sponsor_inde
         f"{base}/scorecard.csv": scorecard_csv(unity_doc, congress),
         f"{base}/sponsorship/index.json": build_json(sponsor_index),
         f"{base}/sponsorship.csv": sponsorship_csv(slices, congress),
-        f"{base}/README.md": freeze_readme(slug, congress, kind, manifest, counts),
+        f"{base}/README.md": freeze_readme(slug, congress, kind, manifest, counts,
+                                           has_nominees=nominees_doc is not None),
         f"{base}/freeze.json": build_json(manifest),
     }
     for bid, sl in slices.items():
         artifacts[f"{base}/sponsorship/{bid}.json"] = build_json(sl)
+    if nominees_doc is not None:
+        artifacts.update(nominee_artifacts(base, nominees_doc, votes, congress))
     assert_archive_paths(artifacts, slug)
     return artifacts
 
@@ -664,7 +796,7 @@ def run_freeze(argv):
     artifacts = build_freeze(
         slug, kind, json.load(open(SRC_MEMBERS, encoding="utf-8")), votes_doc,
         json.load(open(SRC_UNITY, encoding="utf-8")), sponsor_index,
-        load_sponsorship_slices(sponsor_index))
+        load_sponsorship_slices(sponsor_index), nominees_doc=load_nominees())
     publish_or_dry_run(REPO, artifacts, TOKEN_ENV,
                        validate=min_items(f"{SESSIONS_DIR}/{slug}/members.json", "members"))
 

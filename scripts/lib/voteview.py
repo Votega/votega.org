@@ -51,6 +51,8 @@ CAST_LABEL = {
 PARTY_NAME = {"100": "Democratic", "200": "Republican", "328": "Independent"}
 
 _BILL_RE = re.compile(r"^(HR|S|HJRES|SJRES|HCONRES|SCONRES|HRES|SRES)(\d+)$")
+#: A nomination: Voteview drops the part number's hyphen, so only the prefix is usable.
+_NOMINATION_RE = re.compile(r"^PN\d")
 
 
 def url(kind, congress):
@@ -143,6 +145,8 @@ def senate_roll(data, session, number, bioguides):
         "nay": int(row["nay_count"] or 0),
         "bill_type": bill_type,
         "bill_number": bill_number,
+        "document_type": ("PN" if _NOMINATION_RE.match((row["bill_number"] or "").strip().upper())
+                          else None),
         "party_tally": tally or None,
         "member_votes": member_votes,
     }

@@ -14,6 +14,8 @@ Flow:
 
 Output: assets/data/federal-member-votes.json
   memberVotes keyed by bioguideId — matches the entity page's lookup.
+  Beside it, federal-en-bloc-nominees.json: the nominee list of every Senate roll call
+  that covers more than one nomination (lib/senate_nominations.py).
 
 WHY THIS NO LONGER STARTS FROM ENACTED LAWS
 -------------------------------------------
@@ -62,7 +64,7 @@ from datetime import date, datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.http import fetch_bytes
-from lib import voteview, senate_drop
+from lib import voteview, senate_drop, senate_nominations
 from lib.congress_session import current_congress, congress_years
 from lib import federal_turnover
 
@@ -474,6 +476,11 @@ def parse_senate_vote(xml_bytes, lis_to_bioguide):
 
     bill_type, bill_number, title = senate_measure(root)
     bill_label, bill_page = bill_fields(bill_type, bill_number)
+    # senate_measure() reads the first <document> only, which titled an en bloc vote
+    # with one nominee's name. The label says how many the vote covers.
+    document_type, nominee_count = senate_nominations.nomination_fields(root)
+    if (nominee_count or 0) > 1:
+        title = senate_nominations.en_bloc_label(nominee_count, title)
 
     # Senate XML has no party totals, so tally every member's vote by party.
     # Party letters (D/R/I/ID) map to the same names the House XML and the GA
@@ -510,6 +517,8 @@ def parse_senate_vote(xml_bytes, lis_to_bioguide):
         "result":     pass_fail(result),
         "resultText": clean_text(result),
         "partyTally": party_tally or None,
+        "documentType": document_type,
+        "nomineeCount": nominee_count,
     }
 
     ga_votes = {}
@@ -642,6 +651,8 @@ def main():
     # Reuse layer. A roll call is immutable once the chamber has published it, so
     # anything already in the committed file is taken as-is and never re-fetched.
     existing_votes, existing_member_votes = {}, {}
+    nominees_file = os.path.join(os.path.dirname(out_file), senate_nominations.NOMINEES_FILE)
+    previous_nominees = None
     #: Senate roll calls a previous run took from Voteview (senate.gov was
     #: unreachable). Voteview is a derivative, so these are NOT immutable: they
     #: are re-fetched from the official record as soon as it is reachable again.
@@ -656,6 +667,11 @@ def main():
             print(f"Reusing {len(existing_votes)} roll calls already in {out_file}")
         except (OSError, ValueError):
             print(f"No reusable {out_file} — building from scratch")
+        try:
+            with open(nominees_file, encoding="utf-8") as fh:
+                previous_nominees = json.load(fh)
+        except (OSError, ValueError):
+            print(f"No reusable {nominees_file}")
 
     print("\nBuilding LIS→bioguide senator ID map from congress-legislators...")
     lis_to_bioguide = build_lis_to_bioguide()
@@ -672,6 +688,8 @@ def main():
     votes_meta   = {}
     member_votes = {}
     fetched = reused = 0
+    # Held roll calls are never re-fetched, so their lists come from the existing file.
+    nominee_lists = senate_nominations.lists_from_doc(previous_nominees)
 
     def record(vote_key, vote_meta, ga_votes):
         votes_meta[vote_key] = vote_meta
@@ -680,6 +698,12 @@ def main():
                 "voteId": vote_key,
                 "vote":   vote_label,
             })
+
+    def record_official(vote_key, raw, vote_meta, ga_votes):
+        """A roll call read from its official XML, which also names the nominees."""
+        record(vote_key, vote_meta, ga_votes)
+        if (vote_meta.get("nomineeCount") or 0) > 1:
+            nominee_lists[vote_key] = senate_nominations.nominees(ET.fromstring(raw))
 
     # -- Senate: two index fetches enumerate the whole universe ---------------
     print(f"\nSenate roll calls, {CURRENT_CONGRESS}th Congress...")
@@ -704,7 +728,7 @@ def main():
                 vote_meta, ga_votes = parse_senate_vote(raw, lis_to_bioguide)
                 if not vote_meta:
                     continue
-                record(vote_key, vote_meta, ga_votes)
+                record_official(vote_key, raw, vote_meta, ga_votes)
                 fetched += 1
                 if fetched % 50 == 0:
                     print(f"    {fetched} fetched · {reused} reused · {len(votes_meta)} total")
@@ -725,11 +749,11 @@ def main():
             vote_key = senate_key(CURRENT_CONGRESS, session, number)
             if vote_key in held and vote_key not in provisional:
                 continue
-            vote_meta, ga_votes = parse_senate_vote(
-                senate_drop.read_roll(CURRENT_CONGRESS, session, number), lis_to_bioguide)
+            raw = senate_drop.read_roll(CURRENT_CONGRESS, session, number)
+            vote_meta, ga_votes = parse_senate_vote(raw, lis_to_bioguide)
             if not vote_meta:
                 continue
-            record(vote_key, vote_meta, ga_votes)
+            record_official(vote_key, raw, vote_meta, ga_votes)
             dropped_keys.add(vote_key)
             fetched += 1
         if dropped_keys:
@@ -747,12 +771,18 @@ def main():
                 continue
             roll = voteview.senate_roll(vv, session, number, ga_senators)
             bill_label, bill_page = bill_fields(roll["bill_type"], roll["bill_number"])
+            title = clean_text(roll["title"])
+            # Voteview cannot give a count or a list; the row stays pending until
+            # senate.gov supplies both.
+            if (roll["document_type"] == "PN"
+                    and senate_nominations.is_en_bloc_description(title)):
+                title = senate_nominations.EN_BLOC_TITLE
             record(vote_key, {
                 "bill":       bill_label,
                 "billUrl":    bill_page,
                 "billType":   roll["bill_type"],
                 "billNumber": roll["bill_number"],
-                "title":      clean_text(roll["title"]),
+                "title":      title,
                 "motionText": roll["question"],
                 "date":       roll["date"],
                 "yea":        roll["yea"],
@@ -763,6 +793,8 @@ def main():
                 "result":     pass_fail(roll["result"]),
                 "resultText": clean_text(roll["result"]),
                 "partyTally": roll["party_tally"],
+                "documentType": roll["document_type"],
+                "nomineeCount": None,
             }, roll["member_votes"])
             new_provisional.add(vote_key)
             fetched += 1
@@ -863,7 +895,13 @@ def main():
         "memberVotes": member_votes,
     }
 
+    nominees_doc = senate_nominations.build_nominees_doc(
+        votes_meta, nominee_lists, new_provisional, CURRENT_CONGRESS, previous=previous_nominees)
     write_json_atomic(out_file, output, separators=(",", ":"))
+    write_json_atomic(nominees_file, nominees_doc, separators=(",", ":"))
+    print(f"  En bloc nominee lists: {len(nominees_doc['votes'])} roll call(s), "
+          f"{nominees_doc['metadata']['count']} nominee entries, "
+          f"{len(nominees_doc['pending'])} pending -> {nominees_file}")
 
     report_provisional(new_provisional)
 

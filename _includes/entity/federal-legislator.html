@@ -327,6 +327,29 @@
   .vote-law-cell a { color: var(--color-link); text-decoration: none; }
   .vote-law-cell a:hover { text-decoration: underline; }
 
+  /* Nomination filter (senators): en bloc rows and the terms legend. Wording and
+     markup: assets/scripts/votega-nominations.js. */
+  .vote-enbloc { font-size: 0.75rem; font-weight: normal; color: var(--color-text-secondary); }
+  .vote-enbloc p { margin: 0.2rem 0; font-size: inherit; line-height: 1.4; }
+  .vote-enbloc a { color: var(--color-link); }
+  .vote-nominees summary { cursor: pointer; color: var(--color-link); }
+  .vote-nominee-list { margin: 0.3rem 0; padding-left: 1.6rem; overflow-wrap: anywhere; }
+  .vote-nominee-list li { margin-bottom: 0.15rem; }
+  .vote-nominee-match { color: var(--color-text); }
+  .vote-nominee-status { font-size: 0.8rem; color: var(--color-text-secondary); margin: 0 0 0.6rem 0; }
+  .vote-nominee-status:empty { display: none; }
+  .vote-terms { font-size: 0.8rem; margin: 0 0 0.75rem 0; }
+  .vote-terms summary { cursor: pointer; color: var(--color-link); }
+  .vote-terms-head { font-weight: 700; margin: 0.6rem 0 0.2rem 0; }
+  .vote-terms dl { margin: 0; }
+  .vote-terms dt { font-weight: 700; margin-top: 0.5rem; }
+  .vote-terms dd { margin: 0.1rem 0 0 0; color: var(--color-text-secondary); }
+  .vote-term-shown { display: block; font-weight: normal; font-size: 0.72rem; color: var(--color-text-muted); }
+  @media (min-width: 700px) {
+    .vote-terms dl { display: grid; grid-template-columns: 12rem 1fr; gap: 0.5rem 1rem; }
+    .vote-terms dt, .vote-terms dd { margin: 0; }
+  }
+
   /* Key vote cards */
   .kv-card {
     border: 1px solid var(--color-border-subtle);
@@ -420,6 +443,7 @@
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <link rel="stylesheet" href="{{ '/assets/css/votes-table.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 <script src="{{ '/assets/scripts/votega-votes-table.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+<script src="{{ '/assets/scripts/votega-nominations.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/departure-label.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/campaign-finance.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
@@ -1034,7 +1058,8 @@
   // scripts/test_federal_votes_slices.py fails if the two drift. The FV_ prefix
   // keeps them clear of the sponsorship panel's own R_* row positions above.
   const FV_CHAMBER = 0, FV_DATE = 1, FV_BILLTYPE = 2, FV_BILLNUM = 3, FV_TITLE = 4,
-        FV_MOTION = 5, FV_RESULT = 6, FV_YEA = 7, FV_NAY = 8, FV_TALLY = 9;
+        FV_MOTION = 5, FV_RESULT = 6, FV_YEA = 7, FV_NAY = 8, FV_TALLY = 9,
+        FV_CATEGORY = 10, FV_NOMINEES = 11;
 
   // Bill type -> display prefix. Mirrors TYPE_LABEL in
   // scripts/generate_federal_votes_data.py. Both the label and the congress.gov
@@ -1087,6 +1112,10 @@
         result:     row[FV_RESULT] === 'P' ? 'Pass' : row[FV_RESULT] === 'F' ? 'Fail' : row[FV_RESULT],
         yea:        row[FV_YEA],
         nay:        row[FV_NAY],
+        // Senate only. "C" confirmation vote, "N" any other vote about nominations.
+        // Both are absent from a frozen index written before the fields existed.
+        category:     row[FV_CATEGORY] || null,
+        nomineeCount: row[FV_NOMINEES] || null,
         // Six flat ints in the index (Dem then Rep), expanded to the shape
         // buildTallyBar() reads. Independents are deliberately not carried here —
         // the panel draws Dem and Rep bars only, and the full per-party tally
@@ -1726,21 +1755,38 @@
       // page's own: the enacted-law connector and the chamber-dependent columns.
       const VT = window.VotegaVotesTable;
 
-      // Vote breakdown chart
-      let yeaCount = 0, nayCount = 0, otherCount = 0;
-      for (const { vote } of sorted) {
-        if (vote === 'Yea') yeaCount++;
-        else if (vote === 'Nay') nayCount++;
-        else otherCount++;
+      // Nomination filter (votega-nominations.js). Offered only when this record
+      // holds a nomination vote, so a representative's panel is unchanged.
+      const NOM = window.VotegaNominations;
+      const types = (NOM && NOM.hasNominations(sorted, votesIndex))
+        ? NOM.typeOptions(sorted, votesIndex) : null;
+      // The nominee names are a separate file, fetched only when a reader opens an
+      // en bloc list or searches. dataUrl() keeps a former member on the frozen copy.
+      const nomLoader = (types && sorted.some(e => NOM.isEnBloc(votesIndex[e.voteId])))
+        ? NOM.createLoader(dataUrl('federal-en-bloc-nominees.json')) : null;
+      const matchOpts = nomLoader ? { extraMatch: NOM.extraMatcher(nomLoader, votesIndex) } : null;
+      const ofType = type => sorted.filter(VT.makeMatcher({ type }, votesIndex));
+
+      // This page's own wording of the caption, kept verbatim through the
+      // extraction; the GA page uses the module's default.
+      // Reworded with the scope: the frame is no longer "bills that became law"
+      // but every question the chamber put to a recorded vote, most of which —
+      // suspensions, rules, cloture, nominations — carry a majority by design.
+      const CHART_CAPTION = "Most questions that reach a recorded vote carry, so a chart weighted toward “Yea” is typical here and on other members' pages. It reflects what the chamber chose to put to a vote, not this member's overall independence or party loyalty.";
+
+      // Vote breakdown chart for the selected Type; Search and Vote leave it alone.
+      function chartFor(type) {
+        const list = ofType(type);
+        let yeaCount = 0, nayCount = 0, otherCount = 0;
+        for (const { vote } of list) {
+          if (vote === 'Yea') yeaCount++;
+          else if (vote === 'Nay') nayCount++;
+          else otherCount++;
+        }
+        return VT.chartHtml(yeaCount, nayCount, otherCount, list.length, {
+          caption: (types && NOM.chartCaption(type)) || CHART_CAPTION,
+        });
       }
-      const chartHtml = VT.chartHtml(yeaCount, nayCount, otherCount, sorted.length, {
-        // This page's own wording of the caption, kept verbatim through the
-        // extraction; the GA page uses the module's default.
-        // Reworded with the scope: the frame is no longer "bills that became law"
-        // but every question the chamber put to a recorded vote, most of which —
-        // suspensions, rules, cloture, nominations — carry a majority by design.
-        caption: "Most questions that reach a recorded vote carry, so a chart weighted toward “Yea” is typical here and on other members' pages. It reflects what the chamber chose to put to a vote, not this member's overall independence or party loyalty.",
-      });
 
       // The enacted-law line sits below the title, so it uses the cellAfter slot.
       const lawCell = meta => {
@@ -1754,7 +1800,13 @@
           : '';
       };
 
-      const ROW_OPTS = { showMotion: !isHouse, cellAfter: lawCell };
+      // An en bloc row's list takes a full-width line under it: the Bill column is
+      // too narrow on a phone for dozens of names. `filter` is declared below; rows
+      // are only rendered after it is.
+      const enBlocRow = (meta, entry) =>
+        (types ? NOM.rowHtml(entry.voteId, meta, nomLoader, filter.q) : '');
+
+      const ROW_OPTS = { showMotion: !isHouse, cellAfter: lawCell, rowAfter: enBlocRow };
       const TABLE_KEY = 'federal';
       const renderRows = list => VT.rowsHtml(list, votesIndex, ROW_OPTS);
 
@@ -1769,7 +1821,7 @@
       let shownCount = PAGE_INITIAL;
       let filter = { q: '', vote: 'all' };
 
-      const matchedList = () => sorted.filter(VT.makeMatcher(filter, votesIndex));
+      const matchedList = () => sorted.filter(VT.makeMatcher(filter, votesIndex, matchOpts));
 
       function tablesHtml() {
         const list = matchedList();
@@ -1796,9 +1848,9 @@
                                        filtered: VT.isFiltered(filter), pageStep: PAGE_STEP });
       }
 
-      // The chart and any figures above the table describe the member's whole
-      // record, not the filtered rows, so say so while a filter is engaged rather
-      // than letting the two read as one number.
+      // The chart describes the member's whole record (or the whole selected Type),
+      // and the figures above it the whole record, never the filtered rows, so say
+      // so while a filter is engaged rather than letting the two read as one number.
       // This panel's own dated provenance. The page's bottom stamp names
       // Congress.gov, which is where the ROSTER comes from — these roll calls come
       // from the two chambers directly and are refreshed on their own schedule, so
@@ -1820,28 +1872,69 @@
         <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:var(--color-text-secondary);">${session}</small>` : ''}</h2>
         <p style="font-size:0.8rem;color:var(--color-text-secondary);margin:0 0 0.75rem 0;">Every recorded roll call this member's chamber has held in the ${escHtml(session || 'current Congress')} &mdash; including measures that failed, amendments, procedural motions, and, in the Senate, nominations. Rows with no bill number are votes on something other than a measure. Voice votes and unanimous-consent agreements are not recorded by name and so cannot appear here.</p>
         ${scorecardHtml(scorecard, member.bioguideId)}
-        ${chartHtml}
+        <div id="fedVotesChart">${chartFor('all')}</div>
         ${scopeNote}
-        ${VT.filterRowHtml({ searchId: 'fedVoteSearch', voteId: 'fedVoteResult' })}
+        ${VT.filterRowHtml(Object.assign({ searchId: 'fedVoteSearch', voteId: 'fedVoteResult' },
+          types ? { types, typeId: 'fedVoteType', typeNoteId: 'fedVoteTypeNote',
+                    placeholder: 'Bill number, title or nominee' } : null))}
+        ${types ? NOM.legendHtml(sorted, votesIndex) : ''}
+        ${nomLoader ? '<p id="fedVoteNomineeStatus" class="vote-nominee-status" role="status"></p>' : ''}
         <div id="fedVotesTables">${tablesHtml()}</div>
         ${voteSourceLine}`;
 
+      let chartType = 'all';
       function refreshTables() {
         const host = document.getElementById('fedVotesTables');
         if (host) host.innerHTML = tablesHtml();
+        const type = filter.type || 'all';
+        if (type !== chartType) {
+          chartType = type;
+          const chart = document.getElementById('fedVotesChart');
+          if (chart) chart.innerHTML = chartFor(type);
+        }
         const note = document.getElementById('fedVotesScopeNote');
-        if (note) note.style.display = VT.isFiltered(filter) ? '' : 'none';
+        if (note) {
+          const narrowed = VT.isFiltered({ q: filter.q, vote: filter.vote });
+          if (types) note.textContent = NOM.scopeNote(type, ofType(type).length, narrowed);
+          note.style.display = VT.isFiltered(filter) ? '' : 'none';
+        }
+        const status = document.getElementById('fedVoteNomineeStatus');
+        if (status) status.textContent = NOM.searchStatus(nomLoader, sorted, votesIndex, filter.q);
       }
 
-      VT.mountControls({
+      // A search starts the nominee file, then repeats itself once the names are in.
+      // A failed load is retried by the next change to the search.
+      let awaitingNames = false;
+      function searchNominees() {
+        if (!nomLoader || !filter.q || nomLoader.doc() || awaitingNames) return;
+        awaitingNames = true;
+        nomLoader.load().then(() => { awaitingNames = false; if (filter.q) refreshTables(); });
+      }
+
+      // `toggle` does not bubble, so it is caught on the way down. The listener sits
+      // on the container, which outlives every re-render of the rows.
+      if (nomLoader) {
+        document.getElementById('fedVotesTables').addEventListener('toggle', ev => {
+          const list = ev.target;
+          if (!list.open || !list.matches('details[data-nominees]')) return;
+          const voteId = list.getAttribute('data-nominees');
+          const body = list.querySelector('.vote-nominees-body');
+          const show = doc => { body.innerHTML = NOM.listBodyHtml(voteId, votesIndex[voteId], doc); };
+          if (nomLoader.doc()) { show(nomLoader.doc()); return; }
+          body.innerHTML = '<p>Loading nominees&hellip;</p>';
+          nomLoader.load().then(show);
+        }, true);
+      }
+
+      VT.mountControls(Object.assign({
         searchId: 'fedVoteSearch',
         voteId: 'fedVoteResult',
         tablesRoot: 'fedVotesTables',
         // A new result set starts at the top again, so the offset resets with it.
-        onFilter: next => { filter = next; shownCount = PAGE_INITIAL; refreshTables(); },
+        onFilter: next => { filter = next; shownCount = PAGE_INITIAL; searchNominees(); refreshTables(); },
         onClear: () => { filter = { q: '', vote: 'all' }; shownCount = PAGE_INITIAL; refreshTables(); },
         onGrow: (_sid, step) => growTable(step),
-      });
+      }, types ? { typeId: 'fedVoteType', typeNoteId: 'fedVoteTypeNote', types } : null));
     } catch (err) {
       console.warn('Could not load voting history:', err);
       // The panel is now lazy, so the loading line is on screen when this fires —

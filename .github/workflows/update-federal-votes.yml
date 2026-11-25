@@ -104,7 +104,8 @@ jobs:
             assets/data/federal-votes-index.json \
             assets/data/federal-votes \
             assets/data/federal-votes-keyvotes.json \
-            assets/data/curated-federal-bills.json
+            assets/data/curated-federal-bills.json \
+            assets/data/federal-en-bloc-nominees.json
 
       # The scorecard states how loyal a named member of Congress is, so it gets
       # impossibility checks of its own — a rate above 1, an aligned count above
@@ -123,6 +124,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -f assets/data/federal-member-votes.json \
+                     assets/data/federal-en-bloc-nominees.json \
                      assets/data/federal-votes-index.json \
                      assets/data/federal-votes \
                      assets/data/federal-votes-keyvotes.json \
@@ -130,18 +132,23 @@ jobs:
           # The run-scoped counters move on every run by design (an incremental run
           # fetches a handful, a full refresh ~1,600), so they are listed alongside
           # the timestamp: without them a quiet week would still commit a full
-          # revision of the monolith, the index and all 16 slices.
+          # revision of the monolith, the index and all 16 slices. The nominee file
+          # keeps its own stamp when its lists are unchanged, so a staged change to
+          # it is a real one.
           if git diff --cached --quiet; then
             echo "No changes to commit"
-          elif python scripts/only_keys_changed.py assets/data/federal-member-votes.json \
+          elif git diff --cached --quiet -- assets/data/federal-en-bloc-nominees.json \
+               && python scripts/only_keys_changed.py assets/data/federal-member-votes.json \
                  metadata.generatedAt metadata.rollCallsFetchedThisRun metadata.updateMode; then
             echo "Only run-scoped metadata changed — skipping redundant commit"
             git restore --staged assets/data/federal-member-votes.json \
+                                 assets/data/federal-en-bloc-nominees.json \
                                  assets/data/federal-votes-index.json \
                                  assets/data/federal-votes \
                                  assets/data/federal-votes-keyvotes.json \
                                  assets/data/federal-party-unity.json
             git checkout -- assets/data/federal-member-votes.json \
+                            assets/data/federal-en-bloc-nominees.json \
                             assets/data/federal-votes-index.json \
                             assets/data/federal-votes \
                             assets/data/federal-votes-keyvotes.json \
@@ -211,6 +218,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: unpushed-federal-member-votes
-          path: assets/data/federal-member-votes.json
+          path: |
+            assets/data/federal-member-votes.json
+            assets/data/federal-en-bloc-nominees.json
           if-no-files-found: ignore
           retention-days: 14

@@ -28,6 +28,11 @@
  *   cell(meta) — extra HTML for the Bill cell: GA's record/text links, the federal
  *                page's "P.L. … / Official text (GPO) →" line.
  *
+ * The Type control (the nomination filter on senators' pages) is opt-in: a caller
+ * that passes no `types` to filterRowHtml, no `typeId` to mountControls and no
+ * `filter.type` gets exactly the two controls it always had. It matches on
+ * meta.category.
+ *
  * Exposed on window.VotegaVotesTable. Tested by tests/js/votes-table.test.js,
  * which evaluates this file against a stub window — so nothing here may touch
  * `document` at load time (inside functions is fine).
@@ -94,24 +99,40 @@ window.VotegaVotesTable = (function () {
     });
   }
 
+  // The Type control's values against a row's category: "C" a confirmation vote,
+  // "N" any other vote about nominations, absent for everything else.
+  function typeMatches(type, category) {
+    if (type === 'confirm') return category === 'C';
+    if (type === 'nomination') return category === 'C' || category === 'N';
+    if (type === 'other') return category !== 'C' && category !== 'N';
+    return true;
+  }
+
   // Row predicate for the filter controls. `q` is matched against the bill
   // number, title and motion text together, all normalized the same way.
-  function makeMatcher(filter, index) {
+  // opts.extraMatch(entry, normalizedQuery) lets a page search text the row does
+  // not hold (the nominees behind an en bloc vote).
+  function makeMatcher(filter, index, opts) {
     filter = filter || {};
     index = index || {};
+    var extra = opts && opts.extraMatch;
     var q = normalizeQuery(filter.q || '');
     var bucket = filter.vote || 'all';
+    var type = filter.type || 'all';
     return function (entry) {
       if (bucket !== 'all' && voteBucket(entry.vote) !== bucket) return false;
-      if (!q) return true;
       var meta = index[entry.voteId] || {};
+      if (type !== 'all' && !typeMatches(type, meta.category)) return false;
+      if (!q) return true;
       var hay = (meta.bill || '') + ' ' + (meta.title || '') + ' ' + (meta.motionText || '');
-      return normalizeQuery(hay).indexOf(q) !== -1;
+      return normalizeQuery(hay).indexOf(q) !== -1 || !!(extra && extra(entry, q));
     };
   }
 
   function isFiltered(filter) {
-    return !!(filter && ((filter.q && String(filter.q).length) || (filter.vote && filter.vote !== 'all')));
+    return !!(filter && ((filter.q && String(filter.q).length)
+      || (filter.vote && filter.vote !== 'all')
+      || (filter.type && filter.type !== 'all')));
   }
 
   // How many rows are shown after one more ask. `step` is a row count or 'all'.
@@ -143,6 +164,12 @@ window.VotegaVotesTable = (function () {
       // line sits below the title.
       var extra = cell ? (cell(meta) || '') : '';
       var after = typeof opts.cellAfter === 'function' ? (opts.cellAfter(meta) || '') : '';
+      // rowAfter(meta, entry) -> content too wide for the Bill cell (the federal
+      // page's en bloc nominee list), shown on its own line under the row.
+      var wide = typeof opts.rowAfter === 'function' ? (opts.rowAfter(meta, entry) || '') : '';
+      var extraRow = wide
+        ? '<tr class="vote-extra-row"><td colspan="' + (showMotion ? 4 : 3) + '">' + wide + '</td></tr>'
+        : '';
       var billCell = (meta.title
         ? billLink + extra + '<br><span style="font-size:0.75rem;color:var(--color-text-secondary);font-weight:normal;">' + esc(meta.title) + '</span>'
         : billLink + extra) + after;
@@ -152,7 +179,8 @@ window.VotegaVotesTable = (function () {
         + '          <td>' + billCell + '</td>\n'
         + '          ' + motionCell + '\n'
         + '          <td class="' + voteClass(entry.vote) + '">' + esc(entry.vote) + '</td>\n'
-        + '        </tr>';
+        + '        </tr>'
+        + extraRow;
     }).join('');
   }
 
@@ -170,13 +198,27 @@ window.VotegaVotesTable = (function () {
         + '        </div>';
   }
 
+  // opts.types ([{ value, label, description }], the first one selected) adds the
+  // Type control between Search and Vote, and its description under the row.
   function filterRowHtml(opts) {
     opts = opts || {};
     var searchId = opts.searchId || 'voteSearch';
     var voteId = opts.voteId || 'voteResult';
-    return '\n          <div class="vote-filter-row">\n'
+    var types = opts.types && opts.types.length ? opts.types : null;
+    var typeId = opts.typeId || 'voteType';
+    var typeNoteId = opts.typeNoteId || typeId + 'Note';
+    var typeControl = !types ? '' : '            <label for="' + esc(typeId) + '">Type</label>\n'
+        + '            <select id="' + esc(typeId) + '" aria-describedby="' + esc(typeNoteId) + '">\n'
+        + types.map(function (t) {
+            return '              <option value="' + esc(t.value) + '">' + esc(t.label) + '</option>\n';
+          }).join('')
+        + '            </select>\n';
+    var typeNote = !types ? '' : '\n          <p class="vote-type-note" id="' + esc(typeNoteId) + '">'
+        + esc(types[0].description) + '</p>';
+    return '\n          <div class="vote-filter-row' + (types ? ' vote-filter-row-typed' : '') + '">\n'
         + '            <label for="' + esc(searchId) + '">Search</label>\n'
         + '            <input type="search" id="' + esc(searchId) + '" placeholder="' + esc(opts.placeholder || 'Bill number or title') + '" autocomplete="off">\n'
+        + typeControl
         + '            <label for="' + esc(voteId) + '">Vote</label>\n'
         + '            <select id="' + esc(voteId) + '">\n'
         + '              <option value="all">All</option>\n'
@@ -184,7 +226,8 @@ window.VotegaVotesTable = (function () {
         + '              <option value="nay">Nay</option>\n'
         + '              <option value="other">Other</option>\n'
         + '            </select>\n'
-        + '          </div>';
+        + '          </div>'
+        + typeNote;
   }
 
   // The count line under a table, with the two growth controls while rows remain.
@@ -288,18 +331,34 @@ window.VotegaVotesTable = (function () {
     var voteSel = opts.voteId ? doc.getElementById(opts.voteId) : null;
     var root = typeof opts.tablesRoot === 'string' ? doc.getElementById(opts.tablesRoot) : opts.tablesRoot;
     var debounce = opts.debounceMs == null ? 150 : opts.debounceMs;
+    var typeSel = opts.typeId ? doc.getElementById(opts.typeId) : null;
+    var typeNote = opts.typeNoteId ? doc.getElementById(opts.typeNoteId) : null;
+
+    // `type` is reported only by a panel that has the control.
+    function current() {
+      var filter = { q: search ? search.value : '', vote: voteSel ? voteSel.value : 'all' };
+      if (typeSel) filter.type = typeSel.value;
+      return filter;
+    }
+    function describeType() {
+      if (!typeSel || !typeNote) return;
+      (opts.types || []).forEach(function (t) {
+        if (t.value === typeSel.value) typeNote.textContent = t.description;
+      });
+    }
 
     if (search && opts.onFilter) {
       var timer;
       search.addEventListener('input', function () {
         clearTimeout(timer);
-        timer = setTimeout(function () { opts.onFilter({ q: search.value, vote: voteSel ? voteSel.value : 'all' }); }, debounce);
+        timer = setTimeout(function () { opts.onFilter(current()); }, debounce);
       });
     }
     if (voteSel && opts.onFilter) {
-      voteSel.addEventListener('change', function () {
-        opts.onFilter({ q: search ? search.value : '', vote: voteSel.value });
-      });
+      voteSel.addEventListener('change', function () { opts.onFilter(current()); });
+    }
+    if (typeSel && opts.onFilter) {
+      typeSel.addEventListener('change', function () { describeType(); opts.onFilter(current()); });
     }
     if (root) {
       root.addEventListener('click', function (ev) {
@@ -308,6 +367,8 @@ window.VotegaVotesTable = (function () {
           ev.preventDefault();
           if (search) search.value = '';
           if (voteSel) voteSel.value = 'all';
+          if (typeSel) typeSel.value = 'all';
+          describeType();
           if (opts.onClear) opts.onClear();
           return;
         }
@@ -326,6 +387,7 @@ window.VotegaVotesTable = (function () {
     fmtDate: fmtDate,
     sortByDate: sortByDate,
     makeMatcher: makeMatcher,
+    typeMatches: typeMatches,
     isFiltered: isFiltered,
     nextOffset: nextOffset,
     rowsHtml: rowsHtml,

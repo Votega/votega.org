@@ -30,6 +30,8 @@ MEMBERS = "current-members.json"
 VOTES_INDEX = "federal-votes-index.json"
 VOTES_KEYVOTES = "federal-votes-keyvotes.json"
 VOTES_DIR = "federal-votes"
+#: Absent from a freeze taken before the file existed; the page copes without it.
+EN_BLOC = "federal-en-bloc-nominees.json"
 UNITY = "federal-party-unity.json"
 SPONSOR_INDEX = "federal-sponsorship-index.json"
 SPONSOR_DIR = "federal-sponsorship"

@@ -8,9 +8,11 @@ name: Publish GA federal delegation to ga-federal-legislators
 # scripts/publish_federal_delegation.py reads current-members.json (full Congress,
 # all states — filtered to Georgia here, matching the state === 'Georgia' filter
 # congress.js uses) and federal-member-votes.json (already Georgia-scoped), then
-# publishes a full set of consumer-friendly artifacts to the target repo:
+# publishes a full set of consumer-friendly artifacts to the target repo (the en bloc
+# nominee table comes from federal-en-bloc-nominees.json):
 #   data/members.json · data/votes.json · data/members.csv · data/votes.csv ·
-#   data/member-votes.csv · data/members.schema.json · data/votes.schema.json · ROSTER.md
+#   data/member-votes.csv · data/members.schema.json · data/votes.schema.json · ROSTER.md ·
+#   data/en-bloc-nominees.json · .csv · .schema.json
 # Run it locally without the token for a dry run (writes to ./out) — see the script docstring.
 
 permissions:
@@ -23,6 +25,7 @@ on:
     paths:
       - 'assets/data/current-members.json'      # updated daily by update-current-members.yml
       - 'assets/data/federal-member-votes.json'  # updated weekly by update-federal-votes.yml
+      - 'assets/data/federal-en-bloc-nominees.json'  # written beside it, same job
       - 'scripts/publish_federal_delegation.py'  # republish when the generator itself changes
 
 jobs:

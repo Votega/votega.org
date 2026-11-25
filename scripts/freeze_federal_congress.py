@@ -17,6 +17,7 @@ What it writes (file names mirror the live files, so the page needs only a diffe
   federal-votes-index.json, federal-votes-keyvotes.json, federal-votes/<bioguideId>.json
   federal-sponsorship-index.json, federal-sponsorship/<bioguideId>.json
   federal-party-unity.json, curated-federal-bills.json
+  federal-en-bloc-nominees.json    when the live file exists (the nominees behind en bloc votes)
 
 It reuses the publisher's refusal to file one Congress's data under another's name
 (`assert_same_congress`): after 3 January the live files describe the 120th, so a late run of
@@ -31,9 +32,9 @@ from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from lib.atomic_io import write_json_atomic  # noqa: E402
-from lib.federal_pages import (CURATED, FROZEN_ROOT, MANIFEST, MEMBERS, SPONSOR_DIR,  # noqa: E402
-                               SPONSOR_INDEX, UNITY, VOTES_DIR, VOTES_INDEX, VOTES_KEYVOTES,
-                               congress_slug_years, federal_permalink)
+from lib.federal_pages import (CURATED, EN_BLOC, FROZEN_ROOT, MANIFEST, MEMBERS,  # noqa: E402
+                               SPONSOR_DIR, SPONSOR_INDEX, UNITY, VOTES_DIR, VOTES_INDEX,
+                               VOTES_KEYVOTES, congress_slug_years, federal_permalink)
 from publish_federal_delegation import SLUG_RE, assert_same_congress  # noqa: E402  (one implementation)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -80,12 +81,16 @@ def plan(slug, data_dir):
     unity = _load(path(UNITY))
     sp_index = _load(path(SPONSOR_INDEX))
     curated = _load(path(CURATED))
+    # Optional, but one that exists and cannot be read is not silently left out.
+    nominees = _load(path(EN_BLOC)) if os.path.exists(path(EN_BLOC)) else None
 
     sources = {VOTES_INDEX: _meta(votes_index, "congress"), VOTES_KEYVOTES: _meta(keyvotes, "congress"),
                UNITY: _meta(unity, "congress"), SPONSOR_INDEX: _meta(sp_index, "congress")}
     # The roster carries its Congress only since the turnover guard; absent on an older file.
     if _meta(roster, "congress") is not None:
         sources[MEMBERS] = _meta(roster, "congress")
+    if nominees is not None:
+        sources[EN_BLOC] = _meta(nominees, "congress")
     assert_same_congress(slug, sources)  # exits, writing nothing, on a different Congress
 
     ga = [m for m in roster.get("members") or []
@@ -107,6 +112,8 @@ def plan(slug, data_dir):
         raise FreezeError(f"missing per-member slices (refusing to freeze a record without them): {missing}")
     for name in (VOTES_INDEX, VOTES_KEYVOTES, UNITY, SPONSOR_INDEX, CURATED):
         files.append((path(name), name))
+    if nominees is not None:
+        files.append((path(EN_BLOC), EN_BLOC))
 
     urls = {m["bioguideId"]: federal_permalink(m) for m in ga}
     dupes = sorted(u for u in set(urls.values()) if list(urls.values()).count(u) > 1)
@@ -153,6 +160,10 @@ def freeze(slug, data_dir, out_root, *, kind="provisional", overwrite=False, now
                               count=len(p["ga"]), freeze={"kind": kind, "frozenAt": frozen_at, "slug": slug})
     for src, rel in p["files"]:
         _copy(src, os.path.join(dest, rel))
+    # A replaced freeze must not keep an older copy beside newer votes.
+    stale = os.path.join(dest, EN_BLOC)
+    if all(rel != EN_BLOC for _src, rel in p["files"]) and os.path.isfile(stale):
+        os.remove(stale)
     write_json_atomic(os.path.join(dest, MEMBERS), roster, separators=(",", ":"))
     write_json_atomic(mpath, manifest, indent=2)
     return manifest
