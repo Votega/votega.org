@@ -104,8 +104,13 @@ def parse_page(html, base, split_committees=False):
         if not _PDF_RE.search(href):
             continue
         text = _clean(inner)
-        haystack = '%s %s' % (href, text)
-        kind, is_action = _classify(haystack)
+        # The file name and link text decide first; the folder path only when neither
+        # says. Polk keeps every file under "Minutes and Agendas", so reading the full
+        # path called each agenda minutes.
+        name = href.split('?', 1)[0].rsplit('/', 1)[-1]
+        kind, is_action = _classify('%s %s' % (name, text))
+        if not kind:
+            kind, is_action = _classify('%s %s' % (href, text))
         if not kind:
             continue
         # Date from the file name first (most reliable), then the link text.

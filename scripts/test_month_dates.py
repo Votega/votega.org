@@ -28,6 +28,11 @@ if got != ["Board of Commissioners", "Finance Committee"] or len(revize.parse_pa
     bad.append(("split_committees", got, None))
 if revize._parse_date("Minutes of October 06, 2026.pdf") != "2026-10-06" or revize._parse_date("9-2-2026") != "2026-09-02":
     bad.append(("revize._parse_date", None, None))
+F = "Minutes and Agendas/"
+m = revize.parse_page('<a href="%sWork Session Agenda November 03, 2026.pdf">a</a>'
+                      '<a href="%sRegular Meeting Board Actions November 03, 2026.pdf">b</a>' % (F, F), "https://x.test/")[0]
+if "Agenda" not in (m["agendaUrl"] or "") or "Board%20Actions" not in (m["minutesUrl"] or ""):
+    bad.append(("folder name vs file name", m, None))
 for b in bad:
     print("FAIL", b)
 print("FAILED" if bad else "ok: month-name dates")
