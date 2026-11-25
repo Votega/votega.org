@@ -2169,14 +2169,14 @@ places:
         # Municode PublishPage portal (meetings.municode.com), same adapter as Paulding.
         # Not yet validated: Municode challenged the machine that wrote this entry
         # (Cloudflare 403), so check the first CI/--slug run for body names and add body_map if
-        # the portal mixes bodies. Meeting day/time not yet confirmed.
+        # the portal mixes bodies.
         platform: municode
         agendas_url: "https://meetings.municode.com/PublishPage/index?cid=DOUGHERTY&ppid=8eef0464-395e-4aa7-8fda-0cda139a3d01"
         body_label: "Board of Commissioners"
         schedule:
           - body: Board of Commissioners
-            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
-            location: ""            # optional
+            when: "Mondays, 10:00 a.m.: regular meetings usually the 1st and 3rd Monday, work sessions the 2nd and 4th (varies; holidays skipped)"   # county's 2026 schedule PDF
+            location: "Albany-Dougherty Government Center, Room 100, 222 Pine Avenue, Albany, GA"
 
   - slug: lee
     name: Lee County
