@@ -282,3 +282,132 @@ test('filterRowHtml wires its labels to the ids it was given', () => {
   assert.ok(html.includes('for="gaVoteResult"'));
   assert.ok(html.includes('<option value="nay">Nay</option>'));
 });
+
+// -- The opt-in Type control (senators' pages) --------------------------------
+// category is "C" (confirmation), "N" (other nomination vote) or absent.
+const TYPED_INDEX = {
+  c: { bill: null, title: 'Ann Alpha, to be a judge', motionText: 'On the Nomination', date: '2026-04-04', category: 'C' },
+  n: { bill: null, title: 'Ann Alpha, to be a judge', motionText: 'On the Cloture Motion', date: '2026-04-03', category: 'N' },
+  b: { bill: 'S. 5', title: 'A bill', motionText: 'On Passage of the Bill', date: '2026-04-02', category: null },
+  o: { bill: 'S. 6', title: 'Another', motionText: 'On the Amendment', date: '2026-04-01' },
+};
+const TYPED = [
+  { voteId: 'c', vote: 'Nay' }, { voteId: 'n', vote: 'Yea' },
+  { voteId: 'b', vote: 'Yea' }, { voteId: 'o', vote: 'Nay' },
+];
+const typedIds = filter => TYPED.filter(VT.makeMatcher(filter, TYPED_INDEX)).map(e => e.voteId);
+
+test('makeMatcher filters by nomination type', () => {
+  assert.deepStrictEqual(typedIds({ type: 'all' }), ['c', 'n', 'b', 'o']);
+  assert.deepStrictEqual(typedIds({ type: 'confirm' }), ['c']);
+  assert.deepStrictEqual(typedIds({ type: 'nomination' }), ['c', 'n']);
+  assert.deepStrictEqual(typedIds({ type: 'other' }), ['b', 'o']);
+});
+
+test('Type combines with Vote and Search', () => {
+  assert.deepStrictEqual(typedIds({ type: 'nomination', vote: 'yea' }), ['n']);
+  assert.deepStrictEqual(typedIds({ type: 'nomination', q: 'cloture' }), ['n']);
+  assert.deepStrictEqual(typedIds({ type: 'confirm', vote: 'yea' }), []);
+  assert.deepStrictEqual(typedIds({ type: 'other', vote: 'nay', q: 's6' }), ['o']);
+});
+
+test('isFiltered counts an engaged Type', () => {
+  assert.strictEqual(VT.isFiltered({ type: 'all' }), false);
+  assert.strictEqual(VT.isFiltered({ type: 'confirm' }), true);
+});
+
+test('makeMatcher takes an extra match for text the row does not hold', () => {
+  const extraMatch = (entry, q) => entry.voteId === 'c' && q === 'zedzulu';
+  const hits = filter => TYPED.filter(VT.makeMatcher(filter, TYPED_INDEX, { extraMatch })).map(e => e.voteId);
+  assert.deepStrictEqual(hits({ q: 'Zed Zulu' }), ['c']);
+  assert.deepStrictEqual(hits({ q: 'Zed Zulu', vote: 'yea' }), [], 'Vote still applies');
+  assert.deepStrictEqual(hits({ q: 'bill' }), ['b'], 'the row text is still searched');
+});
+
+test('rowAfter adds a full-width line under only the rows that have one', () => {
+  const rowAfter = (meta, entry) => (entry.voteId === 'c' ? '<i>more</i>' : '');
+  const html = VT.rowsHtml(TYPED, TYPED_INDEX, { rowAfter });
+  assert.strictEqual((html.match(/vote-extra-row/g) || []).length, 1);
+  assert.ok(html.includes('<tr class="vote-extra-row"><td colspan="4"><i>more</i></td></tr>'));
+  assert.ok(html.indexOf('vote-extra-row') < html.indexOf('On the Cloture Motion'), 'it follows its own row');
+  assert.ok(VT.rowsHtml(TYPED, TYPED_INDEX, { rowAfter, showMotion: false }).includes('colspan="3"'));
+  assert.ok(!VT.rowsHtml(TYPED, TYPED_INDEX, {}).includes('vote-extra-row'));
+});
+
+const TYPE_OPTS = {
+  searchId: 's', voteId: 'v', typeId: 't', typeNoteId: 'tn', placeholder: 'Bill number, title or nominee',
+  types: [
+    { value: 'all', label: 'All votes (4)', description: 'Every vote.' },
+    { value: 'confirm', label: 'Confirmation votes (1)', description: 'The final "vote".' },
+  ],
+};
+
+test('filterRowHtml adds no Type control unless a caller asks for one', () => {
+  const html = VT.filterRowHtml({ searchId: 'gaVoteSearch', voteId: 'gaVoteResult' });
+  assert.ok(!html.includes('Type'));
+  assert.ok(!html.includes('vote-type-note'));
+  assert.ok(html.includes('<div class="vote-filter-row">'), 'the class a caller without Type always had');
+  assert.strictEqual((html.match(/<select/g) || []).length, 1);
+});
+
+test('filterRowHtml places Type between Search and Vote, described below the row', () => {
+  const html = VT.filterRowHtml(TYPE_OPTS);
+  assert.ok(html.includes('<div class="vote-filter-row vote-filter-row-typed">'), 'stacks on a phone');
+  assert.ok(html.indexOf('id="s"') < html.indexOf('id="t"'));
+  assert.ok(html.indexOf('id="t"') < html.indexOf('id="v"'));
+  assert.ok(html.includes('for="t">Type</label>'));
+  assert.ok(html.includes('<option value="confirm">Confirmation votes (1)</option>'));
+  assert.ok(html.includes('placeholder="Bill number, title or nominee"'));
+  assert.ok(/id="tn"[^>]*>Every vote\.<\/p>/.test(html));
+});
+
+// A stub document: enough of an element to bind listeners and fire them.
+function stubPanel(withType) {
+  const el = value => {
+    const handlers = {};
+    return { value, textContent: '', addEventListener: (name, fn) => { handlers[name] = fn; }, fire: (name, ev) => handlers[name](ev) };
+  };
+  const els = { s: el(''), v: el('all'), root: el('') };
+  if (withType) { els.t = el('all'); els.tn = el(''); }
+  win.document = { getElementById: id => els[id] || null };
+  const calls = [];
+  let cleared = 0;
+  VT.mountControls({
+    searchId: 's', voteId: 'v', typeId: withType ? 't' : undefined, typeNoteId: 'tn',
+    types: TYPE_OPTS.types, tablesRoot: 'root',
+    onFilter: f => calls.push(f), onClear: () => { cleared++; },
+  });
+  return { els, calls, cleared: () => cleared };
+}
+
+test('the description follows the selected Type', () => {
+  const { els, calls } = stubPanel(true);
+  els.t.value = 'confirm';
+  els.t.fire('change');
+  assert.strictEqual(els.tn.textContent, 'The final "vote".');
+  assert.deepStrictEqual(calls, [{ q: '', vote: 'all', type: 'confirm' }]);
+  els.v.value = 'nay';
+  els.v.fire('change');
+  assert.deepStrictEqual(calls[1], { q: '', vote: 'nay', type: 'confirm' });
+  delete win.document;
+});
+
+test('Clear filters resets Type and its description', () => {
+  const { els, cleared } = stubPanel(true);
+  els.s.value = 'x';
+  els.v.value = 'nay';
+  els.t.value = 'confirm';
+  els.t.fire('change');
+  els.root.fire('click', { preventDefault() {}, target: { closest: sel => (sel === '[data-clear-filters]' ? {} : null) } });
+  assert.deepStrictEqual([els.s.value, els.v.value, els.t.value, els.tn.textContent], ['', 'all', 'all', 'Every vote.']);
+  assert.strictEqual(cleared(), 1);
+  delete win.document;
+});
+
+test('a panel without Type reports only Search and Vote', () => {
+  const { els, calls } = stubPanel(false);
+  els.v.value = 'yea';
+  els.v.fire('change');
+  assert.deepStrictEqual(calls, [{ q: '', vote: 'yea' }]);
+  delete win.document;
+});

@@ -380,7 +380,8 @@ def build_federal(data_dir, since, until, excluded, dismissed):
     by_bill = {}
     latest_vote = None
     for vid, r in zip(vote_ids, rows):
-        chamber, vdate, btype, number, title, midx, res, yea, nay, tally = r
+        # Leading run only: build_federal_votes_slices.py appends fields at the end.
+        chamber, vdate, btype, number, title, midx, res, yea, nay, tally = r[:10]
         latest_vote = max(latest_vote or "", vdate or "") or None
         if btype not in FED_BILL_TYPES:
             continue

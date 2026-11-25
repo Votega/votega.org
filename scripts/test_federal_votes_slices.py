@@ -180,6 +180,37 @@ check("tally is six flat ints, Dem then Rep", house[B.R_TALLY], [208, 1, 5, 176,
 check("an absent tally stays null",
       index["rows"][index["voteIds"].index("S119_2_00100")][B.R_TALLY], None)
 
+print("Nomination category:")
+RES = ("An executive resolution authorizing the en bloc consideration in Executive "
+       "Session of certain nominations on the Executive Calendar.")
+
+
+def senate(motion="On the Nomination", doc="PN", bill=None, title="x", chamber="Senate"):
+    return {"chamber": chamber, "motionText": motion, "documentType": doc,
+            "billType": bill, "title": title}
+
+
+check("a confirmation is C", B.vote_category(senate()), "C")
+check("cloture on a nomination is N", B.vote_category(senate("On the Cloture Motion")), "N")
+check("a motion to table on a nomination is N", B.vote_category(senate("On the Motion to Table")), "N")
+check("a vote on the en bloc resolution is N",
+      B.vote_category(senate("On the Resolution", "S.Res.", "sres", RES)), "N")
+check("another Senate resolution is not",
+      B.vote_category(senate("On the Resolution", "S.Res.", "sres", "A resolution honoring en bloc workers")), None)
+check("a bill is not", B.vote_category(senate("On Passage of the Bill", "S.", "s")), None)
+check("a bill-less non-nomination (a treaty) is not",
+      B.vote_category(senate("On the Cloture Motion", "Treaty Doc.")), None)
+check("a House vote is never one", B.vote_category(senate(chamber="House")), None)
+check("a row without documentType is not guessed",
+      B.vote_category({"chamber": "Senate", "motionText": "On the Nomination"}), None)
+typed = fixture()
+typed["votes"]["S119_1_00050"].update(documentType="PN", nomineeCount=48)
+_rc, typed_index, _s, _k = run_builder(typed)
+typed_row = typed_index["rows"][typed_index["voteIds"].index("S119_1_00050")]
+check("the row ends with category and nomineeCount",
+      (typed_row[B.R_CATEGORY], typed_row[B.R_NOMINEES], len(typed_row)), ("C", 48, len(B.ROW_FIELDS)))
+check("a House row carries nulls", index["rows"][index["voteIds"].index("H2026_0081")][B.R_CATEGORY:], [None, None])
+
 print("Per-member slices:")
 check("one slice per member with votes", sorted(slices), ["A000372", "O000174"])
 check("slice names its member", slices["A000372"]["bioguideId"], "A000372")
@@ -248,7 +279,8 @@ js_positions = dict((name, int(pos)) for name, pos in
 check("row positions in the include match ROW_FIELDS",
       js_positions,
       {"CHAMBER": 0, "DATE": 1, "BILLTYPE": 2, "BILLNUM": 3, "TITLE": 4,
-       "MOTION": 5, "RESULT": 6, "YEA": 7, "NAY": 8, "TALLY": 9})
+       "MOTION": 5, "RESULT": 6, "YEA": 7, "NAY": 8, "TALLY": 9,
+       "CATEGORY": 10, "NOMINEES": 11})
 check("python writes exactly that many fields", len(B.ROW_FIELDS), len(js_positions))
 
 # The label table is the include's own; the generator holds the authoritative copy.

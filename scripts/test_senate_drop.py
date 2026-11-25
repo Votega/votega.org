@@ -90,7 +90,7 @@ print("federal generator (senate.gov unreachable)")
 
 
 def fake_roll(vv, session, number, bioguides):
-    return {"bill_type": None, "bill_number": None, "title": "from voteview",
+    return {"bill_type": None, "bill_number": None, "document_type": "PN", "title": "from voteview",
             "question": "On the Nomination", "date": "2026-11-03", "yea": 50, "nay": 50,
             "result": "Nomination Confirmed", "party_tally": None, "member_votes": {}}
 

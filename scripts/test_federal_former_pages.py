@@ -234,7 +234,8 @@ def test_include_reads_every_frozen_file_through_dataurl():
     # The one mention is dataUrl()'s own prefix comment/implementation, which names the directory, not a file.
     check("no bare live path to a per-Congress file", sorted(set(b for b in bare if b != "federal-congresses")), [])
     for name in ("current-members.json", "federal-votes-index.json", "federal-votes-keyvotes.json",
-                 "federal-party-unity.json", "federal-sponsorship-index.json", "curated-federal-bills.json"):
+                 "federal-party-unity.json", "federal-sponsorship-index.json", "curated-federal-bills.json",
+                 "federal-en-bloc-nominees.json"):
         check(f"dataUrl('{name}')", f"dataUrl('{name}')" in html, True)
     check("vote slice via dataUrl", "dataUrl(`federal-votes/" in html, True)
     check("sponsorship slice via dataUrl", "dataUrl(`federal-sponsorship/" in html, True)

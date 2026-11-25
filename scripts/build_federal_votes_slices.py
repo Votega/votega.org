@@ -49,6 +49,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -65,13 +66,19 @@ CURATED_FILE = os.path.join(DATA_DIR, "curated-federal-bills.json")
 SLICES_DIR = os.path.join(DATA_DIR, "federal-votes")
 
 #: Positions in an index row. Rows are positional arrays, not objects, because the
-#: fourteen field names would otherwise repeat on all ~1,591 records — roughly
+#: field names would otherwise repeat on all ~1,591 records — roughly
 #: 140 KB of key names alone. Keep in step with the R_* constants in
 #: _includes/entity/federal-legislator.html.
+#: New fields are only ever APPENDED: older readers unpack the leading run.
 ROW_FIELDS = ("chamber", "date", "billType", "billNumber", "title",
-              "motion", "result", "yea", "nay", "tally")
+              "motion", "result", "yea", "nay", "tally", "category", "nomineeCount")
 (R_CHAMBER, R_DATE, R_BILLTYPE, R_BILLNUM, R_TITLE,
- R_MOTION, R_RESULT, R_YEA, R_NAY, R_TALLY) = range(len(ROW_FIELDS))
+ R_MOTION, R_RESULT, R_YEA, R_NAY, R_TALLY, R_CATEGORY, R_NOMINEES) = range(len(ROW_FIELDS))
+
+#: The Senate resolutions that let nominees be considered as a group are votes about
+#: nominations, though their document is a resolution.
+_EN_BLOC_RESOLUTION = re.compile(r"authoriz\w+ the en bloc consideration\b.*\bnominations", re.I)
+CONFIRMATION_MOTION = "On the Nomination"
 
 #: The index carries Democratic and Republican totals only, as six flat ints
 #: [dYea, dNay, dOther, rYea, rNay, rOther]. That is exactly what the page's
@@ -109,6 +116,23 @@ def compact_result(result):
     return result or ""
 
 
+def vote_category(meta):
+    """"C" a confirmation vote, "N" any other vote about nominations, else None.
+
+    Decided from the documentType the official record gave, so a bill-less vote that
+    is not a nomination (a treaty) stays out, and a row without the field is not
+    guessed at.
+    """
+    if meta.get("chamber") != "Senate":
+        return None
+    if meta.get("documentType") == "PN":
+        motion = (meta.get("motionText") or "").strip()
+        return "C" if motion == CONFIRMATION_MOTION else "N"
+    if meta.get("billType") == "sres" and _EN_BLOC_RESOLUTION.search(meta.get("title") or ""):
+        return "N"
+    return None
+
+
 def compact_row(meta, motion_index):
     """One vote's positional row. `motion_index` interns the motion text in place."""
     motion = (meta.get("motionText") or "").strip()
@@ -125,6 +149,8 @@ def compact_row(meta, motion_index):
         int(meta.get("yea") or 0),
         int(meta.get("nay") or 0),
         compact_tally(meta.get("partyTally")),
+        vote_category(meta),
+        meta.get("nomineeCount"),
     ]
 
 
