@@ -182,12 +182,16 @@ def _commission_seat(o, ol):
         m = re.search(r"\bd\s*[-#]?\s*(\d+)\b", ol)  # 'D6' short form
     # 2) bare number after 'commission' (e.g. 'County Commission 1')
     if not m:
-        m = re.search(r"commission[^0-9a-z]+(\d+)", ol)
+        # 'commissioner' too: "County Commissioner 4" used to fall through to At-Large
+        m = re.search(r"commission(?:er)?s?[^0-9a-z]+(\d+)", ol)
     if m:
         n = m.group(1)
         if "super" in ol:
             return f"Super District {n}"
-        return f"District {n} (At-Large)" if at_large else f"District {n}"
+        # A 'Post N' seat stays a Post: Glynn has both a Post 1 and a District 1, and
+        # calling both 'District 1' merged two seats into one.
+        word = "Post" if re.search(r"\bpost\s*[-#]?\s*\d", ol) else "District"
+        return f"{word} {n} (At-Large)" if at_large else f"{word} {n}"
     if at_large:
         return "At-Large"
     # 3) named district: text after 'commission -' / 'commissioners,' that isn't a number
@@ -333,7 +337,8 @@ def emit_yaml(county_slug, county_name, draft, jtype="county"):
     lines.append("    body: Board of Commissioners")
     lines.append("    partisan: true")
     lines.append("    term_years: 4            # GA terms are per-county local act; most are 4 — override if different")
-    lines.append(f"    board_size: {len(members)}             # auto: current roster size — verify against authorized seats")
+    seats_n = len([m for m in members if not m.get("leaves_office")])  # an outgoing row shares its seat with its successor
+    lines.append(f"    board_size: {seats_n}             # auto: current roster size — verify against authorized seats")
     lines.append(f"    government_form: {derive_government_form(members)}   # ceo | sole-commissioner | commission-chair | commission")
     lines.append(f"    official_url: \"\"            # TODO: county government site")
     lines.append("    related_pages:")
@@ -354,12 +359,23 @@ def emit_yaml(county_slug, county_name, draft, jtype="county"):
         sid = local_terms.suggest_seat_id(m)
         if sid:
             lines.append(f"        seat_id: {sid}            # must match the seat's existing holders")
+        if m.get("takes_office"):
+            lines.append(f"        takes_office: {m['takes_office']}           # general rule: Jan 1 after the election; verify against the local act")
+        if m.get("leaves_office"):
+            lines.append(f"        leaves_office: {m['leaves_office']}")
+            lines.append(f"        leave_reason: {m.get('leave_reason') or 'term-ended'}")
         lines.append(f"        party: {m['party']}")
         lines.append(f"        email: \"\"")
         lines.append(f"        phone: \"\"")
-        lines.append(f"        last_elected: {m['last_elected']}")
-        lines.append(f"        term_end: {m['last_elected'] + 4}         # last_elected + term_years (default 4) — verify")
-        lines.append(f"        next_election: {m['last_elected'] + 4}")
+        le = m.get("last_elected")
+        if le is None:  # an outgoing holder whose own election the results do not show
+            lines.append("        last_elected:")
+            lines.append("        term_end:")
+            lines.append("        next_election:")
+        else:
+            lines.append(f"        last_elected: {le}")
+            lines.append(f"        term_end: {le + 4}         # last_elected + term_years (default 4) — verify")
+            lines.append(f"        next_election: {le + 4}")
         lines.append(f"        voting: true")
         lines.append(f"        source: {_yq(m['source'])}   # SoS results — CONFIRM before merge")
     return "\n".join(lines)
