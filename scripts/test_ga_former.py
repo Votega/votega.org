@@ -60,7 +60,7 @@ def test_departure_sentence_resigned():
     check("removed", F.departure_sentence(mem(1, "Removed", statusDate="2026-02-10"), "2025_26").endswith(
         "Removed from office February 10, 2026."), True)
     check("deceased", F.departure_sentence(mem(1, "Deceased", statusDate="2026-03-01", chamber="Senate"), "2025_26"),
-          "Served in the Georgia Senate, District 63, in the 2025–2026 General Assembly. Died March 1, 2026.")
+          "Served in the Georgia Senate, District 63, in the 2025–2026 General Assembly. Died in office March 1, 2026.")
 
 
 def test_departure_sentence_no_status():

@@ -19,7 +19,7 @@ Since 2026-11-12, Georgia Commons links every bill sponsor to our legislator pag
 |---|---|
 | Former members | A full page, with record, votes and sponsorship from frozen data, plus a "Former member" banner. Not a thin stub. |
 | Prior bienniums | One page per person with a **biennium switch**, built now (before 2027-01-11) so re-elected members and chamber movers keep their 2025-26 record. |
-| Indexing | Former-member pages are **indexed** and in the sitemap. They're hidden from default site search and from current-member listings, and reachable from a Former Legislators directory. |
+| Indexing | Former-member pages are **indexed** and in the sitemap. They're hidden from current-member listings, shown in site search labelled "Former" and listed last (D8, changed 2026-11-24; originally hidden), and reachable from a Former Legislators directory. |
 | The 11 resigned members | They get pages **now**, as the first use of the mechanism. |
 | Scope | 2025-26 is the first frozen biennium. Earlier bienniums are possible later as a data change, not a code change. |
 
