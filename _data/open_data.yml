@@ -74,8 +74,8 @@ datasets:
     title: Georgia Federal Delegation
     hosting: repo
     summary: >
-      Georgia's U.S. House and Senate delegation and their voting record on
-      signed legislation — assembled from Congress.gov plus authoritative
+      Georgia's U.S. House and Senate delegation and their vote on every
+      recorded roll call — assembled from Congress.gov plus authoritative
       Clerk-of-the-House and Senate.gov roll-call XML.
     source: Congress.gov API · Clerk of the U.S. House · U.S. Senate
     scope: Current Congress, Georgia delegation only; each finished Congress is frozen under sessions/ (the 119th first)
@@ -84,7 +84,9 @@ datasets:
     repo_url: https://github.com/Votega/ga-federal-legislators
     files:
       - { name: "data/members.json", desc: "GA delegation roster", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/members.json" }
-      - { name: "data/votes.json",   desc: "Voting history on signed legislation", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/votes.json" }
+      - { name: "data/votes.json",   desc: "Every recorded roll call, including failed measures, amendments, procedural votes and Senate nominations", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/votes.json" }
+      - { name: "data/en-bloc-nominees.csv", desc: "Every nomination behind each en bloc Senate vote (one vote on a whole group), one row per nomination per vote", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/en-bloc-nominees.csv" }
+      - { name: "data/en-bloc-nominees.json", desc: "The same en bloc nomination lists as JSON", url: "https://github.com/Votega/ga-federal-legislators/blob/main/data/en-bloc-nominees.json" }
       - { name: "sessions/119th/members.json", desc: "119th Congress delegation roster (frozen)", url: "https://github.com/Votega/ga-federal-legislators/blob/main/sessions/119th/members.json" }
       - { name: "sessions/119th/votes.json", desc: "119th Congress roll-call record (frozen)", url: "https://github.com/Votega/ga-federal-legislators/blob/main/sessions/119th/votes.json" }
       - { name: "sessions/119th/scorecard.csv", desc: "Party-unity + participation per member, 119th (derived)", url: "https://github.com/Votega/ga-federal-legislators/blob/main/sessions/119th/scorecard.csv" }

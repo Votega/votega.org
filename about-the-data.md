@@ -53,7 +53,7 @@ Voting history is displayed on each Georgia federal legislator's profile page, s
 
 Georgia's federal delegation roster `data/members.json`, is filtered from the full U.S. Congress to only include Georgia's delegation. 
 
-`current-members.json` and the GA members voting records on signed legislation - `data/votes.json` - are published as an open, machine-readable dataset. 
+`current-members.json` and the GA members’ votes on every recorded roll call - `data/votes.json` - are published as an open, machine-readable dataset. 
 
 See **[Open Data](https://www.votega.org/open-data)** for the repository, file links, and update schedule.
 
