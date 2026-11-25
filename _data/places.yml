@@ -2220,15 +2220,14 @@ places:
     region:                         # optional hub grouping label
     domains:
       meetings:
-        # Curated recurring schedule -> the "When they meet" note on /local/habersham/.
-        # Fill when: (and optional location:) per body. No scraper adapter needed
-        # for a schedule; add a platform (civicplus|corecode|civicclerk|legistar|teammunicode|primegov) later to
-        # auto-aggregate agendas/minutes (see the places.yml header).
-        agendas_url: ""            # direct agenda/minutes hub (optional; works with or without a scraper adapter)
+        # Agenda Center page of dated PDF links (lib.pdflinks; validated 47 meetings, agendas + minutes).
+        platform: pdflinks
+        base_url: https://www.habershamga.com/
+        agendas_url: "https://www.habershamga.com/agenda-center"
         schedule:
           - body: Board of Commissioners
-            when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
-            location: ""            # optional
+            when: "3rd Monday of every month, 6:00 p.m."   # county's 2026 schedule; January moves to Tue Jan 20 (MLK Day); annual planning retreat date TBD; subject to change
+            location: "Jury Assembly Room, Habersham County Courthouse, 295 Llewellyn St, Clarkesville, GA 30523"
 
   - slug: harris
     name: Harris County
