@@ -745,8 +745,9 @@ def build_meeting_events(place, slug, name, permalink, org_id, limit=10):
     (assets/data/local-<slug>-meetings.json, otherwise loaded client-side) with the
     time + location from the curated per-body schedule in _data/places.yml, matched
     on the meeting body. Emits only future-dated meetings (Google favors upcoming
-    events and a long tail of past ones adds no value). Returns (jsonld_str,
-    fingerprint_list); both empty when there is nothing upcoming.
+    events and a long tail of past ones adds no value) whose body has a curated
+    location: Google rejects an Event without `location`, and we never guess one.
+    Returns (jsonld_str, fingerprint_list); both empty when nothing qualifies.
     """
     path = os.path.join(SRC_DIR, f"local-{slug}-meetings.json")
     if not os.path.exists(path):
@@ -766,14 +767,19 @@ def build_meeting_events(place, slug, name, permalink, org_id, limit=10):
     upcoming = sorted(
         (m for m in meetings if isinstance(m, dict) and (m.get("date") or "") >= today),
         key=lambda m: m["date"],
-    )[:limit]
+    )
 
     events, fp = [], []
     for m in upcoming:
+        if len(events) >= limit:
+            break
         d = _date_only(m["date"])
         body = m.get("body") or ""
         title = m.get("title") or "Meeting"
         s = by_body.get(body) or by_body_lc.get(body.lower()) or {}
+        loc = (s.get("location") or "").strip()
+        if not loc:
+            continue
         clock = _parse_clock(s.get("when"))
         try:
             start = f"{d}T{clock}{_eastern_offset(date.fromisoformat(d))}" if clock else d
@@ -801,10 +807,8 @@ def build_meeting_events(place, slug, name, permalink, org_id, limit=10):
                             else "https://schema.org/EventScheduled"),
             "organizer": {"@id": org_id},
             "url": SITE_URL + permalink,
+            "location": {"@type": "Place", "name": loc, "address": loc},
         }
-        loc = (s.get("location") or "").strip()
-        if loc:
-            ev["location"] = {"@type": "Place", "name": loc, "address": loc}
         agenda = m.get("agendaUrl")
         if agenda:
             ev["subjectOf"] = {"@type": "CreativeWork", "name": "Agenda", "url": agenda}
