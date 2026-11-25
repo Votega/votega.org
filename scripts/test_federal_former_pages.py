@@ -239,6 +239,7 @@ def test_include_reads_every_frozen_file_through_dataurl():
     check("vote slice via dataUrl", "dataUrl(`federal-votes/" in html, True)
     check("sponsorship slice via dataUrl", "dataUrl(`federal-sponsorship/" in html, True)
     check("former pages hide contact details", "!FORMER &&" in html, True)
+    check("former pages hide social accounts", "!FORMER && socLinks.length" in html, True)
     check("frozen pages never join the live enacted-law index", "Promise.resolve(new Map())" in html, True)
 
 

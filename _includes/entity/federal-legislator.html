@@ -2013,7 +2013,7 @@
     const externalLinksHtml = extLinks.length
       ? `<p><strong>Learn more:</strong> ${linkList(extLinks)}</p>` : '';
     const socLinks = member.socialLinks || [];
-    const socialLinksHtml = socLinks.length
+    const socialLinksHtml = !FORMER && socLinks.length // official accounts close or change hands
       ? `<p><strong>Social media:</strong> ${linkList(socLinks)}</p>` : '';
 
     const html = `
