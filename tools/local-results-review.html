@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Local Results Review</title>
+<!--
+  Reviews a county-commission election against the curated local roster, seat by seat.
+  Reads (never writes the site data): the review JSON built by
+    python scripts/build_local_results_review.py --results <saved results.json> --out <review.json>
+  which joins a saved SoS results pull to _data/local_officials.yml.
+  Writes nothing to the repo. Your decisions are kept in this browser (localStorage, per
+  election) and can be exported to / imported from a JSON file.
+  Open locally in any modern browser; no server needed.
+-->
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; font-size: 14px; background: #f5f5f5; color: #222; }
+  header { background: #1e3a5f; color: #fff; padding: 0.7rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; position: sticky; top: 0; z-index: 5; }
+  header h1 { font-size: 1rem; font-weight: 600; margin-right: auto; }
+  .status { font-size: 0.78rem; opacity: 0.85; }
+  button, select, input[type=text], textarea { font: inherit; border: 1px solid #ccc; border-radius: 4px; padding: 0.3rem 0.6rem; background: #fff; color: #222; }
+  button { cursor: pointer; }
+  button:hover { background: #eef4fc; }
+  header button { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.12); color: #fff; }
+  header button:hover { background: rgba(255,255,255,.25); }
+  .empty { padding: 3rem 1.25rem; text-align: center; color: #555; line-height: 1.7; }
+  .empty code { background: #fff; padding: 1px 6px; border-radius: 3px; border: 1px solid #ddd; }
+  .bar { background: #fff; border-bottom: 1px solid #ddd; padding: 0.6rem 1.25rem; display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; position: sticky; top: 49px; z-index: 4; }
+  .chip { border: 1px solid #ccc; border-radius: 999px; padding: 0.2rem 0.7rem; font-size: 12.5px; background: #fff; cursor: pointer; user-select: none; }
+  .chip.on { background: #1e3a5f; color: #fff; border-color: #1e3a5f; }
+  .chip .n { opacity: .65; margin-left: .3rem; }
+  .bar .sep { width: 1px; height: 22px; background: #ddd; margin: 0 .25rem; }
+  .bar label { font-size: 12.5px; display: flex; gap: .3rem; align-items: center; }
+  .summary { padding: 0.5rem 1.25rem; font-size: 12.5px; color: #555; }
+  main { padding: 0 1.25rem 3rem; }
+  .county { margin-top: 1rem; }
+  .county h2 { font-size: .95rem; margin: 0 0 .35rem; display: flex; gap: .6rem; align-items: baseline; }
+  .county h2 small { font-weight: 400; color: #666; font-size: .75rem; }
+  .seat { background: #fff; border: 1px solid #ddd; border-left-width: 5px; border-radius: 6px; margin-bottom: .45rem; display: grid; grid-template-columns: 150px 1fr 1fr 260px; gap: .75rem; padding: .55rem .75rem; align-items: start; }
+  @media (max-width: 1100px) { .seat { grid-template-columns: 1fr 1fr; } }
+  .seat .lab { font-weight: 600; }
+  .seat .sub { font-size: 12px; color: #666; margin-top: 2px; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; padding: 1px 7px; border-radius: 3px; margin-top: 4px; }
+  .s-turnover-unstaged { border-left-color: #b3261e; } .s-turnover-unstaged .badge { background: #fbe9e7; color: #b3261e; }
+  .s-runoff-check { border-left-color: #c77700; } .s-runoff-check .badge { background: #fcf1dd; color: #8a5300; }
+  .s-name-variant { border-left-color: #c77700; } .s-name-variant .badge { background: #fcf1dd; color: #8a5300; }
+  .s-staged { border-left-color: #1b7a3a; } .s-staged .badge { background: #e6f4e7; color: #1b5e20; }
+  .s-retained { border-left-color: #8aa; } .s-retained .badge { background: #eef2f4; color: #456; }
+  .s-no-roster { border-left-color: #bbb; } .s-no-roster .badge { background: #eee; color: #666; }
+  .s-not-up { border-left-color: #ddd; } .s-not-up .badge { background: #f1f1f1; color: #888; }
+  .col h3 { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #777; margin-bottom: 3px; font-weight: 600; }
+  .person { margin-bottom: 3px; }
+  .person .nm { font-weight: 600; }
+  .person.win .nm::before { content: "\2713 "; color: #1b7a3a; }
+  .pill { font-size: 11px; padding: 0 5px; border-radius: 3px; background: #eef2f4; color: #456; margin-left: 4px; }
+  .pill.inc { background: #e6eef9; color: #1a56a8; }
+  .pill.warn { background: #fcf1dd; color: #8a5300; }
+  .bar2 { height: 5px; background: #eee; border-radius: 3px; margin-top: 2px; width: 140px; }
+  .bar2 > i { display: block; height: 100%; background: #1e3a5f; border-radius: 3px; }
+  .muted { color: #888; font-size: 12px; }
+  .links a { font-size: 12px; margin-right: .6rem; color: #1a56a8; }
+  .decide { display: flex; flex-direction: column; gap: .3rem; }
+  .decide .btns { display: flex; gap: .25rem; flex-wrap: wrap; }
+  .decide .btns button { padding: .15rem .5rem; font-size: 12px; }
+  .decide .btns button.sel { background: #1e3a5f; color: #fff; border-color: #1e3a5f; }
+  .decide textarea { width: 100%; font-size: 12px; min-height: 2.2rem; resize: vertical; }
+  .detail { font-size: 12px; color: #8a5300; margin-top: 3px; }
+</style>
+</head>
+<body>
+<header>
+  <h1 id="title">Local Results Review</h1>
+  <span class="status" id="status"></span>
+  <input type="file" id="file" accept=".json,application/json" hidden>
+  <input type="file" id="decfile" accept=".json,application/json" hidden>
+  <button id="openBtn">Open review file…</button>
+  <button id="impBtn" disabled>Import decisions…</button>
+  <button id="expBtn" disabled>Export decisions</button>
+</header>
+<div id="root">
+  <div class="empty">
+    Open a review file to start.<br>
+    Build one with<br>
+    <code>python scripts/build_local_results_review.py --results data-inputs/sos-results-2026-general/results-2026-general.json --out data-inputs/local-results-review/review-2026.json</code><br>
+    then use <b>Open review file…</b> above (or drop it on this page).
+  </div>
+</div>
+
+<script>
+const STATUS_ORDER = ['turnover-unstaged','runoff-check','name-variant','staged','retained','no-roster','not-up'];
+const STATUS_LABEL = {
+  'turnover-unstaged': 'Turnover, not staged',
+  'runoff-check': 'Runoff check',
+  'name-variant': 'Name variant',
+  'staged': 'Already staged',
+  'retained': 'Incumbent retained',
+  'no-roster': 'County has no roster',
+  'not-up': 'Roster only (not on ballot)'
+};
+const DECISIONS = [['stage','Stage'],['skip','Skip'],['check','Needs check'],['ok','Looks right']];
+// Hidden by default: informational statuses nobody has to act on.
+const DEFAULT_ON = new Set(['turnover-unstaged','runoff-check','name-variant','staged']);
+
+let data = null, storeKey = '', decisions = {}, on = new Set(DEFAULT_ON), q = '', county = '', onlyUndecided = false;
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function load(obj, fname) {
+  if (!obj || !Array.isArray(obj.rows) || !obj.metadata) { alert('Not a review file (expected {metadata, rows}).'); return; }
+  data = obj;
+  storeKey = 'localResultsReview:' + (obj.metadata.election || fname);
+  try { decisions = JSON.parse(localStorage.getItem(storeKey) || '{}'); } catch { decisions = {}; }
+  on = new Set(DEFAULT_ON);
+  $('#impBtn').disabled = $('#expBtn').disabled = false;
+  $('#title').textContent = 'Local Results Review - ' + obj.metadata.election;
+  render();
+}
+function save() { localStorage.setItem(storeKey, JSON.stringify(decisions)); updateStatus(); }
+function updateStatus() {
+  const n = Object.values(decisions).filter(d => d.choice).length;
+  $('#status').textContent = data ? `${data.metadata.rows} rows - ${n} decided - roster as of ${data.metadata.rosterAsOf} - results as of ${(data.rows.find(r => r.asOf) || {}).asOf?.slice(0,10) || '?'}` : '';
+}
+
+function personHtml(c, win) {
+  const party = c.party ? `<span class="pill">${esc(c.party)}</span>` : '<span class="pill warn">no party</span>';
+  const inc = c.incumbent ? '<span class="pill inc">incumbent</span>' : '';
+  const note = c.note ? `<div class="muted">${esc(c.note)}</div>` : '';
+  return `<div class="person ${win ? 'win' : ''}"><span class="nm">${esc(c.name)}</span>${party}${inc}
+    <div class="muted">${(c.votes ?? 0).toLocaleString()} votes - ${c.pct ?? '?'}%</div>
+    <div class="bar2"><i style="width:${Math.min(100, c.pct || 0)}%"></i></div>${note}</div>`;
+}
+function rosterHtml(r) {
+  if (!r.roster.length && !r.former.length) return '<span class="muted">no roster row for this seat</span>';
+  const cur = r.roster.map(m => {
+    const tag = m.state === 'incoming' ? `<span class="pill inc">incoming ${esc(m.takesOffice || '')}</span>`
+      : (m.leavesOffice ? `<span class="pill warn">leaves ${esc(m.leavesOffice)}</span>` : '');
+    const party = m.party ? `<span class="pill">${esc(m.party)}</span>` : '';
+    return `<div class="person"><span class="nm">${esc(m.name)}</span>${party}${tag}
+      <div class="muted">${esc(m.role || '')}${m.lastElected ? ' - elected ' + esc(m.lastElected) : ''}${m.termEnd ? ' - term end ' + esc(m.termEnd) : ''}</div></div>`;
+  }).join('');
+  const f = r.former.length ? `<div class="muted">former: ${r.former.map(m => esc(m.name)).join(', ')}</div>` : '';
+  return cur + f;
+}
+function rowHtml(r) {
+  const res = r.results;
+  const label = res ? res.seat : (r.roster[0]?.seat || '?');
+  const sub = res ? esc(res.contest) + (res.special ? ' <span class="pill warn">special</span>' : '') : 'no contest in this election';
+  const cands = res ? res.candidates.slice(0, Math.max(3, res.voteFor)) : [];
+  const winners = res ? res.voteFor : 0;
+  const resHtml = res
+    ? cands.map((c, i) => personHtml(c, i < winners)).join('') +
+      (res.candidates.length > cands.length ? `<div class="muted">+${res.candidates.length - cands.length} more</div>` : '') +
+      (res.unopposed ? '<div class="muted">unopposed</div>' : '') +
+      (res.voteFor > 1 ? `<div class="muted">vote for ${res.voteFor}: multi-seat contest, check the cutoff</div>` : '')
+    : '<span class="muted">-</span>';
+  const winName = res ? res.candidates[0].name : (r.roster[0]?.name || '');
+  const links = [
+    r.sourceUrl ? `<a href="${esc(r.sourceUrl)}" target="_blank" rel="noopener">SoS data</a>` : '',
+    winName ? `<a href="https://ballotpedia.org/wiki/index.php?search=${encodeURIComponent(winName + ' Georgia')}" target="_blank" rel="noopener">Ballotpedia</a>` : ''
+  ].join('');
+  const d = decisions[r.id] || {};
+  const btns = DECISIONS.map(([k, l]) => `<button data-id="${esc(r.id)}" data-k="${k}" class="${d.choice === k ? 'sel' : ''}">${l}</button>`).join('');
+  return `<div class="seat s-${r.status}" data-id="${esc(r.id)}">
+    <div><div class="lab">${esc(label)}</div><div class="sub">${sub}</div>
+      <span class="badge">${esc(STATUS_LABEL[r.status])}</span>${r.detail ? `<div class="detail">${esc(r.detail)}</div>` : ''}</div>
+    <div class="col"><h3>Roster</h3>${rosterHtml(r)}</div>
+    <div class="col"><h3>Results${r.official === false ? ' (unofficial)' : ''}</h3>${resHtml}<div class="links">${links}</div></div>
+    <div class="decide"><div class="btns">${btns}</div>
+      <textarea data-note="${esc(r.id)}" placeholder="Note (optional)">${esc(d.note || '')}</textarea></div>
+  </div>`;
+}
+
+function visible(r) {
+  if (!on.has(r.status)) return false;
+  if (county && r.county !== county) return false;
+  if (onlyUndecided && decisions[r.id]?.choice) return false;
+  if (q) {
+    const hay = (r.county + ' ' + (r.results ? r.results.contest + ' ' + r.results.candidates.map(c => c.name).join(' ') : '') +
+      ' ' + r.roster.map(m => m.name).join(' ')).toLowerCase();
+    if (!hay.includes(q.toLowerCase())) return false;
+  }
+  return true;
+}
+
+function render() {
+  if (!data) return;
+  const counts = {}; data.rows.forEach(r => counts[r.status] = (counts[r.status] || 0) + 1);
+  const counties = [...new Set(data.rows.map(r => r.county))].sort();
+  const chips = STATUS_ORDER.filter(s => counts[s]).map(s =>
+    `<span class="chip ${on.has(s) ? 'on' : ''}" data-s="${s}">${STATUS_LABEL[s]}<span class="n">${counts[s]}</span></span>`).join('');
+  const rows = data.rows.filter(visible);
+  const byCounty = {};
+  rows.forEach(r => (byCounty[r.county] = byCounty[r.county] || []).push(r));
+  const rank = r => STATUS_ORDER.indexOf(r.status);
+  const body = Object.keys(byCounty).sort().map(c => {
+    const rs = byCounty[c].sort((a, b) => rank(a) - rank(b));
+    return `<section class="county"><h2>${esc(c)}<small>${rs.length} seat${rs.length === 1 ? '' : 's'}${rs[0].curated ? '' : ' - no curated roster'}</small></h2>${rs.map(rowHtml).join('')}</section>`;
+  }).join('') || '<div class="empty">Nothing matches these filters.</div>';
+  $('#root').innerHTML = `
+    <div class="bar">${chips}<span class="sep"></span>
+      <select id="cty"><option value="">All counties</option>${counties.map(c => `<option ${c === county ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select>
+      <input type="text" id="q" placeholder="Search name, county, office" value="${esc(q)}">
+      <label><input type="checkbox" id="und" ${onlyUndecided ? 'checked' : ''}> only undecided</label></div>
+    <div class="summary">Showing ${rows.length} of ${data.rows.length} rows. Scope: ${esc(data.metadata.scope)}. Runoff flag = single-seat leader at or under 50%; local runoffs are not on the SoS portal.</div>
+    <main>${body}</main>`;
+  updateStatus();
+}
+
+document.addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
+  if (chip) { const s = chip.dataset.s; on.has(s) ? on.delete(s) : on.add(s); render(); return; }
+  const b = e.target.closest('.decide button');
+  if (b) {
+    const id = b.dataset.id, k = b.dataset.k, d = decisions[id] || (decisions[id] = {});
+    d.choice = d.choice === k ? null : k; d.at = new Date().toISOString();
+    save(); const y = scrollY; render(); scrollTo(0, y);
+  }
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'q') { q = e.target.value; const p = e.target.selectionStart; render(); const el = $('#q'); el.focus(); el.setSelectionRange(p, p); }
+  if (e.target.dataset?.note) { const id = e.target.dataset.note; (decisions[id] = decisions[id] || {}).note = e.target.value; save(); }
+});
+document.addEventListener('change', e => {
+  if (e.target.id === 'cty') { county = e.target.value; render(); }
+  if (e.target.id === 'und') { onlyUndecided = e.target.checked; render(); }
+});
+
+$('#openBtn').onclick = () => $('#file').click();
+$('#file').onchange = async e => { const f = e.target.files[0]; if (f) load(JSON.parse(await f.text()), f.name); e.target.value = ''; };
+$('#impBtn').onclick = () => $('#decfile').click();
+$('#decfile').onchange = async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try { const j = JSON.parse(await f.text()); Object.assign(decisions, j.decisions || {}); save(); render(); }
+  catch { alert('Could not read that decisions file.'); }
+  e.target.value = '';
+};
+$('#expBtn').onclick = () => {
+  const out = { election: data.metadata.election, exportedAt: new Date().toISOString(),
+    decisions: Object.fromEntries(Object.entries(decisions).filter(([, d]) => d.choice || d.note)) };
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' }));
+  a.download = 'review-decisions-' + data.metadata.election + '.json'; a.click();
+};
+addEventListener('dragover', e => e.preventDefault());
+addEventListener('drop', async e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) load(JSON.parse(await f.text()), f.name); });
+</script>
+</body>
+</html>
