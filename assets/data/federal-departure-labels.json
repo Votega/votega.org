@@ -1,12 +1,12 @@
 {
   "metadata": {
-    "description": "APPROVED departure labels for members of Georgia's congressional delegation who do not return in the 120th Congress (rollover decision D12). Display text states only the fact and date; never 'retired', 'ousted' or 'unseated'; never names the winner of a contest the member lost; each label links the certified results page that sources it. Keyed by bioguideId. Shown only on a former member's page. Drafts live in docs/federal-departure-labels-draft.md until the site owner approves them; ONLY approved entries belong in this file.",
+    "description": "APPROVED departure labels for members of Georgia's congressional delegation who do not return in the 120th Congress (rollover decision D12). Display text states only the fact and date; never 'retired', 'ousted' or 'unseated'; never names the winner of a contest the member lost; each label links the certified results page that sources it. Keyed by bioguideId. Placement: former members' pages and the former-members list, plus a sitting member's own live page until termEnds (see liveDisplay). Drafts live in docs/federal-departure-labels-draft.md until the site owner approves them; ONLY approved entries belong in this file.",
     "congress": "119th",
     "approvedBy": "site owner",
     "batches": [
       {
         "batch": 1,
-        "approvedOn": "2026-11-24",
+        "approvedOn": "2026-11-23",
         "draft": "docs/federal-departure-labels-draft.md",
         "pending": [
           "G000596 (Greene) and S001157 (D. Scott): no page; dates not sourced"
@@ -47,7 +47,9 @@
         }
       ],
       "sources": [
-        "Absent from every contest in the certified 2026 primary and runoff results; races.json note"
+        "Georgia Secretary of State certified results: absent from every contest, for any office, in the primary (2026-05-19, certified 2026-06-05), primary runoff (2026-06-16, certified 2026-08-20) and general (2026-11-03, certified 2026-11-20) files",
+        "Rep. Loudermilk, statement on future plans, 2026-02-04 (decided not to seek re-election), https://loudermilk.house.gov/2026/02/04/rep-loudermilk-statement-on-future-plans/",
+        "races.json Open Seat note (did not file for re-election); not checked against the Secretary of State federal qualifying list"
       ]
     },
     "C001129": {
@@ -70,7 +72,7 @@
       "name": "Everton \"EJ\" Blair",
       "chamber": "House of Representatives",
       "district": 13,
-      "type": "special-winner-lost-primary",
+      "type": "special-election",
       "label": "Won the August 25, 2026 special election runoff to fill the remainder of the term. Ran for the full term in 2026 (lost the Democratic primary on May 19, 2026).",
       "results": [
         {
