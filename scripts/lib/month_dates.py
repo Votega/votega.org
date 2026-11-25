@@ -14,7 +14,7 @@ _MONTHS['sept'] = 9
 _RE = re.compile(
     r'(?<![a-z])(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|'
     r'aug(?:ust)?|sept?(?:ember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?'
-    r'[\s_%20-]*(\d{1,2})(?:st|nd|rd|th)?\s*,?[\s_-]*(\d{4})(?!\d)', re.I)
+    r'[\s_-]*(\d{1,2})(?:st|nd|rd|th)?\s*,?[\s_-]*(\d{4})(?!\d)', re.I)
 
 
 def parse_month_name_date(text):

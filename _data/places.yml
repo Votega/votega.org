@@ -170,6 +170,8 @@
 #                        request. `body` is the meeting TYPE ("City Council Regular Meeting",
 #                        "City Council Workshop") with the date stripped -> scope with a
 #                        body_map. Video not exposed.
+#       revize keys:     split_committees (optional: "<Name> Committee" files get their
+#                        own body, for use with body_map).
 #       revize keys:     agendas_url (the county's Agendas & Minutes page). Revize is a
 #                        CMS, not a portal — no API, no uniform markup — so lib.revize
 #                        harvests the agenda/minutes PDF <a> links whose filename/text
@@ -2279,7 +2281,15 @@ places:
         platform: revize
         base_url: https://www.polkga.org/
         agendas_url: "https://www.polkga.org/government/agendas_and_minutes.php"
-        body_label: "Board of Commissioners"
+        # Files named "<Name> Committee ..." get their own body (lib/revize.py).
+        split_committees: true
+        body_map:
+          - { match: "Bid Committee", label: "Bid Committee" }
+          - { match: "Finance Committee", label: "Finance Committee" }
+          - { match: "Ordinance Committee", label: "Ordinance Committee" }
+          - { match: "Public Safety Committee", label: "Public Safety Committee" }
+          - { match: "Public Works Committee", label: "Public Works Committee" }
+          - { match: "Board of Commissioners", label: "Board of Commissioners" }
         schedule:
           - body: Board of Commissioners
             when: "1st Tuesday of every month: work session 5:15 p.m., regular meeting to follow"
