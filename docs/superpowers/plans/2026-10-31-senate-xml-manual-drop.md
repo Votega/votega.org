@@ -1,8 +1,9 @@
 # Senate Roll-Call XML Manual Drop — Scope
 
-> **Status: SCOPE ONLY — not approved for implementation.** No code has been
-> written. This document defines what would be built and why; the decision to
-> build it has not been made.
+> **Status: BUILT (Votega/votega.org#306), kept as a fallback.** Tasks 1-5 and the
+> run report in task 6 are built. Not built: task 6's tracking issue and task 7
+> (reconciliation log). Task 8 is deferred by design. As of 2026-11-25 senate.gov
+> answers the votes runs again and no roll call is from Voteview.
 
 **Goal:** Let a human-saved copy of the Senate's official roll-call XML feed the
 federal vote pipeline, so the site's Senate record comes from the official

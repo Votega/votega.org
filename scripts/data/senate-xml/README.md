@@ -1,7 +1,8 @@
 # Hand-saved Senate roll-call XML
 
-senate.gov has refused every automated request under `/legislative/` since
-2026-10-25, but the files open fine in a browser. Files saved here are read by
+From 2026-10-25 senate.gov refused every automated request under `/legislative/`,
+though the files open fine in a browser. As of 2026-11-25 it answers again, so this
+folder is a fallback for the next time. Files saved here are read by
 `generate_federal_votes_data.py` and `generate_vp_tie_votes.py` **before** senate.gov
 or Voteview, and are treated as the official record (never "provisional").
 
