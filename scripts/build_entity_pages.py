@@ -31,7 +31,8 @@ from lib.share_card import candidate_line
 from lib.ga_legislator_record import legislator_record
 from lib.ga_ledger import load_ledger, current_path
 from lib.ga_former import (load_frozen, former_records, bienniums_for, departure_sentence,
-                           departure_note, job_title)
+                           departure_note, departure_source_html, job_title,
+                           service_years)
 from lib.ga_sessions import session_slug
 from lib import federal_pages as fedp
 from lib.candidate_standing import LIVE, OFF_BALLOT, LOST, WON, overall, standing, officeholder_target
@@ -486,26 +487,33 @@ def candidate_about(name, race, cand, race_label):
     return paras
 
 
-def ga_legislator_about(name, role, m, is_senate, record=()):
+def ga_legislator_about(name, role, m, is_senate, record=(), past_tag=None):
+    """`past_tag` is a former member's biennium tag: past tense, and no contact details (D5)."""
     chamber = "State Senate" if is_senate else "House of Representatives"
     party = (m.get("party") or "").strip()
     d = m.get("district")
-    paras = [f"{name} is a{'n' if party[:1].upper() in 'AEIOU' and party else ''} "
+    paras = [f"{name} {'was' if past_tag else 'is'} a{'n' if party[:1].upper() in 'AEIOU' and party else ''} "
              f"{party + ' ' if party else ''}member of the Georgia {chamber}"
              f"{', representing District ' + str(d) if d else ''}."
-             + (f" {name} has served in the General Assembly since {m['termStartYear']}." if m.get("termStartYear") else "")]
+             + (f" {name} served {service_years(m, past_tag)}." if past_tag and service_years(m, past_tag)
+                else f" {name} has served in the General Assembly since {m['termStartYear']}."
+                if m.get("termStartYear") and not past_tag else "")]
     comms = [c for c in (m.get("committees") or []) if c]
     if comms:
-        paras.append(f"Committee assignments: {', '.join(comms)}. Committees review bills in their "
+        label = (f"Committees in the {session_slug(past_tag).replace('-', '–')} General Assembly"
+                 if past_tag else "Committee assignments")
+        paras.append(f"{label}: {', '.join(comms)}. Committees review bills in their "
                      "subject area before those bills reach a vote of the full chamber.")
     paras.extend(record)
-    if m.get("address"):
+    if m.get("address") and not past_tag:
         paras.append(f"Capitol office: {m['address'].strip()}.")
     paras.append(("The Georgia State Senate has 56 members" if is_senate else
                   "The Georgia House of Representatives has 180 members")
                  + ", each elected from a single district to a two-year term. This profile also "
-                 "shows voting record, party-line loyalty, campaign finance, and contact "
-                 "information once the interactive profile loads.")
+                 + ("shows voting record, sponsored bills and campaign finance once the "
+                    "interactive profile loads." if past_tag else
+                    "shows voting record, party-line loyalty, campaign finance, and contact "
+                    "information once the interactive profile loads."))
     paras.append("Not sure who represents you? Use VoteGA's Find My Representatives tool to look up "
                  "your U.S. Congress members and your Georgia House and Senate districts by address.")
     return paras
@@ -1096,6 +1104,8 @@ def build_ga_legislators(records, urls, prior, new_state):
                          "url": SITE_URL + "/ga-state-reps"},
             "affiliation": party or None,
         }
+        if is_former:
+            del person["memberOf"]  # schema.org memberOf states a current membership
         if phone:
             person["telephone"] = phone
         ld = json_ld(person)
@@ -1103,20 +1113,27 @@ def build_ga_legislators(records, urls, prior, new_state):
         banner = ""
         if is_former:
             sentence = departure_sentence(m, real_tag)
+            source = departure_source_html(m)
+            if source:
+                sentence += f" {source}"
             holder = holders.get((is_senate, district))
             if holder:
                 sentence += (f' The seat is now held by <a href="{html.escape(holder[1], quote=True)}">'
                              f'{html.escape(holder[0])}</a>.')
+            elif former_tag == "current":
+                sentence += " This seat may be subject to a special election."
             banner = ('<p class="former-member-banner"><i class="fa-solid fa-clock-rotate-left" '
                       f'aria-hidden="true"></i> {sentence}</p>\n')
 
+        past = session_slug(real_tag).replace("-", "–") if is_former else None
         entity = {"type": "ga-legislator", "id": mid, "name": name,
-                  "title": role_short, "chamber": chamber, "district": district,
+                  "title": f"{former_pre}{role_short}", "chamber": chamber, "district": district,
                   "party": party, "committees": committees, "phone": phone,
                   "website": website, "nextElection": next_election,
                   "about": ga_legislator_about(
                       name, role, m, is_senate,
-                      legislator_record(m, unity.get(mid), spon.get(str(m.get("legisGaGovId")))))}
+                      legislator_record(m, unity.get(mid), spon.get(str(m.get("legisGaGovId"))), past),
+                      real_tag if is_former else None)}
         if former:
             entity["former"] = former
         if len(bienniums) > 1:
@@ -1318,7 +1335,6 @@ def _build_former_federal(former, frozen, data, urls, seen, prior, new_state):
         ld = json_ld({
             "@context": "https://schema.org", "@type": "Person", "name": name,
             "jobTitle": fedp.job_title(m), "url": SITE_URL + permalink,
-            "memberOf": {"@type": "GovernmentOrganization", "name": chamber},
             "affiliation": party or None,
         })
         banner = _former_federal_banner(m, slug, label, holders.get(district) if not sen else None)

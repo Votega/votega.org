@@ -142,6 +142,18 @@ def test_banner_text_and_successor_link():
           True)
     check("banner sits before the include", body.index("former-member-banner") < body.index("{% include"), True)
     check("sitting page has no banner", "former-member-banner" in pages["ann-sitting-house-5"][1], False)
+    noted = dict(RESIGNED, statusNote="Per the <official> record. [AJC](https://example.org/a?b=1&c=2)")
+    b2 = run([SITTING, noted], {"2025_26": [noted, GONE]}, ledger3())[0]["bob-resigned-house-5"][1]
+    check("banner carries the note, escaped, before the successor",
+          'Resigned March 1, 2026. Per the &lt;official&gt; record. <a href="https://example.org/a?b=1&amp;c=2" '
+          'target="_blank" rel="noopener">AJC</a>. The seat is now held by' in b2, True)
+    dup = dict(RESIGNED, status="Deceased", statusNote="Died in office on March 1, 2026. [AJC](https://example.org/a)")
+    b3 = run([SITTING, dup], {"2025_26": [dup, GONE]}, ledger3())[0]["bob-resigned-house-5"][1]
+    check("a note repeating the date keeps only its source",
+          'Died in office March 1, 2026. Source: <a href="https://example.org/a"' in b3 and "Died in office on" not in b3, True)
+    b4 = run([RESIGNED], {"2025_26": [RESIGNED]}, {k: v for k, v in ledger3().items() if k == "2"})[0]["bob-resigned-house-5"][1]
+    check("an empty seat says a special election may follow",
+          "This seat may be subject to a special election." in b4, True)
     # the senate seat has no sitting holder: no successor sentence
     pages2, _, _, _ = run([SITTING], FROZEN, ledger3())
     check("no successor, no sentence", "now held by" in pages2["cy-gone-senate-9"][1], False)
@@ -236,6 +248,31 @@ def test_former_description_has_no_contact_claim():
     check("no contact information", "contact" in d.lower(), False)
     check("names the biennium", "2025–2026 General Assembly" in d, True)
     check("sitting description unchanged", "contact information" in pages["ann-sitting-house-5"][0]["share-description"], True)
+
+
+def test_former_page_is_past_tense_and_has_no_contact():
+    """New prose must not slip a former member back into the present tense, or republish
+    contact details (D5). Covers both kinds: departed mid-term, and gone at a rollover."""
+    extra = {"address": "218-D State Capitol, Atlanta, GA 30334", "email": "x@house.ga.gov", "termStartYear": 2013,
+             "committees": ["Rules"], "leadershipRole": "Majority Whip",
+             "committeeRoles": [{"name": "Rules", "role": "Chairman"}]}
+    sit, res, gone = (dict(m, **extra) for m in (SITTING, RESIGNED, GONE))
+    pages, _, _, _ = run([sit, res], {"2025_26": [res, gone]}, ledger3())
+    for slug, years in (("bob-resigned-house-5", "from 2013 to 2026"), ("cy-gone-senate-9", "from 2013 to 2027")):
+        fm, body = pages[slug]
+        about = " ".join(fm["entity"]["about"])
+        shown = about + body + fm["share-description"]
+        check(f"{slug}: was a member", " was a Democratic member of the Georgia" in about, True)
+        check(f"{slug}: years served", f"served {years}." in about, True)
+        check(f"{slug}: dated roles", "held the position of Majority Whip" in about
+              and "Committees in the 2025–2026 General Assembly: Rules." in about, True)
+        check(f"{slug}: title is Former", fm["entity"]["title"].startswith("Former "), True)
+        banned = [w for w in (" is a ", "holds", "serves as", "has served", "current biennium", "Committee assignments:",
+                              "Capitol office", "218-D", "404-555", "x@house", "contact", '"memberOf"') if w in shown]
+        check(f"{slug}: no present tense or contact details", banned, [])
+    about = " ".join(pages["ann-sitting-house-5"][0]["entity"]["about"])
+    check("sitting member unchanged", all(w in about for w in (
+        " is a Democratic member", "has served in the General Assembly since 2013", "holds the position", "Capitol office: 218-D")), True)
 
 
 def main():

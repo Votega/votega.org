@@ -1906,7 +1906,7 @@
     if (leadership.length > 0) {
       const leadershipTitles = leadership.map(l => {
         const title = l.title || l.type || 'Unknown Position';
-        const congress = l.congress ? ` (${l.congress}${l.current === true ? ', Current' : ''})` : '';
+        const congress = l.congress ? ` (${l.congress}${l.current === true && !FORMER ? ', Current' : ''})` : '';
         return escHtml(`${title}${congress}`);
       }).join(', ');
       leadershipHtml = `<p><strong>Leadership Position(s):</strong> ${leadershipTitles}</p>`;
@@ -1917,7 +1917,7 @@
     let committeesHtml = '';
     if (committees.length > 0) {
       const committeeItems = committees.map(c => `<li>${escHtml(c)}</li>`).join('');
-      committeesHtml = `<p><strong>Committees:</strong></p><ul>${committeeItems}</ul>`;
+      committeesHtml = `<p><strong>Committees${FORMER ? ` (${escHtml(FROZEN_CONGRESS)} Congress)` : ''}:</strong></p><ul>${committeeItems}</ul>`;
     }
 
     // Contact information
@@ -2025,7 +2025,7 @@
       <p style="display:flex;justify-content:space-between;"><span><strong>First Term (Current Chamber):</strong> ${startYear}</span><span>${termLineEnd}</span></p>
       <p><strong>Party:</strong> ${escHtml(party)} ${getPartyIconHtml(party)}</p>
       <p><strong>State:</strong> ${escHtml(state)}</p>
-      <p><strong>District:</strong> ${escHtml(district)}</p>
+      <p><strong>${FORMER && chamber !== 'Senate' ? 'District Represented' : 'District'}:</strong> ${escHtml(district)}</p>
       <p><strong>Chamber:</strong> ${escHtml(chamber)}</p>
       ${leadershipHtml}
       ${committeesHtml}

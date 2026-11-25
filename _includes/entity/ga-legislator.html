@@ -495,6 +495,21 @@
     const start = String(member.termStart || '').slice(0, 10);
     return !!start && date < start && bienniumOf(+start.slice(0, 4)) === voteBiennium;
   }
+  // Badge text when the member has no vote on a curated bill. With no roll call for their
+  // chamber nobody there could have voted, so it must not read as this member's absence.
+  function noVoteLabel(member, voteData, bills) {
+    if (!voteData) return `No ${member.chamber === 'Senate' ? 'Senate' : 'House'} floor vote recorded`;
+    return notInOffice(member, voteData.date, bills) ? 'Not in office' : 'No vote recorded';
+  }
+  // The year "Years in Office" counts to: the year a departed member left, and never past
+  // the end of a frozen biennium (its members' terms end the January after it). A count from
+  // today would keep growing on a closed record.
+  function yearsCountedTo(member, shown, thisYear) {
+    const left = /^(\d{4})/.exec(member.statusDate || '');
+    if (['Resigned', 'Removed', 'Deceased'].indexOf(member.status) !== -1 && left) return +left[1];
+    const span = bienniumSpan(shown);
+    return span ? Math.min(thisYear, +span.slug.slice(5) + 1) : thisYear;
+  }
   // END biennium-helpers
   const ENTITY_BIENNIUMS = (window.VOTEGA_ENTITY && window.VOTEGA_ENTITY.bienniums) || [];
   const SELECTED_BIENNIUM = pickBiennium(ENTITY_BIENNIUMS, new URLSearchParams(window.location.search).get('biennium'));
@@ -992,7 +1007,7 @@
     // roster for the 185 members who have one. The remaining 62 keep the year-only
     // form, whose age is an estimate and is labeled as such.
     const bornHtml = (() => {
-      if (!age) return '';
+      if (!age || member.status === 'Deceased') return ''; // an age from today would keep counting
       if (member.birthDate) {
         const born = new Date(member.birthDate + 'T00:00:00')
           .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -1016,8 +1031,13 @@
       ? `<img src="${escHtml(window.VotegaPortraits ? VotegaPortraits.src(member.imageUrl) : member.imageUrl)}" alt="${escHtml(name)}" loading="lazy" decoding="async" style="max-width:200px;margin-bottom:1rem;border-radius:8px;">`
       : '';
 
+    // Set when this record is history: a former member's page, or a past biennium of a
+    // sitting one. Dates the roles that change. Wording specific to having LEFT office keys
+    // on ENTITY_FORMER, never on a departure label: lame ducks and movers carry labels too.
+    const pastSpan = ENTITY_FORMER || !IS_LIVE ? bienniumSpan(rosterSession) : null;
+    const PAST_LABEL = pastSpan ? pastSpan.label : '';
     const leadershipHtml = member.leadershipRole
-      ? `<div style="display:inline-block;margin-bottom:0.75rem;padding:0.25rem 0.75rem;background:var(--color-accent-strong);color:var(--color-on-accent);border-radius:20px;font-size:0.8rem;font-weight:bold;letter-spacing:0.03em;">${escHtml(member.leadershipRole)}</div>`
+      ? `<div style="display:inline-block;margin-bottom:0.75rem;padding:0.25rem 0.75rem;${PAST_LABEL ? 'background:var(--color-surface-tint);color:var(--color-text-secondary);border:1px solid var(--color-border);' : 'background:var(--color-accent-strong);color:var(--color-on-accent);'}border-radius:20px;font-size:0.8rem;font-weight:bold;letter-spacing:0.03em;">${escHtml(member.leadershipRole)}${PAST_LABEL ? ` (${PAST_LABEL})` : ''}</div>`
       : '';
 
     // Distinct from "not up for election" (the common case, no banner needed)
@@ -1065,6 +1085,9 @@
 
     const statusBannerHtml = (() => {
       if (!member.status) return '';
+      // A former member's page carries a server-rendered banner that says all of this. The
+      // legacy ?id= shell has none, and a suspension is not a departure.
+      if (ENTITY_FORMER && ['Resigned', 'Removed', 'Deceased'].includes(member.status)) return '';
       const slug = member.status.toLowerCase().replace(/\s+/g, '-');
       const knownSlug = ['resigned','removed','suspended','deceased','vacant'].includes(slug) ? slug : 'other';
       const dateStr = member.statusDate
@@ -1094,11 +1117,12 @@
     // press-office page (221). Each is omitted entirely when null - a bare
     // "Occupation:" label with nothing after it reads as missing data about the
     // member rather than data we never had.
-    const occupationHtml = member.occupation ? `<p><strong>Occupation:</strong> ${escHtml(member.occupation)}</p>` : '';
-    const residenceHtml  = member.residence  ? `<p><strong>Residence:</strong> ${escHtml(member.residence)}</p>`  : '';
+    // Personal details that go stale are not kept for someone who has left office.
+    const occupationHtml = member.occupation && !ENTITY_FORMER ? `<p><strong>Occupation:</strong> ${escHtml(member.occupation)}</p>` : '';
+    const residenceHtml  = member.residence && !ENTITY_FORMER  ? `<p><strong>Residence:</strong> ${escHtml(member.residence)}</p>`  : '';
     // house-press.com / senatepress.net are the chambers' own press offices, so the
     // link is labeled by what it is rather than shown as a raw URL.
-    const pressHtml = member.pressUrl
+    const pressHtml = member.pressUrl && !ENTITY_FORMER
       ? `<p><strong>Press Releases:</strong> <a href="${escHtml(member.pressUrl)}" target="_blank" rel="noopener">${escHtml(member.chamber === 'Senate' ? 'Senate Press Office' : 'House Press Office')} ↗</a></p>`
       : '';
 
@@ -1140,7 +1164,7 @@
           : '';
       }
       return `<div style="margin-top:1rem;">
-             <strong>Committee Assignments:</strong>
+             <strong>${PAST_LABEL ? `Committees (${PAST_LABEL})` : 'Committee Assignments'}:</strong>
              <ul style="margin:0.4rem 0 0 1.25rem;padding:0;">${items}</ul>
            </div>`;
     })();
@@ -1170,13 +1194,13 @@
       ${member.termStartYear
         ? `<p style="display:flex;justify-content:space-between;">
              <span><strong>First Term (Current Chamber):</strong> ${member.termStartYear}</span>
-             <span><strong>Years in Office:</strong> ${currentYear - member.termStartYear}</span>
+             <span><strong>${ENTITY_FORMER ? 'Years Served' : 'Years in Office'}:</strong> ${yearsCountedTo(member, SELECTED_BIENNIUM, currentYear) - member.termStartYear}</span>
            </p>`
         : ''}
 
       <p><strong>Party:</strong> ${escHtml(member.party || 'N/A')} ${getPartyIconHtml(member.party)}</p>
       <p><strong>Chamber:</strong> ${escHtml(member.chamber || 'N/A')}</p>
-      <p><strong>District:</strong> ${member.district ?? 'N/A'}</p>
+      <p><strong>${ENTITY_FORMER ? 'District Represented' : 'District'}:</strong> ${member.district ?? 'N/A'}</p>
       ${residenceHtml}
       ${occupationHtml}
       ${phoneHtml}
@@ -1408,7 +1432,7 @@
       const voteInfo = myOption ? VOTE_DISPLAY[myOption] : null;
       const voteBadge = voteInfo
         ? `<span class="bill-vote-badge ${voteInfo.cls}">${voteInfo.label}</span>`
-        : `<span class="bill-vote-badge badge-other">${voteData && notInOffice(member, voteData.date, bills) ? 'Not in office' : 'No vote recorded'}</span>`;
+        : `<span class="bill-vote-badge badge-other">${noVoteLabel(member, voteData, bills)}</span>`;
 
       const statusDate = bill.statusDate
         ? new Date(String(bill.statusDate).slice(0, 10) + 'T00:00:00').toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'})

@@ -5,8 +5,10 @@ appears only in a frozen biennium (assets/data/ga-bienniums/<tag>/ga-members.jso
 wording is fact and date only: no evaluation, no "lost" or "defeated".
 """
 import datetime
+import html
 import json
 import os
+import re
 
 from lib.ga_biennium_freeze import FROZEN_ROOT, MEMBERS
 from lib.ga_legislator_pages import DEPARTED_STATUSES  # re-exported: the one definition
@@ -89,6 +91,47 @@ def departure_sentence(m, tag):
     if note:
         s += f" {note}."
     return s
+
+
+_LINK = re.compile(r"\[([^\]]+)\]\((https?://[^)\s]+)\)")
+
+
+def departure_source_html(m):
+    """The editorial status note as safe HTML for the former-member banner, or "".
+
+    Notes are plain text with [label](url) links. Prose that only repeats the date already
+    in departure_note() is dropped and its links kept as the source.
+    """
+    note = (m.get("statusNote") or "").strip()
+    if not note or departure_note(m) is None:
+        return ""
+
+    def link(match):
+        return (f'<a href="{html.escape(match.group(2), quote=True)}" target="_blank" '
+                f'rel="noopener">{html.escape(match.group(1))}</a>')
+
+    links = [link(x) for x in _LINK.finditer(note)]
+    if _date(m["statusDate"]) in _LINK.sub("", note):
+        return f"Source: {', '.join(links)}." if links else ""
+    out, at = "", 0
+    for x in _LINK.finditer(note):
+        out += html.escape(note[at:x.start()]) + link(x)
+        at = x.end()
+    out += html.escape(note[at:])
+    return out if note.endswith(".") else out + "."
+
+
+def service_years(m, tag):
+    """"from 2013 to 2026" for a former member; "" without a start year. Ends with the year
+    they left, else the January their last biennium's terms ended."""
+    start = m.get("termStartYear")
+    if not start:
+        return ""
+    if m.get("status") in DEPARTED_STATUSES and m.get("statusDate"):
+        end = int(m["statusDate"][:4])
+    else:
+        end = int(session_slug(tag)[-4:]) + 1
+    return f"in {start}" if end <= start else f"from {start} to {end}"
 
 
 def job_title(m, former):
