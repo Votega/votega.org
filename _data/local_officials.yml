@@ -7185,10 +7185,10 @@ jurisdictions:
     county: Glynn
     body: Board of Commissioners
     partisan: true
-    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    term_years: 4            # confirmed: seven members, five district and two at-large, staggered four-year terms (Glynn County commissioners page); the Chairman is voted on by the commission at the first meeting of the year
     board_size: 7             # auto: current roster size — verify against authorized seats
     government_form: commission   # ceo | sole-commissioner | commission-chair | commission
-    official_url: ""            # TODO: county government site
+    official_url: "https://www.glynncounty.org/government/departments/board-commissioners/meet-commissioners"
     related_pages:
     members:
       - name: "Sammy Tostensen"
@@ -7285,7 +7285,7 @@ jurisdictions:
       - name: "Thomas Bo Clark, Jr."
         full_name: "Thomas \"Bo\" Clark, Jr."   # authoritative full name (matching); site shows `name`
         role: Commissioner
-        seat: "Post 1"
+        seat: "Post 1 (At-Large)"
         seat_id: post-1            # must match the seat's existing holders
         party: Republican
         email: ""
@@ -7432,10 +7432,10 @@ jurisdictions:
     county: Lee
     body: Board of Commissioners
     partisan: true
-    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    term_years: 4            # confirmed: five members elected by district for four-year staggered terms (Lee County commissioners page); chairman and vice chairman are members chosen by the board
     board_size: 5             # auto: current roster size — verify against authorized seats
     government_form: commission   # ceo | sole-commissioner | commission-chair | commission
-    official_url: ""            # TODO: county government site
+    official_url: "https://www.leecountyga.gov/government/board-of-commissioners"
     related_pages:
     members:
       - name: "Dennis Roland"
@@ -7445,8 +7445,8 @@ jurisdictions:
         leaves_office: 2027-01-01
         leave_reason: term-ended
         party:
-        email: ""
-        phone: ""
+        email: "droland@leecountyga.gov"
+        phone: "229-759-6000"
         last_elected:
         term_end:
         next_election:
@@ -7467,41 +7467,41 @@ jurisdictions:
         voting: true
         source: "https://results.sos.ga.gov/results/public/api/elections/lee-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results — CONFIRM before merge
       - name: "Luke Singletary"
-        role: Commissioner
+        role: Chair
         seat: "District 2"
         seat_id: district-2            # must match the seat's existing holders
         party: Republican
-        email: ""
-        phone: ""
+        email: "luke.singletary@leecountyga.gov"
+        phone: "229-759-6000"
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/lee-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.leecountyga.gov/government/board-of-commissioners"   # confirmed on the county Board of Commissioners page
       - name: "Billy Mathis"
         role: Commissioner
         seat: "District 3"
         seat_id: district-3            # must match the seat's existing holders
         party: Republican
         email: ""
-        phone: ""
+        phone: "229-759-6000"
         last_elected: 2026
         term_end: 2030         # last_elected + term_years (default 4) — verify
         next_election: 2030
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/lee-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results — CONFIRM before merge
+        source: "https://www.leecountyga.gov/government/board-of-commissioners"   # confirmed on the county Board of Commissioners page
       - name: "Chris Guarnieri"
-        role: Commissioner
+        role: Vice Chair
         seat: "District 4"
         seat_id: district-4            # must match the seat's existing holders
         party: Republican
-        email: ""
-        phone: ""
+        email: "chris.guarnieri@leecountyga.gov"
+        phone: "229-759-6000"
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/lee-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.leecountyga.gov/government/board-of-commissioners"   # confirmed on the county Board of Commissioners page
       - name: "George Walls, Sr."
         full_name: "George E. Walls, Sr."   # authoritative full name (matching); site shows `name`
         role: Commissioner
@@ -7509,12 +7509,12 @@ jurisdictions:
         seat_id: district-5            # must match the seat's existing holders
         party: Republican
         email: ""
-        phone: ""
+        phone: "229-759-6000"
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/lee-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.leecountyga.gov/government/board-of-commissioners"   # confirmed on the county Board of Commissioners page
 
   - id: bryan
     name: Bryan County
@@ -7525,7 +7525,7 @@ jurisdictions:
     term_years: 4            # GA terms are per-county local act; most are 4 — override if different
     board_size: 6             # auto: current roster size — verify against authorized seats
     government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
-    official_url: ""            # TODO: county government site
+    official_url: "https://www.bryancountyga.gov/government/board-of-commissioners"
     related_pages:
     members:
       - name: "Carter Infinger"
@@ -7541,7 +7541,7 @@ jurisdictions:
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/bryan-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.bryancountyga.gov/government/board-of-commissioners"   # confirmed on the county Board of Commissioners page (per your check)
       - name: "Alex Floyd"
         role: Commissioner
         seat: "District 1"
@@ -7553,17 +7553,17 @@ jurisdictions:
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/bryan-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
-      - name: "Wade Price"   # (!) 48% — sub-50%, RUNOFF decided this; verify (not in portal)
+        source: "https://www.bryancountyga.gov/government/board-of-commissioners"   # confirmed on the county Board of Commissioners page (per your check)
+      - name: "Wade Price"   # RUNOFF PENDING: led the Nov 3, 2026 contest with 48.2% (James Fulwood 41.5%, Dave London 10.3%); early voting for the runoff began Nov 24, 2026 (Savannah Morning News). He holds the seat through Dec 2026; replace or update after the runoff
         role: Commissioner
         seat: "District 2"
         seat_id: district-2            # must match the seat's existing holders
         party: Republican
         email: ""
         phone: ""
-        last_elected: 2026
-        term_end: 2030         # last_elected + term_years (default 4) — verify
-        next_election: 2030
+        last_elected: 2022          # inferred: incumbent whose term ends Dec 2026; NOT yet re-elected
+        term_end: 2026
+        next_election: 2026           # runoff pending
         voting: true
         source: "https://results.sos.ga.gov/results/public/api/elections/bryan-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results — CONFIRM before merge
       - name: "Jeff Nielsen"
@@ -7577,7 +7577,7 @@ jurisdictions:
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/bryan-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.bryancountyga.gov/government/board-of-commissioners"   # confirmed on the county Board of Commissioners page (per your check)
       - name: "Patrick Kisgen Jr."
         role: Commissioner
         seat: "District 4"
@@ -7625,10 +7625,10 @@ jurisdictions:
     county: Habersham
     body: Board of Commissioners
     partisan: true
-    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    term_years: 4            # confirmed: five members, one per district but elected at-large, staggered four-year terms; the chairman and vice-chairman are chosen by the board each January (Habersham County commissioners page)
     board_size: 5             # auto: current roster size — verify against authorized seats
     government_form: commission   # ceo | sole-commissioner | commission-chair | commission
-    official_url: ""            # TODO: county government site
+    official_url: "https://www.habershamga.com/commissioners.cfm"
     related_pages:
     members:
       - name: "Kelly Woodall"
@@ -7637,13 +7637,13 @@ jurisdictions:
         seat: "District 1"
         seat_id: district-1            # must match the seat's existing holders
         party: Republican
-        email: ""
+        email: "kwoodall@habershamga.com"
         phone: ""
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/habersham-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.habershamga.com/commissioners.cfm"   # confirmed on the county commissioners page
       - name: "Dustin Mealor"
         role: Commissioner
         seat: "District 2"
@@ -7651,13 +7651,13 @@ jurisdictions:
         leaves_office: 2027-01-01
         leave_reason: term-ended
         party:
-        email: ""
+        email: "dmealor@habershamga.com"
         phone: ""
         last_elected:
         term_end:
         next_election:
         voting: true
-        source: "https://www.habershamga.com/commissioners.cfm"   # current holder per the county page
+        source: "https://www.habershamga.com/commissioners.cfm"   # current District 2 holder per the county commissioners page; leaves when Shelley Tullis takes office
       - name: "Shelley Tullis"
         full_name: "Shelley A. Tullis"   # authoritative full name (matching); site shows `name`
         role: Commissioner
@@ -7677,37 +7677,37 @@ jurisdictions:
         seat: "District 3"
         seat_id: district-3            # must match the seat's existing holders
         party: Republican
-        email: ""
+        email: "dmcclellon@habershamga.com"
         phone: ""
         last_elected: 2026
         term_end: 2030         # last_elected + term_years (default 4) — verify
         next_election: 2030
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/habersham-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results — CONFIRM before merge
+        source: "https://www.habershamga.com/commissioners.cfm"   # confirmed on the county commissioners page
       - name: "Bruce Harkness"
         role: Commissioner
         seat: "District 4"
         seat_id: district-4            # must match the seat's existing holders
         party: Republican
-        email: ""
+        email: "bharkness@habershamga.com"
         phone: ""
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/habersham-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.habershamga.com/commissioners.cfm"   # confirmed on the county commissioners page
       - name: "Ty Akins"
         role: Commissioner
         seat: "District 5"
         seat_id: district-5            # must match the seat's existing holders
         party: Republican
-        email: ""
+        email: "takins@habershamga.com"
         phone: ""
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/habersham-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.habershamga.com/commissioners.cfm"   # confirmed on the county commissioners page
 
   - id: harris
     name: Harris County
@@ -7715,10 +7715,10 @@ jurisdictions:
     county: Harris
     body: Board of Commissioners
     partisan: true
-    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    term_years: 4            # four-year terms confirmed on the county page (D4 and D5 terms 1/1/2025 - 12/31/2028)
     board_size: 5             # auto: current roster size — verify against authorized seats
     government_form: commission   # ceo | sole-commissioner | commission-chair | commission
-    official_url: ""            # TODO: county government site
+    official_url: "https://www.harriscountyga.gov/board-of-commissioners/"
     related_pages:
     members:
       - name: "Scott Lightsey"
@@ -7774,30 +7774,32 @@ jurisdictions:
         voting: true
         source: "https://results.sos.ga.gov/results/public/api/elections/harris-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results — CONFIRM before merge
       - name: "Bobby Irions"
-        role: Commissioner
+        role: Vice Chair
         seat: "District 4"
         seat_id: district-4            # must match the seat's existing holders
         party: Republican
-        email: ""
-        phone: ""
+        email: "hcgadistrict4@harriscountyga.gov"
+        phone: "762-207-6808"
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
+        term_provenance: verified   # county page: term 1/1/2025 - 12/31/2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/harris-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.harriscountyga.gov/board-of-commissioners/"   # confirmed on the county page: Vice Chairman, term 1/1/2025 - 12/31/2028
       - name: "Susan Andrews"
         full_name: "Susan G. Andrews"   # authoritative full name (matching); site shows `name`
-        role: Commissioner
+        role: Chair
         seat: "District 5"
         seat_id: district-5            # must match the seat's existing holders
         party: Republican
-        email: ""
-        phone: ""
+        email: "hcgadistrict5@harriscountyga.gov"
+        phone: "706-561-9725"
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
+        term_provenance: verified   # county page: term 1/1/2025 - 12/31/2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/harris-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.harriscountyga.gov/board-of-commissioners/"   # confirmed on the county page: Chair, term 1/1/2025 - 12/31/2028
 
   - id: polk
     name: Polk County
@@ -7901,7 +7903,7 @@ jurisdictions:
         term_end: 2026
         next_election:
         voting: true
-        source: "https://www.polkga.org/government/board_of_commissioners/index.php"   # current per the county page (which lists no districts); District 3 and re-elected 2022 per Polk Today / Branch.vote; leaves when Lee Burch takes office
+        source: "https://www.polkga.org/government/board_of_commissioners/index.php"   # current per the county page (which lists no districts); District 3 by elimination (Linda Liles is confirmed District 2, Hal Floyd re-elected in 2022 per Polk Today / Branch.vote); leaves when Lee Burch takes office
       - name: "Linda Liles"
         role: Commissioner
         seat: "District 2"
@@ -7915,17 +7917,17 @@ jurisdictions:
         term_end: 2026
         next_election:
         voting: true
-        source: "https://ballotpedia.org/Linda_Liles_(Polk_County_Commission,_District_2,_Georgia,_candidate_2022)"   # current per the county page; District 2 and re-elected 2022 per Ballotpedia / Polk Today; leaves when Johnny Crawford takes office
+        source: "https://ballotpedia.org/Linda_B._Liles_%28Polk_County_Commission,_District_2,_Georgia,_candidate_2026%29"   # District 2 confirmed (Ballotpedia): chosen by the commission April 2020, won the Dec 2, 2020 District 2 runoff, re-elected 2022, ran in the 2026 Republican primary for re-election and did not advance; leaves when Johnny Crawford takes office
   - id: gilmer
     name: Gilmer County
     type: county
     county: Gilmer
     body: Board of Commissioners
     partisan: true
-    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    term_years: 4            # four-year terms: Post 1 term 1/1/2025 - 12/31/2028 (Gilmer County commissioners page)
     board_size: 3             # auto: current roster size — verify against authorized seats
     government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
-    official_url: ""            # TODO: county government site
+    official_url: "https://gilmercounty-ga.gov/board-of-commissioners/"
     related_pages:
     members:
       - name: "Charlie Paris"
@@ -7947,13 +7949,29 @@ jurisdictions:
         seat: "Post 1"
         seat_id: post-1            # must match the seat's existing holders
         party: Republican
-        email: ""
+        email: "karleen.ferguson@gilmercounty-ga.gov"
         phone: ""
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
+        term_provenance: verified   # county page: term 1/1/2025 - 12/31/2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/gilmer-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://gilmercounty-ga.gov/board-of-commissioners/"   # confirmed on the county page: Post 1, term 1/1/2025 - 12/31/2028 (previously Post 2, 2019-2022)
+      - name: "John Marshall"
+        role: Commissioner
+        seat: "Post 2"
+        seat_id: post-2
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
+        party:
+        email: "john.marshall@gilmercounty-ga.gov"
+        phone: ""
+        last_elected: 2022          # term began Jan 1, 2023
+        term_end: 2026
+        next_election:
+        term_provenance: verified   # county page: term 1/1/2023 - 12/31/2026
+        voting: true
+        source: "https://gilmercounty-ga.gov/board-of-commissioners/"   # confirmed on the county page: Post 2, term 1/1/2023 - 12/31/2026; leaves when Gary Engel takes office
       - name: "Gary Engel"
         role: Commissioner
         seat: "Post 2"
@@ -7977,7 +7995,7 @@ jurisdictions:
     term_years: 4            # GA terms are per-county local act; most are 4 — override if different
     board_size: 1             # auto: current roster size — verify against authorized seats
     government_form: sole-commissioner   # ceo | sole-commissioner | commission-chair | commission
-    official_url: ""            # TODO: county government site
+    official_url: "https://www.unioncountyga.gov/259/Commissioners-Office"
     related_pages:
     members:
       - name: "Harold Collins"
@@ -7986,13 +8004,13 @@ jurisdictions:
         seat: "At-Large"
         seat_id: at-large            # must match the seat's existing holders
         party: Republican
-        email: ""
+        email: "uccommissioner@uniongov.com"
         phone: ""
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/union-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.unioncountyga.gov/259/Commissioners-Office"   # confirmed on the county Commissioners Office page: Sole Commissioner
 
   - id: monroe
     name: Monroe County
@@ -8000,10 +8018,10 @@ jurisdictions:
     county: Monroe
     body: Board of Commissioners
     partisan: true
-    term_years: 4            # GA terms are per-county local act; most are 4 — override if different
+    term_years: 4            # four-year terms: D2 Commissioner Rowland sworn in Jan 7, 2025 for a second full four-year term (Monroe County news release, Jan 8, 2025). The county code itself states no length
     board_size: 5             # auto: current roster size — verify against authorized seats
     government_form: commission-chair   # ceo | sole-commissioner | commission-chair | commission
-    official_url: ""            # TODO: county government site
+    official_url: "https://www.monroecoga.org/commissioners/"
     related_pages:
     members:
       - name: "Alan Gibbs"
@@ -8012,50 +8030,66 @@ jurisdictions:
         seat: "At-Large"
         seat_id: at-large            # must match the seat's existing holders
         party: Republican
-        email: ""
-        phone: ""
+        email: "agibbs@monroecoga.org"
+        phone: "478-737-1365"
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/monroe-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.monroecoga.org/commissioners/"   # confirmed on the county commissioners page: Chairman
       - name: "Lamarcus Davis"
         role: Commissioner
         seat: "District 1"
         seat_id: district-1            # must match the seat's existing holders
-        party: Nonpartisan
-        email: ""
-        phone: ""
+        party: Independent          # ran as an Independent when first elected in 2020 (per your source); no party on the 2024 ballot
+        email: "ldavis@monroecoga.org"
+        phone: "478-841-2561"
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/monroe-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.monroecoga.org/commissioners/"   # confirmed on the county commissioners page
       - name: "Eddie Rowland"
         role: Commissioner
         seat: "District 2"
         seat_id: district-2            # must match the seat's existing holders
         party: Republican
-        email: ""
-        phone: ""
+        email: "erowland@monroecoga.org"
+        phone: "478-808-9354"
         last_elected: 2024
         term_end: 2028         # last_elected + term_years (default 4) — verify
         next_election: 2028
+        term_provenance: verified   # sworn in Jan 7, 2025 for a four-year term (county news release); term ends Dec 31, 2028
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/monroe-county-ga/2024NovGen/data"   # SoS results — CONFIRM before merge
+        source: "https://www.monroecoga.org/commissioners/"   # confirmed on the county commissioners page
       - name: "John Ambrose Sr."
         full_name: "John H. Ambrose Sr."   # authoritative full name (matching); site shows `name`
         role: Commissioner
         seat: "District 3"
         seat_id: district-3            # must match the seat's existing holders
         party: Republican
-        email: ""
-        phone: ""
+        email: "jambrose@monroecoga.org"
+        phone: "478-960-0764"
         last_elected: 2026
         term_end: 2030         # last_elected + term_years (default 4) — verify
         next_election: 2030
         voting: true
-        source: "https://results.sos.ga.gov/results/public/api/elections/monroe-county-ga/11032026GeneralAndSpecialElection/data"   # SoS results — CONFIRM before merge
+        source: "https://www.monroecoga.org/commissioners/"   # confirmed on the county commissioners page (listed as John Ambrose)
+      - name: "Al Turner"
+        full_name: 'Albert "Al" Turner'
+        role: Commissioner
+        seat: "District 4"
+        seat_id: district-4
+        leaves_office: 2027-01-01
+        leave_reason: term-ended
+        party: Republican
+        email: "aturner@monroecoga.org"
+        phone: "478-973-4948"
+        last_elected: 2024
+        term_end: 2026
+        next_election:
+        voting: true
+        source: "https://www.monroecoga.org/commissioners/"   # current District 4 holder per the county commissioners page, sworn in December 2024; leaves when Kerry Osborne takes office (the seat is on the 2026 ballot, so this looks like an unexpired term: confirm)
       - name: "Kerry Osborne"
         role: Commissioner
         seat: "District 4"
