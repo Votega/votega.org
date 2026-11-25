@@ -36,7 +36,7 @@ Both left mid-term and are not in `current-members.json`, so there is no roster 
 | bioguideId | Member | Seat | Draft label | Needs |
 |---|---|---|---|---|
 | G000596 | Marjorie Taylor Greene (R) | GA-14 | Resigned [date]. | The resignation date, from the Clerk of the House or Congress.gov (`races.json` says only that Fuller "won the April 2026 special election runoff to fill the seat vacated by" her) |
-| S001157 | David Scott (D) | GA-13 | Died [date]. | The date, from Congress.gov or the Clerk (`ga-special-2026-results.html` says only that the special election fills the seat "left vacant by the death of Rep. David Scott") |
+| S001157 | David Scott (D) | GA-13 | Died in office [date]. | The date, from Congress.gov or the Clerk (`ga-special-2026-results.html` says only that the special election fills the seat "left vacant by the death of Rep. David Scott") |
 
 ## Decisions for the owner
 

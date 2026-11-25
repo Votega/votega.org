@@ -149,7 +149,9 @@ Georgia Commons publishes under a per-session URL space and today covers `2025-2
 
 Settles it: whether Georgia Commons backfills earlier sessions, and whether anyone asks for pre-2025 member pages.
 
-### D8. Site search — Proposed 2026-10-30
+### D8. Site search — **Decided 2026-11-24: former members ARE in site search, labelled and listed last**
+**Built 2026-11-24.** Hiding them was paired with D4's `noindex`, which was reversed on 2026-11-13, so Google showed pages our own search hid. Former GA and federal members appear as "Former GA Legislator" / "Former Member of Congress", after every current record (`searchRecords()` in `assets/scripts/entity-urls.js`); off-ballot candidates stay hidden. The address lookup and current-member lists still show only sitting members. The original proposal is kept below for the record.
+
 Keep former members out of search, or include them labelled.
 
 **Proposed: keep them out — and note that the mechanism already exists and needs no new search code.**
@@ -162,11 +164,11 @@ That also collapses D4 (noindex) and this into one rule, which is the point: a f
 
 Not verified: that `search-entities.json` still carries a record for a member the live roster no longer lists. That depends on `generate_search_corpus.py` reading D3's index, which does not exist yet, so it is a requirement on D3 rather than a separate decision.
 
-### D9. Labelling for Removed and Deceased — Proposed 2026-10-30
+### D9. Labelling for Removed and Deceased — Deceased wording decided 2026-11-24: "Died in office <date>" (built in `lib/ga_former.py` and the Ballinger label; the first real case)
 None exist today; decide the wording before one does (date and the legislature's note only).
 
 **Proposed, following D6's principle that only the fact and the date are shown:**
-- Deceased: "Died in office, <date>."
+- Deceased: "Died in office <date>." (no comma, matching "Resigned <date>")
 - Removed: "Removed from office, <date>." — plus the legislature's own note where there is one, quoted and attributed, never paraphrased.
 - No inferred reason, no link to coverage, and no euphemism ("left office").
 
@@ -217,7 +219,7 @@ The 120th Congress convenes **January 3, 2027**, eight days before the General A
 
 **Decided 2026-11-23, option B, and built (branch `claude/federal-former-pages-7125af`):**
 - **Pages.** A departing member of Georgia's delegation keeps a frozen "Former member" page at their existing `/us-congress/<slug>/` URL after 2027-01-03, built from the 119th record (votes, key votes, sponsorship, scorecard, committees, term dates). Contact details, the website, campaign finance and any "up for election" framing are hidden. **No roster page and no Congress selector** (option A is deferred; the 2026-11-04 proposal above is not built). Returning members' pages are unchanged.
-- **Indexing: indexed and in the sitemap**, matching the GA side (D4 reversed 2026-11-13); out of site search, as D8 (a former member is never added to the search corpus, and the id is under `entity_urls['us-congress-former']`, not `['us-congress']`, so the race and candidate pages still read `['us-congress']` as "sitting").
+- **Indexing: indexed and in the sitemap**, matching the GA side (D4 reversed 2026-11-13); in site search since 2026-11-24, labelled and last, as D8 (the id is under `entity_urls['us-congress-former']`, not `['us-congress']`, so the race and candidate pages still read `['us-congress']` as "sitting").
 - **Data.** `scripts/freeze_federal_congress.py <slug> [--final] [--overwrite]` writes `assets/data/federal-congresses/<slug>/` (the whole sitting delegation, ~1.5 MB: roster, vote index and key-vote sidecar, per-member vote and sponsorship slices, scorecard, curated bills, `freeze.json`), with the live file names so the page needs only a different root. It reuses the publisher's `assert_same_congress` (a late run refuses to file the 120th under the 119th), and refuses a missing slice, a roster/sponsorship disagreement, a replaced FINAL freeze without `--overwrite`, and any change to a URL an earlier freeze promised. **Not yet run for real** (a local test run was deleted): it runs at the final freeze, RECURRING-TASKS.md §3b step 5, before 2027-01-02.
 - **Permanence: no separate federal ledger.** `freeze.json` records each member's page URL (`urls`), computed with the live slug rule at freeze time; the builder uses it as authoritative for a former member, writes a redirect from a promised URL a sitting member's page no longer occupies, and raises (category degraded) for a promised member who has no page. A GA-style ledger earns its keep because 247 people across many bienniums change name, district and chamber and the roster producer needs one writer for `votegaUrl`; here there are 16 slugs set by name plus district, and the freeze already is an append-only per-Congress record with a replace-guard. If option A or a second Congress's freeze is built, revisit: a person in two frozen Congresses already resolves to the newest `urls` entry.
 - **Labels (D6 rules, owner approves).** Drafted in `docs/federal-departure-labels-draft.md` for Carter, Loudermilk, Collins and Blair, plus Greene and Scott (no page: not in the roster, no sponsorship slice; dates not in the repo). **None approved.** The page reads only `assets/data/federal-departure-labels.json` (empty), shows each approved label after the service sentence with links to its certified results page, and says only that the member served when there is none. Tests pin the wording ban ("retired", "ousted", "unseated", "defeated") on the committed file.

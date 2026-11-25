@@ -130,6 +130,7 @@
     var kind = MAP_FOR_CATEGORY[rec && rec.category];
     var id = kind ? idFromUrl(url) : null;
     var clean = href(maps, kind, id, null);
+    if (!clean && kind === 'us-congress') clean = href(maps, 'us-congress-former', id, null);
     return clean ? clean.replace(/^\//, '') : url;
   }
 
@@ -144,6 +145,45 @@
     return !!(id && set && set[id]);
   }
 
+  // Search label for a former officeholder's record. Former members are findable (D8,
+  // decided 2026-11-24) but must never read as sitting ones, and the result template
+  // shows only a category and a name.
+  var FORMER_CATEGORY = {
+    'ga-legislator': 'Former GA Legislator',
+    'us-congress': 'Former Member of Congress',
+  };
+
+  // `former` is written by generate_search_corpus.py, daily; the maps are rebuilt on every
+  // deploy, so they also catch a member who left since the index was last generated.
+  function isFormer(rec, maps) {
+    var kind = MAP_FOR_CATEGORY[rec && rec.category];
+    if (!FORMER_CATEGORY[kind]) return false;
+    if (rec.former) return true;
+    if (kind === 'us-congress') {
+      var id = idFromUrl(rec.url);
+      return !!(id && maps && maps['us-congress-former'] && maps['us-congress-former'][id]);
+    }
+    return isRetired(rec, maps);
+  }
+
+  // The index as both search boxes show it: off-ballot candidates hidden, clean URLs, and
+  // former officeholders labelled and listed last (results keep this order).
+  function searchRecords(records, maps, base) {
+    var current = [], former = [];
+    (records || []).forEach(function (rec) {
+      var wasMember = isFormer(rec, maps);
+      if (!wasMember && isRetired(rec, maps)) return;
+      (wasMember ? former : current).push({
+        title: rec.title,
+        desc: rec.desc,
+        category: wasMember ? FORMER_CATEGORY[MAP_FOR_CATEGORY[rec.category]] : rec.category,
+        url: base + '/' + resolve(rec, maps)
+      });
+    });
+    return current.concat(former);
+  }
+
   global.VoteGA = global.VoteGA || {};
-  global.VoteGA.entityUrls = { load: load, href: href, get: get, resolve: resolve, isRetired: isRetired };
+  global.VoteGA.entityUrls = { load: load, href: href, get: get, resolve: resolve, isRetired: isRetired,
+    isFormer: isFormer, searchRecords: searchRecords };
 })(window);

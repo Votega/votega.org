@@ -15,7 +15,7 @@ from lib.ga_sessions import session_slug
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DEFAULT_ROOT = os.path.join(REPO_ROOT, FROZEN_ROOT)
 
-_VERB = {"Resigned": "Resigned", "Removed": "Removed from office", "Deceased": "Died"}
+_VERB = {"Resigned": "Resigned", "Removed": "Removed from office", "Deceased": "Died in office"}
 
 
 def load_frozen(root=DEFAULT_ROOT):

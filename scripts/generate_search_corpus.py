@@ -33,6 +33,7 @@ from urllib.parse import quote
 from lib.ga_voters import VOTING_CHAMBERS
 from lib.ga_legislator_pages import DEPARTED_STATUSES
 from lib.ga_former import load_frozen, former_records
+from lib import federal_pages
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = REPO_ROOT / "assets" / "data"
@@ -186,11 +187,18 @@ def build_ga_federal_delegation(records, seen):
     data = load("current-members.json")
     if not data:
         return
+    # Members of a frozen Congress who are no longer sitting keep their page (decision D12)
+    # and stay searchable, labelled "former". The page builder skips these ids when it
+    # builds sitting members' pages, from the same federal_pages.former_records().
+    former = federal_pages.former_records(
+        data.get("members", []),
+        federal_pages.load_frozen(str(DATA_DIR / "federal-congresses")))
+    former_ids = {m["bioguideId"] for m, _slug in former}
     for m in data.get("members", []):
         if clean(m.get("state")) != "Georgia":
             continue  # GA voter site: index only the Georgia delegation.
         bid = clean(m.get("bioguideId"))
-        if not bid:
+        if not bid or bid in former_ids:
             continue
         terms = ((m.get("terms") or {}).get("item")) or []
         chamber = clean(terms[-1].get("chamber")) if terms else ""
@@ -211,6 +219,17 @@ def build_ga_federal_delegation(records, seen):
             category="U.S. Congress",
             url=f"member.html?bioguideId={quote(bid, safe='')}",
         )
+    for m, slug in former:
+        bits = [federal_pages.job_title(m)]
+        if m.get("district") is not None and not federal_pages.is_senate(m):
+            bits.append(f"District {m['district']}")
+        if clean(m.get("partyName")):
+            bits.append(clean(m.get("partyName")))
+        before = len(records)
+        add(records, seen, title=m.get("name"), desc=", ".join(bits), category="U.S. Congress",
+            url=f"member.html?bioguideId={quote(m['bioguideId'], safe='')}")
+        if len(records) > before:
+            records[-1]["former"] = slug
 
 
 def build_races_and_candidates(records, seen):
