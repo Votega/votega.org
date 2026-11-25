@@ -144,7 +144,7 @@ Published as-is from votega.org's `federal-member-votes.json` — no filtering n
 
 `yea`/`nay` are chamber-wide totals (all voting members, not just Georgia's). `chamber` is `"House"` or `"Senate"`. `result` is `"Pass"` or `"Fail"`.
 
-Senate records also carry `documentType` (e.g. `"PN"` for a nomination; `null` when the roll call names no document) and `nomineeCount` (nominations covered by the one vote; `null` when not a nomination or not yet known). An en bloc record's `title` reads `En bloc: N nominees, including …`; join its `voteId` to `data/en-bloc-nominees.json` for the names.
+Senate records also carry `documentType` (e.g. `"PN"` for a nomination; `null` when the roll call names no document) and `nomineeCount` (nominations covered by the one vote; `null` when not a nomination or not yet known). An en bloc record's `title` reads `En bloc: N nominations, including …`; join its `voteId` to `data/en-bloc-nominees.json` for the names.
 
 #### Vote ID format
 

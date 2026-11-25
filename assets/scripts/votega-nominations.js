@@ -4,7 +4,7 @@
  *
  * Holds the page's wording (filter options and terms, in this one place), the chart
  * caption and note for a selected Type, and the en bloc rows: one roll call on a
- * group of nominees, with a "Show all N nominees" list and search over the names.
+ * group of nominees, with a "Show all N nominations" list and search over the names.
  * The names live in assets/data/federal-en-bloc-nominees.json, fetched only when a
  * reader opens a list or searches. A list is shown complete or not at all.
  *
@@ -227,7 +227,7 @@ window.VotegaNominations = (function () {
           + (more > 0 ? '; and ' + more + ' more' : '') + '</p>';
       }
       html += '<details class="vote-nominees" data-nominees="' + esc(voteId) + '">'
-        + '<summary>Show all ' + esc(meta.nomineeCount) + ' nominees</summary>'
+        + '<summary>Show all ' + esc(meta.nomineeCount) + ' nominations</summary>'
         + '<div class="vote-nominees-body">' + (doc ? listBodyHtml(voteId, meta, doc) : '') + '</div>'
         + '</details>';
     } else {

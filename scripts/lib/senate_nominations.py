@@ -82,8 +82,8 @@ def nominees(root):
 
 
 def en_bloc_label(count, first_title):
-    """"En bloc: 48 nominees, including Jessica Kramer"."""
-    label = f"En bloc: {count} nominees"
+    """"En bloc: 48 nominations, including Jessica Kramer"."""
+    label = f"En bloc: {count} nominations"
     first = parse_title(first_title)[0] or (first_title or "").split(",")[0].strip()
     return f"{label}, including {first}" if first else label
 

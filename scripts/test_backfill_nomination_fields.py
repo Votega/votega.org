@@ -109,7 +109,7 @@ check("the fields are appended last", list(after["votes"][key(2)])[-2:], ["docum
 check("values", [(after["votes"][key(n)]["documentType"], after["votes"][key(n)]["nomineeCount"])
                  for n in (1, 2, 3, 4, 5)],
       [("PN", 2), ("PN", 1), ("S.", None), ("S.Amdt.", None), ("S.Amdt.", None)])
-check("en bloc title", after["votes"][key(1)]["title"], "En bloc: 2 nominees, including Ann Alpha")
+check("en bloc title", after["votes"][key(1)]["title"], "En bloc: 2 nominations, including Ann Alpha")
 check("nominee file", (list(side["votes"]), side["metadata"]["count"]), ([key(1)], 2))
 check("report names the en bloc votes", report["enBloc"], {key(1): 2})
 

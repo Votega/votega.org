@@ -92,7 +92,7 @@ check("a document without a PN number gives no list rather than a partial one",
 
 print("Generator parse:")
 meta, ga = G.parse_senate_vote(EN_BLOC, {"S1": "O000174"})
-check("en bloc title is the label", meta["title"], "En bloc: 2 nominees, including Jessica Kramer")
+check("en bloc title is the label", meta["title"], "En bloc: 2 nominations, including Jessica Kramer")
 check("fields on the row", (meta["documentType"], meta["nomineeCount"]), ("PN", 2))
 check("new fields are appended after partyTally", list(meta)[-3:],
       ["partyTally", "documentType", "nomineeCount"])
@@ -100,8 +100,8 @@ meta1, _ = G.parse_senate_vote(SINGLE, {})
 check("a single nomination keeps its own title", (meta1["title"], meta1["nomineeCount"]), (KRAMER, 1))
 check("label for an unmatched first title uses the text before the comma",
       N.en_bloc_label(3, "John Doe, to be something else"),
-      "En bloc: 3 nominees, including John Doe")
-check("label with no title at all", N.en_bloc_label(3, None), "En bloc: 3 nominees")
+      "En bloc: 3 nominations, including John Doe")
+check("label with no title at all", N.en_bloc_label(3, None), "En bloc: 3 nominations")
 
 print("Voteview recognition:")
 check("two nominees joined by '; and' is en bloc", N.is_en_bloc_description(KRAMER + "; and " + GIL), True)
@@ -228,7 +228,7 @@ with tempfile.TemporaryDirectory() as tmp:
     votes, side, _, _ = generate(tmp, official, vv=VV)
     check("senate.gov fills a pending list later",
           (list(side["votes"]), side["pending"], votes["votes"][K1]["title"]),
-          ([K1], [], "En bloc: 2 nominees, including Jessica Kramer"))
+          ([K1], [], "En bloc: 2 nominations, including Jessica Kramer"))
 
     # Unreachable again: the official rows and their lists are carried forward.
     _, side_again, _, _ = generate(tmp, {}, vv=VV)

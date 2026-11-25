@@ -26,7 +26,7 @@ const readData = name => JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'assets
 
 const row = extra => Object.assign(
   { bill: null, title: 't', motionText: 'On the Nomination', date: '2026-01-01', category: 'C', nomineeCount: 1 }, extra);
-const LABEL = 'En bloc: 2 nominees, including Ann Alpha';
+const LABEL = 'En bloc: 2 nominations, including Ann Alpha';
 const INDEX = {
   S119_1_00526: row({ title: LABEL, nomineeCount: 2 }),
   S119_1_00525: row({ title: LABEL, motionText: 'On the Cloture Motion', category: 'N', nomineeCount: 2 }),
@@ -176,7 +176,7 @@ test('boilerplate in a title does not match every batch', () => {
 test('an en bloc row offers its list, the caveat and the official roll call', () => {
   const loader = NOM.createLoader('u', okFetch(DOC));
   const html = NOM.rowHtml('S119_1_00526', INDEX.S119_1_00526, loader, '');
-  assert.ok(html.includes('<summary>Show all 2 nominees</summary>'));
+  assert.ok(html.includes('<summary>Show all 2 nominations</summary>'));
   assert.ok(html.includes('data-nominees="S119_1_00526"'));
   const after = html.split('</details>')[1];
   assert.ok(after.includes('The Senate took one vote on this whole group. A senator&rsquo;s vote does not show a view on any one nominee.'),
