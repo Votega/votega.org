@@ -1,0 +1,35 @@
+{
+  "congress": 119,
+  "slug": "119th",
+  "kind": "provisional",
+  "frozenAt": "2026-11-25T18:26:19.322167+00:00",
+  "schemaVersion": 1,
+  "license": "CC0-1.0",
+  "sources": {
+    "committee-membership.json": {
+      "url": "https://raw.githubusercontent.com/unitedstates/congress-legislators/2b1fe728159fe5f5e145277794106e800719eb50/committee-membership-current.yaml",
+      "sha256": "713dd1782423f7a892406cceba8821728509e4348676416db2a7ceda865bd08f"
+    },
+    "committees.json": {
+      "url": "https://raw.githubusercontent.com/unitedstates/congress-legislators/2b1fe728159fe5f5e145277794106e800719eb50/committees-current.yaml",
+      "sha256": "3885591df90465f004695444aca47db88188471542cb35cf8a88f24c8649b4b4"
+    }
+  },
+  "membershipLastUpdated": {
+    "commit": "97261713f5dcd1b846050130cea77eded642268b",
+    "committedAt": "2026-11-04T18:42:47Z"
+  },
+  "rosterGeneratedAt": "2026-11-25T17:15:40.764138+00:00",
+  "counts": {
+    "committees": 49,
+    "subcommittees": 181,
+    "members": 533,
+    "assignments": 3919,
+    "notInLiveRoster": [],
+    "subcommitteesWithNoMembersListed": [
+      "SSCM39",
+      "SSJU27"
+    ]
+  },
+  "note": "Upstream lags reorganizations. `party` in committee-membership.json is majority/minority; a person's own party and state are in members.json."
+}
