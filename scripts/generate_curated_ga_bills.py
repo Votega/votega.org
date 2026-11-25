@@ -79,12 +79,6 @@ def build_party_lookup():
     return lookup
 
 
-def build_crosswalk():
-    """legisGaGovId(int) -> roster id. Only people with a roster id; kept for callers and
-    tests that want exactly that. The SOAP path uses build_voter_index() instead."""
-    return {lid: v["key"] for lid, v in build_voter_index().items() if v["rostered"]}
-
-
 #: legis.ga.gov's party strings -> the names the rest of the site publishes. An unlisted
 #: string maps to None: a party is never guessed.
 LISTING_PARTY = {"Democrat": "Democratic", "Democratic": "Democratic",

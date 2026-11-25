@@ -62,7 +62,7 @@ def index_cases():
     check("a former member is keyed legis:<id>, not dropped", idx[2]["key"], "legis:2")
     check("a former member's party comes from the crosswalk role", idx[2]["party"], "Republican")
     check("no role means no party yet (never guessed)", idx[3]["party"], None)
-    check("build_crosswalk still returns rostered people only (callers unchanged)",
+    check("only people with a roster id are marked rostered",
           {k for k, v in idx.items() if v["rostered"]}, {1})
 
 
