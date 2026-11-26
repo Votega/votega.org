@@ -95,7 +95,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'   # stdlib only, like every scripts/ test
+          python-version: '3.12'   # stdlib only, like every scripts/ test
 
       # Fail here rather than three steps later with a confusing parse error.
       - name: Resolve the export
@@ -196,7 +196,7 @@ jobs:
       - name: Rebuild the race-page results index
         run: |
           set -euo pipefail
-          python -m pip install --quiet pyyaml==6.0.2
+          python -m pip install -c requirements-ci.txt --quiet pyyaml
           python scripts/build_race_results_index.py
 
       - name: Commit and push

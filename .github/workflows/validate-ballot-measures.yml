@@ -31,12 +31,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # The validator falls back to a hand-rolled enum/required check without it,
       # which is weaker than validating the whole document against the schema.
       - name: Install jsonschema
-        run: pip install --quiet jsonschema
+        run: pip install -c requirements-ci.txt --quiet jsonschema
 
       - name: Validate ga-ballot-measures.json
         run: python scripts/validate_ballot_measures.py

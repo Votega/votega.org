@@ -34,7 +34,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # Official source: the legis.ga.gov SOAP web service (no auth, no quota). --no-overlay
       # classifies passage by the native caption rule only, with zero Open States input, so

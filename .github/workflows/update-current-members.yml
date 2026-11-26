@@ -43,12 +43,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests pyyaml
+          pip install -c requirements-ci.txt requests pyyaml
 
       - name: Check sponsorship fetch/slice invariants (no network)
         run: python scripts/test_federal_sponsorship.py

@@ -27,7 +27,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # No API key: the PeachFile public endpoints are unauthenticated. They are
       # CORS origin-locked, which is why this runs at build time rather than in the page.

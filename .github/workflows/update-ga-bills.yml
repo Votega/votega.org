@@ -33,7 +33,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # Official source: the legis.ga.gov SOAP web service (no auth, no quota). Bills now
       # share a source with the votes (generate_ga_votes_soap.py), so the party-tally

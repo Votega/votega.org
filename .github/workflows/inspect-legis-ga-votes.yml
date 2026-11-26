@@ -1,7 +1,7 @@
 name: Inspect legis.ga.gov vote source (manual)
 
 # Manual, NON-COMMITTING trial of the official-source vote producer
-# (scripts/generate_ga_votes_from_legis.py). This does NOT update the site — it
+# (scripts/archive/generate_ga_votes_from_legis.py, archived 2026-11-26). This does NOT update the site — it
 # exists to confirm the remaining live-only unknowns and to produce the parallel
 # file for diffing against the Open States output before any cutover.
 #
@@ -55,7 +55,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Check the client key is configured
         env:
@@ -81,11 +81,11 @@ jobs:
           SESSION_ARG=""
           if [ "$SESSION" != "active" ]; then SESSION_ARG="--session $SESSION"; fi
           if [ "$MODE" = "list" ]; then
-            python scripts/generate_ga_votes_from_legis.py --list-sessions
+            PYTHONPATH=scripts python scripts/archive/generate_ga_votes_from_legis.py --list-sessions
           elif [ "$MODE" = "inspect" ]; then
-            python scripts/generate_ga_votes_from_legis.py --inspect $SESSION_ARG
+            PYTHONPATH=scripts python scripts/archive/generate_ga_votes_from_legis.py --inspect $SESSION_ARG
           elif [ "$MODE" = "classify" ]; then
-            python scripts/generate_ga_votes_from_legis.py --classify-report $SESSION_ARG --sample "$SAMPLE_SIZE"
+            PYTHONPATH=scripts python scripts/archive/generate_ga_votes_from_legis.py --classify-report $SESSION_ARG --sample "$SAMPLE_SIZE"
           elif [ "$MODE" = "backfill" ]; then
             # Always sweep ALL configured sessions: a legisGaGovId is session-independent,
             # and union coverage is what makes resolution turnover-safe. The `session`
@@ -96,7 +96,7 @@ jobs:
             # gathered so far (write + diff + upload it) instead of losing a ~2h run.
             # Safe here because this workflow never commits; a committing cutover job
             # must OMIT the flag so a partial sweep fails loudly instead of shipping.
-            python scripts/generate_ga_votes_from_legis.py $SESSION_ARG --sample "$SAMPLE_SIZE" --allow-partial out/ga-member-votes.legis.json
+            PYTHONPATH=scripts python scripts/archive/generate_ga_votes_from_legis.py $SESSION_ARG --sample "$SAMPLE_SIZE" --allow-partial out/ga-member-votes.legis.json
             # Tally-aware diff vs Open States (cutover go/no-go). Only meaningful
             # on a FULL sweep — a small --sample inflates "OS-only" roll calls
             # because legis saw only a slice. Needs the COMMITTED id-crosswalk.json

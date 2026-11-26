@@ -2011,11 +2011,11 @@
       const sessionNames = {};
       (data.metadata?.sessions || []).forEach(s => { if (s.id) sessionNames[s.id] = s.name || s.id; });
       const activeSession = data.metadata?.activeSession || '';
-      // Legacy coverage-gap flag. The former Open States source could leave the
-      // roll-call record short of the full session (a quota-bounded gap); the current
-      // legis.ga.gov official source fetches every published roll call, so it sets no
-      // paginationComplete flag and this stays false. Kept as a defensive guard in case
-      // a future source reintroduces a bounded gap.
+      // Coverage-gap flag. The current legis.ga.gov producer fetches every published
+      // roll call and sets no paginationComplete flag, so this stays false. Only the
+      // archived Open States fallback (scripts/archive/generate_ga_votes_data.py) sets
+      // it, to false when its quota-bounded sweep stopped short; the guard is kept so
+      // that fallback still shows the caveat. See docs/data-schemas.md.
       const incomplete = data.metadata?.paginationComplete === false;
       const incompleteNote = incomplete
         ? '<p style="font-size:0.78rem;color:var(--color-warning);background:var(--color-warning-tint);border:1px solid var(--color-warning-line);border-radius:6px;padding:0.5rem 0.75rem;margin:0 0 0.75rem 0;">Note: our roll-call record covers most, but not all, of the regular session\'s bills, so some passage votes are missing. The participation, party-alignment, and chart figures below are based on the votes we have and may understate a member\'s totals.</p>'

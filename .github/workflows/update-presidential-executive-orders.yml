@@ -34,7 +34,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # Federal Register is required (exit 1, file untouched); whitehouse.gov is a
       # supplement and its outage carries forward the previous provisional entries.

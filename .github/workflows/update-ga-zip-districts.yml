@@ -33,7 +33,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # HUD_USER_TOKEN is read-only access to one public HUD dataset. A HUD failure
       # exits 1 and leaves the committed file untouched.

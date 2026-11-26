@@ -99,8 +99,9 @@
 
 <script>
 // ─────────────────────────────────────────────────────────────────────────────
-// Matching logic — mirrors find_filers() in scripts/report_ga_finance_matches.py
-// and findFiler() in candidate.html. Keep all three in step.
+// Matching logic — mirrors find_filers() in scripts/lib/ga_match.py and
+// findGaFilers() in assets/scripts/campaign-finance.js. Keep all three in step;
+// scripts/test_ga_finance_match_parity.py runs this block and fails on any drift.
 // ─────────────────────────────────────────────────────────────────────────────
 const CHAMBER_MAP = {
   'Georgia House of Representatives': 'House of Representatives',
@@ -133,8 +134,8 @@ function candidatePool(chamber, district, data) {
 const SUFFIX_RE = /\b(jr|sr|ii|iii|iv|dr|mr|mrs|ms|esq)\.?\b/g;
 
 function toks(s) {
-  // Apostrophes are intra-word, not separators — see the matching note in
-  // scripts/report_ga_finance_matches.py (O'Steen vs Osteen).
+  // Apostrophes are intra-word, not separators — see toks() in
+  // scripts/lib/ga_match.py (O'Steen vs Osteen).
   return String(s || '').toLowerCase().replace(SUFFIX_RE, '')
     .replace(/['’]/g, '')
     .replace(/[^a-z\s]/g, ' ').split(/\s+/).filter(Boolean);

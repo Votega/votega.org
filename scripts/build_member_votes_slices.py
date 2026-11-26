@@ -34,6 +34,7 @@ import os
 import re
 
 from lib.atomic_io import write_json_atomic
+from lib.votes_schema import VOTE_CODES
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(ROOT, "assets", "data")
@@ -48,10 +49,11 @@ BILLS_FILE = os.path.join(DATA_DIR, "ga-bills.json")
 # build_sponsorship_slices.py — keep the two in step.
 TEXT_URL_PREFIX = "https://www.legis.ga.gov/api/legislation/document/"
 
-# Compact vote codes → the two positions that count toward a party tally. Mirrors
-# the CODE map in the client; only Yea/Nay feed party-line math (everything else —
-# Not Voting / Present / Absent / Excused / Other — is ignored for the tally).
-YEA, NAY = "Y", "N"
+# The two compact codes that count toward a party tally, taken from the codec that
+# wrote the file. Only Yea/Nay feed party-line math (everything else — Not Voting /
+# Present / Absent / Excused / Other — is ignored for the tally). The client's CODE
+# map must decode the same codes; scripts/test_ga_votes_slices.py checks both.
+YEA, NAY = VOTE_CODES["Yea"], VOTE_CODES["Nay"]
 
 
 def member_slug(member_id: str) -> str:

@@ -33,7 +33,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # legis.ga.gov's own Members service — no API key, no quota. The Open States
       # producer is archived at scripts/archive/generate_ga_members_data.py and is NOT

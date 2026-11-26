@@ -29,7 +29,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # No API key: Session/GetSessions needs no auth and takes no parameters.
       - name: Generate legis session table

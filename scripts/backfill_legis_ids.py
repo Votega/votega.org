@@ -3,7 +3,7 @@
 
 Why this exists
 ---------------
-generate_ga_votes_from_legis.py joins each legis.ga.gov roll-call row to a person
+archive/generate_ga_votes_from_legis.py joins each legis.ga.gov roll-call row to a person
 by the legislature's own numeric `member.id` (== `legisGaGovId`). That join is
 collision-proof — BUT only for members who actually carry a `legisGaGovId` in the
 crosswalk. Members who don't (freshmen Open States hasn't stamped a `georgia_id`

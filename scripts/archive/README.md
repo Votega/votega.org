@@ -54,6 +54,19 @@ This file keeps its own copy of the local-subject inference (`GA_COUNTIES`,
 `scripts/lib/ga_bill_subjects.py` extracted from it.
 
 
+## `generate_ga_votes_from_legis.py` — archived 2026-11-26 (a diagnostic, not a fallback)
+
+A third producer of `assets/data/ga-member-votes.json`, built against the legis.ga.gov
+`/api` (needs `LEGIS_GA_CLIENT_KEY`). It never reached production: its header still says
+SCAFFOLD, and the SOAP producer replaced both it and Open States. It sat in `scripts/`
+looking live, which is how the retired members producer above drifted.
+
+The only thing that still runs it is the manual `inspect-legis-ga-votes.yml` diagnostic,
+which now calls it here with `PYTHONPATH=scripts` so its `lib.` imports resolve. Run it
+the same way by hand:
+
+    PYTHONPATH=scripts python scripts/archive/generate_ga_votes_from_legis.py --list-sessions
+
 ## `generate_ga_members_data.py` — archived 2026-10-26 (NOT a working fallback)
 
 The Open States producer of `assets/data/ga-members.json`, replaced by

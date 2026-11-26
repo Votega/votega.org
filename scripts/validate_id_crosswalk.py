@@ -97,12 +97,56 @@ def load(path, default=None):
         return json.load(f)
 
 
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
 def git_show(path):
     try:
-        out = subprocess.run(["git", "show", f"HEAD:{path}"], capture_output=True, check=True)
+        out = subprocess.run(["git", "show", f"HEAD:{path}"], capture_output=True, check=True,
+                             cwd=REPO_ROOT)
         return json.loads(out.stdout)
     except (subprocess.CalledProcessError, json.JSONDecodeError, FileNotFoundError):
         return None
+
+
+def tracked_at_head(path):
+    """True if HEAD has `path`, False if it does not, None if git could not say."""
+    try:
+        out = subprocess.run(["git", "ls-tree", "--name-only", "HEAD", "--", path],
+                             capture_output=True, check=True, text=True, cwd=REPO_ROOT)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return None
+    return bool(out.stdout.strip())
+
+
+def ledger_baseline_errors(old, tracked):
+    """Why the append-only check could not run, as (errors, warnings).
+
+    Only a ledger that HEAD genuinely does not have yet may skip the check. If HEAD has
+    it but it could not be read (git missing, not a repository, unparseable JSON), or git
+    could not say either way, skipping would let a renumbering through, so that fails.
+    """
+    if old is not None:
+        return [], []
+    if tracked is False:
+        return [], ["ledger has no committed baseline yet — append-only check skipped"]
+    if tracked is None:
+        return [f"could not ask git whether HEAD has {LEDGER_FILE} — the append-only "
+                f"check cannot run"], []
+    return [f"HEAD has {LEDGER_FILE} but it could not be read as JSON — the append-only "
+            f"check cannot run"], []
+
+
+def ledger_append_only_errors(old_assign, new_assign):
+    """A published assignment may never be dropped or point at a different vgId."""
+    errors = []
+    for key, vg in (old_assign or {}).items():
+        if key not in new_assign:
+            errors.append(f"ledger dropped assignment {key} -> {vg} (the ledger is append-only)")
+        elif new_assign[key] != vg:
+            errors.append(f"ledger renumbered {key}: was {vg}, now {new_assign[key]} "
+                          f"(a published vgId must never change meaning)")
+    return errors
 
 
 def unaccounted_inputs(people, members, federal, cand_ids):
@@ -517,15 +561,14 @@ def main():
                     f"filing is {p['vgId']} ({p['name']['full']})")
 
     old = git_show(LEDGER_FILE)
-    if old:
-        for key, vg in (old.get("assign") or {}).items():
-            if key not in raw_assign:
-                err(f"ledger dropped assignment {key} -> {vg} (the ledger is append-only)")
-            elif raw_assign[key] != vg:
-                err(f"ledger renumbered {key}: was {vg}, now {raw_assign[key]} "
-                    f"(a published vgId must never change meaning)")
-    else:
-        warn("ledger has no committed baseline yet — append-only check skipped")
+    base_errs, base_warns = ledger_baseline_errors(
+        old, None if old is not None else tracked_at_head(LEDGER_FILE))
+    for msg in base_errs:
+        err(msg)
+    for msg in base_warns:
+        warn(msg)
+    for msg in ledger_append_only_errors((old or {}).get("assign"), raw_assign):
+        err(msg)
 
     # --- Merge forwards (retired vgId -> survivor) ---------------------------
     xov_all = {k: v for k, v in load(OVERRIDES_FILE, {}).items() if not k.startswith("_")}
