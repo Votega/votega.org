@@ -1,0 +1,101 @@
+name: Publish certified election results to ga-races-elections (daily, 08:45 UTC)
+
+# Requires secret: GA_RACES_PUSH_TOKEN (the same one publish-races-to-ga-races-elections.yml uses)
+#   A GitHub Personal Access Token (classic) with repo scope on Votega/ga-races-elections.
+#
+# Writes results/<election>/ and data/results/manifest.json (plus the shared LICENSE and NOTICE.md).
+# Only results pages with `status: certified` are published (scripts/publish_results.py), so it is
+# safe to run at any time; an unofficial count never reaches the target repo.
+#
+# Besides the button: a person's push (certifying a page is a front-matter edit); the completion of
+# "Publish election results", whose GITHUB_TOKEN commit raises no `push` event (the name below must
+# match that workflow's `name:`, pinned by scripts/test_publish_results.py); and a daily run that
+# catches anything the other two miss. A run with nothing new commits nothing.
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 8 * * *'
+  workflow_run:
+    workflows: [Publish election results]
+    types: [completed]
+  push:
+    branches: [main]
+    paths:
+      - 'ga-*results.html'
+      - '_data/election_results/**'
+      - 'scripts/publish_results.py'
+      - 'scripts/lib/sibling_publish.py'
+      - '.github/workflows/publish-results-to-ga-races-elections.yml'
+
+concurrency:
+  group: publish-results-to-ga-races-elections
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 15
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+      # main, not the triggering commit: after a workflow_run the results commit is newer than it.
+      - name: Checkout source repo
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Checkout target repo
+        uses: actions/checkout@v4
+        with:
+          repository: Votega/ga-races-elections
+          token: ${{ secrets.GA_RACES_PUSH_TOKEN }}
+          path: target-repo
+
+      - name: Commit and push to ga-races-elections
+        working-directory: target-repo
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Re-apply the source files onto the current target tree. Used for the first commit and
+          # again after a reset when a push loses a race with another publisher of this repo.
+          restage() {
+            ( cd "$GITHUB_WORKSPACE" && OUT_DIR="$GITHUB_WORKSPACE/target-repo" python3 scripts/publish_results.py )
+            git add -A
+          }
+
+          restage
+          if git diff --cached --quiet; then
+            echo "No changes — files are already up to date"
+            exit 0
+          fi
+
+          # Same idempotent mirror as the races publisher: on a non-fast-forward push, take the
+          # remote tip and re-apply our files rather than rebasing.
+          pushed=0
+          for attempt in 1 2 3; do
+            git commit -m "Publish certified election results ($(date -u '+%Y-%m-%d'))" || true
+            if git push; then pushed=1; break; fi
+            echo "Push rejected (attempt $attempt) — syncing to remote and re-applying"
+            git fetch origin main
+            git reset --hard origin/main
+            restage
+            if git diff --cached --quiet; then
+              echo "Remote already carries our content"; pushed=1; break
+            fi
+          done
+          if [ "$pushed" -ne 1 ]; then
+            echo "::error::Push to ga-races-elections failed after 3 attempts"
+            exit 1
+          fi

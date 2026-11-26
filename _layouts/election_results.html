@@ -10,6 +10,10 @@ _data/election_results/<results_data>.json.
 Front-matter contract
 ---------------------
   results_data   (required)  key into _data/election_results/  (e.g. ga-special-2026-results)
+  results_folder required once certified: the permanent folder under results/ in
+                             Votega/ga-races-elections, starting with the election year (e.g.
+                             2026-general). scripts/publish_results.py publishes certified pages
+                             there and the page footnote links to it. A new election needs a new name.
   heading        (required)  the <h1>  (falls back to page.title)
   election_date  (required)  ISO date, e.g. 2026-07-28
   subtitle       optional    shown before the date in the meta line (e.g. "U.S. House District 13")
@@ -125,6 +129,7 @@ Front-matter contract
   .bar-fill.np  { background: var(--color-party-vacant); }
   .bar-fill.trail { opacity: .42; }
   .pr-crosslink { font-size: .83rem; margin-bottom: .75rem; }
+  .pr-source { font-size: .8rem; color: var(--color-text-muted); margin-top: 1.5rem; }
   .pr-related { background: var(--color-surface-tint); border: 1px solid var(--color-border); border-left: 4px solid var(--color-accent); border-radius: 6px; padding: .6rem 1rem; font-size: .82rem; color: var(--color-text); margin-bottom: 1rem; }
   .pr-related .pr-related-link { display: inline-block; margin-top: .3rem; font-weight: 600; }
 
@@ -281,6 +286,16 @@ Front-matter contract
 <div id="tab-state-house"  class="tab-panel"></div>
 <div id="tab-courts"       class="tab-panel"></div>
 <div id="tab-measures"     class="tab-panel"></div>
+
+{%- comment -%}
+  Source footnote: the published dataset, not the internal data file. Certified pages
+  only, because scripts/publish_results.py publishes nothing else.
+{%- endcomment -%}
+{%- if result_status == 'certified' and page.results_folder %}
+<p class="pr-source">Source: Georgia Secretary of State. Download these results as CSV or JSON from the
+  <a href="https://github.com/Votega/ga-races-elections/tree/main/results/{{ page.results_folder }}" target="_blank" rel="noopener">Votega/ga-races-elections</a>
+  open-data repository.</p>
+{%- endif %}
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/results-contest.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
