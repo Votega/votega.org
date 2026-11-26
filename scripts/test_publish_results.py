@@ -431,7 +431,8 @@ def test_real_repo_county_files_exist_for_every_committed_breakdown():
         path = os.path.join(ROOT, "_sources", "election_results", fm["results_data"] + "-breakdown.json")
         if fm.get("status") == "certified" and os.path.isfile(path):
             have.append(fm["results_folder"])
-    assert {"2026-primary", "2026-primary-runoff", "2026-general"} <= set(have)
+    assert {"2026-primary", "2026-primary-runoff", "2026-special-us-house-13",
+            "2026-special-us-house-13-runoff", "2026-general"} <= set(have)
     assert {p.split("/")[1] for p in out if p.endswith("county-results.csv")} == set(have)
 
 

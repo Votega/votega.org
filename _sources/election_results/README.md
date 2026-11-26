@@ -49,8 +49,12 @@ python scripts/distill_results_breakdown.py <export.json> <data-key>
 ```
 
 The **Publish election results** workflow does this itself when run on the JSON feed with
-`commit_csv` on. Present for the primary, primary runoff and general; the two CD-13 specials
-have none yet. The raw exports (25-160 MB) are not committed.
+`commit_csv` on. Present for all five certified 2026 elections. The raw exports (up to
+160 MB) are not committed; they are at
+`https://results.sos.ga.gov/cdn/results/Georgia/export-<...>.json`:
+`export-GeneralPrimary51926`, `export-06162026GeneralPrimaryRunoff`,
+`export-072826GASpecialElection`, `export-08252026SpecialElectionRunoff` and
+`export-11032026GeneralAndSpecialElection`.
 
 ## After certification
 
