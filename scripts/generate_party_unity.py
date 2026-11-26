@@ -219,6 +219,8 @@ def main():
             "source": "Derived from ga-member-votes.json (legis.ga.gov SOAP roll calls)",
             "biennium": votes_data.get("metadata", {}).get("biennium"),
             "sessions": votes_data.get("metadata", {}).get("sessions", []),
+            # null under the current producer; only the archived Open States fallback
+            # sets it (false = known gap). ga-party-unity.html reads it.
             "paginationComplete": votes_data.get("metadata", {}).get("paginationComplete"),
             "count": len(results),
             "scoredForUnity": len(scored),

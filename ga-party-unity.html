@@ -593,7 +593,8 @@ members, from the same roll-call record behind each member's page.</p>
       // published roll call and sets no flag, so this stays false and the caveat
       // below correctly never fires. `null` means "no known gap", NOT "unknown":
       // widening this to `!== true` would print an incompleteness warning over a
-      // complete record. It is kept in case a future source reintroduces a gap.
+      // complete record. It is kept for the archived Open States fallback
+      // (scripts/archive/generate_ga_votes_data.py), which still sets it.
       var incomplete = meta.paginationComplete === false;
       $('pu-foot').innerHTML =
         'Small-sample members are held back by the minimum-sample filter, which applies to whichever '
