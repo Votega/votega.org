@@ -196,8 +196,9 @@ datasets:
     hosting: repo
     summary: >
       Vote counts by candidate and ballot question for each 2026 election the Georgia
-      Secretary of State has certified, one folder per election. Statewide totals per
-      contest, with no county or precinct breakdown. The winner and outcome fields are
+      Secretary of State has certified, one folder per election. Totals per contest,
+      plus results by county and by vote method for the primary, primary runoff and
+      general election (no precinct breakdown). The winner and outcome fields are
       derived by VoteGA from the certified counts (including who advanced to a runoff);
       they are not a separate Secretary of State publication. Unofficial counts are not
       published here. Published alongside the races data in the ga-races-elections repo.

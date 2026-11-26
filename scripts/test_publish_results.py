@@ -43,7 +43,7 @@ def page(key="ga-general-2026-results", folder="2026-general", status="certified
     return {k: v for k, v in fm.items() if v is not None}
 
 
-def make_root(tmp, pages, data, stamps=None):
+def make_root(tmp, pages, data, stamps=None, breakdowns=None):
     """A minimal site tree: results page stubs, their data files and the build stamps."""
     os.makedirs(os.path.join(tmp, "_data", "election_results"))
     for fm in pages:
@@ -57,12 +57,17 @@ def make_root(tmp, pages, data, stamps=None):
         stamps = {key: {"iso": "2026-11-20T15:51:29+00:00"} for key in data}
     with open(os.path.join(tmp, "_data", "results_updated.json"), "w", encoding="utf-8") as f:
         json.dump(stamps, f)
+    os.makedirs(os.path.join(tmp, "_sources", "election_results"))
+    for key, doc in (breakdowns or {}).items():
+        with open(os.path.join(tmp, "_sources", "election_results", key + "-breakdown.json"), "w",
+                  encoding="utf-8") as f:
+            json.dump(doc, f)
     return tmp
 
 
-def build(pages, data, stamps=None, published=None):
+def build(pages, data, stamps=None, published=None, breakdowns=None):
     with tempfile.TemporaryDirectory() as tmp:
-        return pr.build_artifacts(make_root(tmp, pages, data, stamps), published)
+        return pr.build_artifacts(make_root(tmp, pages, data, stamps, breakdowns), published)
 
 
 def contests_of(secs, mode="round", **pg):
@@ -226,7 +231,7 @@ def test_schema_declares_its_own_path_and_describes_every_field_published():
     cand = item["properties"]["candidates"]["items"]
     assert set(doc["metadata"]) == set(schema["properties"]["metadata"]["properties"])
     assert set(doc["contests"][0]) == set(item["properties"]) == set(item["required"])
-    assert set(doc["contests"][0]["candidates"][0]) == set(cand["properties"]) == set(cand["required"])
+    assert set(doc["contests"][0]["candidates"][0]) == set(cand["properties"]) >= set(cand["required"])
 
 
 def test_manifest_names_only_files_that_are_published():
@@ -243,6 +248,125 @@ def test_manifest_names_only_files_that_are_published():
 def test_two_builds_are_byte_identical():
     args = ([page()], {"ga-general-2026-results": ONE})
     assert build(*args) == build(*args)
+
+
+# --- county and vote-method figures -------------------------------------------
+
+BREAKDOWN_SOURCE = sections(statewide=[("Governor", contest(60, 40, names=["A (Rep)", "B (Dem)"]))],
+                            courts=[("District Attorney - X", contest(0, names=["Solo"]))])
+METHODS = ["electionDay", "advanceVoting", "absenteeByMail", "provisional"]
+
+
+def breakdown(**changes):
+    doc = {"electionDate": "2026-11-03", "createdAt": "2026-11-20T15:51:29Z", "methods": METHODS,
+           "contests": [{"section": "statewide", "office": "Governor",
+                         # listed in a different order from the published contest
+                         "candidates": [{"name": "B", "votes": 40, "methods": [10, 25, 4, 1]},
+                                        {"name": "A", "votes": 60, "methods": [20, 35, 5, 0]}],
+                         "counties": {"Echols": [[15, None], [20, None]],
+                                      "Ben Hill": [[25, [5, 18, 1, 1]], [40, [10, 27, 3, 0]]]}}]}
+    doc.update(changes)
+    return doc
+
+
+def build_breakdown(doc=None, secs=BREAKDOWN_SOURCE):
+    return build([page()], {"ga-general-2026-results": secs},
+                 breakdowns={"ga-general-2026-results": doc or breakdown()})
+
+
+def csv_rows(out, name):
+    return list(csv.DictReader(io.StringIO(out[f"results/2026-general/{name}"].decode("utf-8"))))
+
+
+def test_vote_methods_are_appended_to_the_results_rows():
+    assert pr.RESULTS_COLUMNS[16:] == METHODS, "appended after the original sixteen"
+    out = build_breakdown()
+    a, b, solo = csv_rows(out, "results.csv")
+    assert [a[m] for m in METHODS] == ["20", "35", "5", "0"]
+    assert [b[m] for m in METHODS] == ["10", "25", "4", "1"]
+    assert [solo[m] for m in METHODS] == [""] * 4
+    doc = json.loads(out["results/2026-general/results.json"])
+    assert doc["contests"][0]["candidates"][0]["advanceVoting"] == 35
+    assert doc["metadata"]["countyResults"] is True
+
+
+def test_county_results_have_one_row_per_county_contest_and_candidate():
+    rows = csv_rows(build_breakdown(), "county-results.csv")
+    assert list(rows[0]) == pr.COUNTY_COLUMNS
+    assert [(r["county"], r["candidate"], r["votes"]) for r in rows] == [
+        ("Ben Hill", "A", "40"), ("Ben Hill", "B", "25"), ("Echols", "A", "20"), ("Echols", "B", "15")]
+    first = rows[0]
+    assert (first["countyFips"], first["party"], first["contestId"]) == ("13017", "Republican", "statewide-governor")
+    assert (first["election"], first["electionDate"], first["status"]) == ("2026-general", "2026-11-03", "certified")
+    assert [first[m] for m in METHODS] == ["10", "27", "3", "0"]
+    assert [rows[2][m] for m in METHODS] == [""] * 4, "no split reported: blank, not zero"
+
+
+def test_county_file_is_listed_in_the_manifest():
+    man = json.loads(build_breakdown()["data/results/manifest.json"])
+    assert "results/2026-general/county-results.csv" in {f["path"] for f in man["files"]}
+
+
+def test_an_election_without_a_breakdown_keeps_the_same_shape_with_blanks():
+    out = build([page()], {"ga-general-2026-results": ONE})
+    assert "results/2026-general/county-results.csv" not in out
+    assert [csv_rows(out, "results.csv")[0][m] for m in METHODS] == [""] * 4
+    doc = json.loads(out["results/2026-general/results.json"])
+    assert doc["contests"][0]["candidates"][0]["electionDay"] is None
+    assert doc["metadata"]["countyResults"] is False
+
+
+def test_new_fields_are_described_but_not_required():
+    schema = json.loads(build_breakdown()["results/2026-general/results.schema.json"])
+    cand = schema["properties"]["contests"]["items"]["properties"]["candidates"]["items"]
+    for m in METHODS:
+        assert m in cand["properties"] and m not in cand["required"]
+    assert schema["schemaVersion"] == "1.1.0"
+
+
+def refused(doc, *fragments):
+    raises(lambda: build_breakdown(doc), *fragments)
+
+
+def test_a_breakdown_for_another_election_is_refused():
+    refused(breakdown(electionDate="2026-12-01"), "2026-12-01")
+
+
+def test_a_breakdown_that_disagrees_with_the_certified_totals_is_refused():
+    doc = breakdown()
+    doc["contests"][0]["candidates"][0]["votes"] = 41
+    refused(doc, "Governor", "breakdown")
+
+
+def test_a_reported_contest_missing_from_the_breakdown_is_refused():
+    refused(breakdown(contests=[]), "Governor", "breakdown")
+
+
+def test_a_breakdown_contest_that_is_not_published_is_refused():
+    doc = breakdown()
+    doc["contests"].append({**doc["contests"][0], "office": "Extra",
+                            "candidates": [{"name": "Z", "votes": 1, "methods": None}], "counties": {}})
+    refused(doc, "Extra")
+
+
+def test_published_county_results_are_never_dropped():
+    old = build_breakdown()
+    with tempfile.TemporaryDirectory() as published:
+        write_tree(published, old)
+        raises(lambda: build([page()], {"ga-general-2026-results": BREAKDOWN_SOURCE}, published=published),
+               "county-results.csv")
+
+
+def test_county_votes_must_add_up_to_the_certified_total():
+    doc = breakdown()
+    del doc["contests"][0]["counties"]["Echols"]
+    refused(doc, "Governor", "counties")
+
+
+def test_an_unknown_county_is_refused():
+    doc = breakdown()
+    doc["contests"][0]["counties"]["Atlantis"] = doc["contests"][0]["counties"].pop("Echols")
+    refused(doc, "Atlantis")
 
 
 # --- per-election folders are permanent ---------------------------------------
@@ -298,6 +422,17 @@ def test_real_repo_publishes_every_certified_page_and_loses_no_vote():
         left = [c["candidate"] for k in doc["contests"] for c in k["candidates"]
                 if c["candidate"].endswith((")",)) and c["candidate"][-5:] in ("(Dem)", "(Rep)", "(Ind)")]
         assert not left, f"{key}: party suffix left on {left[:3]}"
+
+
+def test_real_repo_county_files_exist_for_every_committed_breakdown():
+    out = pr.build_artifacts(ROOT, None)
+    have = []
+    for fm in pr.results_pages(ROOT):
+        path = os.path.join(ROOT, "_sources", "election_results", fm["results_data"] + "-breakdown.json")
+        if fm.get("status") == "certified" and os.path.isfile(path):
+            have.append(fm["results_folder"])
+    assert {"2026-primary", "2026-primary-runoff", "2026-general"} <= set(have)
+    assert {p.split("/")[1] for p in out if p.endswith("county-results.csv")} == set(have)
 
 
 def test_results_layout_links_the_published_folder_on_certified_pages():

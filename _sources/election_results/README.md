@@ -37,6 +37,21 @@ The certified general export omits District Attorney - Waycross Judicial Circuit
 (273 contests; the page lists 274). Rebuild it with `--fill-missing-from` the
 committed JSON, or that race disappears from the page.
 
+## County and vote-method breakdown
+
+`<data-key>-breakdown.json` holds each contest's results by county and by vote method, cut from
+the certified **JSON** export (the only form with both). The publisher turns it into
+`county-results.csv` and the vote-method columns of `results.csv`, and refuses figures that do
+not match the certified totals.
+
+```
+python scripts/distill_results_breakdown.py <export.json> <data-key>
+```
+
+The **Publish election results** workflow does this itself when run on the JSON feed with
+`commit_csv` on. Present for the primary, primary runoff and general; the two CD-13 specials
+have none yet. The raw exports (25-160 MB) are not committed.
+
 ## After certification
 
 Set the results page's `status: certified` (and `updated:`). That also publishes the election to
