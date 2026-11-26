@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-26T11:42:42.605134+00:00",
+    "generatedAt": "2026-11-26T20:42:55.024595+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,30 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 132,
+    "count": 129,
     "windowDays": 45,
     "entityTagged": 83,
     "topicCounts": {
-      "education": 11,
-      "elections": 47,
-      "courts": 11,
-      "healthcare": 18,
+      "elections": 45,
+      "education": 10,
+      "courts": 10,
       "ethics": 4,
+      "healthcare": 17,
       "budget": 7,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000211": {
+      "name": "Soo Hong",
+      "url": null,
+      "ocdPersonId": "ocd-person/64721c9b-451c-4bc9-9040-4ca232ffd746",
+      "rosterId": "ocd-person/64721c9b-451c-4bc9-9040-4ca232ffd746",
+      "candidateIds": [
+        "ga-house-103-2026-r-1"
+      ]
+    },
     "vg-ga-p-000335": {
       "name": "Keisha Lance Bottoms",
       "url": null,
@@ -166,6 +175,30 @@
   "mergedEntities": {},
   "items": [
     {
+      "id": "f8ffee501f12",
+      "title": "Two Georgia GOP House lawmakers challenge losses that helped House Democrats flip chamber",
+      "url": "https://thecurrentga.org/2026/11/26/two-georgia-gop-house-lawmakers-challenge-losses-that-helped-house-democrats-flip-chamber/",
+      "source": "The Current GA",
+      "publishedAt": "2026-11-26T14:18:26+00:00",
+      "snippet": "Two Georgia House Republicans filed legal challenges to their November midterm election losses, alleging voter ineligibility in the contests involving Representative Soo Hong and Representative Bill H",
+      "entityIds": [
+        "vg-ga-p-000211"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "0207af0793d8",
+      "title": "Georgia leads nation in permanent loss of forest land",
+      "url": "https://www.gpb.org/news/2026/11/26/georgia-leads-nation-in-permanent-loss-of-forest-land",
+      "source": "GPB News",
+      "publishedAt": "2026-11-26T13:12:00+00:00",
+      "snippet": "About 1.2 million acres of the state’s forest land were permanently converted to development or crop land from 1990 to 2017.",
+      "entityIds": [],
+      "topics": []
+    },
+    {
       "id": "4bc55d13d999",
       "title": "2026 was a mixed bag for Georgia pecan farmers",
       "url": "https://georgiarecorder.com/2026/11/26/2026-was-a-mixed-bag-for-georgia-pecan-farmers/",
@@ -206,20 +239,6 @@
       ]
     },
     {
-      "id": "4cdbb0b67aa9",
-      "title": "Georgia Today: Winter storm prep; Fulton County ballots; Bottoms inaugural plan",
-      "url": "https://www.gpb.org/news/2026/11/25/georgia-today-winter-storm-prep-fulton-county-ballots-bottoms-inaugural-plan",
-      "source": "GPB News",
-      "publishedAt": "2026-11-25T21:17:13+00:00",
-      "snippet": "On today's Nov. 25 edition: Keisha Lance Bottoms will be sworn in as governor at the State Farm Arena; forecasters warn to be careful of unpredictable storms this upcoming winter; and a March of Dimes",
-      "entityIds": [
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
       "id": "5d49bde26be4",
       "title": "Two Georgia GOP House lawmakers are challenging losses that helped House Democrats flip chamber",
       "url": "https://georgiarecorder.com/2026/11/25/two-georgia-gop-house-lawmakers-are-challenging-november-losses/",
@@ -229,32 +248,6 @@
       "entityIds": [],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "da5800a7642a",
-      "title": "Judge halts order for Georgia's Fulton County to give 2020 election records to State Election Board",
-      "url": "https://www.gpb.org/news/2026/11/25/judge-halts-order-for-georgias-fulton-county-give-2020-election-records-state",
-      "source": "GPB News",
-      "publishedAt": "2026-11-25T17:06:00+00:00",
-      "snippet": "A judge has paused an order for Georgia's Fulton County to hand over digital copies of ballots and other records from the 2020 election to the State Election Board. Wednesday's decision came after cou",
-      "entityIds": [],
-      "topics": [
-        "elections",
-        "courts"
-      ]
-    },
-    {
-      "id": "a38b39db5d08",
-      "title": "GPB morning headlines for November 25, 2026",
-      "url": "https://www.gpb.org/news/2026/11/25/gpb-morning-headlines-for-november-25-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-25T13:07:22+00:00",
-      "snippet": "Georgia sees little progress in maternal and infant health; Cobb County schools grapple with declining enrollment; FCC allows prisons to jam cell phone signals.",
-      "entityIds": [],
-      "topics": [
-        "education",
-        "healthcare"
       ]
     },
     {
@@ -465,28 +458,6 @@
         "budget",
         "education"
       ]
-    },
-    {
-      "id": "ea6359573d2a",
-      "title": "Over half the Georgia counties that flipped in the midterms were rural",
-      "url": "https://thecurrentga.org/2026/11/21/over-half-the-georgia-counties-that-flipped-in-the-midterms-were-rural/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-21T19:05:49+00:00",
-      "snippet": "Five of the nine flipped counties in the gubernatorial election came from rural Georgia, which shifted more than six points left compared with the 2022 midterms. In this election cycle, Black voters r",
-      "entityIds": [],
-      "topics": [
-        "elections"
-      ]
-    },
-    {
-      "id": "7e207c807003",
-      "title": "Georgia Water Coalition releases its 14th ‘Dirty Dozen’ report for 2026",
-      "url": "https://thecurrentga.org/2026/11/21/georgia-water-coalition-releases-its-14th-dirty-dozen-report-for-2026/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-21T18:13:38+00:00",
-      "snippet": "The Georgia Water Coalition unveiled its 2026 Dirty Dozen Report, naming their picks for the worst offenders and most pressing threats to the state’s waterways. \nThe Current is an inclusive nonprofit,",
-      "entityIds": [],
-      "topics": []
     },
     {
       "id": "4379ce1ff754",
