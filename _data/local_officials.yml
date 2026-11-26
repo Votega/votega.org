@@ -737,7 +737,24 @@ jurisdictions:
     related_pages:                  # cross-links to existing VoteGA content
       - { title: "", url: }
     notes: ""
-  
+    term_years: 4                   # Charter § III(c)-(d) (Ga. L. 1985, p. 3542)
+    election_rules:
+      checked: 2026-11-26
+      text_as_of: 2025-11-03
+      items:
+        - topic: schedule
+          text: "City elections are held in odd-numbered years, on the Tuesday after the first Monday in November, the date state law sets for city elections (O.C.G.A. § 21-2-9). Seats are staggered: the Ward 1 and Ward 2 council members are elected in one odd-numbered year, and the mayor and the Ward 3 and Ward 4 council members in the other."
+          cite: "Charter § III (Ga. L. 1985, p. 3542)"
+          url: https://georgiacommons.org/cities/carrollton/charter/part
+        - topic: terms
+          text: "Four years. Officials serve until their successors are elected and qualified."
+          cite: "Charter § III (Ga. L. 1985, p. 3542)"
+          url: https://georgiacommons.org/cities/carrollton/charter/part
+        - topic: districts
+          text: "The city is divided into four election wards. Each council member must live in the ward they represent and is elected only by the voters who live in that ward. The mayor must live in the city and is elected citywide. If the mayor moves out of the city, or a council member moves out of the ward they were elected from, the office is declared vacant."
+          cite: "Charter § III (Ga. L. 1985, p. 3542)"
+          url: https://georgiacommons.org/cities/carrollton/charter/part
+
   # ---- PHASE 1 — ROSTER --------------------------------------------------
     # next_election / term_end assume 4-year staggered terms (last_elected + 4).
     # VERIFY against the source and correct where a member was re-elected since.
@@ -749,9 +766,10 @@ jurisdictions:
         party: Nonpartisan
         email: ""
         phone: ""
-        last_elected: 
-        term_end: 2027              # assumed: 2023 + 4
-        next_election:         
+        last_elected: 2023
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
         voting: false               # mayor presides — verify vote/tie-break rules
         tie_break_only: true
         photo: ""
@@ -766,8 +784,9 @@ jurisdictions:
         email: "dnorth@carrollton-ga.gov"
         phone: ""
         last_elected: 2025
-        term_end: 2029              
-        next_election:         
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         tie_break_only: false
         photo: "https://carrolltonga.com/wp-content/uploads/2026/01/city-of-carrollton-councilmember-donnorth-683x1024.webp"
@@ -780,9 +799,10 @@ jurisdictions:
         party: Nonpartisan
         email: "bledbetter@carrollton-ga.gov"
         phone: ""
-        last_elected: 
-        term_end: 2029              
-        next_election:          
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         tie_break_only: false
         photo: "https://carrolltonga.com/wp-content/uploads/2025/09/city-of-carrollton-councilmember-brett-ledbetter.webp"
@@ -795,9 +815,10 @@ jurisdictions:
         party: Nonpartisan
         email: "sgibbs@carrollton-ga.gov"
         phone: ""
-        last_elected: 
-        term_end: 2027           
-        next_election:        
+        last_elected: 2023
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
         voting: true
         tie_break_only: false
         photo: "https://carrolltonga.com/wp-content/uploads/2025/09/city-of-carrollton-councilmember-stacie-gibbs.webp"
@@ -810,9 +831,10 @@ jurisdictions:
         party: Nonpartisan
         email: "buglum@carrollton-ga.gov"
         phone: ""
-        last_elected: 
-        term_end: 2027              
-        next_election:         
+        last_elected: 2023
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
         voting: true
         tie_break_only: false
         photo: "https://carrolltonga.com/wp-content/uploads/2025/09/city-of-carrollton-councilmember-bob-uglum.webp"
