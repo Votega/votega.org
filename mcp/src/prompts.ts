@@ -74,12 +74,18 @@ export function explainBill(bill: string, session?: string): PromptResult {
   return message(
     `Explain the Georgia bill "${b}" in plain language. ` +
       `Call get_bill with identifier "${b}"${s ? ` and session "${s}"` : ""}.\n\n` +
-      "Then get the plain-language summary from Georgia Commons, an independent project: if its MCP server " +
+      "Then get Georgia Commons' summary. Georgia Commons is an independent project: if its MCP server " +
       "(mcp.georgiacommons.org/mcp) is connected, call its fetch tool with the id in georgia_commons.id; " +
-      "otherwise open georgia_commons.url if you can read web pages. Say that the summary is Georgia Commons' " +
-      "AI-written summary and link their page; never present it as the bill's own text or as VoteGA's. If you " +
-      "can do neither, or there is no summary, give the title, status and official links, say that no summary " +
-      "was retrieved, and do not write one from the title or from memory.\n\n" +
+      "otherwise open georgia_commons.url if you can read web pages. From the section headed \"Summaries " +
+      "written by Georgia Commons\", show the one-sentence headline, \"Plain-language summary\" and \"What it " +
+      "does\". That section follows the bill text, so read further if the first result stops before it. Leave " +
+      "out \"Why it matters\" and the other parts.\n\n" +
+      "Put it under its own heading that says it is a summary AI-written by Georgia Commons, and say with it " +
+      "that it is not part of the bill, is not official and may contain errors. Link georgia_commons.url and, " +
+      "for the wording that counts, the bill text at bill.textUrl (or bill.billUrl if that is empty). " +
+      "Quote the bill itself when quoting the law. About the summary: never present it as the bill's own text or as VoteGA's. " +
+      "If you can do neither, or there is no summary, give the title, status and official links, say that no " +
+      "summary was retrieved, and do not write one from the title or from memory.\n\n" +
       "Also report the status, sponsors, passage votes and governor action get_bill returns. Do not say " +
       "whether the bill is good or bad, or what its sponsors intended.\n\n" +
       RULES,

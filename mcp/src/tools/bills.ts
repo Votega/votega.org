@@ -5,7 +5,7 @@
  */
 import { need, type Loader } from "../data";
 import type { BillCatalog, BillDetail, BillRow, BillSession, BillShard, BillTokens, Member, Meta, MembersIndex } from "../types";
-import { fail, ok, SITE, tokens, type ToolResult } from "../util";
+import { fail, GA_PASS_RULE, ok, SITE, tokens, type ToolResult } from "../util";
 
 export const DEFAULT_LIMIT = 10;
 export const MAX_LIMIT = 25;
@@ -246,6 +246,7 @@ export async function getBill(
       textUrl: detail.textUrl,
       votegaUrl: page,
     },
+    ...(detail.passageVotes.length ? { pass_rule: GA_PASS_RULE } : {}),
     georgia_commons: commons,
     as_of: meta.metadata.generatedAt,
     source_url: page,

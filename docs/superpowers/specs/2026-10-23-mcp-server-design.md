@@ -621,6 +621,13 @@ Where this differs from the plan above:
   text, with its link, never as bill text; and, with neither, to give the title, status and
   official links and say no summary was retrieved. VoteGA fetches and stores none of their text,
   so §6.3 stands.
+  - **What it shows** (site owner, 2026-11-26, after a chain test): their headline,
+    "Plain-language summary" and "What it does", under a heading naming it as AI-written by
+    Georgia Commons, with the caveats that it is not part of the bill, not official and may
+    contain errors, and links to their page and the bill text. "Why it matters" (evaluative) and
+    the other parts are left out. The assistant may reproduce the summary: their terms allow
+    quoting with credit and a link, although the note their server returns with it asks that it
+    not be quoted or cited as source text. It is never shown as the bill's wording.
   - Checked 2026-11-25 against their server (2.1.0): `fetch` takes
     `bill:<session-slug>/<number>` and returns the summary at `metadata.summary.headline` (their
     note on it: not source text, never quote or cite it); `search` results carry
@@ -659,9 +666,13 @@ prompt. `search_legislators` includes earlier-term former members with `include_
 - **Checked against real data** (local build, 2026-11-26): every tool answered through the HTTP
   loader, and for all 262 members with a vote file the totals and the newest votes (6,545) matched
   the monolithic source files. Bundle 1,302 KB raw, 231 KB gzipped.
-- **Not yet measured:** CPU on the live Worker. The largest reads are a bill search with no
-  keyword (all current shards, about 2 MB) and a state vote lookup (the 1.2 MB index), against the
-  100 ms cap (§10).
+- **Pass thresholds travel with the results** (0.4.1): state votes and a bill's passage votes
+  carry `pass_rule`, a summary of `scripts/lib/ga_vote_rules.py`, because a correct "Fail" on 97
+  yeas to 72 nays reads as an error. Keep the two in step.
+- **CPU on the live Worker** (0.4.0, 2026-11-26): 60 requests, no errors, median 9 ms, p90 27 ms,
+  max 55 ms against the 100 ms cap (§10). A small sample: look again after real use. The largest
+  reads are a bill search with no keyword (all current shards, about 2 MB) and a state vote lookup
+  (the 1.2 MB index).
 
 ## 13. Rollout
 
