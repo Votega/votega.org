@@ -32,6 +32,13 @@ python scripts/build_results_json.py _sources/election_results/<file>.csv <data-
 | `ga-special-2026-results-official.csv`  | Jul 28 2026 CD-13 special          | `ga-special-2026-results.json` |
 | `ga-special-2026-runoff-results.csv`    | Aug 25 2026 CD-13 special runoff   | `ga-special-2026-runoff-results.json` |
 
+## After certification
+
+Set the results page's `status: certified` (and `updated:`). That also publishes the election to
+`results/<results_folder>/` in Votega/ga-races-elections
+(`publish-results-to-ga-races-elections.yml`). A new election's page needs its own
+`results_folder`; published folders are never rewritten for a different election date.
+
 ## Election night
 
 Use the **JSON feed**, which lives at a stable URL all night:

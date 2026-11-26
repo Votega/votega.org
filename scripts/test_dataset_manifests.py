@@ -179,7 +179,7 @@ def _manifest_slugs(tree, src):
 
 
 PUBLISHERS = ('publish_ga_local_government', 'publish_ga_millage',
-              'publish_races', 'publish_early_vote',
+              'publish_races', 'publish_early_vote', 'publish_results',
               'publish_ga_bills', 'publish_ga_ballot_measures')
 INFO = {}
 for name in PUBLISHERS:
