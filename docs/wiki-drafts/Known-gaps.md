@@ -3,7 +3,7 @@ What the data does not cover, and what is easy to misread. If you find something
 ## State votes
 
 - **Passage votes only.** Amendments, procedural motions and committee votes are not included, so `rollNumber` has gaps.
-- **Check close votes against the bill's status.** `result` is `"Pass"` on a simple majority, except for state constitutional amendments. A Georgia bill needs a [majority of the chamber's total membership](https://www.georgiaencyclopedia.org/articles/government-politics/legislative-process-overview/) (91 in the House, 29 in the Senate), so a bill vote below that can be marked `"Pass"` although it failed. For `HB` and `SB` votes, compare `yea` with those numbers.
+- **Check close votes against the official status.** Some failed votes are marked `"Pass"`. A Georgia bill needs a [majority of the chamber's total membership](https://www.georgiaencyclopedia.org/articles/government-politics/legislative-process-overview/) (91 in the House, 29 in the Senate), and a state constitutional amendment needs two-thirds (120 and 38). If an `HB`, `SB` or amendment vote marked `"Pass"` is below its number, check the measure on [legis.ga.gov](https://www.legis.ga.gov/). A low tally alone is not proof: a few such bills are officially recorded as passed.
 - **Bundled calendars repeat.** One floor vote appears once per bill with identical tallies.
 - **Use `chamber`, not the motion text.** "Agree to Senate Substitute" is a House vote.
 - **Two votes on one bill in one day happen.** Use `rollNumber` and `time` to order them.
@@ -25,7 +25,7 @@ What the data does not cover, and what is easy to misread. If you find something
 - Voice votes and unanimous consent leave no roll call, so they are absent.
 - An en bloc Senate vote covers a group of nominations. It does not show a view on any one nominee.
 - `memberVotes` can include members who have left. In an election of the Speaker, `vote` is a person's name.
-- A Senator's record may omit the `district` field, so don't assume it is present.
+- `district` is `null` for Senators.
 
 ## Elections
 
