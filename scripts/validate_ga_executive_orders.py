@@ -31,6 +31,12 @@ with the runner. See docs/audits/2026-10-13-data-pipeline-audit.md 2.6.
   PDF hash. All of these are things the Governor's office or the calendar can do,
   so they are reported and never gate the commit.
 
+  Held for a person - an order signed on a day one Governor's term ends and the next
+  begins, with no hand-verified issuer in assets/data/ga-eo-issuers.json. Nothing in
+  the record says which Governor signed it, so this is never guessed: the run exits 1
+  (nothing is committed, the generated file is kept as a workflow artifact) until an
+  entry is added. Decided by the site owner 2026-11-25. See lib/ga_governors.py.
+
 Usage:
     python scripts/validate_ga_executive_orders.py \
         assets/data/ga-executive-orders-2026.json --baseline-ref HEAD --report-out report.md
@@ -45,6 +51,15 @@ import re
 import subprocess
 import sys
 from datetime import date, datetime, timezone
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from lib import ga_governors  # noqa: E402
+
+#: "I, Brian P. Kemp, Governor of the State of Georgia" - the only place a few orders
+#: name the Governor. Used only to cross-check the date-based issuer.
+SELF_NAMED = re.compile(r"\bI,?\s+([A-Z][A-Za-z.'\- ]{2,40}?),?\s+Governor\s+of\s+the\s+State\s+of\s+Georgia")
+TEXT_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "assets", "data", "eo-text")
 
 NUMBER = re.compile(r"^(\d{2})\.(\d{2})\.(\d{2})\.\d{2,}$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
@@ -145,6 +160,11 @@ def tier1(d, year=None):
             if want_year is not None and signed.year != want_year:
                 errors.append(f"{label}: dated {signed}, but this is the {want_year} file")
 
+        who = o.get("issuedBy")
+        if who is not None and not (isinstance(who, dict) and who.get("name")
+                                    and who.get("basis") in ("date", "verified")):
+            errors.append(f"{label}: issuedBy {who!r} is not {{name, execId, basis}}")
+
         # Enrichment is best-effort and an order may legitimately lack all of it
         # (tier 2). What cannot be true is a PARTIAL or malformed record: the
         # enricher writes sha256/bytes/fetchedAt together and carry-forward keeps
@@ -159,6 +179,55 @@ def tier1(d, year=None):
             if not o.get("fetchedAt"):
                 errors.append(f"{label}: has a sha256 but no fetchedAt")
     return errors
+
+
+# ── held for a person: an inauguration-day order nobody has verified ──────────
+
+def held_for_person(d, tl=None, overrides=None):
+    """Orders signed on a handover day with no verified issuer. Each one stops the run."""
+    tl = ga_governors.timeline() if tl is None else tl
+    overrides = ga_governors.load_overrides() if overrides is None else overrides
+    days = {str(x) for x in ga_governors.handover_days(tl)}
+    return [o for o in d.get("orders") or []
+            if o.get("date") in days and not overrides.get(o.get("number"))]
+
+
+def _self_named(year, number, text_dir=TEXT_DIR):
+    try:
+        with open(os.path.join(text_dir, str(year), f"{number}.txt"), encoding="utf-8") as fh:
+            m = SELF_NAMED.search(fh.read())
+    except OSError:
+        return None
+    return m.group(1).strip() if m else None
+
+
+def issuer_sections(d, year=None, text_dir=TEXT_DIR):
+    """Tier 2: orders with no issuer yet, and text that names a different Governor."""
+    sections = []
+    orders = d.get("orders") or []
+    unknown = [o for o in orders if o.get("issuedBy") is None]
+    if unknown:
+        sections.append((
+            "Orders with no confirmed Governor",
+            [f"- {_label(o)}" for o in unknown[:10]]
+            + ([f"- ... and {len(unknown) - 10} more"] if len(unknown) > 10 else [])
+            + ["", "Each is dated after the last sworn-in Governor's term in "
+                   "ga-executive-seats.json. Promote the incoming Governor (drop `provisional`, "
+                   "add the person to ga-executive.json); the next run fills these in."]))
+    mismatched = []
+    for o in orders:
+        who = o.get("issuedBy") or {}
+        named = _self_named(year or (o.get("date") or "")[:4], o.get("number"), text_dir)
+        if named and who.get("name"):
+            if named.split()[-1].lower() != who["name"].split()[-1].lower():
+                mismatched.append(f"- {_label(o)}: the text says **{named}**, "
+                                  f"the date says **{who['name']}**")
+    if mismatched:
+        sections.append((
+            "Order text names a different Governor than its date",
+            mismatched + ["", "Check the order. If the text is right, add it to "
+                              "assets/data/ga-eo-issuers.json with a `_note`."]))
+    return sections
 
 
 # ── tier 2: the file against the committed one, and against the calendar ───────
@@ -287,7 +356,20 @@ def main():
         return 1
     print(f"Tier 1 passed: {len(new.get('orders') or [])} orders in {os.path.basename(args.path)}.")
 
-    sections = tier2(new, old, today=_parse_date(args.today), year=year)
+    held = held_for_person(new)
+    if held:
+        print("HELD FOR A PERSON - inauguration-day order(s) with no verified issuer, "
+              "refusing to commit:\n", file=sys.stderr)
+        for o in held:
+            print(f"  - {o.get('number')} ({o.get('date')}): {o.get('title')}\n"
+                  f"    {o.get('url')}", file=sys.stderr)
+        print("\nBoth the outgoing and the incoming Governor could have signed these. Open "
+              "each PDF, then add it to assets/data/ga-eo-issuers.json as\n"
+              '  "orders": {"<number>": {"execId": "exec:...", "_note": "how it was verified"}}\n'
+              "and re-run the workflow.", file=sys.stderr)
+        return 1
+
+    sections = issuer_sections(new, year) + tier2(new, old, today=_parse_date(args.today), year=year)
     report = render(args.path, sections)
     if args.report_out:
         with open(args.report_out, "w", encoding="utf-8") as f:

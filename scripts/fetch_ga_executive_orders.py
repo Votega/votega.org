@@ -21,6 +21,7 @@ import urllib.error
 from datetime import datetime
 
 from lib.http import fetch_bytes
+from lib import ga_governors
 from html.parser import HTMLParser
 
 BASE_URL   = "https://gov.georgia.gov"
@@ -48,20 +49,20 @@ def _carry_enrichment(new_entry, old_entry):
     for fld in _ENRICH_FIELDS:
         if fld in old_entry and fld not in new_entry:
             new_entry[fld] = old_entry[fld]
+    # The issuer follows the date, not the PDF, so it carries whatever the URL does.
+    if 'issuedBy' in old_entry and 'issuedBy' not in new_entry:
+        new_entry['issuedBy'] = old_entry['issuedBy']
     return new_entry
 
 
 def governor_for_year(year):
-    """Return the Georgia governor who held office for (most of) the given year.
+    """The Governor in office on 1 January of `year`, for a year file with no orders yet.
 
-    Nathan Deal served through 2018 and left office 14 Jan 2019; Brian P. Kemp
-    took office that day. 2019 spans both, so it is labelled for both.
+    Once a year has orders, lib/ga_governors.assign() names every Governor who issued
+    one (e.g. two in an inauguration year), from the governor seat's holders.
     """
-    if year <= 2018:
-        return "Nathan Deal"
-    if year == 2019:
-        return "Nathan Deal / Brian P. Kemp"
-    return "Brian P. Kemp"
+    who, _ = ga_governors.issuer(f"{year}-01-01", None, ga_governors.timeline(), {})
+    return who["name"] if who else None
 
 
 # ── Categorisation ────────────────────────────────────────────────────────────
@@ -397,6 +398,8 @@ def fetch_year(year, strict=True):
         data = load_existing(year)
         data.setdefault('metadata', {})
         data['metadata']['count'] = len(data.get('orders') or [])
+        if data['metadata'].get('governor') is None:
+            data['metadata'].pop('governor', None)
         save(year, data)
         return True
 
@@ -433,7 +436,11 @@ def fetch_year(year, strict=True):
 
     all_orders = sorted(merged.values(), key=lambda o: o['number'], reverse=True)
 
-    if not new_count:
+    # Who issued each order, from its date and the governor seat. Re-derived every run,
+    # so promoting the incoming Governor's seat fills orders that had no issuer yet.
+    issuers_changed = ga_governors.assign({'metadata': dict(data.get('metadata') or {}),
+                                           'orders': all_orders})
+    if not new_count and not issuers_changed:
         print(f"  No new orders — skipping save (file unchanged)")
         return False
 
@@ -447,6 +454,7 @@ def fetch_year(year, strict=True):
         'count':     len(all_orders),
     }
     data['orders'] = all_orders
+    ga_governors.assign(data)
 
     path = save(year, data)
     print(f"Saved {len(all_orders)} orders -> {path} ({new_count} new)")

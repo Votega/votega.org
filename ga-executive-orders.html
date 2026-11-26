@@ -120,6 +120,7 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
     flex-shrink: 0;
   }
   .order-num-sm { display: none; }
+  .order-issuer { display: block; margin-top: 0.15rem; color: var(--color-text-secondary); font-size: 0.78rem; }
   @media (max-width: 600px) {
     .order-num { display: none; }
     .order-num-sm { display: block; margin-top: 0.15rem; color: var(--color-text-muted); font-size: 0.75rem; font-family: var(--font-mono); }
@@ -240,7 +241,21 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
     return CATEGORY_BADGE[cat] || 'badge-other';
   }
 
+  // Who issued the year's orders. One Governor: said once, in the source line. More than
+  // one, or an order whose issuer is still being confirmed: said on each row.
+  function issuerNames(orders) {
+    return [...new Set(orders.map(o => (o.issuedBy && o.issuedBy.name) || ''))];
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  }
+  function issuerLine(o) {
+    const name = o.issuedBy && o.issuedBy.name;
+    return `<span class="order-issuer">${name ? `Issued by ${esc(name)}` : 'Issuing Governor not yet confirmed'}</span>`;
+  }
+
   function renderTable(orders) {
+    const perRow = issuerNames(allOrders).length > 1;
     const tbody = document.getElementById('orderBody');
     document.getElementById('orderCount').textContent =
       `Showing ${orders.length} order${orders.length !== 1 ? 's' : ''}`;
@@ -257,6 +272,7 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
         <td class="order-title">
           <a href="${o.url}" target="_blank" rel="noopener">${o.title} ↗</a>
           <span class="order-num-sm">${o.number}</span>
+          ${perRow ? issuerLine(o) : ''}
         </td>
         <td><span class="badge ${badgeClass(o.category)}">${o.category}</span></td>
       </tr>
@@ -331,7 +347,9 @@ share-description: "Executive orders issued by the Governor of Georgia, with dat
       if (year === CURRENT_YEAR && eoUpdated && window.VotegaFreshness) {
         src.insertAdjacentHTML('beforeend', window.VotegaFreshness.suffix('ga-executive-orders', eoUpdated));
       }
-      src.appendChild(document.createTextNode(` · ${allOrders.length} orders · `));
+      const issuers = issuerNames(allOrders);
+      const issuedBy = issuers.length === 1 && issuers[0] ? ` · Issued by ${issuers[0]}` : '';
+      src.appendChild(document.createTextNode(`${issuedBy} · ${allOrders.length} orders · `));
       // Machine-readable data is published (and archived per year, alongside an
       // all-years CSV + schema) in the ga-executive-orders repo — the stable open-
       // data home, not the internal per-year asset this page fetches. See the
