@@ -78,6 +78,7 @@ Full annotated tree: `docs/project-structure.md`. Run `git ls-files` for the cur
 - A districted seat is its census blocks, never its number; decide carry-over from the block files.
 **Elections** (`docs/conventions-elections.md`)
 - Election night: use the SoS JSON feed URL (the XLSX name carries a fresh GUID), keep `fill_missing` ON for unofficial counts. Wait for certification before updating results from unofficial exports.
+- Results pages: stage them indexable with every contest in the served HTML (an empty-looking page is a soft 404); only `status: certified` pages publish to ga-races-elections, and a missing count is blank, never 0. Full checklist: "Results pages and publishing".
 - Never drop a retired candidate from `search-entities.json` (page builders read it back and would delete the page). Share cards are generated at deploy, never committed.
 **Local government** (`docs/conventions-local-government.md`)
 - Never overwrite good data with worse: judge a re-read by lost findings, not lost characters. Meeting-topic keywords are measured against the corpus, never guessed; the scorer and probe never carry a private keyword list.
