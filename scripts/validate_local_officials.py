@@ -165,6 +165,13 @@ def validate_member(juris_id, index, member, partisan):
         err(context, f"term_provenance must be one of {sorted(VALID_TERM_PROVENANCE)}, "
                      f"got: {provenance!r}")
 
+    # `term_note` is the OPTIONAL one-line explanation shown under a card's term
+    # dates when they look wrong beside the body's rules (a shortened unexpired
+    # term). Non-empty string when present.
+    term_note = member.get("term_note")
+    if "term_note" in member and (not isinstance(term_note, str) or not term_note.strip()):
+        err(context, f"term_note must be a non-empty string when present, got: {term_note!r}")
+
     # OPTIONAL service status + its companions. Validated only when present.
     status = member.get("status")
     if status is not None and status not in VALID_STATUSES:

@@ -319,6 +319,9 @@
             {% if m.term_end %}<br>Term ends {{ m.term_end }}{% endif %}
           </p>
           {% endif %}
+          {%- if m.term_note %}
+          <p class="po-handover">{{ m.term_note | escape }}</p>
+          {%- endif %}
           {%- if m.leaves_office %}
             {%- assign t1 = m.leaves_office | date: "%Y-%m-%d" -%}
             {%- assign succ = nil -%}

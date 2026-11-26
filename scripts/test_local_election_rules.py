@@ -117,6 +117,21 @@ bare = [i + 1 for i, ln in enumerate(lines)
         if ln.lstrip().startswith("topic:") and not ln.lstrip().startswith("#")]
 check(bare == [], "every election_rules item starts with '- topic:' (lines %s)" % bare)
 
+print("term_note: the optional member field")
+
+
+def member_errs(**kw):
+    V.errors.clear()
+    V.validate_member("x", 0, row(**kw), True)
+    return list(V.errors)
+
+
+check(member_errs() == [], "absent term_note is valid")
+check(member_errs(term_note="Won a special election.") == [], "a non-empty string is valid")
+for bad in (None, "", "   ", 2027, ["a note"], True):
+    check(any("term_note" in e for e in member_errs(term_note=bad)),
+          "term_note %r is an error" % (bad,))
+
 if failures:
     print(f"\n{len(failures)} FAILED")
     sys.exit(1)

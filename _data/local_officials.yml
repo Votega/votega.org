@@ -94,6 +94,11 @@
 #                 `verified` = a human confirmed the dates against `source`;
 #                 `assumed`  = derived (e.g. last_elected + term_years); `unknown` = no
 #                 basis. Omit while a roster is unreviewed. See LOCALDATAEXPORT.md.
+#     term_note : one short sentence shown under the card's term dates, for dates
+#                 that look wrong beside the body's rules (e.g. a special election
+#                 to fill the rest of an unexpired term). Plain fact, not a warning
+#                 (a service problem is `status`). Cite the evidence in a YAML
+#                 comment above it.
 #
 #   election_rules (JURISDICTION field, optional): how and when the body elects its
 #   officials, written by hand from charter sections a person has read.
@@ -756,8 +761,6 @@ jurisdictions:
           url: https://georgiacommons.org/cities/carrollton/charter/part
 
   # ---- PHASE 1 — ROSTER --------------------------------------------------
-    # next_election / term_end assume 4-year staggered terms (last_elected + 4).
-    # VERIFY against the source and correct where a member was re-elected since.
     members:
       - name: Betty B. Cason
         role: Mayor
@@ -4691,6 +4694,10 @@ jurisdictions:
         term_end: 2027
         next_election: 2027
         term_provenance: assumed
+        # "Special City Council Dist 2 Post 2" in the 2025-11-04 Rockdale County
+        # municipal results:
+        # https://results.sos.ga.gov/results/public/api/elections/rockdale-county-ga/MunicipalGeneralSpecialElectionPSC11042025/data
+        term_note: "Won a 2025 special election to fill the rest of an unexpired term."
         voting: true
         source: "https://www.conyersga.com/government/city-government/city-council"
       - name: "Gerald A. Hinesley, Sr."
