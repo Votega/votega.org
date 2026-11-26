@@ -578,6 +578,62 @@ still after the rollover); the Worker deploys from **CI with a scoped token**; t
   and the server's own host). Non-browser MCP clients send no Origin and are unaffected.
   Decided 2026-11-21: keep the default (§9).
 
+### 12.14 Phase 3 indexes (built 2026-11-25; the tools are not built yet)
+
+**Executive orders are left out for now** (site owner, 2026-11-25), while the question of the
+unpublished EO text (§12.12) is open. No `eo-index.json` is built.
+
+| Files | Rows | Notes |
+|---|---|---|
+| `former-members-index.json` | 0 | Only people missing from the live roster and present in a frozen biennium, so it is empty until the rollover. Members who left this term stay in `members-index.json` with `serving: false`. Departure wording: the approved label for that session, else `lib/ga_former.departure_note()`. No contact details |
+| `bills/sessions.json` | 2 sessions | The catalog: shard paths, live and active flags, Commons slug, URL templates |
+| `bills/<session>-<TYPE>.json` | 5,656 bills | Search rows. Includes frozen `ga-bienniums/<tag>/ga-bills.json` once it exists; the live copy wins |
+| `bills/<session>-<TYPE>-detail.json` | same | Links, passage votes, governor action |
+| `bills/<session>-<TYPE>-tokens.json` | same | Title word → positions. Only 11 function words are ignored |
+| `races-index.json` | 363 | `candidates` = the current ballot, by the candidate pages' rules |
+| `candidates-index.json` | 830 | Every candidate in any phase; 119 have no page of their own (`votegaUrl: null`) |
+| `local-mentions-index.json` | 1,703 | Topics read from the files; no excerpts or vote outcomes |
+
+55 index files, 783 KB gzipped; the largest is `bills/2025_26-HR.json` (105 KB gzip, 656 KB raw).
+
+Where this differs from the plan above:
+- **Word tables are per shard.** One table for 2025-26 was 145 KB gzipped, under 5 KB from the
+  budget, and the next biennium would have crossed it.
+- **No bill abstract or summary of our own** (site owner, 2026-11-25): `explain_bill` links and
+  chains to Georgia Commons. See "`explain_bill`" below.
+- **No bill actions:** `ga-bills.json` carries none, so `get_bill` returns status, votes and the
+  governor's action.
+- **Georgia Commons slugs are a rule, not a table** (`lib/mcp_bills.commons_slug`): `YYYY_YY` and
+  `YYYY_ss`; any other shape gets no link. A table would have needed an edit at each rollover.
+- **`ga-legislative-candidates.json` is not read:** `races.json` already carries those candidates.
+- **Candidate finance summaries are not indexed.**
+- The candidate-page helpers (active ballot, ids) moved to `lib/candidate_standing.py`, shared by
+  the page builder and the index; their output on all 363 races was unchanged.
+- **A new group cannot take down the live tools** (amends §12.2). The core files (members, ZIPs,
+  counties, local officials, resources, `meta.json`) fail together as before. `former-members`,
+  `local-mentions`, `bills` and `elections` are each built and checked alone: one that cannot be
+  built or fails a check is removed, listed in `meta.json` `failedGroups`, and the rest are
+  published (`validate_mcp_index.py` exit 3). The run is still flagged. The Phase 3 tools must
+  treat a missing file as "unavailable", not as "no results".
+- **`explain_bill` (decided; written with the bill tools).** The prompt calls `get_bill`, then
+  tells the assistant to use the Georgia Commons MCP server (`mcp.georgiacommons.org/mcp`) if it
+  is connected, else to open `commonsUrl`; to present the summary as Georgia Commons' AI-written
+  text, with its link, never as bill text; and, with neither, to give the title, status and
+  official links and say no summary was retrieved. VoteGA fetches and stores none of their text,
+  so §6.3 stands.
+  - Checked 2026-11-25 against their server (2.1.0): `fetch` takes
+    `bill:<session-slug>/<number>` and returns the summary at `metadata.summary.headline` (their
+    note on it: not source text, never quote or cite it); `search` results carry
+    `ai_summary.text`. Summaries were present for 30 of 30 sampled 2025-26 bills and, by
+    `fetch`, 21 of 21 special-session bills.
+  - Special-session numbers drop legis.ga.gov's `EX` suffix there (`HB 1EX` is `hb1`). The first
+    build of the indexes missed this, so each bill now carries its own `commonsUrl`
+    (`lib/mcp_bills.commons_url`) instead of a template for the Worker to fill.
+- A recorded winner whose `candidateId` matches nobody in the race gets `winner.key: null`, as
+  the candidate pages ignore it.
+- The Worker's path allowlist (`mcp/src/data.ts`) still covers only the Phase 2 files; the tools
+  work extends it.
+
 ## 13. Rollout
 
 | Phase | Scope | Exit criteria |
@@ -585,7 +641,7 @@ still after the rollover); the Worker deploys from **CI with a scoped token**; t
 | 0. Spike | Hello-world `createMcpHandler` Worker on `mcp.votega.org`; pinned SDK versions; Worker CPU time for a bills shard, a ZIP shard and the federal votes index; the bot-protection and isolate-reuse checks (§12.9) | Each §12 measurement confirmed on a Worker, or the named fallback chosen |
 | 1. Indexes (core: done 2026-11-21, §12.12) | `build_mcp_index.py` + validator in `deploy-pages.yml`: members, ZIP shards, county index, local officials, meta. Bills shards + token table, races, candidates, EOs, local mentions and former members moved to Phase 3 | Index files built at deploy, within budgets |
 | 2. Core tools (what a voter asks first; built 2026-11-21, §12.13) | `find_my_representatives`, `find_local_officials`, `search_legislators` / `get_legislator` (state and federal), `get_data_freshness` | Passes Inspector + unit tests |
-| 3. Remaining tools | The remaining indexes (bills shards + word → bill-id table, races, candidates, EOs, local mentions, former members); `search_races` / `get_candidate`, `get_legislator_votes` (GA and federal), bills, EOs, local government, former members and `session`, the `explain_bill` prompt (resources and the two area prompts shipped 2026-11-21, §8) | Full v1 tool set |
+| 3. Remaining tools | Indexes built 2026-11-25 except EOs (§12.14). Then: `search_races` / `get_candidate`, `get_legislator_votes` (GA and federal), bills, EOs, local government, former members and `session`, the `explain_bill` prompt (resources and the two area prompts shipped 2026-11-21, §8) | Full v1 tool set |
 | 4. Launch | Unstage the `/ai-assistants/` page (built 2026-11-21, §8: client config snippets included) and link it from `/open-data`, README entry; the rate-limit rule, CPU cap and Workers Paid are already in place (§9, §10); proposed for after the 2027-01-11 rollover (§7) | Public, announced |
 | 5. v2 | Street-address lookup (needs a geocoding and privacy decision), federal bills and sponsorship, seat history, optional KV/D1 search, Georgia Commons text if their license allows it | Separate spec |
 

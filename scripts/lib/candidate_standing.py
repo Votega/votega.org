@@ -39,6 +39,51 @@ def certified_winner_id(race, all_candidate_ids, all_member_ids=()) -> str | Non
     return mid if mid and mid in all_member_ids else None
 
 
+def _groups(phase):
+    """A phase's candidate lists, across both storage shapes (party ballots and a flat list)."""
+    return list((phase.get("ballots") or {}).values()) + [phase.get("candidates") or []]
+
+
+def active_candidates(race, with_name=lambda c: c):
+    """(phase_key, candidates) for the race's active phase (else the latest with candidates).
+
+    `with_name` fills a nameless entry (an incumbent listed only by member id) from a roster;
+    withdrawn and disqualified candidates are not on the ballot.
+    """
+    phases = {k: v for k, v in (race.get("phases") or {}).items() if isinstance(v, dict)}
+    order = [race.get("activePhase")] + ["general", "runoff", "primary"]
+    for key in order:
+        ph = phases.get(key)
+        if not ph:
+            continue
+        out, seen = [], set()
+        for g in _groups(ph):
+            for c in (g or []):
+                c = with_name(c)
+                cn = (c.get("name") or "").strip()
+                k = c.get("id") or cn
+                if cn and k not in seen and not c.get("withdrawn") and not c.get("disqualified"):
+                    seen.add(k)
+                    out.append(c)
+        if out:
+            return key, out
+    return None, []
+
+
+def all_candidate_ids(race) -> set:
+    """Every candidate id the race has carried in any phase (validates a recorded winner)."""
+    return {c["id"] for ph in (race.get("phases") or {}).values() if isinstance(ph, dict)
+            for g in _groups(ph) for c in (g or []) if c.get("id")}
+
+
+def all_member_ids(race) -> set:
+    """Member ids of incumbents the race lists (a recorded winner may be keyed on one)."""
+    return {c.get("memberId") or c.get("existingMemberId")
+            for ph in (race.get("phases") or {}).values() if isinstance(ph, dict)
+            for g in _groups(ph) for c in (g or [])
+            if c.get("memberId") or c.get("existingMemberId")}
+
+
 def standing(race, active, me_key, all_candidate_ids, all_member_ids=()) -> str:
     """One of LIVE / OFF_BALLOT / LOST / WON for the candidate keyed `me_key`.
 

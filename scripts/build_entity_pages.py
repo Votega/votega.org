@@ -35,7 +35,8 @@ from lib.ga_former import (load_frozen, former_records, bienniums_for, departure
                            service_years)
 from lib.ga_sessions import session_slug
 from lib import federal_pages as fedp
-from lib.candidate_standing import LIVE, OFF_BALLOT, LOST, WON, overall, standing, officeholder_target
+from lib.candidate_standing import (LIVE, OFF_BALLOT, LOST, WON, overall, standing, officeholder_target,
+                                    active_candidates, all_candidate_ids, all_member_ids)
 import os
 import re
 import sys
@@ -295,26 +296,8 @@ def _with_roster_name(c):
 
 
 def _race_active_candidates(race):
-    """(phase_key, candidates) for the race's active phase (else the latest with candidates)."""
-    phases = {k: v for k, v in (race.get("phases") or {}).items() if isinstance(v, dict)}
-    order = [race.get("activePhase")] + ["general", "runoff", "primary"]
-    for key in order:
-        ph = phases.get(key)
-        if not ph:
-            continue
-        out, seen = [], set()
-        groups = list((ph.get("ballots") or {}).values()) + [ph.get("candidates") or []]
-        for g in groups:
-            for c in (g or []):
-                c = _with_roster_name(c)
-                cn = (c.get("name") or "").strip()
-                k = c.get("id") or cn
-                if cn and k not in seen and not c.get("withdrawn") and not c.get("disqualified"):
-                    seen.add(k)
-                    out.append(c)
-        if out:
-            return key, out
-    return None, []
+    """(phase_key, candidates) on the race's current ballot, names filled from the rosters."""
+    return active_candidates(race, _with_roster_name)
 
 
 def _party_txt(c):
@@ -577,28 +560,6 @@ def _crosswalk_people():
     return _CROSSWALK
 
 
-def _race_all_candidate_ids(race):
-    """Every candidate id the race has carried in any phase (validates a recorded winner)."""
-    ids = set()
-    for ph in (race.get("phases") or {}).values():
-        if isinstance(ph, dict):
-            for g in list((ph.get("ballots") or {}).values()) + [ph.get("candidates") or []]:
-                ids.update(c["id"] for c in (g or []) if c.get("id"))
-    return ids
-
-
-def _race_all_member_ids(race):
-    """Member ids of incumbents the race lists without a candidate id (a recorded winner may
-    be keyed on one)."""
-    ids = set()
-    for ph in (race.get("phases") or {}).values():
-        if isinstance(ph, dict):
-            for g in list((ph.get("ballots") or {}).values()) + [ph.get("candidates") or []]:
-                ids.update(c.get("memberId") or c.get("existingMemberId") for c in (g or [])
-                           if c.get("memberId") or c.get("existingMemberId"))
-    return ids
-
-
 def candidate_standing(races, cand_obj, cid, name):
     """live / off-ballot / lost / won for a candidate page (see lib/candidate_standing.py).
 
@@ -612,7 +573,7 @@ def candidate_standing(races, cand_obj, cid, name):
     for race in races:
         _phase, active = _race_active_candidates(race)
         states.append(standing(race, active, cand_obj.get("id") or cid or name,
-                               _race_all_candidate_ids(race), _race_all_member_ids(race)))
+                               all_candidate_ids(race), all_member_ids(race)))
     return overall(states)
 
 
@@ -620,7 +581,7 @@ def _races_by_candidate(races):
     """candidate id -> every race (any phase) that lists them."""
     out = {}
     for race in races:
-        for cid in _race_all_candidate_ids(race):
+        for cid in all_candidate_ids(race):
             out.setdefault(cid, []).append(race)
     return out
 

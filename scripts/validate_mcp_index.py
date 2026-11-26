@@ -4,7 +4,13 @@
 Tier 1 only: every check is the index contradicting itself or the committed files it was built
 from (meta.json vs the bytes on disk, keys that do not resolve, ZIPs or counties lost in sharding,
 a slice path that does not exist, a file over the 150 KB gzip budget). The rules are
-lib/mcp_index.index_errors(). Exits 1 on any error.
+lib/mcp_index.grouped_errors().
+
+Exit codes:
+  0  every group is good
+  1  a core file (what the live tools read) is wrong: the caller must discard the whole index
+  3  the core is good; one or more Phase 3 groups failed and their files were REMOVED, with
+     meta.json rewritten to match, so what is left can be published
 
 Usage: python scripts/validate_mcp_index.py [--out DIR]
 """
@@ -39,6 +45,43 @@ def read_out(out_dir):
     return docs, actual
 
 
+DEGRADED = 3
+
+
+def finish(out_dir, src):
+    """Check the index in `out_dir`; drop any failed optional group. -> exit code."""
+    docs, actual = read_out(out_dir)
+    meta_path = os.path.join(out_dir, "meta.json")
+    with open(meta_path, "rb") as f:
+        meta = json.loads(f.read())
+    unbuilt = {x["group"]: x["reason"] for x in meta.get("failedGroups") or []}
+    grouped = M.grouped_errors(docs, actual,
+                               {**src, "load_errors": {**(src.get("load_errors") or {}), **unbuilt}})
+    for group, errs in sorted(grouped.items()):
+        for e in errs:
+            print(f"FAIL [{group}]: {e}")
+    if grouped.get("core"):
+        print("FAILED: the core indexes are wrong")
+        return 1
+    failed = {g: unbuilt.get(g) or "; ".join(errs[:3]) for g, errs in grouped.items()}
+    if failed:
+        for name in docs:
+            if M.group_of(name) in failed:
+                os.remove(os.path.join(out_dir, *name.split("/")))
+        bills_dir = os.path.join(out_dir, "bills")
+        if os.path.isdir(bills_dir) and not os.listdir(bills_dir):
+            os.rmdir(bills_dir)
+        meta = M.prune_meta(meta, failed)
+        with open(meta_path + ".tmp", "wb") as f:
+            f.write(B.encode(meta))
+        os.replace(meta_path + ".tmp", meta_path)
+    kept = [k for k in actual if k != "__claimed__" and M.group_of(k) not in failed]
+    total = sum(actual[k]["gzipBytes"] for k in kept)
+    state = f"DEGRADED (dropped: {', '.join(sorted(failed))})" if failed else "OK"
+    print(f"{state}: {len(kept)} index files, {total / 1e3:.0f} KB gzip")
+    return DEGRADED if failed else 0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--out", default=B.OUT)
@@ -46,7 +89,6 @@ def main():
     if not os.path.exists(os.path.join(args.out, "meta.json")):
         print(f"FAIL: {args.out}/meta.json not found (run build_mcp_index.py first)")
         return 1
-    docs, actual = read_out(args.out)
     officials = B.load_yaml(B.ROOT, "_data", "local_officials.yml")
     officers = B.load_yaml(B.ROOT, "_data", "county_officers.yml")
     places = B.load_yaml(B.ROOT, "_data", "places.yml")
@@ -62,14 +104,19 @@ def main():
         "open_data_ids": {d["id"] for d in (B.load_yaml(B.ROOT, "_data", "open_data.yml") or {}).get("datasets") or []},
         "retired_vgids": set((B.load_json(B.DATA, "id-crosswalk.json").get("metadata") or {})
                              .get("mergedVgIds") or {}),
+        "load_errors": {},
     }
-    errs = M.index_errors(docs, actual, src)
-    for e in errs:
-        print(f"FAIL: {e}")
-    total = sum(v["gzipBytes"] for k, v in actual.items() if k != "__claimed__")
-    print(f"{'FAILED' if errs else 'OK'}: {len(docs)} index files, {total / 1e3:.0f} KB gzip, "
-          f"{len(errs)} error(s)")
-    return 1 if errs else 0
+    for key, loader, groups in (
+            ("frozen", B.frozen_members, ("former-members", "elections")),
+            ("bill_docs", B.bill_docs, ("bills",)),
+            ("races", lambda: B.load_json(B.DATA, "races.json"), ("elections",)),
+            ("topic_docs", B.topic_docs, ("local-mentions",))):
+        try:
+            src[key] = loader()
+        except Exception as e:  # reported against the group(s) that need this source
+            for group in groups:
+                src["load_errors"][group] = f"{key}: {type(e).__name__}: {e}"
+    return finish(args.out, src)
 
 
 if __name__ == "__main__":

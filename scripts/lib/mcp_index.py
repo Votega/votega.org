@@ -11,6 +11,12 @@ Phase 1 (core): the four index families the Phase 2 tools read.
   local-officials-index.json county commissions / city councils + sheriffs
   meta.json                  per-file hashes and sizes, and per-dataset dates (written last)
 
+Phase 3 (the indexes for the remaining tools; executive orders are left out for now):
+  former-members-index.json  members found only in a frozen biennium
+  local-mentions-index.json  local-topic mentions from agendas and minutes
+  bills/                     lib/mcp_bills.py
+  races-, candidates-index   lib/mcp_elections.py
+
 Rules carried from CLAUDE.md:
   - A GA legislator is keyed `ga:<legisGaGovId>`, a federal member `us:<bioguideId>` (spec §5.5).
     The roster `id` is an opaque handle: it appears here only as the vote-slice file name, built
@@ -20,6 +26,8 @@ Rules carried from CLAUDE.md:
 """
 
 import re
+
+from lib.ga_former import departure_note, former_records
 
 SITE = "https://www.votega.org"
 GA_STATE = "Georgia"
@@ -34,6 +42,15 @@ ZIP_MEANING = (
 COUNTY_MEANING = (
     "For each county, the 2020 population living in each district, and that as a share of the "
     "county. A county is not a district: a county in several districts lists each of them.")
+
+FORMER_MEANING = (
+    "General Assembly members who appear only in a frozen biennium, not on the current roster. "
+    "Each row describes their newest biennium. No contact details. A member who left during the "
+    "current term is in members-index.json with serving=false.")
+
+MENTIONS_MEANING = (
+    "Meeting agendas and minutes in which a topic's keywords appear, newest first. A mention is "
+    "not an action taken; future dates are posted agendas. Only some places are scanned.")
 
 OFFICIALS_MEANING = (
     "Human-reviewed rosters, incomplete by design: a place not listed is not covered, which is "
@@ -195,6 +212,35 @@ def build_members(ga, federal, crosswalk, entity_urls, existing, generated_at, c
     }
 
 
+# ---------------------------------------------------------------- former members
+
+def build_former_members(ga, frozen, labels, crosswalk, existing, generated_at):
+    """`frozen` = ga_former.load_frozen() ({tag: {gid: record}}), `labels` =
+    ga-departure-labels.json, whose approved wording is copied for its own session only."""
+    vg_by_gid, _ = vgid_lookup(crosswalk)
+    label_tag = (labels.get("metadata") or {}).get("session")
+    rows = []
+    for rec, tag in former_records(ga.get("members") or [], frozen):
+        if tag == "current" or rec.get("chamber") not in ("Senate", "House of Representatives"):
+            continue
+        gid = str(rec["legisGaGovId"])
+        row = ga_member_row(rec, vg_by_gid, set())
+        votes = f"ga-bienniums/{tag}/ga-votes/{member_slug(rec['id'])}.json"
+        spons = f"ga-bienniums/{tag}/ga-sponsorship/{gid}.json"
+        label = ((labels.get("labels") or {}).get(gid) or {}).get("label") if tag == label_tag else None
+        row.update({
+            "serving": False, "phone": None, "email": None, "officialWebsiteUrl": None,
+            "slices": {"votes": votes if votes in existing else None,
+                       "sponsorship": spons if spons in existing else None},
+            "biennium": tag,
+            "bienniums": sorted((t for t in frozen if gid in frozen[t]), reverse=True),
+            "departure": blank(label) or departure_note(rec),
+        })
+        rows.append(row)
+    return {"metadata": {"generatedAt": generated_at, "count": len(rows), "meaning": FORMER_MEANING},
+            "members": rows}
+
+
 # ---------------------------------------------------------------- ZIPs
 
 def build_zip_shards(zipdoc, generated_at):
@@ -311,6 +357,46 @@ def build_local_officials(officials, officers, places, fips_by_slug, today, gene
     }
 
 
+# ---------------------------------------------------------------- local topic mentions
+
+def build_local_mentions(topic_docs, places, fips_by_slug, generated_at):
+    """`topic_docs` = the parsed local-topics-*.json files; topics are read from them. Excerpts
+    and vote outcomes are not carried."""
+    place_by_slug = {p["slug"]: p for p in (places.get("places") or []) if p.get("slug")}
+    by_name = county_fips_by_name(fips_by_slug)
+    topics, rows, seen_places = [], [], {}
+    for doc in topic_docs:
+        meta = doc.get("metadata") or {}
+        slug = meta["topic"]
+        mentions = doc.get("mentions") or []
+        topics.append({"slug": slug, "label": blank(meta.get("label")), "count": len(mentions),
+                       "generatedAt": meta.get("generatedAt"),
+                       "votegaUrl": f"{SITE}/local/topics/{slug}/"})
+        for m in mentions:
+            pid = m["placeId"]
+            if pid not in seen_places:
+                p = place_by_slug.get(pid) or {}
+                parent = place_by_slug.get(p.get("parentCounty")) or {}
+                fips = (blank(m.get("fips")) or p.get("fips") or parent.get("fips")
+                        or (by_name.get(_letters(pid)) if m.get("placeType") == "county" else None))
+                seen_places[pid] = {
+                    "name": m.get("placeName"), "type": m.get("placeType"), "countyFips": fips,
+                    "votegaUrl": f"{SITE}/local/{pid}/" if p and not p.get("hidden") else None}
+            row = {"place": pid, "topic": slug}
+            for f in ("date", "body", "docType", "confidence", "sourceUrl", "minutesUrl"):
+                row[f] = blank(m.get(f))
+            for f in ("terms", "tags", "vendors"):
+                row[f] = [x for x in m.get(f) or [] if blank(x)]
+            rows.append(row)
+    rows.sort(key=lambda r: (r["place"], r["topic"], r["sourceUrl"] or ""))
+    rows.sort(key=lambda r: r["date"] or "", reverse=True)
+    return {"metadata": {"generatedAt": generated_at, "count": len(rows),
+                         "topics": sorted(topics, key=lambda t: t["slug"]),
+                         "places": {k: seen_places[k] for k in sorted(seen_places)},
+                         "meaning": MENTIONS_MEANING},
+            "mentions": rows}
+
+
 # ---------------------------------------------------------------- MCP resources (spec §8)
 
 def _text(v):
@@ -411,6 +497,47 @@ def resources_errors(doc, open_data_ids):
     return errs
 
 
+# ---------------------------------------------------------------- groups
+# The core files are what the live tools read: any error there fails the whole index. Each other
+# group stands alone: if it cannot be built or fails a check, only its files are dropped.
+
+OPTIONAL_GROUPS = {
+    "former-members": ("former-members-index.json",),
+    "local-mentions": ("local-mentions-index.json",),
+    "bills": ("bills/",),
+    "elections": ("races-index.json", "candidates-index.json"),
+}
+
+
+def group_of(name):
+    """An index file (or a SOURCES key) -> its group; anything not listed is "core"."""
+    for group, names in OPTIONAL_GROUPS.items():
+        if any(name == n or (n.endswith("/") and name.startswith(n)) for n in names):
+            return group
+    return "core"
+
+
+def prune_meta(meta, failed):
+    """meta.json without the failed groups. `failed` = {group: reason}."""
+    out = dict(meta)
+    out["files"] = {k: v for k, v in meta["files"].items() if group_of(k) not in failed}
+    out["metadata"] = {**meta["metadata"], "count": len(out["files"])}
+    out["sources"] = {k: v for k, v in (meta.get("sources") or {}).items() if group_of(k) not in failed}
+    out["failedGroups"] = [{"group": g, "reason": failed[g]} for g in sorted(failed)]
+    stamps = dict(meta.get("sourceStamps") or {})
+    if "bills" in failed:
+        stamps.pop("ga-bills", None)
+        sessions = dict(out.get("sessions") or {})
+        sessions["ga"] = {**(sessions.get("ga") or {}), "activeBillSession": None}
+        out["sessions"] = sessions
+    if "elections" in failed:
+        stamps.pop("races", None)
+    if "local-mentions" in failed:
+        out["localTopics"] = []
+    out["sourceStamps"] = stamps
+    return out
+
+
 # ---------------------------------------------------------------- checks (validate_mcp_index.py)
 
 GZIP_BUDGET = 150_000  # bytes per index file (spec §5.1)
@@ -433,39 +560,54 @@ def _empty_strings(obj, path="$"):
 
 
 def index_errors(docs, file_meta, src):
-    """Tier-1 checks: the index contradicts itself or the files it was built from.
+    """Every error from grouped_errors(), in one list."""
+    return [e for errs in grouped_errors(docs, file_meta, src).values() for e in errs]
+
+
+def grouped_errors(docs, file_meta, src):
+    """{group: [errors]}, only for groups that have any. Tier-1 checks: the index contradicts itself or the files it was built from.
 
     docs       {name: parsed index document} for every file in the output except meta.json
     file_meta  {name: {bytes, gzipBytes, sha256}} computed from the bytes on disk, plus
                meta.json's own claims under the key "__claimed__"
     src        the inputs: ga, federal, zipdoc, county_fips (set), place_slugs (set),
                jurisdiction_ids (set), officer_ids (set), slices (set of existing paths),
-               retired_vgids (set, the keys of id-crosswalk.json metadata.mergedVgIds)
+               retired_vgids (set, the keys of id-crosswalk.json metadata.mergedVgIds),
+               frozen (ga_former.load_frozen()), bill_docs (live ga-bills.json first, then
+               frozen), races (races.json), topic_docs (local-topics-*.json), and optionally
+               load_errors ({group: reason}) for a group whose sources could not be read
     """
-    errs = []
+    out = {}
+
+    def add(group, *found):
+        if found:
+            out.setdefault(group, []).extend(found)
+
+    errs = []  # the core group's
     claimed = file_meta.get("__claimed__") or {}
     actual = {k: v for k, v in file_meta.items() if k != "__claimed__"}
 
     # meta.json describes exactly the files on disk, byte for byte
     for name in sorted(set(claimed) | set(actual)):
+        group = group_of(name)
         if name not in actual:
-            errs.append(f"meta.json lists {name}, which is not on disk")
+            add(group, f"meta.json lists {name}, which is not on disk")
         elif name not in claimed:
-            errs.append(f"{name} is on disk but not in meta.json")
+            add(group, f"{name} is on disk but not in meta.json")
         else:
             for k in ("bytes", "sha256"):
                 if claimed[name].get(k) != actual[name].get(k):
-                    errs.append(f"{name}: meta.json {k} does not match the file")
+                    add(group, f"{name}: meta.json {k} does not match the file")
         if name in actual and actual[name]["gzipBytes"] > GZIP_BUDGET:
-            errs.append(f"{name}: {actual[name]['gzipBytes']} bytes gzipped, over the "
-                        f"{GZIP_BUDGET} budget (shard it)")
+            add(group, f"{name}: {actual[name]['gzipBytes']} bytes gzipped, over the "
+                       f"{GZIP_BUDGET} budget (shard it)")
 
     for name, doc in docs.items():
         meta = doc.get("metadata") or {}
         for p in _empty_strings(doc)[:5]:
-            errs.append(f"{name}: empty string at {p} (use null)")
+            add(group_of(name), f"{name}: empty string at {p} (use null)")
         if name in claimed and claimed[name].get("count") != meta.get("count"):
-            errs.append(f"{name}: meta.json count differs from the file's own metadata.count")
+            add(group_of(name), f"{name}: meta.json count differs from the file's own metadata.count")
 
     # members
     m = docs.get("members-index.json")
@@ -575,4 +717,71 @@ def index_errors(docs, file_meta, src):
         errs.append("resources.json is missing")
     elif "open_data_ids" in src:
         errs += resources_errors(r, src["open_data_ids"])
+
+    add("core", *errs)
+
+    # imported here: those modules import this one's helpers
+    from lib.mcp_bills import bill_errors
+    from lib.mcp_elections import election_errors
+    checks = {
+        "former-members": lambda: former_errors(docs, src),
+        "local-mentions": lambda: mention_errors(docs, src),
+        "bills": lambda: bill_errors(docs, src["bill_docs"]),
+        "elections": lambda: election_errors(docs, src["races"]),
+    }
+    load_errors = src.get("load_errors") or {}
+    for group, check in checks.items():
+        if group in load_errors:
+            add(group, f"{group}: not built or sources unreadable: {load_errors[group]}")
+            continue
+        try:
+            add(group, *check())
+        except Exception as e:  # a crashing check condemns its own group, not the index
+            add(group, f"{group}: check crashed: {type(e).__name__}: {e}")
+    return out
+
+
+def former_errors(docs, src):
+    doc = docs.get("former-members-index.json")
+    if doc is None:
+        return ["former-members-index.json is missing"]
+    errs = []
+    rows = doc.get("members") or []
+    if doc["metadata"].get("count") != len(rows):
+        errs.append("former-members-index.json: metadata.count != len(members)")
+    live = {str(m.get("legisGaGovId")) for m in src["ga"].get("members") or []}
+    want = {f"ga:{gid}" for recs in src["frozen"].values() for gid, m in recs.items()
+            if gid not in live and m.get("chamber") in ("Senate", "House of Representatives")}
+    have = [r.get("key") for r in rows]
+    if len(have) != len(set(have)) or set(have) != want:
+        errs.append(f"former members differ from the frozen bienniums (missing "
+                    f"{sorted(want - set(have))[:5]}, extra {sorted(set(have) - want)[:5]})")
+    for r in rows:
+        k = r.get("key")
+        if r.get("serving") is not False or any(r.get(f) for f in ("phone", "email", "officialWebsiteUrl")):
+            errs.append(f"former member {k}: marked serving, or carries contact details")
+        if r.get("vgId") is not None and r["vgId"] in src.get("retired_vgids", ()):
+            errs.append(f"former member {k}: carries retired vgId {r['vgId']}")
+        for kind, path in (r.get("slices") or {}).items():
+            if path is not None and path not in src["slices"]:
+                errs.append(f"former member {k}: {kind} slice {path} does not exist")
+    return errs
+
+
+def mention_errors(docs, src):
+    doc = docs.get("local-mentions-index.json")
+    if doc is None:
+        return ["local-mentions-index.json is missing"]
+    errs = []
+    rows = doc.get("mentions") or []
+    if doc["metadata"].get("count") != len(rows):
+        errs.append("local-mentions-index.json: metadata.count != len(mentions)")
+    want = {d["metadata"]["topic"]: len(d.get("mentions") or []) for d in src["topic_docs"]}
+    have = {}
+    for r in rows:
+        have[r.get("topic")] = have.get(r.get("topic"), 0) + 1
+    if have != {t: n for t, n in want.items() if n}:
+        errs.append(f"local mentions differ from the topic files (have {have}, want {want})")
+    if any(r.get("place") not in doc["metadata"].get("places", {}) for r in rows):
+        errs.append("local-mentions-index.json: a mention names a place missing from metadata.places")
     return errs
