@@ -1,0 +1,67 @@
+name: Correct a closed GA session's vote results (manual)
+
+# Re-derives the Pass/Fail of every roll call in ONE published closed biennium,
+# Votega/ga-legislators sessions/<slug>/votes.json, under lib/ga_vote_rules.py, and
+# republishes that votes.json and votes.csv. Nothing else in them changes: the published
+# file is read back, only `result` (plus metadata.amendmentRuleApplied / resultRule) is
+# rewritten, and members.* and votes.schema.json are not touched. Run once per biennium
+# after a rule fix; an unchanged rule republishes identical bytes, a no-op.
+# List what changed in that repo's CHANGES.md: the step summary prints every flip.
+# Nothing here changes the site or any committed file in this repo.
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      session:
+        description: Closed biennium to correct
+        type: choice
+        required: true
+        options:
+          - '2023_24'
+          - '2021_22'
+          - '2019_20'
+          - '2017_18'
+
+jobs:
+  correct:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Read the published votes.json
+        env:
+          SESSION: ${{ inputs.session }}
+        run: |
+          slug="${SESSION:0:4}-$(( ${SESSION:0:4} + 1 ))"   # 2017_18 -> 2017-2018
+          echo "SLUG=$slug" >> "$GITHUB_ENV"
+          mkdir -p out/correct
+          curl -fsSL "https://raw.githubusercontent.com/Votega/ga-legislators/main/sessions/$slug/votes.json" \
+            -o "out/correct/published-$SESSION.json"
+
+      - name: Re-derive results (reads resolution abstracts from legis.ga.gov)
+        env:
+          SESSION: ${{ inputs.session }}
+        run: |
+          python3 scripts/rederive_ga_vote_results.py "out/correct/published-$SESSION.json" \
+            "out/correct/votes-$SESSION.json" --report "out/correct/report-$SESSION.json" \
+            | tee out/correct/log.txt
+          { echo '```'; cat out/correct/log.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Cross-check close votes against legis.ga.gov status history
+        env:
+          SESSION: ${{ inputs.session }}
+        run: python3 scripts/check_ga_vote_status.py "out/correct/votes-$SESSION.json"
+
+      - name: Publish votes.json + votes.csv to ga-legislators sessions/<slug>/
+        env:
+          GA_LEGISLATORS_TOKEN: ${{ secrets.GA_LEGISLATORS_TOKEN }}
+          SESSION: ${{ inputs.session }}
+        run: python3 scripts/publish_ga_legislators.py correct-results "$SESSION" "out/correct/votes-$SESSION.json"

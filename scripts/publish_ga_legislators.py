@@ -932,6 +932,40 @@ def build_archive(tag, path):
     return artifacts
 
 
+def build_correct_results(tag, path):
+    """Republish a closed biennium's votes.json + votes.csv after
+    rederive_ga_vote_results.py corrected their `result` fields. Pure: no network.
+
+    `path` is the corrected copy of the PUBLISHED sessions/<slug>/votes.json (decoded
+    memberVotes, same metadata), so everything but `result` and the two metadata keys
+    the corrector sets re-emits byte-identical. members.* and votes.schema.json are
+    left alone, and the session must already be published."""
+    if tag not in ARCHIVE_SESSIONS:
+        sys.exit(f"correct-results: '{tag}' is not an archive session "
+                 f"({', '.join(ARCHIVE_SESSIONS)}). Current-biennium results are "
+                 f"re-derived by the daily votes run.")
+    doc = json.load(open(path, encoding="utf-8"))
+    meta = doc.get("metadata", {})
+    if not meta.get("archive") or meta.get("session") != tag or not meta.get("resultRule"):
+        sys.exit(f"correct-results: {path} is not a corrected archive votes.json for "
+                 f"'{tag}' (archive={meta.get('archive')!r}, session={meta.get('session')!r}, "
+                 f"resultRule set={bool(meta.get('resultRule'))}); run "
+                 f"rederive_ga_vote_results.py first.")
+    votes = doc.get("votes") or {}
+    if not votes or not doc.get("memberVotes"):
+        sys.exit(f"correct-results: {path} has no votes or no memberVotes; refusing to publish.")
+    if any(isinstance(e, dict) for e in doc["memberVotes"].values()):
+        sys.exit(f"correct-results: {path} has compact memberVotes; expected the published "
+                 f"(decoded) votes.json.")
+    slug = session_slug(tag)
+    artifacts = {
+        f"sessions/{slug}/votes.json": compact_json(doc),
+        f"sessions/{slug}/votes.csv": votes_csv(votes, tag),
+    }
+    assert_archive_paths(artifacts, slug)
+    return artifacts
+
+
 def assert_archive_paths(artifacts, slug):
     """Every artifact lives under sessions/<slug>/ and none is a daily pointer. The
     LICENSE/NOTICE the publisher injects later are byte-identical across publishers."""
@@ -990,8 +1024,13 @@ def main():
             sys.exit("usage: publish_ga_legislators.py archive <session-tag> <archive-file> [--overwrite]")
         artifacts = build_archive(args[0], args[1])
         refuse_if_published(session_slug(args[0]), "--overwrite" in sys.argv)
+    elif mode == "correct-results":
+        args = [a for a in sys.argv[2:] if not a.startswith("--")]
+        if len(args) != 2:
+            sys.exit("usage: publish_ga_legislators.py correct-results <session-tag> <corrected-votes.json>")
+        artifacts = build_correct_results(args[0], args[1])
     else:
-        sys.exit("usage: publish_ga_legislators.py <members|votes|scorecard|freeze-roster|identifiers|archive> [session-slug]")
+        sys.exit("usage: publish_ga_legislators.py <members|votes|scorecard|freeze-roster|identifiers|archive|correct-results> [session-slug]")
     publish_or_dry_run(REPO, artifacts, TOKEN_ENV, validate=validate)
 
 

@@ -40,6 +40,7 @@ from datetime import datetime, timezone
 from lib.atomic_io import write_json_atomic
 from lib.ga_passage import native_is_passage, normalize_bill
 from lib.ga_sessions import legis_session_id
+from lib.ga_vote_rules import vote_passed
 from lib.ga_soap import (CHAMBERS, VACANT_ID, RollCallNotPublished, get_members_by_session,
                          get_text_url, get_title_index, get_vote_detail, get_vote_listings)
 from lib.ga_voters import VOTING_CHAMBERS, MemberIndex, new_stats, summarize
@@ -379,10 +380,13 @@ def soap_bill_record(entry, voters, party_lookup, report=None, reviewed=None):
             for item in legislation:
                 if normalize_bill(item.get("description")) == want:
                     legislation_id = legislation_id or item.get("legislationId")
+            day = date10 or l.get("date") or ""
+            passed = vote_passed(yea, nay, branch, entry.get("constitutionalAmendment", False),
+                                 caption, legislation_id, day)
             candidates.append({
-                "rollNumber": l.get("number"), "date": date10 or l.get("date") or "",
+                "rollNumber": l.get("number"), "date": day,
                 "time": l.get("time"), "motionText": caption,
-                "result": "pass" if yea > nay else "fail",
+                "result": "pass" if passed else "fail",
                 "_memberVotes": member_votes, "_extraParty": extra_party,
                 "_unattributed": unattributed, "_partyless": partyless, "_former": former,
             })

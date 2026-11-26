@@ -30,6 +30,10 @@ re-downloading immutable records. This is the model lib/ga_sessions.py documents
 ACTIVE_SESSION / preserved_session_ids) and that the archived Open States producer
 implemented; it was dropped in the SOAP cutover and is restored here.
 
+Each preserved passage vote's `result` is the one exception to "verbatim": it is
+re-derived from the vote's own tally on every run, so a fix to lib/ga_vote_rules.py
+reaches closed sessions without a full refresh.
+
 Carrying bills forward also PRESERVES downstream enrichment on closed sessions:
 enrich_bills_with_party_votes.py injects partyTally into each passageVote after this
 producer runs, and a re-fetch would blank it until the next enrichment pass.
@@ -70,7 +74,8 @@ from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic, atomic_write
 from lib.ga_passage import native_is_passage
-from lib.ga_vote_rules import is_state_constitutional_amendment, vote_passed
+from lib.ga_vote_results import rederive_bill_passage_votes
+from lib.ga_vote_rules import STORED_ABSTRACT_MAX, requires_two_thirds, vote_passed
 from lib.ga_bill_subjects import infer_local_subject
 from lib.ga_bills_rollover import (WRITE_FLOOR, detect_changeover, floor_problem,  # noqa: E402
                                    frozen_problem, rollover_stamp)
@@ -117,7 +122,7 @@ OVERRIDES_FILE    = os.path.join(DATA_DIR, "ga-bills-subjects.json")
 AI_FILE           = os.path.join(DATA_DIR, "ga-bill-ai.json")
 MEMBERS_FILE      = os.path.join(DATA_DIR, "ga-members.json")
 REVIEW_CSV_FILE   = os.path.join(DATA_DIR, "ga-bills-untagged-review.csv")
-ABSTRACT_MAX      = 500
+ABSTRACT_MAX      = STORED_ABSTRACT_MAX   # lib/ga_vote_rules reads the cut-off length
 RESOLUTION_TYPES  = {"HR", "SR"}
 
 # legis numeric session id -> our session tag (reverse of lib.ga_sessions.LEGIS_SESSIONS).
@@ -187,11 +192,13 @@ def _text(el, tag, cast=None):
     return child.text.strip()
 
 
-def derive_result(yea, nay, chamber=None, constitutional_amendment=False):
-    """Pass/Fail by simple majority (Open States' result rule), or two-thirds of the
-    chamber's elected members for a Georgia constitutional amendment — see
-    lib/ga_vote_rules.py and generate_ga_votes_soap.derive_result."""
-    passed = vote_passed(yea, nay, chamber, constitutional_amendment)
+def derive_result(yea, nay, chamber=None, constitutional_amendment=False, motion=None,
+                  legislation_id=None, date=None):
+    """Lower-case pass/fail under lib/ga_vote_rules.vote_passed: a majority of the
+    chamber's seats (91 House / 29 Senate), two-thirds for a Georgia constitutional
+    amendment. Same rule as generate_ga_votes_soap.derive_result."""
+    passed = vote_passed(yea, nay, chamber, constitutional_amendment, motion,
+                         legislation_id, date)
     if passed is None:
         return None
     return "pass" if passed else "fail"
@@ -301,7 +308,7 @@ def _clean_member_desc(desc):
     return (desc or "").strip()
 
 
-def _passage_votes(detail, constitutional_amendment=False):
+def _passage_votes(detail, constitutional_amendment=False, legislation_id=None):
     """The bill's passage roll calls (native_is_passage), mapped to the ga-bills schema."""
     out = []
     votes = detail.find("d:Votes", ns)
@@ -316,10 +323,12 @@ def _passage_votes(detail, constitutional_amendment=False):
         nv  = _text(vl, "NotVoting", int) or 0
         exc = _text(vl, "Excused", int) or 0
         chamber = _chamber(None, _text(vl, "Branch"))
+        date10 = (_text(vl, "Date") or "")[:10] or ""
         out.append({
             "chamber":    chamber,
-            "date":       (_text(vl, "Date") or "")[:10] or "",
-            "result":     derive_result(yea, nay, chamber, constitutional_amendment) or "",
+            "date":       date10,
+            "result":     derive_result(yea, nay, chamber, constitutional_amendment, caption,
+                                        legislation_id, date10) or "",
             "motionText": caption,
             "yea":        yea if yea is not None else 0,
             "nay":        nay if nay is not None else 0,
@@ -396,7 +405,8 @@ def map_bill(detail, our_session, roster, titles_map):
         "billUrl":     "https://www.legis.ga.gov/legislation/%s" % lid,
         "textUrl":     (_text(latest, "Url") or "") if latest is not None else "",
         "passageVotes": _passage_votes(
-            detail, is_state_constitutional_amendment(summary) and doc_type.upper() in RESOLUTION_TYPES),
+            detail, requires_two_thirds(summary, doc_type.upper() in RESOLUTION_TYPES),
+            lid),
         "governorAction": _governor_action(detail),
     }
 
@@ -602,6 +612,10 @@ def main():
             sys.exit(1)
         print("Preserving %d bills from %d closed session(s): %s"
               % (len(preserved), len(preserve), ", ".join(preserve)))
+        # Carried verbatim, except each passage vote's result, which is re-derived from
+        # its own tally so a rule change reaches closed sessions (lib/ga_vote_results).
+        flipped = sum(rederive_bill_passage_votes(b) for b in preserved)
+        print("Re-derived passage-vote results on preserved bills: %d changed" % flipped)
 
     roster = load_roster()
     base, overrides = load_subjects()
