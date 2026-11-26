@@ -154,7 +154,42 @@ def merge_validation_cases():
           (V.resolve(good, "vg2"), V.resolve(good, "vg9")), ("vg1", "vg9"))
 
 
+def ledger_append_only_cases():
+    print("ledger append-only")
+    old = {"legis:1": "vg1", "fec:H1": "vg2"}
+    check("an unchanged ledger passes", V.ledger_append_only_errors(old, dict(old)), [])
+    check("adding an assignment passes",
+          V.ledger_append_only_errors(old, {**old, "fec:H2": "vg3"}), [])
+    check("dropping an assignment fails",
+          len(V.ledger_append_only_errors(old, {"legis:1": "vg1"})), 1)
+    check("renumbering an assignment fails",
+          any("renumbered" in e for e in V.ledger_append_only_errors(
+              old, {"legis:1": "vg9", "fec:H1": "vg2"})), True)
+    check("no baseline at all checks nothing", V.ledger_append_only_errors(None, old), [])
+
+    # Only a ledger HEAD genuinely lacks may skip the check.
+    check("a readable baseline neither errors nor warns",
+          V.ledger_baseline_errors({"assign": old}, True), ([], []))
+    errs, warns = V.ledger_baseline_errors(None, False)
+    check("a ledger new at HEAD only warns", (errs, len(warns)), ([], 1))
+    errs, warns = V.ledger_baseline_errors(None, True)
+    check("a committed ledger that cannot be read fails", (len(errs), warns), (1, []))
+    errs, warns = V.ledger_baseline_errors(None, None)
+    check("git unable to answer fails", (len(errs), warns), (1, []))
+
+    # The live check: HEAD has the ledger, and it reads from any working directory.
+    here = os.getcwd()
+    try:
+        os.chdir(os.path.dirname(V.REPO_ROOT))
+        check("the committed ledger is tracked at HEAD", V.tracked_at_head(V.LEDGER_FILE), True)
+        check("the committed ledger reads from outside the repo",
+              isinstance(V.git_show(V.LEDGER_FILE), dict), True)
+    finally:
+        os.chdir(here)
+
+
 def main():
+    ledger_append_only_cases()
     tier1_cases()
     tier2_cases()
     ledger_merge_cases()
