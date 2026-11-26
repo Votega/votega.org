@@ -5,7 +5,7 @@
  */
 import type { Loader } from "../data";
 import type { CountiesIndex, Meta, Official, OfficialsIndex, Place } from "../types";
-import { fail, isoDate, norm, ok, SITE, type ToolResult } from "../util";
+import { asOf, fail, isoDate, norm, ok, SITE, type ToolResult } from "../util";
 
 /** On `today`: holding the seat (takesOffice blank or <= today, leavesOffice blank or > today). */
 export function holdsSeat(o: Official, today: string): boolean {
@@ -81,7 +81,7 @@ export async function findLocalOfficials(
   if (!meta || !index) return fail("VoteGA's data index is unavailable right now. Try again later.");
   const today = isoDate(nowMs);
   const base = {
-    as_of: meta.metadata.generatedAt,
+    as_of: asOf(loader, meta),
     last_reviewed: index.metadata.lastReviewed,
     license: "CC BY-SA 4.0",
     meaning: index.metadata.meaning,

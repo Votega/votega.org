@@ -4,7 +4,7 @@
  */
 import type { Loader } from "../data";
 import type { CountiesIndex, Member, MembersIndex, Meta, Share, ZipShard } from "../types";
-import { ok, fail, SITE, type ToolResult } from "../util";
+import { asOf, ok, fail, SITE, type ToolResult } from "../util";
 
 export type Chamber = "state_senate" | "state_house" | "us_house";
 
@@ -81,7 +81,7 @@ export async function findMyRepresentatives(
       return ok({
         summary: `${zip} is not a Georgia ZIP in VoteGA's data.`,
         found: false,
-        as_of: meta.metadata.generatedAt,
+        as_of: asOf(loader, meta),
         source_url: `${SITE}/find-my-reps.html`,
         license: "CC BY-SA 4.0",
       }, loader.stale);
@@ -94,7 +94,7 @@ export async function findMyRepresentatives(
         city: entry.city,
         kind: entry.kind,
         us_senators: senators,
-        as_of: meta.metadata.generatedAt,
+        as_of: asOf(loader, meta),
         source_url: `${SITE}/find-my-reps.html`,
         license: "CC BY-SA 4.0",
       }, loader.stale);
@@ -153,7 +153,7 @@ export async function findMyRepresentatives(
     statewide_note:
       "Statewide offices (Governor, Lieutenant Governor, constitutional officers, Public Service Commission) are elected statewide, not by district.",
     sessions: { georgia: idx.metadata.state.session, congress: idx.metadata.federal.congress },
-    as_of: meta.metadata.generatedAt,
+    as_of: asOf(loader, meta),
     source_url: `${SITE}/find-my-reps.html`,
     license: "CC BY-SA 4.0",
   }, loader.stale);

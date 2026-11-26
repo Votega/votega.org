@@ -6,7 +6,7 @@
  */
 import { need, type Loader } from "../data";
 import type { CandidateRow, CandidatesIndex, CountiesIndex, CountyEntry, Meta, RaceRow, RacesIndex } from "../types";
-import { fail, norm, ok, SITE, type ToolResult } from "../util";
+import { asOf, fail, norm, ok, SITE, type ToolResult } from "../util";
 
 export const DEFAULT_LIMIT = 10;
 export const MAX_LIMIT = 25;
@@ -101,7 +101,7 @@ export async function searchRaces(
     total: found.length,
     races: results,
     meaning: races.metadata.meaning,
-    as_of: meta.metadata.generatedAt,
+    as_of: asOf(loader, meta),
     source_url: results.length === 1 && results[0].votegaUrl ? results[0].votegaUrl : `${SITE}/elections/`,
     license: "CC BY-SA 4.0",
   }, loader.stale);
@@ -142,7 +142,7 @@ export async function getCandidate(loader: Loader, input: { id: string }): Promi
       ". Campaign finance is not available through this server.",
     candidates: views,
     meaning: candidates.metadata.meaning,
-    as_of: meta.metadata.generatedAt,
+    as_of: asOf(loader, meta),
     source_url: first.votegaUrl ?? first.races[0]?.votegaUrl ?? `${SITE}/elections/`,
     license: "CC BY-SA 4.0",
   }, loader.stale);

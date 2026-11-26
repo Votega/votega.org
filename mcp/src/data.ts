@@ -10,6 +10,10 @@
  * - a module-scope memo, so a warm isolate parses each file once per TTL (Phase 0, §12.11).
  * If the upstream fetch fails, the last parsed copy is served and the result is flagged stale.
  *
+ * A loader also keeps `asOf`: the oldest build date among the index files it handed out. The
+ * files are cached for different lengths, so meta.json can be newer than the data an answer
+ * came from; tools date answers with this (util.asOf).
+ *
  * A caller may name the sha256 a file must have (vote-files.json). Different bytes are a
  * MismatchError and are never kept or served.
  */
@@ -29,7 +33,29 @@ export type Loader = {
   load<T = unknown>(path: string, options?: LoadOptions): Promise<T | null>;
   /** True once any load in this request fell back to a stale copy. */
   readonly stale: boolean;
+  /** Oldest metadata.generatedAt among the index files loaded so far, meta.json aside. */
+  readonly asOf: string | null;
 };
+
+/**
+ * Notes each loaded file's build date. meta.json describes the build, not an answer's data.
+ * The site's own vote files (data/) are stamped by their producers, not by the index build,
+ * and have to match vote-files.json, which is counted.
+ */
+function buildDates() {
+  let oldest: string | null = null;
+  return {
+    get oldest() {
+      return oldest;
+    },
+    note<D>(path: string, doc: D): D {
+      if (path === "meta.json" || path.startsWith("data/")) return doc;
+      const at = (doc as { metadata?: { generatedAt?: unknown } } | null)?.metadata?.generatedAt;
+      if (typeof at === "string" && (oldest === null || Date.parse(at) < Date.parse(oldest))) oldest = at;
+      return doc;
+    },
+  };
+}
 
 /** Seconds each file family may be cached (spec §5.3). */
 export function ttlFor(path: string): number {
@@ -71,9 +97,13 @@ export async function sha256Hex(text: string): Promise<string> {
 /** A loader for one request, backed by the shared memo. `nowMs` is read inside the request. */
 export function httpLoader(nowMs: number, fetcher: typeof fetch = fetch): Loader {
   let stale = false;
+  const dates = buildDates();
   return {
     get stale() {
       return stale;
+    },
+    get asOf() {
+      return dates.oldest;
     },
     async load<T>(path: string, options: LoadOptions = {}): Promise<T | null> {
       if (!ALLOWED.some((a) => a.test(path))) throw new Error(`not an index path: ${path}`);
@@ -81,7 +111,7 @@ export function httpLoader(nowMs: number, fetcher: typeof fetch = fetch): Loader
       const ttl = ttlFor(path);
       const hit = memo.get(path);
       const usable = hit && (!sha256 || hit.sha256 === sha256) ? hit : undefined;
-      if (!fresh && usable && nowMs - usable.at < ttl * 1000) return usable.data as T | null;
+      if (!fresh && usable && nowMs - usable.at < ttl * 1000) return dates.note(path, usable.data as T | null);
       try {
         const base = path.startsWith("data/") ? SITE_DATA + path.slice(5) : DATA_BASE + path;
         // A one-off query string passes every cache between here and the origin.
@@ -98,12 +128,12 @@ export function httpLoader(nowMs: number, fetcher: typeof fetch = fetch): Loader
         if (sha256 && (await sha256Hex(text)) !== sha256) throw new MismatchError(`${path} does not match`);
         const data = JSON.parse(text) as T;
         memo.set(path, { at: nowMs, data, sha256 });
-        return data;
+        return dates.note(path, data);
       } catch (err) {
         if (err instanceof MismatchError) throw err;
         if (usable) {
           stale = true;
-          return usable.data as T | null;
+          return dates.note(path, usable.data as T | null);
         }
         throw new UnavailableError(`VoteGA data is unavailable right now (${path}: ${String(err)})`);
       }
@@ -113,14 +143,18 @@ export function httpLoader(nowMs: number, fetcher: typeof fetch = fetch): Loader
 
 /** Test helper: a loader over in-memory documents (missing path = 404). */
 export function fixtureLoader(files: Record<string, unknown>): Loader {
+  const dates = buildDates();
   return {
     stale: false,
+    get asOf() {
+      return dates.oldest;
+    },
     async load<T>(path: string, options: LoadOptions = {}) {
       if (!(path in files)) return null;
       if (options.sha256 && (await sha256Hex(JSON.stringify(files[path]))) !== options.sha256) {
         throw new MismatchError(`${path} does not match`);
       }
-      return files[path] as T;
+      return dates.note(path, files[path] as T);
     },
   };
 }

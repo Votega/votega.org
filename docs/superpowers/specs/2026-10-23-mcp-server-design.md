@@ -160,7 +160,8 @@ assistant can cite the page.
 ## 6. Tools (v1)
 
 All tools: `readOnlyHint: true`, `openWorldHint: false`. Inputs validated with `zod`.
-Every result includes `source_url`, `as_of` (from `meta.json`) and `license: "CC BY-SA 4.0"`.
+Every result includes `source_url`, `as_of` (the oldest build date among the index files it read;
+`meta.json`'s when it read no other, §12.15) and `license: "CC BY-SA 4.0"`.
 
 ### 6.1 Tool list
 
@@ -678,6 +679,12 @@ prompt. `search_legislators` includes earlier-term former members with `include_
 - **Second-chamber sponsor** (0.4.3, 2026-11-26): `get_bill` returns `second_chamber_sponsor`
   apart from `sponsors`, and omits it when the row has none (a bill not yet re-fetched is not
   claimed to have none). `search_bills` `sponsor_id` matches it and adds `sponsor_role`.
+- **`as_of` dates the data, not `meta.json`** (0.4.4, 2026-11-26): `meta.json` is cached 5 minutes
+  and the data files up to 24 hours, so after a deploy results claimed a newer date than they had.
+  The loader now reports the oldest `metadata.generatedAt` it handed out (`meta.json` and the
+  site's own `data/` files aside). An unchanged ZIP or county table can therefore date a whole
+  answer up to a day back. It does not shorten the staleness: for that, purge Cloudflare and
+  redeploy the Worker.
 - **CPU on the live Worker** (0.4.0, 2026-11-26): 60 requests, no errors, median 9 ms, p90 27 ms,
   max 55 ms against the 100 ms cap (§10). A small sample: look again after real use. The largest
   reads are a bill search with no keyword (all current shards, about 2 MB) and a state vote lookup

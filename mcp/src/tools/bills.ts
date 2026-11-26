@@ -5,7 +5,7 @@
  */
 import { need, type Loader } from "../data";
 import type { BillCatalog, BillDetail, BillRow, BillSession, BillShard, BillTokens, Member, Meta, MembersIndex } from "../types";
-import { fail, GA_PASS_RULE, ok, SITE, tokens, type ToolResult } from "../util";
+import { asOf, fail, GA_PASS_RULE, ok, SITE, tokens, type ToolResult } from "../util";
 
 export const DEFAULT_LIMIT = 10;
 export const MAX_LIMIT = 25;
@@ -171,7 +171,7 @@ export async function searchBills(
     summary,
     total: found.length,
     results,
-    as_of: meta.metadata.generatedAt,
+    as_of: asOf(loader, meta),
     source_url: `${SITE}/ga-bills.html`,
     license: "CC BY-SA 4.0",
   }, loader.stale);
@@ -263,7 +263,7 @@ export async function getBill(
     },
     ...(detail.passageVotes.length ? { pass_rule: GA_PASS_RULE } : {}),
     georgia_commons: commons,
-    as_of: meta.metadata.generatedAt,
+    as_of: asOf(loader, meta),
     source_url: page,
     license: "CC BY-SA 4.0",
   }, loader.stale);
