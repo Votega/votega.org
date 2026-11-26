@@ -86,6 +86,14 @@ export function explainBill(bill: string, session?: string): PromptResult {
       "Quote the bill itself when quoting the law. About the summary: never present it as the bill's own text or as VoteGA's. " +
       "If you can do neither, or there is no summary, give the title, status and official links, say that no " +
       "summary was retrieved, and do not write one from the title or from memory.\n\n" +
+      "Before you show a summary, check the summary against the bill text (the same Georgia Commons document " +
+      "usually carries it above the summaries; else read bill.textUrl). Compare who it applies to, amounts, " +
+      "deadlines, penalties, exceptions and what triggers each duty. A limit may come from the title and the " +
+      "Code section being amended rather than from the changed words. Where the summary says something broader, " +
+      "narrower or different, say so under \"Where the summary differs from the bill\", quoting the bill; do not " +
+      "silently rewrite the summary. If you could not read the bill text, say the summary was not checked against " +
+      "the bill text. If you found no difference, say only that you found none: do not call the summary verified " +
+      "or accurate.\n\n" +
       "Also report the status, sponsors, passage votes and governor action get_bill returns. Do not say " +
       "whether the bill is good or bad, or what its sponsors intended.\n\n" +
       RULES,

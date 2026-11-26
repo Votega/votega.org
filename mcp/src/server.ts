@@ -17,7 +17,7 @@ import { explainBill, localOfficials, MAX_ARG, whoRepresentsArea } from "./promp
 import { readResource, RESOURCES } from "./resources";
 import { fail, type ToolResult } from "./util";
 
-export const VERSION = "0.4.1";
+export const VERSION = "0.4.2";
 
 const READ_ONLY = { readOnlyHint: true, openWorldHint: false } as const;
 
