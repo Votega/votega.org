@@ -49,29 +49,42 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Run every scripts/test_*.py
         run: |
           # Run them all and report once, rather than stopping at the first
           # failure: when a shared helper breaks several suites, seeing which
           # ones is the diagnosis.
+          #
+          # Exit 77 means the suite skipped itself (e.g. node is not installed for a
+          # JS parity check). That is reported, and is not a failure, but a skip is
+          # annotated so a suite that silently stopped running is visible.
           failed=()
+          skipped=()
           for t in scripts/test_*.py; do
             echo "::group::$t"
-            if python "$t"; then
+            rc=0
+            python "$t" || rc=$?
+            if [ "$rc" -eq 0 ]; then
               echo "PASS $t"
+            elif [ "$rc" -eq 77 ]; then
+              echo "SKIP $t"
+              skipped+=("$t")
             else
-              echo "FAIL $t"
+              echo "FAIL $t (exit $rc)"
               failed+=("$t")
             fi
             echo "::endgroup::"
+          done
+          for t in "${skipped[@]}"; do
+            echo "::warning title=Skipped test suite::$t exited 77 (skipped)"
           done
           if [ ${#failed[@]} -gt 0 ]; then
             echo "Failing suites: ${failed[*]}"
             exit 1
           fi
-          echo "All script test suites passed."
+          echo "All script test suites passed (${#skipped[@]} skipped)."
 
   # The GA legislator page ledger is append-only (a published /ga-legislators/<slug>/ URL
   # must never 404). update-ga-members enforces that on the bot's own commit; this job
@@ -90,7 +103,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Validate the GA legislator ledger against the base
         env:
