@@ -152,16 +152,21 @@ jobs:
 
       # The MCP server's index files (assets/data/mcp/, gitignored), built from the same data
       # this deploy publishes (spec: docs/superpowers/specs/2026-10-23-mcp-server-design.md §5.1,
-      # §12.2), then checked by validate_mcp_index.py. Non-fatal to the site: on any failure the
-      # directory is removed, so the MCP server sees no index (and says so) rather than a bad one,
-      # and the report-degraded job flags the run.
+      # §12.2), then checked by validate_mcp_index.py. Non-fatal to the site. Exit 3 means only a
+      # non-core group failed: the validator already removed its files, so the rest is published.
+      # Any other failure removes the directory, so the MCP server sees no index (and says so)
+      # rather than a bad one. Either way the report-degraded job flags the run.
       - name: Generate MCP indexes
         id: mcp
         run: |
           set +e
           python3 scripts/build_mcp_index.py && python3 scripts/validate_mcp_index.py
           code=$?
-          if [ "$code" -ne 0 ]; then
+          if [ "$code" -eq 3 ]; then
+            echo "degraded=true" >> "$GITHUB_OUTPUT"
+            echo "::error title=MCP indexes partly failed::one or more non-core index groups were dropped (see this step's log); the other MCP indexes were published"
+            echo ":warning: **Some MCP index groups failed** and were dropped; the rest were published. The site still deployed." >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$code" -ne 0 ]; then
             rm -rf assets/data/mcp
             echo "degraded=true" >> "$GITHUB_OUTPUT"
             echo "::error title=MCP indexes failed::build or validation exited $code; assets/data/mcp/ was removed, so the MCP server has no index this deploy"
