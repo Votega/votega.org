@@ -56,6 +56,10 @@ on:
       - Update Local Government data (twice weekly)
       - Report stale local officials (monthly)
       - Cache government candidate portraits (weekly, Sun 11:00 UTC)
+      # Not scheduled, but run unattended: bot commits to races.json trigger the
+      # stamp, and every deploy triggers IndexNow, so nobody is watching either one.
+      - Stamp races.json updatedAt
+      - Submit URLs to IndexNow
 
 permissions:
   issues: write
