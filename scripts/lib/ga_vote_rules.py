@@ -37,7 +37,12 @@ Rule, for the final-action roll calls the producers keep (lib/ga_passage):
     history, and for passes the governor's signature, are the evidence. Each is pinned
     rather than bending the rule.
 
-Veto overrides (two-thirds) are not modelled; they do not occur among passage votes.
+  * Veto overrides: two-thirds of the members to which each house is entitled
+    (Art. III, Sec. V, Para. XIII), 120 / 38, whatever the bill. The first one kept is
+    2026 HB 1192 in the House, 94-77 (lost).
+  * legis.ga.gov's own LegislationType, when known, replaces the abstract heuristics:
+    CA is a constitutional amendment, LOC a local act, PRIV/NP simple resolutions, GEN
+    a general bill (docs/ga-soap-data-dictionary.md).
 """
 
 import re
@@ -80,6 +85,9 @@ _MAJORITY_OF_VOTING_MOTION_RE = re.compile(
     r"remove\s+from)",
     re.IGNORECASE,
 )
+
+#: A vote to override the Governor's veto: two-thirds whatever the bill.
+_VETO_OVERRIDE_RE = re.compile(r"^\s*veto\s+override", re.IGNORECASE)
 
 #: Officially passed below the floor: (legislationId, chamber, date, yea, nay) -> note.
 #: The three 90-yea House votes were each followed within the minute by a House Notice
@@ -127,10 +135,22 @@ def is_local_tax_exemption(abstract, truncated_at=None):
     return bool(_AD_VALOREM_EXEMPTION_RE.search(a)) and not _GENERAL_LAW_RE.search(a)
 
 
-def requires_two_thirds(abstract, is_resolution, truncated_at=None):
+def requires_two_thirds(abstract, is_resolution, truncated_at=None, legislation_type=None):
     """True when a bill or resolution needs two-thirds of the members elected: a
     resolution proposing a Georgia constitutional amendment, or a local property-tax
-    exemption act. `truncated_at` as for is_local_tax_exemption."""
+    exemption act. `truncated_at` as for is_local_tax_exemption.
+
+    `legislation_type` is legis.ga.gov's LegislationType. When given it decides the
+    kind of measure, and the abstract is read only for the exemption: CA -> True;
+    LOC -> True for a property-tax exemption; GEN / PRIV / NP -> False. Without it the
+    kind is inferred from the abstract, as before."""
+    lt = (legislation_type or "").strip().upper()
+    if lt == "CA":
+        return True
+    if lt == "LOC":
+        return bool(_AD_VALOREM_EXEMPTION_RE.search(abstract or ""))
+    if lt in ("GEN", "PRIV", "NP"):
+        return False
     if is_resolution:
         return is_state_constitutional_amendment(abstract)
     return is_local_tax_exemption(abstract, truncated_at)
@@ -142,6 +162,8 @@ def required_yeas(chamber, two_thirds=False, motion=None):
     key = chamber_key(chamber)
     if key is None:
         return None
+    if motion and _VETO_OVERRIDE_RE.search(motion):
+        return TWO_THIRDS_REQUIRED_YEAS[key]
     if motion and _MAJORITY_OF_VOTING_MOTION_RE.search(motion):
         return None          # even on a two-thirds bill (2020 HB 1167, Remove from Local Calendar)
     if two_thirds:

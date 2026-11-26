@@ -131,7 +131,10 @@ export type BillRow = {
   identifier: string;
   billType: string | null;
   title: string | null;
+  // The Governor's decision when there is one ("Vetoed by Governor"), else legis.ga.gov's
+  // latest status. officialStatus keeps that latest status when the two differ.
   status: string | null;
+  officialStatus?: string | null;
   statusDate: string | null;
   subjects: string[];
   sponsors: [number, boolean][]; // [legisGaGovId, primary]

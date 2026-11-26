@@ -84,6 +84,17 @@ jobs:
             --baseline-ref HEAD \
             --report-out "$RUNNER_TEMP/ga-bills-changes.md"
 
+      # The bills' own passageVotes, checked against legis.ga.gov's status history, as
+      # update-ga-votes.yml does for the votes file. A warning, not a failure. An
+      # AMBIGUOUS line where the record shows a loss then a pass on one day usually
+      # means a final-action roll call the passage filter dropped
+      # (docs/ga-soap-data-dictionary.md, "Caption shapes").
+      - name: Cross-check close bill votes against official status
+        run: |
+          session=$(python -c "import json; print(json.load(open('assets/data/ga-bills.json'))['metadata'].get('activeSession') or '')")
+          python scripts/check_ga_vote_status.py assets/data/ga-bills.json \
+            ${session:+--session "$session"} --warn-only
+
       - name: Enrich GA bills with party vote tallies
         run: python scripts/enrich_bills_with_party_votes.py assets/data/ga-bills.json assets/data/ga-member-votes.json assets/data/ga-members.json
 

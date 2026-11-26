@@ -50,7 +50,8 @@ def amendment_ids_from_soap(lids, fetch=None):
         if detail is None:
             failed.append(lid)
         elif requires_two_thirds(detail.get("summary"),
-                                 bool(_RESOLUTION_RE.match(detail.get("identifier") or ""))):
+                                 bool(_RESOLUTION_RE.match(detail.get("identifier") or "")),
+                                 legislation_type=detail.get("legislationType")):
             out.add(lid)
     if failed:
         raise RuntimeError("GetLegislationDetail failed for %d resolution(s): %s"
@@ -87,7 +88,8 @@ def rederive_bill_passage_votes(bill):
     place. Returns the number changed. The amendment flag comes from the bill's own
     abstract, as generate_ga_bills_soap.map_bill does."""
     ca = requires_two_thirds(bill.get("abstract"), bill.get("billType") == "resolution",
-                             STORED_ABSTRACT_MAX)
+                             legislation_type=bill.get("legislationType"),
+                             truncated_at=STORED_ABSTRACT_MAX)
     changed = 0
     for pv in bill.get("passageVotes") or []:
         passed = vote_passed(pv.get("yea"), pv.get("nay"), pv.get("chamber"), ca,

@@ -331,6 +331,15 @@ check("sponsors are [legisGaGovId, primary] with names alongside",
       (hb["bills"][0]["sponsors"], hb["sponsorNames"]), ([[101, True]], {"101": "Ann One"}))
 detail = docs["bills/2025_26-HB-detail.json"]["bills"]["HB 1"]
 check("detail carries links and votes; blank is null", (detail["textUrl"], detail["passageVotes"]), (None, []))
+# A vetoed bill's official latest status is "Date Signed by Governor": the index must
+# not pass that on as the bill's status.
+from lib.mcp_bills import outcome_status  # noqa: E402
+check("vetoed status", outcome_status({"status": "House Date Signed by Governor",
+                                       "governorAction": {"status": "Vetoed"}}), "Vetoed by Governor")
+check("signed status", outcome_status({"governorAction": {"status": "Signed", "actNumber": 73}}),
+      "Signed by Governor (Act 73)")
+check("undecided status", outcome_status({"governorAction": {"status": "Sent to Governor"}}), None)
+check("no action", outcome_status({"governorAction": None}), None)
 tok = docs["bills/2025_26-HB-tokens.json"]
 check("one word table per shard", [x["tokensPath"] for x in sess["2025_26"]["shards"]],
       ["bills/2025_26-HB-tokens.json", "bills/2025_26-SR-tokens.json"])

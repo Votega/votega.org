@@ -41,7 +41,19 @@ import re
 #:                         "ADOPT CONFERENCE COMMITTEE REPORT" and "ADOPTION OF
 #:                         CONSTITUTIONAL AMENDMENT") — the floor-AMENDMENT adoptions are
 #:                         carved back out by PROCEDURAL_CAPTION below.
-PASSAGE_CAPTION = re.compile(r"^\s*(passage|agree\s+to|adopt)", re.IGNORECASE)
+PASSAGE_CAPTION = re.compile(r"^\s*(passage|agree\s+to|adopt|recede\s+from|veto\s+override)",
+                             re.IGNORECASE)
+
+#: Final actions whose caption does not START with the action word (see
+#: docs/ga-soap-data-dictionary.md, "Caption shapes"):
+#:   "SBs 234,  235,  & 336 Passage" -- a re-vote after reconsideration (2025-04-04,
+#:                                      the vote that actually passed the three bills)
+#:   "Uncontested House Resolutions" -- batch adoption of House resolutions
+#:   "CONSENT CALENDAR FOR SENATE STUDY COMMITTEES" / "... EXPRESSING THE WILL OF THE
+#:   SENATE" -- batch adoption of Senate resolutions
+TRAILING_PASSAGE = re.compile(
+    r"\bpassage\s*$|^\s*uncontested\b.*\bresolutions\b|^\s*consent\s+calendar\b",
+    re.IGNORECASE)
 
 #: Local/consent-calendar batches — the mechanism by which LOCAL legislation (bills
 #: affecting a single county/city) is passed en masse, so each is a real passage vote.
@@ -72,7 +84,8 @@ def native_is_passage(caption):
     cap = caption or ""
     if PROCEDURAL_CAPTION.search(cap):
         return False
-    return bool(PASSAGE_CAPTION.search(cap) or LOCAL_CALENDAR.search(cap))
+    return bool(PASSAGE_CAPTION.search(cap) or LOCAL_CALENDAR.search(cap)
+                or TRAILING_PASSAGE.search(cap))
 
 
 def classify(caption, bills, date, os_index):

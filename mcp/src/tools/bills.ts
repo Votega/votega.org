@@ -249,6 +249,7 @@ export async function getBill(
       type: row.billType,
       title: row.title,
       status: row.status,
+      ...(row.officialStatus ? { official_status: row.officialStatus } : {}),
       statusDate: row.statusDate,
       subjects: row.subjects,
       sponsors: row.sponsors.map(([g, primary]) => ({ ...person(g), primary })),
