@@ -45,7 +45,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # FEC allows 1,000 API calls an hour and a full run makes roughly 950, so
       # two runs inside one rolling hour exhaust the quota. That does not fail

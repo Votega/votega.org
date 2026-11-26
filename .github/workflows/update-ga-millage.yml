@@ -37,13 +37,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # The workbooks are read by scripts/lib/xlsx.py, which is zipfile +
       # ElementTree — no openpyxl, no pandas. pyyaml is only for places.yml in
       # build_millage_places.py.
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install -c requirements-ci.txt pyyaml
 
       # pdftotext reads the 2019 millage PDF, the one tax year DOR does not
       # publish as a workbook (lib/dor_millage_pdf.py). Without poppler the run

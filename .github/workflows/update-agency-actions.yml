@@ -32,7 +32,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # Verifies every hardcoded agency id against agencies.json first, and exits 1
       # before writing anything if a department fails to fetch.

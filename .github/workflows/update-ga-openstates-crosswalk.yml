@@ -33,13 +33,13 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # PyYAML is for the openstates/people person files only; the offline tests and the
       # roster merge are stdlib. No Open States API key: this reads a public GitHub repo
       # (CC0). GITHUB_TOKEN only lifts the contents-API rate limit.
       - name: Install PyYAML
-        run: pip install pyyaml
+        run: pip install -c requirements-ci.txt pyyaml
 
       - name: Resolve identifiers from openstates/people
         id: fetch

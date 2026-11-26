@@ -65,7 +65,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install generator dependencies
-        run: python -m pip install --quiet pyyaml==6.0.2 playwright==1.55.0
+        run: python -m pip install -c requirements-ci.txt --quiet pyyaml playwright
 
       # Generate compact server-render sidecars in _data/rendered/ from the large
       # runtime JSON in assets/data/. GitHub Pages builds Jekyll in safe mode, so

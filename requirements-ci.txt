@@ -1,0 +1,14 @@
+# Pinned versions of the third-party packages the workflows install.
+#
+# Workflows install only what they need, constrained to these versions:
+#     pip install -c requirements-ci.txt pyyaml
+# A package missing from this file installs unpinned, so add it here first.
+# Bump a pin in one place and every workflow picks it up.
+#
+# The offline script tests (run-script-tests.yml) install nothing on purpose.
+
+Pillow==11.0.0
+jsonschema==4.23.0
+playwright==1.55.0
+pyyaml==6.0.2
+requests==2.32.3

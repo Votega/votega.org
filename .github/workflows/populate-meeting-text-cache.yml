@@ -46,10 +46,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install -c requirements-ci.txt pyyaml
 
       # lib/sharepoint.py drives a real browser to open an anonymous SharePoint
       # share link, and imports Playwright lazily so the parser tests need no
@@ -59,7 +59,7 @@ jobs:
       # another engine, and the other two cost minutes per run.
       - name: Install Playwright (SharePoint places only)
         run: |
-          pip install playwright
+          pip install -c requirements-ci.txt playwright
           python -m playwright install --with-deps chromium
 
       # Same tools as update-local-government.yml: pdftotext does the work,

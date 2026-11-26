@@ -37,7 +37,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       # Refuses (::error + exit 1) before anything is published: the freeze cannot be
       # repeated once the incoming class is seated, so a short, doubled or mislabelled

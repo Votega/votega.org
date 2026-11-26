@@ -38,10 +38,10 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install pyyaml
+        run: pip install -c requirements-ci.txt pyyaml
 
       - name: Staleness + executive-order signals
         run: python scripts/report_stale_officials.py > staleness.md
