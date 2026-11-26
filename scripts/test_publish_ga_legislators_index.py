@@ -75,6 +75,18 @@ with tempfile.TemporaryDirectory() as root:
         refused = True
     check("an unreadable frozen index refuses the publish", refused, True)
 
+print("rosterArchive:")
+with tempfile.TemporaryDirectory() as root:
+    check("null while no biennium is frozen", P.roster_archive("2025-2026", root), None)
+    frozen(root, "2025_26", "2025-2026", SESSIONS)
+    check("null when the votes are frozen but the roster is not",
+          P.roster_archive("2025-2026", root), None)
+    open(os.path.join(root, "2025_26", "ga-members.json"), "w").write("{}")
+    check("points at the frozen roster once there is one",
+          P.roster_archive("2025-2026", root), "sessions/2025-2026/members.json")
+    check("null after the rollover: the new biennium's roster is years from frozen",
+          P.roster_archive("2027-2028", root), None)
+
 print("against the committed data:")
 latest = json.loads(P.build_votes()["latest.json"])
 check("latest.json lists the 2017-2024 archive today",
@@ -83,6 +95,8 @@ check("latest.json lists the 2017-2024 archive today",
 check("current fields unchanged", sorted(k for k in latest if k != "earlierBienniums"),
       ["activeSession", "biennium", "currentRoster", "currentSession", "generatedAt",
        "rosterArchive", "sessions"])
+check("rosterArchive still points at the frozen 2025-2026 roster",
+      latest["rosterArchive"], "sessions/2025-2026/members.json")
 if os.path.exists(P.SRC_SCORECARD):
     sc = json.loads(P.build_scorecard()["scorecard-latest.json"])
     check("scorecard-latest.json has no earlier scorecard yet", sc["earlierBienniums"], [])

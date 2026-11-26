@@ -227,7 +227,7 @@ def members_schema(schema_path="data/members.schema.json"):
                 "description": "Provenance for THIS file. This roster is the CURRENT biennium "
                                "only and is overwritten in place when a new General Assembly "
                                "is seated; prior bienniums are preserved under sessions/<slug>/ "
-                               "(see latest.json's rosterArchive).",
+                               "(see latest.json's earlierBienniums).",
                 "properties": {
                     "session": {"type": "string", "description":
                                 "The General Assembly session this roster describes, e.g. "
@@ -511,6 +511,28 @@ def earlier_bienniums(current=BIENNIUM, frozen_root=FROZEN_ROOT, archive=None):
     return [out[k] for k in sorted(out, reverse=True)]
 
 
+def roster_archive(current=BIENNIUM, frozen_root=FROZEN_ROOT):
+    """latest.json's rosterArchive: the current General Assembly's frozen roster, or None
+    while it has none. The roster is frozen once, at sine die (freeze-ga-roster, runbook
+    section 3b, with the on-site copy from freeze_ga_biennium.py), so for most of a
+    biennium sessions/<current>/members.json does not exist yet. Pointing at it anyway
+    would leave consumers a dead link for about two years after each rollover.
+
+    The on-site frozen roster, assets/data/ga-bienniums/<tag>/ga-members.json, is the
+    signal: offline and deterministic, so an unchanged run still writes a byte-identical
+    pointer."""
+    for path in glob.glob(os.path.join(frozen_root, "*", "ga-votes-index.json")):
+        try:
+            with open(path, encoding="utf-8") as fh:
+                biennium = (json.load(fh).get("metadata") or {}).get("biennium")
+        except (OSError, ValueError) as exc:
+            sys.exit(f"refusing to publish: cannot read {path}: {exc}")
+        if biennium == current and os.path.exists(
+                os.path.join(os.path.dirname(path), "ga-members.json")):
+            return f"sessions/{current}/members.json"
+    return None
+
+
 def build_votes():
     """Split the biennium's roll calls by session into per-session archive dirs and
     refresh the root latest.json pointer. ga-member-votes.json now covers the whole
@@ -571,14 +593,15 @@ def build_votes():
     # Root pointer: the biennium, the session currently in progress, and every session's
     # files. Uses the source data timestamp (not now()) so an unchanged run produces a
     # byte-identical pointer. The live roster is always data/all.json; the frozen roster
-    # for the whole General Assembly lives at sessions/<biennium>/members.json.
+    # for the whole General Assembly lives at sessions/<biennium>/members.json once it has
+    # been frozen at sine die, and rosterArchive is null until then.
     artifacts["latest.json"] = build_json({
         "biennium": BIENNIUM,
         "currentSession": active_slug,
         "activeSession": meta.get("activeSession") or ACTIVE_SESSION,
         "generatedAt": meta.get("generatedAt"),
         "currentRoster": "data/all.json",
-        "rosterArchive": f"sessions/{BIENNIUM}/members.json",
+        "rosterArchive": roster_archive(),
         "sessions": sorted(sessions_index, key=lambda s: s["slug"]),
         # Closed General Assemblies, newest first: their folders stay under sessions/.
         "earlierBienniums": earlier_bienniums(),
