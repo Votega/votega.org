@@ -191,6 +191,44 @@ datasets:
     docs: /about-the-data#early-voting-turnout
     contribute: https://github.com/Votega/ga-races-elections/issues
 
+  - id: ga-election-results
+    title: Georgia Certified Election Results (2026)
+    hosting: repo
+    summary: >
+      Vote counts by candidate and ballot question for each 2026 election the Georgia
+      Secretary of State has certified, one folder per election. Statewide totals per
+      contest, with no county or precinct breakdown. The winner and outcome fields are
+      derived by VoteGA from the certified counts (including who advanced to a runoff);
+      they are not a separate Secretary of State publication. Unofficial counts are not
+      published here. Published alongside the races data in the ga-races-elections repo.
+    source: Georgia Secretary of State
+    scope: 2026 primary, primary runoff, U.S. House District 13 special election and runoff, and general election
+    cadence: After the Secretary of State certifies an election
+    coverage: >
+      In the general election, the Waycross Judicial Circuit District Attorney contest
+      has no count in the data VoteGA holds, so it is marked not-reported with blank
+      votes rather than zero.
+    repo_url: https://github.com/Votega/ga-races-elections/tree/main/results
+    files:
+      - { name: "data/results/manifest.json", desc: "Start here — lists every published election and its files", url: "https://github.com/Votega/ga-races-elections/blob/main/data/results/manifest.json" }
+      - { name: "results/2026-primary/results.csv", desc: "May 19 primary and nonpartisan judicial election, one row per contest and candidate", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-primary/results.csv" }
+      - { name: "results/2026-primary/results.json", desc: "May 19 primary and nonpartisan judicial election, one entry per contest", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-primary/results.json" }
+      - { name: "results/2026-primary/results.schema.json", desc: "Field definitions, May 19 primary and nonpartisan judicial election", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-primary/results.schema.json" }
+      - { name: "results/2026-primary-runoff/results.csv", desc: "June 16 primary runoff, one row per contest and candidate", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-primary-runoff/results.csv" }
+      - { name: "results/2026-primary-runoff/results.json", desc: "June 16 primary runoff, one entry per contest", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-primary-runoff/results.json" }
+      - { name: "results/2026-primary-runoff/results.schema.json", desc: "Field definitions, June 16 primary runoff", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-primary-runoff/results.schema.json" }
+      - { name: "results/2026-special-us-house-13/results.csv", desc: "July 28 U.S. House District 13 special election, one row per contest and candidate", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-special-us-house-13/results.csv" }
+      - { name: "results/2026-special-us-house-13/results.json", desc: "July 28 U.S. House District 13 special election, one entry per contest", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-special-us-house-13/results.json" }
+      - { name: "results/2026-special-us-house-13/results.schema.json", desc: "Field definitions, July 28 U.S. House District 13 special election", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-special-us-house-13/results.schema.json" }
+      - { name: "results/2026-special-us-house-13-runoff/results.csv", desc: "August 25 U.S. House District 13 special runoff, one row per contest and candidate", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-special-us-house-13-runoff/results.csv" }
+      - { name: "results/2026-special-us-house-13-runoff/results.json", desc: "August 25 U.S. House District 13 special runoff, one entry per contest", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-special-us-house-13-runoff/results.json" }
+      - { name: "results/2026-special-us-house-13-runoff/results.schema.json", desc: "Field definitions, August 25 U.S. House District 13 special runoff", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-special-us-house-13-runoff/results.schema.json" }
+      - { name: "results/2026-general/results.csv", desc: "November 3 general election, one row per contest and candidate", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-general/results.csv" }
+      - { name: "results/2026-general/results.json", desc: "November 3 general election, one entry per contest", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-general/results.json" }
+      - { name: "results/2026-general/results.schema.json", desc: "Field definitions, November 3 general election", url: "https://github.com/Votega/ga-races-elections/blob/main/results/2026-general/results.schema.json" }
+    docs: /about-the-data#2026-election-races--candidates
+    contribute: https://github.com/Votega/ga-races-elections/issues
+
   - id: ga-local-government
     title: Georgia Local Government Agenda Topics
     hosting: repo
