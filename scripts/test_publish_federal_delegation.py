@@ -45,6 +45,14 @@ warns = P.check_sources(GA, {"votes": {}, "memberVotes": {}})
 check("a Congress with no roll calls yet is NOT fatal", len(warns), 1)
 check("an absent votes section is treated as no roll calls", len(P.check_sources(GA, {})), 1)
 
+# Senators: Congress.gov omits `district`; the published record must carry it as null.
+senator = P.normalize_member({"name": "S", "state": "Georgia",
+                              "terms": {"item": [{"chamber": "Senate"}]}})
+check("a Senator's district is present and null", ("district" in senator, senator["district"]), (True, None))
+rep = P.normalize_member({"name": "R", "state": "Georgia", "district": 5,
+                          "terms": {"item": [{"chamber": "House of Representatives"}]}})
+check("a Representative's district is left alone", rep["district"], 5)
+
 if failures:
     print(f"\n{len(failures)} failure(s)")
     sys.exit(1)
