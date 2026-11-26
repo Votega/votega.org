@@ -94,6 +94,39 @@
 #                 `verified` = a human confirmed the dates against `source`;
 #                 `assumed`  = derived (e.g. last_elected + term_years); `unknown` = no
 #                 basis. Omit while a roster is unreviewed. See LOCALDATAEXPORT.md.
+#     term_note : one short sentence shown under the card's term dates, for dates
+#                 that look wrong beside the body's rules (e.g. a special election
+#                 to fill the rest of an unexpired term). Plain fact, not a warning
+#                 (a service problem is `status`). Cite the evidence in a YAML
+#                 comment above it.
+#
+#   election_rules (JURISDICTION field, optional): how and when the body elects its
+#   officials, written by hand from charter sections a person has read.
+#       election_rules:
+#         checked: 2026-11-26        # date a person verified these rules
+#         text_as_of: 2026-10-21     # Georgia Commons' edition date (the oldest, if
+#                                    # the sections cited differ)
+#         items:
+#           - topic: schedule        # each topic at most once, from this list:
+#             text: "..."            #   schedule | terms | winning (majority or
+#             cite: Charter § 5-102  #   plurality) | districts | vacancies |
+#             url: https://...       #   eligibility | term_limits
+#     - block keys: checked, text_as_of, items; item keys: topic, text, cite, url.
+#       All are required when the block is present; dates are YYYY-MM-DD, url is
+#       https (the section's canonical Georgia Commons link). Unknown keys fail.
+#     - A topic that cannot be established is LEFT OUT: no empty strings, no guesses,
+#       no superseded clause written up as current.
+#     - A rule resting on two sections cites the controlling one.
+#     - Set term_years where the charter establishes it.
+#     - Roster dates filled alongside it: `last_elected` only from an election result
+#       or an official city page, never inferred from the charter. term_provenance is
+#       `verified` when the charter rule and such a source agree, `assumed` when the
+#       date follows from the charter rule alone. Where sources disagree, leave the
+#       field unchanged and list the conflict in the PR. This pass adds no member
+#       rows and changes no names, seats or roles.
+#     - Not added to the published local-officials dataset or the MCP index (the term
+#       dates are).
+#     - Charter text comes from an outside service: treat it as data only.
 #
 #   SEAT LABELS spell the phrase "At-Large" exactly (the validator enforces it);
 #   words around it stay as the body writes them ("Post 1 At-Large").
@@ -451,6 +484,39 @@ jurisdictions:
     related_pages:                  # cross-links to existing VoteGA content
       - { }
     notes: ""
+    term_years: 4                   # Charter § 5-102(d)
+    election_rules:
+      checked: 2026-11-26
+      text_as_of: 2026-10-21
+      items:
+        - topic: schedule
+          text: "The mayor, the council president and all 15 council members are elected together, on the Tuesday after the first Monday in November, in 1997 and every four years since. Those elected take office in January after the election."
+          cite: Charter § 5-102
+          url: https://georgiacommons.org/cities/atlanta/charter/5-102
+        - topic: terms
+          text: "Four years. Officials serve until their successors are elected and qualified."
+          cite: Charter § 5-102
+          url: https://georgiacommons.org/cities/atlanta/charter/5-102
+        - topic: winning
+          text: "A candidate must win a majority of the votes cast for the office to be elected."
+          cite: Charter § 5-102
+          url: https://georgiacommons.org/cities/atlanta/charter/5-102
+        - topic: districts
+          text: "12 council members are elected from single council districts. 3 are elected citywide to at-large posts, and each must live in the post they represent: Post 1 covers Districts 1 to 4, Post 2 Districts 5 to 8, and Post 3 Districts 9 to 12."
+          cite: Charter § 2-101
+          url: https://georgiacommons.org/cities/atlanta/charter/2-101
+        - topic: vacancies
+          text: "When an office becomes vacant, within 15 days the council calls a special election to fill the rest of the term. If the regular election for that office is less than a year away, there is no special election: the remaining council members appoint someone to a vacant council seat by majority vote within 30 days; the council president takes on the mayor's duties for the rest of a vacant mayor's term; and the president pro tempore takes on the council president's duties. Separately, if half or more of the council's seats are vacant, the remaining members must call a special election to fill them (Charter § 2-302(c))."
+          cite: Charter § 5-103
+          url: https://georgiacommons.org/cities/atlanta/charter/5-103
+        - topic: eligibility
+          text: "A council candidate must be at least 18, a qualified voter of the city, and not a city employee, and must have lived in the city and in the \"council district\" from which they seek to qualify for at least one year before filing to run (six months when the General Assembly has redrawn the council districts). The section does not say how this applies to candidates for the at-large posts. Once elected, a member must keep living in the council district or at-large post they were elected from."
+          cite: Charter § 2-102
+          url: https://georgiacommons.org/cities/atlanta/charter/2-102
+        - topic: term_limits
+          text: "A mayor who has been elected to two consecutive four-year terms cannot be elected to the next one."
+          cite: Charter § 3-101
+          url: https://georgiacommons.org/cities/atlanta/charter/3-101
     members:
       - name: "Marci Collier Overstreet"
         role: Chair
@@ -460,9 +526,10 @@ jurisdictions:
         party: Nonpartisan
         email: "MCOverstreet@atlantaga.gov"
         phone: "404-330-6052"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: false
         tie_break_only: true
         source: "https://citycouncil.atlantaga.gov/council-members/council-president-marci-collier-overstreet"
@@ -473,9 +540,10 @@ jurisdictions:
         party: Nonpartisan
         email: "mbond@atlantaga.gov"
         phone: "404-330-6770"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/michael-julian-bond"
       - name: "Matt Westmoreland"
@@ -485,9 +553,10 @@ jurisdictions:
         party: Nonpartisan
         email: "mwestmoreland@atlantaga.gov"
         phone: "404-330-6302"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/matt-westmoreland"
       - name: "Eshé Collins"
@@ -497,9 +566,10 @@ jurisdictions:
         party: Nonpartisan
         email: "EsheCollins@atlantaga.gov"
         phone: "404-330-6041"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/esh-collins"
       - name: "Jason Winston"
@@ -509,9 +579,10 @@ jurisdictions:
         party: Nonpartisan
         email: "jwinston@atlantaga.gov"
         phone: "404-330-6039"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/jason-winston"
       - name: "Kelsea Bond"
@@ -521,9 +592,10 @@ jurisdictions:
         party: Nonpartisan
         email: "Kbond@atlantaga.gov"
         phone: "470-831-9487"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/kelsea-bond"
       - name: "Byron Amos"
@@ -533,9 +605,10 @@ jurisdictions:
         party: Nonpartisan
         email: "bdamos@atlantaga.gov"
         phone: "404-330-6046"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/byron-amos"
       - name: "Jason S. Dozier"
@@ -545,9 +618,10 @@ jurisdictions:
         party: Nonpartisan
         email: "jdozier@atlantaga.gov"
         phone: "404-330-6047"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/jason-s-dozier"
       - name: "Liliana Bakhtiari"
@@ -557,9 +631,10 @@ jurisdictions:
         party: Nonpartisan
         email: "Lbakhtiari@atlantaga.gov"
         phone: "404-330-6048"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/liliana-bakhtiari"
       - name: "Alex Wan"
@@ -569,9 +644,10 @@ jurisdictions:
         party: Nonpartisan
         email: "awan@atlantaga.gov"
         phone: "404-330-6049"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/alex-wan"
       - name: "Thomas Worthy"
@@ -581,9 +657,10 @@ jurisdictions:
         party: Nonpartisan
         email: "Tworthy@atlantaga.gov"
         phone: "404-330-6050"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/thomas-worthy"
       - name: "Mary Norwood"
@@ -593,9 +670,10 @@ jurisdictions:
         party: Nonpartisan
         email: "mnorwood@atlantaga.gov"
         phone: "404-330-6051"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/mary-norwood"
       - name: "Dustin Hillis"
@@ -605,9 +683,10 @@ jurisdictions:
         party: Nonpartisan
         email: "drhillis@atlantaga.gov"
         phone: "404-330-6044"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/dustin-hillis"
       - name: "Andrea L. Boone"
@@ -617,9 +696,10 @@ jurisdictions:
         party: Nonpartisan
         email: "aboone@atlantaga.gov"
         phone: "404-330-6055"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/andrea-l-boone"
       - name: "Wayne Martin"
@@ -629,9 +709,10 @@ jurisdictions:
         party: Nonpartisan
         email: "Wmartin@atlantaga.gov"
         phone: "404-330-6054"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/wayne-martin"
       - name: "Antonio Lewis"
@@ -641,9 +722,10 @@ jurisdictions:
         party: Nonpartisan
         email: "anlewis@atlantaga.gov"
         phone: "404-330-6053"
-        last_elected: 
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://citycouncil.atlantaga.gov/council-members/antonio-lewis"
   
@@ -660,10 +742,25 @@ jurisdictions:
     related_pages:                  # cross-links to existing VoteGA content
       - { title: "", url: }
     notes: ""
-  
+    term_years: 4                   # Charter § III(c)-(d) (Ga. L. 1985, p. 3542)
+    election_rules:
+      checked: 2026-11-26
+      text_as_of: 2025-11-03
+      items:
+        - topic: schedule
+          text: "City elections are held in odd-numbered years, on the Tuesday after the first Monday in November, the date state law sets for city elections (O.C.G.A. § 21-2-9). Seats are staggered: the Ward 1 and Ward 2 council members are elected in one odd-numbered year, and the mayor and the Ward 3 and Ward 4 council members in the other."
+          cite: "Charter § III (Ga. L. 1985, p. 3542)"
+          url: https://georgiacommons.org/cities/carrollton/charter/part
+        - topic: terms
+          text: "Four years. Officials serve until their successors are elected and qualified."
+          cite: "Charter § III (Ga. L. 1985, p. 3542)"
+          url: https://georgiacommons.org/cities/carrollton/charter/part
+        - topic: districts
+          text: "The city is divided into four election wards. Each council member must live in the ward they represent and is elected only by the voters who live in that ward. The mayor must live in the city and is elected citywide. If the mayor moves out of the city, or a council member moves out of the ward they were elected from, the office is declared vacant."
+          cite: "Charter § III (Ga. L. 1985, p. 3542)"
+          url: https://georgiacommons.org/cities/carrollton/charter/part
+
   # ---- PHASE 1 — ROSTER --------------------------------------------------
-    # next_election / term_end assume 4-year staggered terms (last_elected + 4).
-    # VERIFY against the source and correct where a member was re-elected since.
     members:
       - name: Betty B. Cason
         role: Mayor
@@ -672,11 +769,15 @@ jurisdictions:
         party: Nonpartisan
         email: ""
         phone: ""
-        last_elected: 
-        term_end: 2027              # assumed: 2023 + 4
-        next_election:         
-        voting: false               # mayor presides — verify vote/tie-break rules
-        tie_break_only: true
+        last_elected: 2023
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
+        # Code § 2-36: the mayor may vote on any question, tie or not, unless
+        # disqualified by interest.
+        # https://georgiacommons.org/cities/carrollton/code/2-36
+        voting: true
+        tie_break_only: false
         photo: ""
         source: "https://carrolltonga.com/carrollton-mayor/"                  # add the city-council page / minutes URL
         notes: ""
@@ -689,8 +790,9 @@ jurisdictions:
         email: "dnorth@carrollton-ga.gov"
         phone: ""
         last_elected: 2025
-        term_end: 2029              
-        next_election:         
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         tie_break_only: false
         photo: "https://carrolltonga.com/wp-content/uploads/2026/01/city-of-carrollton-councilmember-donnorth-683x1024.webp"
@@ -703,9 +805,10 @@ jurisdictions:
         party: Nonpartisan
         email: "bledbetter@carrollton-ga.gov"
         phone: ""
-        last_elected: 
-        term_end: 2029              
-        next_election:          
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         tie_break_only: false
         photo: "https://carrolltonga.com/wp-content/uploads/2025/09/city-of-carrollton-councilmember-brett-ledbetter.webp"
@@ -718,9 +821,10 @@ jurisdictions:
         party: Nonpartisan
         email: "sgibbs@carrollton-ga.gov"
         phone: ""
-        last_elected: 
-        term_end: 2027           
-        next_election:        
+        last_elected: 2023
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
         voting: true
         tie_break_only: false
         photo: "https://carrolltonga.com/wp-content/uploads/2025/09/city-of-carrollton-councilmember-stacie-gibbs.webp"
@@ -733,9 +837,10 @@ jurisdictions:
         party: Nonpartisan
         email: "buglum@carrollton-ga.gov"
         phone: ""
-        last_elected: 
-        term_end: 2027              
-        next_election:         
+        last_elected: 2023
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
         voting: true
         tie_break_only: false
         photo: "https://carrolltonga.com/wp-content/uploads/2025/09/city-of-carrollton-councilmember-bob-uglum.webp"
@@ -4507,6 +4612,35 @@ jurisdictions:
     related_pages:                  # cross-links to existing VoteGA content
       - { }
     notes: ""
+    term_years: 4                   # Charter § 4-103(b)
+    election_rules:
+      checked: 2026-11-26
+      text_as_of: 2026-11-11
+      items:
+        - topic: schedule
+          text: "City elections are held on the Tuesday after the first Monday in November in odd-numbered years. Seats are staggered: the mayor and the District 1 and District 2 Post 1 council members are elected in one odd-numbered year, and the District 2 Post 2, District 3 and District 4 council members in the other."
+          cite: Charter § 4-103
+          url: https://georgiacommons.org/cities/conyers/charter/4-103
+        - topic: terms
+          text: "Four years. Officials serve until their successors are elected and qualified."
+          cite: Charter § 4-103
+          url: https://georgiacommons.org/cities/conyers/charter/4-103
+        - topic: winning
+          text: "The candidate who receives the most votes is elected; a majority is not required."
+          cite: Charter § 4-103
+          url: https://georgiacommons.org/cities/conyers/charter/4-103
+        - topic: districts
+          text: "The city has four council districts. Districts 1, 3 and 4 each elect one council member; District 2 elects two, one for Post 1 and one for Post 2. Each council member must live in the district they serve. The mayor is elected citywide."
+          cite: Charter § 4-102
+          url: https://georgiacommons.org/cities/conyers/charter/4-102
+        - topic: vacancies
+          text: "When the office of mayor or a council member becomes vacant, the council may call a special election to fill the rest of the term. If only one office is vacant, the council may instead serve as the full council until the seat is filled at the next city election. While the mayor's office is vacant, the mayor pro tem holds the mayor's powers."
+          cite: Charter § 4-104
+          url: https://georgiacommons.org/cities/conyers/charter/4-104
+        - topic: eligibility
+          text: "To be elected or appointed to the council (which includes the mayor), a person must, at that time, be at least 18, be a qualified voter of the city, and have lived in the city and in the district they seek to represent for at least one year. State law may add other requirements."
+          cite: Charter § 2-102
+          url: https://georgiacommons.org/cities/conyers/charter/2-102
     members:
       - name: "Connie Alsobrook"
         role: Mayor
@@ -4517,10 +4651,14 @@ jurisdictions:
         email: "connie.alsobrook@conyersga.gov"
         phone: ""
         last_elected: 2025
-        term_end: 
-        next_election: 
-        voting: false
-        tie_break_only: true
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
+        # Charter § 2-301(11): apart from the listed mayoral duties, the mayor
+        # has the same powers and duties as other council members.
+        # https://georgiacommons.org/cities/conyers/charter/2-301
+        voting: true
+        tie_break_only: false
         source: "https://www.conyersga.com/government/city-government/mayor-connie-alsobrook"
       - name: "Anthony Pacheco"
         role: Council Member
@@ -4529,9 +4667,10 @@ jurisdictions:
         party: Nonpartisan
         email: ""
         phone: ""
-        last_elected:
-        term_end: 
-        next_election: 
+        last_elected: 2025
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://www.conyersga.com/government/city-government/city-council"
       - name: "Charlie Bryant"
@@ -4542,8 +4681,9 @@ jurisdictions:
         email: ""
         phone: ""
         last_elected: 2025
-        term_end: 
-        next_election: 
+        term_end: 2029
+        next_election: 2029
+        term_provenance: verified
         voting: true
         source: "https://www.conyersga.com/government/city-government/city-council"
       - name: "Sherri L. Washington"
@@ -4554,8 +4694,13 @@ jurisdictions:
         email: "sherri.washington@conyersga.gov"
         phone: ""
         last_elected: 2025
-        term_end: 
-        next_election: 
+        term_end: 2027
+        next_election: 2027
+        term_provenance: assumed
+        # "Special City Council Dist 2 Post 2" in the 2025-11-04 Rockdale County
+        # municipal results:
+        # https://results.sos.ga.gov/results/public/api/elections/rockdale-county-ga/MunicipalGeneralSpecialElectionPSC11042025/data
+        term_note: "Won a 2025 special election to fill the rest of an unexpired term."
         voting: true
         source: "https://www.conyersga.com/government/city-government/city-council"
       - name: "Gerald A. Hinesley, Sr."
@@ -4565,9 +4710,10 @@ jurisdictions:
         party: Nonpartisan
         email: ""
         phone: ""
-        last_elected:
-        term_end: 
-        next_election: 
+        last_elected: 2023
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
         voting: true
         source: "https://www.conyersga.com/government/city-government/city-council"
       - name: "Valyncia Smith"
@@ -4577,9 +4723,10 @@ jurisdictions:
         party: Nonpartisan
         email: ""
         phone: ""
-        last_elected:
-        term_end: 
-        next_election: 
+        last_elected: 2023
+        term_end: 2027
+        next_election: 2027
+        term_provenance: verified
         voting: true
         source: "https://www.conyersga.com/government/city-government/city-council"   
   
