@@ -19,6 +19,8 @@ on:
     paths:
       - 'scripts/**.py'
       - '_includes/entity/**.html'
+      - 'assets/scripts/**.js'
+      - 'tools/**.html'
       - '.github/workflows/run-script-tests.yml'
       - 'assets/data/ga-legislator-ledger.json'
       - 'assets/data/ga-bienniums/**'
@@ -27,6 +29,8 @@ on:
     paths:
       - 'scripts/**.py'
       - '_includes/entity/**.html'
+      - 'assets/scripts/**.js'
+      - 'tools/**.html'
       - '.github/workflows/run-script-tests.yml'
       - 'assets/data/ga-legislator-ledger.json'
       - 'assets/data/ga-bienniums/**'
