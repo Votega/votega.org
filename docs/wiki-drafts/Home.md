@@ -17,7 +17,7 @@ How to use [VoteGA.org](https://www.votega.org)'s open Georgia civic data, mainl
 | [ga-federal-legislators](https://github.com/Votega/ga-federal-legislators) | Georgia's U.S. Senators and Representatives and roll calls |
 | [ga-legislation](https://github.com/Votega/ga-legislation) | Bills, resolutions and statewide ballot measures |
 | [ga-executive-orders](https://github.com/Votega/ga-executive-orders) | Governor's executive orders |
-| [ga-races-elections](https://github.com/Votega/ga-races-elections) | Races, candidates, early-voting turnout |
+| [ga-races-elections](https://github.com/Votega/ga-races-elections) | Races, candidates, certified results, early-voting turnout |
 | [ga-local-government](https://github.com/Votega/ga-local-government) | Agenda topics, local officials, millage rates |
 | [ga-district-information](https://github.com/Votega/ga-district-information) | ZIP, county and tract crosswalks to districts |
 

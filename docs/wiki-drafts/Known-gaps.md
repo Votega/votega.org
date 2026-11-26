@@ -29,8 +29,14 @@ What the data does not cover, and what is easy to misread. If you find something
 
 ## Elections
 
-- A race has no `winner` until certification has been recorded, and not every decided race has one. Judicial and district attorney races in particular may not.
+- A race in `races.json` has no `winner` until certification has been recorded, and not every decided race has one. Judicial and district attorney races in particular may not; look for them in the [certified results](https://github.com/Votega/ga-races-elections#election-results).
 - A candidate listed in an earlier phase may no longer be on the ballot. Check the race's `activePhase`.
+- Only certified elections are in `results/`. Unofficial counts are on the [VoteGA results pages](https://www.votega.org/results/).
+- `winner` and `outcome` in the results are derived by VoteGA from certified counts. In a primary, `winner` means the nominee.
+- A blank vote count is not zero. In the 2026 general, the Waycross Judicial Circuit District Attorney contest is `not-reported`.
+- Some counties report no vote-method split, so adding the method columns can fall short of `votes`.
+- Results have no precinct breakdown.
+- Early-voting files are refreshed by hand. Check `asOf`.
 - Georgia voters don't register by party, so early-voting data cannot say which party's voters turned out.
 - The 2022 early-voting comparison is limited because the state's source file is incomplete. See the [early-voting notes](https://github.com/Votega/ga-races-elections#early-voting-early-vote2026-general).
 

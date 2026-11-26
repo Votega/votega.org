@@ -10,7 +10,8 @@
 | A state roll call, per bill | `voteId` within its session | Form `<rollCallId>-<legislationId>` |
 | A federal roll call | `voteId` within its Congress | `H<year>_<roll>` or `S<congress>_<session>_<roll>` |
 | A race | race `id` with `cycle` | |
-| A county | 5-digit FIPS, or VoteGA's slug | `data/county-codes.csv` maps them |
+| A contest in certified results | `election` **and** `contestId` | Not the same as a race `id` |
+| A county | 5-digit FIPS, or VoteGA's slug | `data/county-codes.csv` maps them. The column is `county_fips` in most files and `countyFips` in results |
 | An executive order | `number` | |
 | A local government | `placeId` | For counties it matches the county slug |
 
@@ -23,6 +24,10 @@ The full account of state legislator identifiers is in [IDENTIFIERS.md](https://
 - **`candidateId` in the races files, over time.** It encodes a position in the source export, so the same ID can point at a different person after a re-export. Use it only within one downloaded copy.
 - **`ocdPersonId`.** A cross-reference that is missing for some people. Never required for identity.
 - **`countyCode` in `millage.csv`.** It is not a FIPS code. Use `millage-places.json` (keyed by slug) or match on county name.
+
+## Results and races share no ID
+
+Certified results identify candidates by ballot name, with no `candidateId`, `memberId` or race `id`. See the [legislative seat example](Using-the-data-together#who-won-a-legislative-seat). For other offices, match on office, district and election, and expect office names to differ.
 
 ## State and federal do not join
 

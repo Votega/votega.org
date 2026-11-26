@@ -100,7 +100,47 @@ for (race, _), name in list(linked.items())[:10]:
 print(len(linked), "general-election entries linked to an officeholder")
 ```
 
-An officeholder running for a different office is linked the same way, and a member who has since left the roster will not resolve. A race's result is on the race in `races.json` (`status: "certified"` and `winner`), and is absent until recorded.
+An officeholder running for a different office is linked the same way, and a member who has since left the roster will not resolve. Vote counts are in separate files, shown next.
+
+## Certified results for one county
+
+`data/results/manifest.json` lists the certified elections. Each has contest totals (`results.csv`) and county rows (`county-results.csv`), which join on `contestId` within one election.
+
+```python
+manifest = get_json("ga-races-elections", "data/results/manifest.json")
+for f in manifest["files"]:
+    if f["path"].endswith("/results.json"):
+        print(f["path"].split("/")[1])          # one folder per election
+
+folder = "results/2026-general"
+totals = get_csv("ga-races-elections", f"{folder}/results.csv")
+by_county = get_csv("ga-races-elections", f"{folder}/county-results.csv")
+
+contest = "statewide-us-senate"
+statewide = {r["candidate"]: r for r in totals if r["contestId"] == contest}
+for r in by_county:
+    if r["contestId"] == contest and r["countyFips"] == "13217":    # Newton
+        print(r["candidate"], r["votes"], "in the county,",
+              statewide[r["candidate"]]["votes"], "statewide")
+```
+
+## Who won a legislative seat
+
+The results files carry no race ID or member ID. For General Assembly seats, `office` matches the race's `chamber`, so join on that and the district.
+
+```python
+races = get_json("ga-races-elections", "races/2026/races.json")["races"]
+totals = get_csv("ga-races-elections", "results/2026-general/results.csv")
+
+race = next(r for r in races if r["id"] == "ga-house-151-2026")
+rows = [r for r in totals
+        if r["office"] == race["chamber"] and r["district"] == str(race["district"])]
+for r in rows:
+    print(r["candidate"], r["votes"], r["outcome"], r["winner"])
+print("race now in phase:", race["activePhase"])
+```
+
+Other office names differ between the two (`US Senate` in results, `U.S. Senate` in races), so check them before joining.
 
 ## One county across repositories
 
