@@ -411,3 +411,26 @@ def get_text_url(legislation_id):
         return ""
     latest = root.find(".//d:LatestVersion", ns)
     return (_text(latest, "Url") or "") if latest is not None else ""
+
+
+
+def get_legislation_record(legislation_id):
+    """GetLegislationDetail -> {"identifier", "summary", "statusHistory"}, or None when
+    the call fails. `summary` is the abstract the constitutional-amendment rule reads
+    (closed bienniums have no ga-bills.json to read it from); `statusHistory` is
+    [{"date", "code", "description"}] oldest first, the official record
+    check_ga_vote_status.py compares published results against."""
+    root = soap_call(LEG_URL, "GetLegislationDetail",
+                     "<s:LegislationId>%d</s:LegislationId>" % int(legislation_id))
+    if root is None:
+        return None
+    detail = root.find(".//s:GetLegislationDetailResult", ns)
+    if detail is None:
+        return None
+    identifier = ("%s %s%s" % (_text(detail, "DocumentType") or "", _text(detail, "Number") or "",
+                               _text(detail, "Suffix") or "")).strip()
+    history = [{"date": (_text(sl, "Date") or "")[:19], "code": _text(sl, "Code") or "",
+                "description": (_text(sl, "Description") or "").strip()}
+               for sl in detail.findall("d:StatusHistory/d:StatusListing", ns)]
+    return {"identifier": identifier, "summary": _text(detail, "Summary") or "",
+            "statusHistory": sorted(history, key=lambda r: r["date"])}

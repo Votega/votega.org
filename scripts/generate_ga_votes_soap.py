@@ -33,8 +33,8 @@ Parity with the other producers (so the three files diff cleanly, design §6/§7
   * Passage classification is the shared overlay-primary rule (lib/ga_passage.classify):
     a roll call is kept if any bundled (bill, date) matches the Open States passage
     overlay (borrowing OS's authoritative Pass/Fail) OR its caption reads as passage
-    (fills OS gaps; Pass/Fail then derived from the tally via derive_result, which
-    reproduces OS's rule exactly — see that function); procedural roll calls are
+    (fills OS gaps; Pass/Fail then derived from the tally via derive_result under the
+    constitutional-majority rule in lib/ga_vote_rules.py); procedural roll calls are
     dropped. (The overlay is a cross-check, NOT a hard dependency — result stands on
     the SOAP tally alone, so OS can be retired.) Attendance
     listings are skipped before the GetVote call; unpublished roll calls (attendance that
@@ -71,10 +71,10 @@ tells you to re-run with --full-refresh.
 What incremental means for provenance: metadata counters from `statsScope` onward describe
 only THIS RUN'S FETCH (`sessionsFetched`), so they drop sharply on an incremental run —
 that is preservation working, not data loss. Whole-file figures are `totalVotes`,
-`rollCallsTotal` and `sessions[].voteCount`. Two derivations also freeze for closed
-sessions, which is the main reason to keep the full-refresh hatch: crosswalk backfills
-(an unresolved legisGaGovId resolved later) and result derivation (the two-thirds
-constitutional-amendment rule, read from ga-bills.json) no longer reach them.
+`rollCallsTotal` and `sessions[].voteCount`. Crosswalk backfills (an unresolved legisGaGovId resolved
+later) freeze for closed sessions, which is the main reason to keep the full-refresh
+hatch. Results do not: each preserved record's Pass/Fail is re-derived from its own
+tally on every run (lib/ga_vote_results.py), so a rule change reaches closed sessions.
 
 A biennium rollover needs NO full refresh: SESSION_NAMES then holds only the new biennium,
 so nothing is marked for preservation and the run is already a single-session fetch.
@@ -101,7 +101,8 @@ from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
 from lib.ga_passage import classify, load_os_passage_index, normalize_bill
-from lib.ga_vote_rules import is_state_constitutional_amendment, vote_passed
+from lib.ga_vote_results import amendment_ids_from_soap, rederive_votes, two_thirds_candidate_ids
+from lib.ga_vote_rules import STORED_ABSTRACT_MAX, requires_two_thirds, vote_passed
 from lib.ga_sessions import (ACTIVE_SESSION, ARCHIVE_SESSIONS, BIENNIUM, all_session_ids,
                              legis_session_id, session_name, preserved_session_ids)
 from lib.ga_soap import (CHAMBER_NAMES, CHAMBERS, VACANT_ID, RollCallNotPublished,
@@ -118,17 +119,20 @@ DEFAULT_OUTPUT = "assets/data/ga-member-votes.soap.json"
 
 
 
-def derive_result(yea, nay, chamber=None, constitutional_amendment=False):
-    """Pass/Fail from the tally (see lib/ga_vote_rules.py for the rule).
+def derive_result(yea, nay, chamber=None, constitutional_amendment=False, motion=None,
+                  legislation_id=None, date=None):
+    """Pass/Fail from the tally under lib/ga_vote_rules.vote_passed, or None if the
+    tally is absent.
 
-    A simple majority of those voting (`yea > nay`) — which reproduced Open States'
-    `result` on all 2503/2503 of the biennium's votes at the SOAP cutover — except for
-    a resolution proposing a Georgia constitutional amendment, which needs two-thirds
-    of the chamber's elected members (House 120 / Senate 38). Those had been labelled
-    Pass on a bare majority (HR 1114 at 99-73; SR 838, 875 and 668, which the Senate
-    lost), so this now takes the chamber and an amendment flag. Returns None if the
-    tally is absent."""
-    passed = vote_passed(yea, nay, chamber, constitutional_amendment)
+    A roll call carries only with a majority of the chamber's SEATS (Ga. Const.
+    Art. III, Sec. V, Para. V: 91 House / 29 Senate), and a resolution proposing a
+    Georgia constitutional amendment needs two-thirds (120 / 38). Until 2026-11 this
+    was yea > nay, which published 38 lost roll calls as Pass (2017 SB 1 at 85-83,
+    2026 SB 175 at 89-73, HR 1114 at 99-73). `motion`, `legislation_id` and `date` let
+    the rule spot the text/calendar motions decided by a majority of those voting and
+    the three officially-passed 90-yea House votes it pins."""
+    passed = vote_passed(yea, nay, chamber, constitutional_amendment, motion,
+                         legislation_id, date)
     if passed is None:
         return None
     return "Pass" if passed else "Fail"
@@ -143,13 +147,13 @@ def load_amendment_ids(bills_file):
         with open(bills_file, encoding="utf-8") as f:
             bills = json.load(f).get("bills", [])
     except (OSError, ValueError) as e:
-        print("  WARNING: could not read %s (%s); constitutional-amendment votes will use "
-              "the simple-majority rule" % (bills_file, e), file=sys.stderr)
+        print("  WARNING: could not read %s (%s); two-thirds votes will use "
+              "the constitutional-majority rule" % (bills_file, e), file=sys.stderr)
         return set()
     return {b["legislationId"] for b in bills
             if b.get("legislationId") is not None
-            and b.get("billType") == "resolution"
-            and is_state_constitutional_amendment(b.get("abstract"))}
+            and requires_two_thirds(b.get("abstract"), b.get("billType") == "resolution",
+                                    STORED_ABSTRACT_MAX)}
 
 
 # ------------------------------------------------------------------------ crosswalk
@@ -333,13 +337,14 @@ def build_session(our_session, by_legis_id, os_index, title_index,
                     # this the party-tally enrichment reads each vacancy as a member it
                     # failed to attribute and reports coverage < 1 on a complete roster.
                     **({"vacant": vacant} if vacant else {}),
-                    # Pass/Fail derived from THIS roll call's tally (derive_result —
-                    # reproduces OS's rule exactly). Deliberately NOT the OS overlay:
+                    # Pass/Fail derived from THIS roll call's tally (derive_result,
+                    # lib/ga_vote_rules.py). Deliberately NOT the OS overlay:
                     # the overlay indexes on (bill, date) only, so when a bill has two
                     # roll calls the same day both would inherit ONE roll call's result
                     # (67 such mis-assignments observed). The per-roll-call tally is
                     # correct for each, and fully decouples result from OS.
-                    "result": derive_result(yea, nay, branch, lid in amendment_ids),
+                    "result": derive_result(yea, nay, branch, lid in amendment_ids,
+                                            caption, lid, date10),
                 }
                 for ocd, option in resolved:
                     member_votes.setdefault(ocd, []).append({"voteId": key, "vote": option})
@@ -432,9 +437,9 @@ def archive_main(args, chambers, sample):
 
     No preservation, no merge, no overlay: the file is self-contained and the run cannot
     touch the live data. The Open States overlay and the ga-bills constitutional-amendment
-    list only cover the current biennium, so passage is classified by caption alone and
-    the two-thirds amendment rule is not applied (recorded in metadata, since it can flip
-    a Pass/Fail on those resolutions)."""
+    list only cover the current biennium, so passage is classified by caption alone, and
+    the two-thirds amendment rule reads the biennium's resolution abstracts from
+    legis.ga.gov (one GetLegislationDetail per resolution)."""
     tag = args.archive
     if tag not in ARCHIVE_SESSIONS:
         sys.exit("Error: unknown archive session '%s'. Available: %s."
@@ -458,6 +463,15 @@ def archive_main(args, chambers, sample):
                                           sample=sample, skip_anomalous=True)
     if not votes_meta or not mv:
         sys.exit("Error: zero roll calls or member rows for %s — refusing to write." % tag)
+    # ga-bills.json only covers the current biennium, so read the abstracts of this
+    # biennium's resolutions from legis.ga.gov and apply the two-thirds rule to them.
+    try:
+        amendment_ids = amendment_ids_from_soap(two_thirds_candidate_ids(votes_meta))
+    except RuntimeError as exc:
+        sys.exit("Error: %s — refusing to write results without the amendment rule." % exc)
+    flipped = rederive_votes(votes_meta, amendment_ids)
+    print("Two-thirds bills/resolutions: %d · results changed by the rule: %d"
+          % (len(amendment_ids), len(flipped)))
     compact, vote_ids = encode_member_votes(mv, list(votes_meta.keys()))
     output = {
         "metadata": {
@@ -478,7 +492,7 @@ def archive_main(args, chambers, sample):
                                      "themselves; see each entry's reason.",
             "partial": bool(sample) or chambers != CHAMBERS,
             "passageClassification": "caption only (no Open States overlay)",
-            "amendmentRuleApplied": False,
+            "amendmentRuleApplied": True,
             "memberIdSource": "id-crosswalk rosterId, else legis-<legisGaGovId>",
         },
         "members": archive_roster(legis_session, ids),
@@ -569,7 +583,19 @@ def main():
     print("Loaded crosswalk: %d legisGaGovId joins (id-only resolution)" % len(by_legis_id))
 
     amendment_ids = load_amendment_ids(BILLS_FILE)
-    print("Constitutional-amendment resolutions (2/3 rule): %d" % len(amendment_ids))
+    print("Two-thirds bills/resolutions (constitutional amendments, tax exemptions): %d" % len(amendment_ids))
+
+    # Closed sessions are carried forward, not re-fetched, but their results are
+    # re-derived from each record's own tally so a rule change reaches them too
+    # (lib/ga_vote_results.py). Member rows are untouched.
+    if preserved_votes:
+        flipped = rederive_votes(preserved_votes, amendment_ids)
+        print("Re-derived results of preserved votes: %d changed" % len(flipped))
+        for vid, old, new in flipped:
+            r = preserved_votes[vid]
+            print("  %s %s %s %s %d-%d: %s -> %s" % (vid, r.get("bill"), r.get("chamber"),
+                                                    r.get("date"), r.get("yea"), r.get("nay"),
+                                                    old, new))
 
     votes_meta, member_votes = {}, {}
     agg = Counter()

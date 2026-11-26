@@ -88,6 +88,18 @@ jobs:
             --baseline-ref HEAD \
             --report-out "$RUNNER_TEMP/ga-votes-changes.md"
 
+      # Close votes in the session being fetched, checked against legis.ga.gov's own
+      # status history ("House Third Reading Lost" vs a published Pass). A
+      # disagreement is a warning, not a failure: it means lib/ga_vote_rules.py is
+      # missing a rule (or an OFFICIAL_PASSED pin) for a human to add, and holding
+      # back the day's votes would not fix it. Closed sessions were checked when the
+      # rule last changed (docs/conventions-publishing.md, "Vote results").
+      - name: Cross-check close votes against official status
+        run: |
+          session=$(python -c "import json; print(json.load(open('assets/data/ga-member-votes.json'))['metadata']['activeSession'])")
+          python scripts/check_ga_vote_status.py assets/data/ga-member-votes.json \
+            --session "$session" --warn-only
+
       - name: Commit and push generated data
         run: |
           set -e
