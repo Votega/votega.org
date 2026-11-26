@@ -63,6 +63,9 @@ def normalize_member(m):
     """Add a derived top-level `chamber` and fix field types. Everything else is
     passed through unchanged from Congress.gov."""
     m = dict(m)
+    # Congress.gov omits `district` for Senators. The published schema and README say
+    # it is null for them, and optional fields are null, never missing.
+    m.setdefault("district", None)
     terms = (m.get("terms") or {}).get("item") or []
     # Terms run oldest -> newest, so the LAST one is where the member sits now. Taking
     # item[0] reports a House-to-Senate member by their first chamber (43 members of
