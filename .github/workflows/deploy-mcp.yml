@@ -84,10 +84,14 @@ jobs:
       - name: Check the live server
         if: steps.creds.outputs.present == 'true'
         run: |
-          for i in 1 2 3 4 5 6; do
-            body=$(curl -fsS https://mcp.votega.org/health) && break
+          want=$(node -p "require('fs').readFileSync('src/server.ts','utf8').match(/VERSION = \"([^\"]+)\"/)[1]")
+          # Wait for the new version, not just a response: the old one keeps answering for a
+          # moment after wrangler returns (it failed a good 0.4.4 deploy on 2026-11-26).
+          for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+            body=$(curl -fsS --max-time 20 https://mcp.votega.org/health) || body=""
+            if echo "$body" | grep -q "\"version\": \"$want\""; then echo "$body"; exit 0; fi
             sleep 10
           done
           echo "$body"
-          want=$(node -p "require('fs').readFileSync('src/server.ts','utf8').match(/VERSION = \"([^\"]+)\"/)[1]")
-          echo "$body" | grep -q "\"version\": \"$want\"" || { echo "::error::mcp.votega.org/health does not report version $want"; exit 1; }
+          echo "::error::mcp.votega.org/health does not report version $want"
+          exit 1
