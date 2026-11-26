@@ -80,6 +80,43 @@ V.validate_jurisdiction(0, {"id": "x", "name": "X", "type": "city", "body": "Cou
     "partisan": False, "members": [row()], "election_rules": []}, set())
 check(any("election_rules" in e for e in V.errors), "validate_jurisdiction checks the block")
 
+JURIS = {"id": "x", "name": "X", "type": "city", "body": "Council", "partisan": True,
+         "members": [row()]}
+
+
+def juris_errs(**kw):
+    V.errors.clear()
+    V.validate_jurisdiction(0, {**JURIS, **kw}, set())
+    return list(V.errors)
+
+
+check(juris_errs() == [], "a plain jurisdiction is valid")
+check(juris_errs(election_rules=block()) == [], "a jurisdiction with a good block is valid")
+check(any("election_rules" in e for e in juris_errs(election_rules=None)),
+      "election_rules present but empty is an error")
+check(any("election_rule" in e for e in juris_errs(election_rule=block())),
+      "unknown jurisdiction key (election_rule) is an error")
+check(any("checked" in e for e in juris_errs(checked=date(2026, 11, 26))),
+      "a dedented block key (checked) is an error")
+for k in ("county", "official_url", "related_pages", "notes", "term_years", "board_size",
+          "government_form", "seat_capacity", "meetings", "participate"):
+    check(k in V.JURISDICTION_KEYS, f"{k} is an allowed jurisdiction key")
+
+print("election_rules: the page template")
+HERE = os.path.dirname(os.path.abspath(__file__))
+tpl = open(os.path.join(HERE, "..", "_includes", "entity", "place.html"),
+           encoding="utf-8").read()
+check('"%s" | split: ","' % ",".join(V.ELECTION_TOPICS) in tpl, "template topic order")
+
+# YAML merges two items into one mapping (last key wins, silently) when a `- ` is
+# missed, so a topic would vanish with no error. Each item therefore starts with
+# `- topic:`, and a `topic:` line without its dash fails here.
+src = open(os.path.join(HERE, "..", "_data", "local_officials.yml"), encoding="utf-8").read()
+lines = src.splitlines()
+bare = [i + 1 for i, ln in enumerate(lines)
+        if ln.lstrip().startswith("topic:") and not ln.lstrip().startswith("#")]
+check(bare == [], "every election_rules item starts with '- topic:' (lines %s)" % bare)
+
 if failures:
     print(f"\n{len(failures)} FAILED")
     sys.exit(1)

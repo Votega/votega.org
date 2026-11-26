@@ -211,6 +211,14 @@
   .po-source a { color: var(--color-text-muted); }
   .po-meta { font-size: 0.85rem; color: var(--color-text-secondary); margin: 0.35rem 0 0; }
   .po-meta a { color: var(--color-link); font-weight: 600; }
+  /* Elections & terms: one labelled row per charter rule; stacks on a phone. */
+  .po-rules { margin: 0.75rem 0 0; }
+  .po-rule { display: grid; grid-template-columns: minmax(0, 14rem) minmax(0, 1fr); gap: 0.2rem 1.25rem;
+    padding: 0.7rem 0; border-bottom: 1px solid var(--color-border-subtle); }
+  .po-rule dt { font-weight: 600; color: var(--color-text); }
+  .po-rule dd { margin: 0; color: var(--color-text); line-height: 1.55; overflow-wrap: anywhere; }
+  .po-rule-cite { color: var(--color-link); font-weight: 600; font-size: 0.88em; }
+  @media (max-width: 640px) { .po-rule { grid-template-columns: minmax(0, 1fr); } }
 </style>
 
 <a class="back-link" href="{{ '/local/' | relative_url }}">&larr; All Georgia local governments</a>
@@ -344,6 +352,32 @@
     {% endfor %}
   </div>
 </section>
+
+{%- comment %} Elections & terms: hand-written rules from charter sections a person
+    read (`election_rules` in local_officials.yml). Rows follow the topic order
+    below, which must stay equal to ELECTION_TOPICS in validate_local_officials.py
+    (test_local_election_rules.py checks it); a topic the city has no item for is
+    skipped, never shown blank. Every value is escaped: rule text quotes charters. {% endcomment -%}
+{% if juris.election_rules %}
+{% assign er = juris.election_rules %}
+{% assign rule_topics = "schedule,terms,winning,districts,vacancies,eligibility,term_limits" | split: "," %}
+{% assign rule_labels = "When elections are held|Length of term|What it takes to win|Districts and at-large seats|Vacancies|Who can run|Term limits" | split: "|" %}
+<section class="po-section" id="election-rules">
+  <h2 class="po-heading">Elections &amp; terms</h2>
+  <dl class="po-rules">
+    {%- for t in rule_topics %}
+    {%- assign rule = er["items"] | where: "topic", t | first %}
+    {%- if rule %}
+    <div class="po-rule">
+      <dt>{{ rule_labels[forloop.index0] }}</dt>
+      <dd>{{ rule.text | escape }} <a class="po-rule-cite" href="{{ rule.url | escape }}" target="_blank" rel="noopener">{{ rule.cite | escape }} ↗</a></dd>
+    </div>
+    {%- endif %}
+    {%- endfor %}
+  </dl>
+  <p class="po-meta">From the city charter as stored by Georgia Commons, text as of {{ er.text_as_of | date: "%b %-d, %Y" }}. Checked {{ er.checked | date: "%b %-d, %Y" }}. Charters can be amended and state election law also applies; confirm with the city clerk.</p>
+</section>
+{% endif %}
 {% endif %}
 
 {%- comment %} Constitutional officers (sheriffs) - elected countywide, NOT commission members, so

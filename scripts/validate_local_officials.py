@@ -404,9 +404,25 @@ def validate_election_rules(juris_id, block):
         seen.add(topic)
 
 
+# Every key a jurisdiction may carry (the keys the file uses, plus election_rules).
+# An unknown key fails: a typo like `election_rule:`, or a block key dedented out
+# of its block (`checked:`), would otherwise be ignored and drop content silently.
+JURISDICTION_KEYS = {
+    "id", "name", "type", "county", "body", "partisan", "official_url",
+    "related_pages", "notes", "term_years", "board_size", "government_form",
+    "seat_capacity", "meetings", "participate", "election_rules", "members",
+}
+
+
 def validate_jurisdiction(index, juris, seen_ids):
     juris_id = juris.get("id", f"?[{index}]")
     context = juris_id
+
+    for key in juris:
+        if key not in JURISDICTION_KEYS:
+            err(context, f"unknown jurisdiction key {key!r} (allowed: {sorted(JURISDICTION_KEYS)})")
+    if "election_rules" in juris and juris["election_rules"] is None:
+        err(f"{juris_id}.election_rules", "is present but empty: fill it in or remove the key")
 
     for field in ("id", "name", "type", "body", "partisan"):
         if field not in juris:
