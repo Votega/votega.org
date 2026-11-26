@@ -334,6 +334,76 @@ PARTICIPATE_KEYS = {
 }
 
 
+# OPTIONAL `election_rules` block: how and when a city elects its officials, hand-
+# written from charter sections a person read. The tuple is also the page's row order.
+ELECTION_TOPICS = (
+    "schedule", "terms", "winning", "districts",
+    "vacancies", "eligibility", "term_limits",
+)
+ELECTION_RULES_KEYS = ("checked", "text_as_of", "items")
+ELECTION_ITEM_KEYS = ("topic", "text", "cite", "url")
+
+
+def _is_iso_day(value):
+    """A date (not a timestamp) or a zero-padded YYYY-MM-DD string."""
+    if isinstance(value, datetime):
+        return False
+    if isinstance(value, str) and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+        return False
+    try:
+        return local_terms.parse_date(value) is not None
+    except ValueError:
+        return False
+
+
+def validate_election_rules(juris_id, block):
+    """A topic we cannot establish is left out, so every item present must be
+    complete. Unknown keys fail: a typo like `ur1` would silently drop content."""
+    context = f"{juris_id}.election_rules"
+    if block is None:
+        return
+    if not isinstance(block, dict):
+        err(context, "must be a mapping")
+        return
+    for key in block:
+        if key not in ELECTION_RULES_KEYS:
+            err(context, f"unknown key {key!r} (allowed: {list(ELECTION_RULES_KEYS)})")
+    for field in ("checked", "text_as_of"):
+        if not _is_iso_day(block.get(field)):
+            err(context, f"{field} is required as an ISO date (YYYY-MM-DD), "
+                         f"got: {block.get(field)!r}")
+
+    items = block.get("items")
+    if not isinstance(items, list) or not items:
+        err(context, "items must be a non-empty list")
+        return
+    seen = set()
+    for i, item in enumerate(items):
+        where = f"items[{i}]"
+        if not isinstance(item, dict):
+            err(context, f"{where} must be a mapping")
+            continue
+        for key in item:
+            if key not in ELECTION_ITEM_KEYS:
+                err(context, f"{where}: unknown key {key!r} "
+                             f"(allowed: {list(ELECTION_ITEM_KEYS)})")
+        for field in ELECTION_ITEM_KEYS:
+            v = item.get(field)
+            if not isinstance(v, str) or not v.strip():
+                err(context, f"{where}: {field} must be a non-empty string, got: {v!r}")
+        url = item.get("url")
+        if isinstance(url, str) and url.strip() and not url.startswith("https://"):
+            err(context, f"{where}: url must start with https://, got: {url!r}")
+        topic = item.get("topic")
+        if not isinstance(topic, str) or not topic.strip():
+            continue  # reported above
+        if topic not in ELECTION_TOPICS:
+            err(context, f"{where}: topic must be one of {list(ELECTION_TOPICS)}, got: {topic!r}")
+        elif topic in seen:
+            err(context, f"{where}: topic {topic!r} appears more than once")
+        seen.add(topic)
+
+
 def validate_jurisdiction(index, juris, seen_ids):
     juris_id = juris.get("id", f"?[{index}]")
     context = juris_id
@@ -366,6 +436,7 @@ def validate_jurisdiction(index, juris, seen_ids):
 
     validate_reserved_block(juris_id, "meetings", juris.get("meetings"), MEETINGS_KEYS)
     validate_reserved_block(juris_id, "participate", juris.get("participate"), PARTICIPATE_KEYS)
+    validate_election_rules(juris_id, juris.get("election_rules"))
 
     members = juris.get("members")
     if not isinstance(members, list) or not members:
