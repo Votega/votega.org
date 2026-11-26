@@ -66,6 +66,7 @@ Full annotated tree: `docs/project-structure.md`. Run `git ls-files` for the cur
 **Data & votes** (`docs/data-schemas.md`)
 - Congress.gov member endpoints must be paged to the end; a failed page means `null`/carry-forward, never a short list published as fact.
 - A missing House roll call is HTTP 200 with an error body: decide on content, stop after consecutive misses. Never read pass/fail from one keyword ("Agreed to" passed).
+- GA pass/fail is never yea > nay: a bill needs a majority of all seats (91 House / 29 Senate, vacancies don't lower it), and two-thirds (120/38) for constitutional amendments and local tax-exemption acts, in EVERY biennium, not just the current one. One rule, `lib/ga_vote_rules.py`; check against official status with `check_ga_vote_status.py` (313 lost votes once showed as Pass).
 - GA vote chamber comes from the record's `chamber`, never from `motionText`. Read/write `ga-member-votes.json` only through `lib/votes_schema.py`.
 - senate.gov 403s non-browsers: Senate votes fall back to Voteview (`lib/voteview.py`), replaced when senate.gov is reachable again.
 - Executive orders: `pubDate` is not the signing date; join Register and whitehouse.gov on normalized title plus EO-number cross-check, never body-text numbers. Always date-filter Federal Register queries (10,000 is the API cap, not a count).
@@ -77,6 +78,7 @@ Full annotated tree: `docs/project-structure.md`. Run `git ls-files` for the cur
 - A districted seat is its census blocks, never its number; decide carry-over from the block files.
 **Elections** (`docs/conventions-elections.md`)
 - Election night: use the SoS JSON feed URL (the XLSX name carries a fresh GUID), keep `fill_missing` ON for unofficial counts. Wait for certification before updating results from unofficial exports.
+- Results pages: stage them indexable with every contest in the served HTML (an empty-looking page is a soft 404); only `status: certified` pages publish to ga-races-elections, and a missing count is blank, never 0. Full checklist: "Results pages and publishing".
 - Never drop a retired candidate from `search-entities.json` (page builders read it back and would delete the page). Share cards are generated at deploy, never committed.
 **Local government** (`docs/conventions-local-government.md`)
 - Never overwrite good data with worse: judge a re-read by lost findings, not lost characters. Meeting-topic keywords are measured against the corpus, never guessed; the scorer and probe never carry a private keyword list.

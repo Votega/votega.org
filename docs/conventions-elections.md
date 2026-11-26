@@ -11,3 +11,47 @@ Moved out of `CLAUDE.md` (verbatim, no edits) so the always-loaded file stays sh
   `https://results.sos.ga.gov/cdn/results/Georgia/export-<MMDDYYYY><ElectionName>.json` (2026 general: `export-11032026GeneralAndSpecialElection.json`). The XLSX workbook the results site offers carries a fresh GUID in its download name every time, so it can only be fetched by hand; the builder reads either, plus a CSV of the workbook's first sheet. The export is the SoS's **XLSX workbook** (three sheets; `Total Votes` is the one parsed) — `build_results_json.py` reads it directly, stdlib only, and also takes a CSV of that sheet; if there is no stable URL, commit the file and pass `csv_path` instead. It fetches the export, rebuilds `_data/election_results/<key>.json`, refuses it if it looks wrong (`scripts/validate_results_build.py`: no votes at all, a ballot that shrank, counts going backwards, structural damage), commits, and dispatches the deploy — then verifies a deploy run actually started, because `deploy-pages.yml` fires on human pushes plus crons at 13:00 and 23:00 UTC (6pm ET, before polls close), and a GITHUB_TOKEN commit raises no `push` event. Leave `fill_missing` ON for unofficial counts so a partial export cannot delete the rest of the ballot from the page (races it does not mention keep reading "Awaiting Results"); turn it OFF for the certified rebuild, which should be exactly what was certified. Nothing on the results page needs flipping on election night — the first counted vote switches the badge and notice on its own; `status: certified` and `updated:` are the only hand edits, at certification. The same sequence by hand is `python scripts/build_results_json.py <csv> <data_key>`, commit, push to main as a person.
 
 - **After an election: recording winners (the runbook).** The candidate-page behavior above only fires once `races.json` carries `status: "certified"` and a `winner` on each decided race, and `scripts/propose_race_winners.py` is how those get there. In order: (1) **Election night**, once the results JSON holds counts: `python scripts/propose_race_winners.py --preview-unofficial` (report only; it can never be combined with `--apply`) to check that the real file's names and structure match, and fix anything under "Needs a person" by correcting the ballot name in `races.json` or the results file. (2) **A race with no majority** is listed under "No majority, so a runoff" and gets no winner; set it to `activePhase: runoff` as usual and re-run after the runoff results certify (a later certified set supersedes it). (3) **At certification**, set the results page's `status: certified` (and `updated:`), then run `python scripts/propose_race_winners.py` and read the report: every "Needs a person" line is a race it declined to decide, and a CONFLICT means a different winner is already recorded (the tool never overwrites one). (4) `python scripts/propose_race_winners.py --apply`, review `git diff assets/data/races.json` (only `status`, `winner` and `updatedAt` change), commit and push. Candidate pages then redirect or retire on the next deploy; a winner whose officeholder page does not exist yet keeps a "Won this election" page until the roster carries them (federal roster updates after the January swearing-in, the GA roster at the 2027-01-11 biennium rollover). Judicial races are not matched yet.
+
+## Results pages and publishing
+
+One results page per election, `/<slug>-results/` (`layout: election_results`), backed by `_data/election_results/<results_data>.json`. Listed in `_data/election_archive.yml`, which drives `/results/` and the home page Election Results card. The page front matter is the source of truth for status; the archive's `status` is only a fallback.
+
+**Front matter that matters.**
+- `status`: `unofficial` until the Secretary of State certifies, then `certified`. With `updated:`, it is the only hand edit at certification.
+- `results_folder`: the permanent folder under `results/` in Votega/ga-races-elections. Set it when the page is created, and never change it once published.
+- `notice_upcoming`: shown until the first counted vote, then it drops away on its own. Never name it `notice`, which stays above the results.
+- `results_mode` (`round` / `final`), `runoff_advances`, `label_*`, `race_notes`, `district_lookup`, and `county_map` (the map shows only once `certified`).
+
+**Before election night (stage the page).**
+- Create the page and its data file with every contest and candidate at zero votes, built from the SoS's staged export, so it reads "Upcoming" / "Awaiting Results". Add the election to `election_archive.yml`. Point `publish-results.yml`'s `data_key` default at it.
+- Make it indexable as soon as it exists: no `noindex`, no `sitemap: false`, no `search: false`. The point is for the URL to be indexed before people search on election night.
+- **A staged page must not read as empty**, or Google files it as a soft 404 (#528).
+  - Pages with 25 or fewer races carry the races and candidates in the served HTML, not only after scripts run.
+  - Empty sections write nothing.
+  - Before polls close, each contest says when votes will be reported.
+- Write `share-description` for the election, not for its status ("results for …, with counts after polls close at 7 PM ET").
+- After the deploy, run **Test live URL** in Search Console and request indexing. This step is manual.
+
+**Election night and certification.**
+- Election night: run **Publish election results** with the SoS JSON feed, `fill_missing` on and `commit_csv` off; see the pipeline section above. Nothing on the page needs flipping; the first counted vote switches the badge and notice.
+- Certification: rebuild with `fill_missing` off from the certified export, and commit the export to `_sources/election_results/`. Set `status: certified` and `updated:`, then record winners (runbook above).
+- A contest the SoS published no certified count for stays on the page with a "No Certified Count" note, never zero votes. Example: Waycross DA, 2026 general.
+
+**Open data (Votega/ga-races-elections).**
+- Only `status: certified` pages publish (`publish_results.py`, `publish-results-to-ga-races-elections.yml`, on push, after Publish election results, and daily). Unofficial counts are never published there.
+- Each certified page gets `results/<results_folder>/`:
+  - `results.json`, `results.csv` and `results.schema.json`;
+  - `county-results.csv` where the SoS JSON export exists (distilled to `_sources/election_results/<key>-breakdown.json`);
+  - plus `data/results/manifest.json`.
+- A missing count or vote-method split is blank (`not-reported`), never 0.
+- Certified pages carry a source footnote linking their published folder.
+- Add the `/open-data` catalog entry only after the first publish.
+
+**Home page.**
+- The Election Results card lists the two newest entries from `election_archive.yml` with the same badges as `/results/`. It is built at deploy, so badges change on the next deploy.
+- Turn the Next Election card on (`home_next_election: true`) once the previous election is certified.
+- A small election (one district) sets `hideSampleBallot: true` in `ga-election-calendar.json`.
+
+**URLs.** No status words in any results URL or post slug (see above). The page URL and `results_folder` are permanent, so the badge, title wording and notices carry the status.
+
+**IndexNow** runs on its own after every deploy (`indexnow.yml`). Search Console indexing requests stay manual.
