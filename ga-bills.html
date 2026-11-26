@@ -384,8 +384,8 @@ breadcrumb:
         "legislationIdentifier": {{ b.identifier | jsonify }},
         "name": {{ b.title | default: b.identifier | jsonify }},
         "legislationType": {% if b.billType == "resolution" %}"Resolution"{% else %}"Bill"{% endif %},
-        "legislationJurisdiction": "Georgia, USA",
-        "legislationPassedBy": { "@type": "GovernmentOrganization", "name": "Georgia General Assembly" }{% if b.sessionName %},
+        "legislationJurisdiction": "Georgia, USA"{% if b.enacted %},
+        "legislationPassedBy": { "@type": "GovernmentOrganization", "name": "Georgia General Assembly" }{% endif %}{% if b.sessionName %},
         "isPartOf": { "@type": "Legislation", "name": {{ b.sessionName | jsonify }} }{% endif %}{% if b.statusDate %},
         "legislationDate": {{ b.statusDate | jsonify }}{% endif %}
       }
@@ -563,7 +563,11 @@ breadcrumb:
     const latestByChamber = {};
     (bill.passageVotes || []).forEach(function (v) {
       const prev = latestByChamber[v.chamber];
-      if (!prev || (v.date || '') >= (prev.date || '')) latestByChamber[v.chamber] = v;
+      // Same-day votes order by time of day (passageVotes[].time); files written before
+      // that field existed fall back to array order, which is the producer's order.
+      const key = (v.date || '') + ' ' + (v.time || '');
+      const prevKey = prev ? (prev.date || '') + ' ' + (prev.time || '') : '';
+      if (!prev || key >= prevKey) latestByChamber[v.chamber] = v;
     });
     const lower = latestByChamber['lower'];
     const upper = latestByChamber['upper'];

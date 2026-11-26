@@ -220,6 +220,44 @@ check("votes casing", votes_result(99, 73, "House", True), "Fail")
 check("bills casing", bills_result(89, 73, "lower"), "fail")
 check("votes no chamber default", votes_result(5, 3), "Pass")
 
+# --- veto overrides need two-thirds whatever the bill ------------------------
+check("override 94-77 lost (2026 HB 1192)", vote_passed(94, 77, "lower", False, "Veto Override"), False)
+check("override 120 passes", vote_passed(120, 50, "lower", False, "Veto Override"), True)
+check("senate override 37", vote_passed(37, 10, "upper", False, "VETO OVERRIDE"), False)
+
+# --- legis.ga.gov LegislationType decides the kind of measure ----------------
+LOCAL_EXEMPTION_WITH_CODE = ("A BILL to be entitled an Act to provide a homestead exemption from "
+                             "Dade County school district ad valorem taxes; to provide for "
+                             "applicability of Code Section 48-5-44 of the Official Code of Georgia")
+check("CA type", requires_two_thirds("anything", True, legislation_type="CA"), True)
+check("LOC exemption naming the Code", requires_two_thirds(LOCAL_EXEMPTION_WITH_CODE, False,
+                                                           legislation_type="LOC"), True)
+check("LOC exemption, no type: heuristic misses it",
+      requires_two_thirds(LOCAL_EXEMPTION_WITH_CODE, False), False)
+check("LOC non-exemption", requires_two_thirds("A BILL to amend the charter of Dalton", False,
+                                               legislation_type="LOC"), False)
+check("GEN exemption stays majority", requires_two_thirds(
+    "A BILL to provide a homestead exemption from ad valorem taxes", False,
+    legislation_type="GEN"), False)
+check("PRIV never two-thirds", requires_two_thirds(
+    "proposing an amendment to the Constitution", True, legislation_type="PRIV"), False)
+check("type case/space folded", requires_two_thirds("x", True, legislation_type=" ca "), True)
+
+# --- the passage classifier keeps final actions whatever the caption order ---
+from lib.ga_passage import native_is_passage  # noqa: E402
+for cap, want in [("SBs 234,  235,  & 336 Passage", True), ("Veto Override", True),
+                  ("Uncontested House Resolutions", True),
+                  ("CONSENT CALENDAR FOR SENATE STUDY COMMITTEES", True),
+                  ("CONSENT CALENDAR EXPRESSING THE WILL OF THE SENATE", True),
+                  ("RECEDE FROM SENATE AMENDMENT", True),
+                  ("Recon SB 234,  235,  & 336", False), ("SB1 & SB2 RECON", False),
+                  ("MOTION TO RECONSIDER LOCAL CONSENT CALENDAR", False),
+                  ("Remove from Local Cal/Vote Separately", False), ("Attendance", False),
+                  ("MORNING ROLL CALL", False),
+                  ("ADOPTION OF AMENDMENT #1 BY THE SENATOR FROM THE 22ND", False),
+                  ("MOTION FOR THE PREVIOUS QUESTION", False)]:
+    check("passage %r" % cap, native_is_passage(cap), want)
+
 if failures:
     print("FAIL (%d):" % len(failures))
     for f in failures:

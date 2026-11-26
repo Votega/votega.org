@@ -23,6 +23,24 @@ COMMONS_URL = "https://georgiacommons.org/bills/{slug}/{number}"
 COMMONS_LABEL = "Plain-language summary (AI-written), Georgia Commons"
 
 
+
+#: The Governor's decision, as the bill's `status`. legis.ga.gov's latest status for a
+#: vetoed bill is still "House Date Signed by Governor" (docs/ga-soap-data-dictionary.md,
+#: gotcha 1), so a search for "signed" found vetoed bills and one for "vetoed" found none.
+_OUTCOME_STATUS = {"Signed": "Signed by Governor", "Vetoed": "Vetoed by Governor"}
+
+
+def outcome_status(bill):
+    """'Signed by Governor (Act 73)' / 'Vetoed by Governor (2025-05-14)' for a bill the
+    Governor decided, else None (the official status stands)."""
+    ga = bill.get("governorAction") or {}
+    label = _OUTCOME_STATUS.get(ga.get("status"))
+    if not label:
+        return None
+    if ga.get("status") == "Signed" and ga.get("actNumber"):
+        return "%s (Act %s)" % (label, ga["actNumber"])
+    return label
+
 def tokenize(text):
     words = TOKEN_RE.findall((text or "").lower())
     return sorted({w for w in words if len(w) > 1 and w not in IGNORED})
@@ -114,11 +132,15 @@ def build_bills(bill_docs, generated_at):
                     sponsors.append([gid, bool(s.get("primary"))])
                     if s.get("name"):
                         names[str(gid)] = s["name"]
+                official = (b.get("status") or "").strip() or None
+                status = outcome_status(b) or official
                 row = {
                     "legislationId": b.get("legislationId"), "identifier": b["identifier"],
-                    "billType": b.get("billType"), "title": b.get("title"), "status": b.get("status"),
+                    "billType": b.get("billType"), "title": b.get("title"), "status": status,
                     "statusDate": b.get("statusDate"), "subjects": b.get("subjects") or [],
                     "sponsors": sponsors}
+                if status != official:
+                    row["officialStatus"] = official
                 second = b.get("secondChamberSponsor") or {}
                 if second.get("legisGaGovId") is not None:
                     row["secondChamberSponsor"] = [second["legisGaGovId"], second.get("chamber")]

@@ -292,6 +292,12 @@ def _sponsors(detail, roster):
         mid = _text(sp, "MemberId", int)
         seq = _text(sp, "Sequence", int)
         desc = _text(sp, "MemberDescription") or ""
+        kind = _text(sp, "Type")
+        if kind not in AUTHOR_TYPES:
+            # Authors has only held *Author rows (docs/ga-soap-data-dictionary.md 2.5);
+            # anything else means the service changed what it puts here.
+            print("  bill %s: unexpected Authors type %r" % (_text(detail, "Id"), kind),
+                  file=sys.stderr)
         rows.append((seq if seq is not None else 9999, mid, desc))
     rows.sort(key=lambda r: r[0])
     for seq, mid, desc in rows:
@@ -300,6 +306,7 @@ def _sponsors(detail, roster):
     return out
 
 
+AUTHOR_TYPES = {"HouseAuthor", "SenateAuthor", "SenateCoAuthor"}
 SECOND_CHAMBER = {"SenateSponsor": "upper", "HouseSponsor": "lower"}
 
 
@@ -329,7 +336,11 @@ def _clean_member_desc(desc):
 
 
 def _passage_votes(detail, constitutional_amendment=False, legislation_id=None):
-    """The bill's passage roll calls (native_is_passage), mapped to the ga-bills schema."""
+    """The bill's passage roll calls (native_is_passage), mapped to the ga-bills schema.
+
+    Ordered by the roll call's time of day (`Date` is a datetime), so the last vote a
+    chamber took on a day is last. Sorting by caption put "AGREE TO HOUSE SUBSTITUTE AS
+    AMENDED" after "AGREE TO HOUSE SUBSTITUTE" whatever the order they were taken in."""
     out = []
     votes = detail.find("d:Votes", ns)
     if votes is None:
@@ -343,10 +354,12 @@ def _passage_votes(detail, constitutional_amendment=False, legislation_id=None):
         nv  = _text(vl, "NotVoting", int) or 0
         exc = _text(vl, "Excused", int) or 0
         chamber = _chamber(None, _text(vl, "Branch"))
-        date10 = (_text(vl, "Date") or "")[:10] or ""
+        stamp = _text(vl, "Date") or ""
+        date10 = stamp[:10]
         out.append({
             "chamber":    chamber,
             "date":       date10,
+            "time":       stamp[11:16] or None,
             "result":     derive_result(yea, nay, chamber, constitutional_amendment, caption,
                                         legislation_id, date10) or "",
             "motionText": caption,
@@ -354,7 +367,7 @@ def _passage_votes(detail, constitutional_amendment=False, legislation_id=None):
             "nay":        nay if nay is not None else 0,
             "other":      nv + exc,
         })
-    out.sort(key=lambda v: (v["date"], v["chamber"], v["motionText"]))
+    out.sort(key=lambda v: (v["date"], v["time"] or "", v["chamber"], v["motionText"]))
     return out
 
 
@@ -401,6 +414,8 @@ def map_bill(detail, our_session, roster, titles_map):
     title     = _text(detail, "Caption") or ""
     summary   = _text(detail, "Summary") or ""
     status    = detail.find("d:Status", ns)
+    leg_type  = (_text(detail, "LegislationType") or "").strip() or None
+    footnotes = [n.strip() for n in (_text(detail, "Footnotes") or "").split(";") if n.strip()]
     latest    = detail.find("d:LatestVersion", ns)
 
     # Fallback subjects: code-title parse off the FULL summary (not the truncated
@@ -415,10 +430,12 @@ def map_bill(detail, our_session, roster, titles_map):
         "identifier":  identifier,
         "session":     our_session,
         "billType":    "resolution" if doc_type.upper() in RESOLUTION_TYPES else "bill",
+        # legis.ga.gov's own kind: GEN / LOC / CA / PRIV / NP (data dictionary 2.3).
+        "legislationType": leg_type,
         "chamber":     _chamber(doc_type),
         "title":       title,
         "abstract":    summary[:ABSTRACT_MAX],
-        "status":      _text(status, "Description") or "",
+        "status":      (_text(status, "Description") or "").strip(),
         "statusDate":  (_text(status, "Date") or "")[:19] if status is not None else "",
         "subjects":    subjects,
         "sponsors":    _sponsors(detail, roster),
@@ -426,9 +443,12 @@ def map_bill(detail, our_session, roster, titles_map):
         "billUrl":     "https://www.legis.ga.gov/legislation/%s" % lid,
         "textUrl":     (_text(latest, "Url") or "") if latest is not None else "",
         "passageVotes": _passage_votes(
-            detail, requires_two_thirds(summary, doc_type.upper() in RESOLUTION_TYPES),
+            detail, requires_two_thirds(summary, doc_type.upper() in RESOLUTION_TYPES,
+                                        legislation_type=leg_type),
             lid),
         "governorAction": _governor_action(detail),
+        # Procedural notes ("Modified Structured Rule", "Tabled in Senate"), oldest first.
+        "footnotes":   footnotes,
     }
 
 
@@ -660,15 +680,32 @@ def main():
         print("Session %s (legis %d): %d bills to fetch%s"
               % (our_session, legis_session, len(index), " [sample]" if sample else ""))
         t0 = time.time()
+        failed = []
         for i, lid in enumerate(index, 1):
             detail = get_detail(lid)
             if detail is None:
+                failed.append(lid)
                 continue
             bills.append(map_bill(detail, our_session, roster, titles_map))
             if i % 250 == 0:
                 print("  %d/%d (%.0fs)" % (i, len(index), time.time() - t0))
             if args.delay:
                 time.sleep(args.delay)
+        # A bill whose detail call failed would otherwise just be missing from the file.
+        # Retry each once after the sweep; any still failing stops the run.
+        still = []
+        for lid in failed:
+            detail = get_detail(lid)
+            if detail is None:
+                still.append(lid)
+            else:
+                bills.append(map_bill(detail, our_session, roster, titles_map))
+        if still:
+            print("Error: GetLegislationDetail failed for %d bill(s) in %s: %s — "
+                  "refusing to write a file without them."
+                  % (len(still), our_session, ", ".join(map(str, still[:20]))),
+                  file=sys.stderr)
+            sys.exit(1)
 
     fetched_count = len(bills)
 

@@ -118,10 +118,20 @@ def build_bills_rows(data, cfg):
     rows, total = rows_from_list(data, cfg["list"], cfg["fields"], cfg["cap"])
     names = {s.get("id"): s.get("name")
              for s in (_get(data, "metadata.sessions", []) or []) if isinstance(s, dict)}
-    for row in rows:
+    source = (_get(data, cfg["list"], []) or [])[:cfg["cap"]]
+    for row, bill in zip(rows, source):
         nm = names.get(row.get("session"))
         if nm:
             row["sessionName"] = nm
+        # legis.ga.gov's latest status for a VETOED bill is "Date Signed by Governor", so
+        # the Governor's decision replaces it, and only an enacted bill is marked as
+        # passed in the Legislation structured data.
+        decision = ((bill or {}).get("governorAction") or {}).get("status")
+        if decision == "Vetoed":
+            row["status"] = "Vetoed by Governor"
+        elif decision == "Signed":
+            row["status"] = "Signed by Governor"
+            row["enacted"] = True
     human, iso = _fmt_date(_get(data, cfg["date"]))
     return {"updated": human, "updatedISO": iso, "count": total,
             "shown": len(rows), "source": _get(data, "metadata.source"), "rows": rows}

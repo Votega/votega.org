@@ -153,7 +153,8 @@ def load_amendment_ids(bills_file):
     return {b["legislationId"] for b in bills
             if b.get("legislationId") is not None
             and requires_two_thirds(b.get("abstract"), b.get("billType") == "resolution",
-                                    STORED_ABSTRACT_MAX)}
+                                    STORED_ABSTRACT_MAX,
+                                    legislation_type=b.get("legislationType"))}
 
 
 # ------------------------------------------------------------------------ crosswalk

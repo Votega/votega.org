@@ -433,4 +433,5 @@ def get_legislation_record(legislation_id):
                 "description": (_text(sl, "Description") or "").strip()}
                for sl in detail.findall("d:StatusHistory/d:StatusListing", ns)]
     return {"identifier": identifier, "summary": _text(detail, "Summary") or "",
+            "legislationType": (_text(detail, "LegislationType") or "").strip() or None,
             "statusHistory": sorted(history, key=lambda r: r["date"])}
