@@ -24,6 +24,14 @@ export function clean<T>(value: T): T {
   return value;
 }
 
+/** Georgia General Assembly pass thresholds: a summary of scripts/lib/ga_vote_rules.py. */
+export const GA_PASS_RULE =
+  "Georgia passage is not decided by yea versus nay. A bill needs a majority of all seats (91 of 180 " +
+  "in the House, 29 of 56 in the Senate). Constitutional amendments and local property-tax exemption " +
+  "acts need two-thirds (120 House, 38 Senate). A few procedural motions need only a majority of those " +
+  "voting, and a few results follow the official record instead. Report the stored result; never " +
+  "recompute it.";
+
 export type Envelope = {
   summary: string;
   as_of: string | null;

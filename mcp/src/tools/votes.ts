@@ -6,7 +6,7 @@
  */
 import { MismatchError, need, UnavailableError, type Loader } from "../data";
 import type { FederalVoteIndex, GaVoteIndex, Member, Meta, MembersIndex, VoteFiles, VoteSlice } from "../types";
-import { fail, ok, type ToolResult } from "../util";
+import { fail, GA_PASS_RULE, ok, type ToolResult } from "../util";
 import { findMember, loadMembers, ordinal, sessionKey } from "./legislators";
 
 export const DEFAULT_LIMIT = 10;
@@ -60,6 +60,7 @@ function answer(
       " Not Voting, Absent and Excused are not positions for or against.",
     legislator: { id: m.key, name: m.name, party: m.party, chamber: m.chamber, district: m.district },
     record_covers: covers,
+    ...(m.level === "state" ? { pass_rule: GA_PASS_RULE } : {}),
     total: votes.length,
     votes: shown,
     as_of: meta.metadata.generatedAt,

@@ -17,7 +17,7 @@ import { explainBill, localOfficials, MAX_ARG, whoRepresentsArea } from "./promp
 import { readResource, RESOURCES } from "./resources";
 import { fail, type ToolResult } from "./util";
 
-export const VERSION = "0.4.0";
+export const VERSION = "0.4.1";
 
 const READ_ONLY = { readOnlyHint: true, openWorldHint: false } as const;
 
@@ -137,7 +137,8 @@ export function createServer(loader: Loader, nowMs: number) {
         "A legislator's recorded votes, newest first: the bill or motion, date, how they voted and the " +
         "result. State members: final passage votes, by General Assembly session. Members of Congress: every " +
         "roll call of the current Congress, including votes tied to no bill. Do not infer a position from " +
-        "Not Voting, Absent or Excused." + NONPARTISAN,
+        "Not Voting, Absent or Excused. Report each stored result: in Georgia more yeas than nays is not enough to pass a bill " +
+        "(see pass_rule)." + NONPARTISAN,
       inputSchema: z.object({
         id: z.string().min(1).max(40).describe("ga:5089, us:C001103 or vg-ga-p-000001."),
         session: z.string().max(20).optional().describe('State: "2025_26" or "2026_ss". Default: the current General Assembly.'),

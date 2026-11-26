@@ -99,8 +99,15 @@ describe("worker", () => {
     expect(t).toContain('get_bill with identifier "HB 2"');
     expect(t).toContain("mcp.georgiacommons.org/mcp");
     expect(t).toContain("georgia_commons.id");
-    expect(t).toContain("AI-written");
-    expect(t).toContain("never present it as the bill's own text");
+    // Which parts of Commons' section to show, and which to leave out.
+    expect(t).toContain('"Summaries written by Georgia Commons"');
+    expect(t).toContain('the one-sentence headline, "Plain-language summary" and "What it does"');
+    expect(t).toContain('Leave out "Why it matters"');
+    expect(t).toContain("read further");
+    // The caveats that travel with it.
+    for (const caveat of ["AI-written by Georgia Commons", "not part of the bill", "not official",
+      "georgia_commons.url", "bill.textUrl"]) expect(t).toContain(caveat);
+    expect(t).toContain("never present it as the bill's own text or as VoteGA's");
     expect(t).toContain("no summary was retrieved");
     expect(await text({ bill: "HB 1", session: "2026_ss" })).toContain('session "2026_ss"');
   });
