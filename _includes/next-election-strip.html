@@ -51,7 +51,7 @@
     </div>
     <dl class="next-election-facts" id="nextElectionFacts"></dl>
     <div class="next-election-actions">
-      <a class="next-election-btn" href="{{ '/sample-ballot' | relative_url }}">See what's on my ballot &rarr;</a>
+      <a class="next-election-btn" id="nextElectionBallot" href="{{ '/sample-ballot' | relative_url }}">See what's on my ballot &rarr;</a>
       <a class="next-election-btn next-election-btn--alt" id="nextElectionRaces" href="{{ '/elections/candidates/' | relative_url }}">See all races &rarr;</a>
       <a class="next-election-link" href="{{ '/ga-voter-access' | relative_url }}">Voter access &amp; deadlines</a>
       <a class="next-election-link" id="nextElectionEarlyVote" href="{{ '/ga-early-vote/' | relative_url }}" hidden>Early vote turnout</a>
@@ -133,6 +133,10 @@
     }
     document.getElementById('nextElectionFacts').innerHTML = facts
       .map(([dt, dd]) => `<div><dt>${esc(dt)}</dt><dd>${esc(dd)}</dd></div>`).join('');
+
+    // An election with `hideSampleBallot` in the calendar is too narrow for the
+    // button: a one-district runoff would send most voters to an empty ballot.
+    if (next.hideSampleBallot) document.getElementById('nextElectionBallot').remove();
 
     // The turnout dashboard covers one election, named by its dataset, so the link
     // shows only while that election is the one on this card and goes away after it.
