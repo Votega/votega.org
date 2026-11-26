@@ -770,8 +770,11 @@ jurisdictions:
         term_end: 2027
         next_election: 2027
         term_provenance: verified
-        voting: false               # mayor presides — verify vote/tie-break rules
-        tie_break_only: true
+        # Code § 2-36: the mayor may vote on any question, tie or not, unless
+        # disqualified by interest.
+        # https://georgiacommons.org/cities/carrollton/code/2-36
+        voting: true
+        tie_break_only: false
         photo: ""
         source: "https://carrolltonga.com/carrollton-mayor/"                  # add the city-council page / minutes URL
         notes: ""
