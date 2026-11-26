@@ -50,7 +50,6 @@ Front-matter contract
                              election night and then fall back to the normal per-status notice on
                              its own the moment the first vote lands — no front-matter edit.
                              Beaten by `notice` if both are set.
-  empty_section_text optional message for a section tab with no races
   district_lookup optional   true = show an address/ZIP box on the U.S. House, State Senate and
                              State House tabs that narrows each to the voter's own district.
                              Needs those sections' contests to be named "District N".
@@ -129,6 +128,7 @@ Front-matter contract
   .bar-fill.np  { background: var(--color-party-vacant); }
   .bar-fill.trail { opacity: .42; }
   .pr-crosslink { font-size: .83rem; margin-bottom: .75rem; }
+  .pr-static h2 { font-size: 1rem; font-weight: 600; margin: .75rem 0 .35rem; }
   .pr-source { font-size: .8rem; color: var(--color-text-muted); margin-top: 1.5rem; }
   .pr-related { background: var(--color-surface-tint); border: 1px solid var(--color-border); border-left: 4px solid var(--color-accent); border-radius: 6px; padding: .6rem 1rem; font-size: .82rem; color: var(--color-text); margin-bottom: 1rem; }
   .pr-related .pr-related-link { display: inline-block; margin-top: .3rem; font-weight: 600; }
@@ -280,6 +280,35 @@ Front-matter contract
   <input type="text" id="searchBox" placeholder="Search candidates or races…" />
 </div>
 
+{%- comment -%}
+  The races and candidates in the served HTML, for readers and crawlers that see
+  the page before (or without) the script, which replaces this with the cards.
+  Small pages only: a full general election would double its page weight. The
+  limit is in races.
+{%- endcomment -%}
+{%- assign er_sections = site.data.election_results[page.results_data] -%}
+{%- assign er_races = 0 -%}
+{%- for s in er_sections -%}{%- assign er_races = er_races | plus: s.races.size -%}{%- endfor -%}
+{%- if er_races > 0 and er_races <= 25 %}
+<div id="prStatic" class="pr-static">
+{%- for s in er_sections -%}
+  {%- for race in s.races %}
+  <h2>{{ s.label | escape }}: {{ race.office | escape }}</h2>
+    {%- for contest in race.contests %}
+  <ul>
+      {%- for cd in contest.candidates %}
+    <li>{{ cd.name | escape }}{% if cd.incumbent %} (incumbent){% endif %}{% if contest.totalVotes > 0 %}: {{ cd.votes }} votes{% endif %}</li>
+      {%- endfor %}
+  </ul>
+    {%- endfor -%}
+  {%- endfor -%}
+{%- endfor %}
+  {%- if result_status == 'upcoming' %}
+  <p>Votes are reported after polls close at 7:00 PM ET on {{ page.election_date | date: "%B %-d, %Y" }}.</p>
+  {%- endif %}
+</div>
+{%- endif %}
+
 <div id="tab-statewide"    class="tab-panel active"></div>
 <div id="tab-us-house"     class="tab-panel"></div>
 <div id="tab-state-senate" class="tab-panel"></div>
@@ -324,7 +353,7 @@ const CFG = {
     uncontested: {{ page.label_uncontested | jsonify }},
     noResults:   {{ page.label_noresults | jsonify }},
   },
-  emptyText: {{ page.empty_section_text | default: 'No races in this section.' | jsonify }},
+  electionDay: {{ page.election_date | date: "%B %-d, %Y" | jsonify }},
   // Per-office notes, keyed by office name, from this page's own front
   // matter. NOT in the results data: that file is rebuilt wholesale from the
   // SoS CSV on election night and would drop them. See officeNote().
@@ -549,7 +578,9 @@ function renderContest(c, office, candidateIndex, section){
       <div class="bar-track"><div class="bar-fill ${p}${i>0?' trail':''}" style="width:${ResultsContest.barWidth(c, cd, status)}%"></div></div>
     </div>`;
   }).join('');
-  const total = noRes ? 'No results reported' : `Total votes: ${fmt(c.totalVotes)}`;
+  // Guarded like officeNote below: a stale script costs the wording, not the page.
+  const total = ResultsContest.totalText ? ResultsContest.totalText(c, status, CFG)
+    : noRes ? 'No results reported' : `Total votes: ${fmt(c.totalVotes)}`;
   // Escaped, not raw: SoS ballot names carry quoted nicknames (`Earl L. "Buddy"
   // Carter`), and an unescaped `"` closes the attribute early. The parser then
   // truncated data-cands mid-name and turned the rest into stray attributes, so
@@ -609,14 +640,16 @@ if (!SECTIONS.length) {
 SECTIONS.forEach(s=>{
   const panel = document.getElementById('tab-'+s.id);
   if(!panel) return;
-  panel.innerHTML = (s.races.length===0)
-    ? `<p style="color:var(--color-text-muted);font-size:.85rem;padding:.5rem 0">${CFG.emptyText}</p>`
-    : s.races.map(r =>
-        r.contests.length===1
-          ? renderContest(r.contests[0], r.office, candidateIndex, s.id)
-          : r.contests.map(c => renderContest(c, r.office, candidateIndex, s.id)).join('')
-      ).join('');
+  // An empty section stays empty: its tab is hidden below, and placeholder text
+  // in a hidden panel is still text a search engine reads.
+  panel.innerHTML = s.races.map(r =>
+    r.contests.map(c => renderContest(c, r.office, candidateIndex, s.id)).join('')
+  ).join('');
 });
+
+// The cards now say everything the server-rendered list did.
+const staticList = document.getElementById('prStatic');
+if (staticList) staticList.remove();
 
 // A race_notes key that matches no office on the page renders nothing and
 // looks exactly like having configured no note at all — which is how a note
