@@ -675,6 +675,9 @@ prompt. `search_legislators` includes earlier-term former members with `include_
 - **Pass thresholds travel with the results** (0.4.1): state votes and a bill's passage votes
   carry `pass_rule`, a summary of `scripts/lib/ga_vote_rules.py`, because a correct "Fail" on 97
   yeas to 72 nays reads as an error. Keep the two in step.
+- **Second-chamber sponsor** (0.4.3, 2026-11-26): `get_bill` returns `second_chamber_sponsor`
+  apart from `sponsors`, and omits it when the row has none (a bill not yet re-fetched is not
+  claimed to have none). `search_bills` `sponsor_id` matches it and adds `sponsor_role`.
 - **CPU on the live Worker** (0.4.0, 2026-11-26): 60 requests, no errors, median 9 ms, p90 27 ms,
   max 55 ms against the 100 ms cap (§10). A small sample: look again after real use. The largest
   reads are a bill search with no keyword (all current shards, about 2 MB) and a state vote lookup

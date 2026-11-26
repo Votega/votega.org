@@ -57,7 +57,7 @@ export const BILL_FILES: Record<string, unknown> = {
     [
       billRow(11, "HB 1", "Firearms; safe storage", { subjects: ["CRIMES AND OFFENSES"], sponsors: [[1, true], [3, false]] }),
       billRow(12, "HB 2", "Income tax credit", { status: "House Date Signed by Governor", statusDate: "2025-03-20T10:00:00",
-        subjects: ["REVENUE AND TAXATION"] }),
+        subjects: ["REVENUE AND TAXATION"], secondChamberSponsor: [3, "upper"] }),
     ],
     [
       detail(11, "2025-2026", "hb1"),

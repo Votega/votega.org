@@ -86,6 +86,16 @@ async function membersByGid(loader: Loader): Promise<Map<number, Member>> {
   return out;
 }
 
+const secondRole = (chamber: "lower" | "upper") => (chamber === "upper" ? "Senate sponsor" : "House sponsor");
+
+/** How a member is on a bill, or null when they are not. */
+function sponsorRole(row: BillRow, gid: number): string | null {
+  const author = row.sponsors.find(([g]) => g === gid);
+  if (author) return author[1] ? "primary sponsor" : "co-sponsor";
+  const second = row.secondChamberSponsor;
+  return second?.[0] === gid ? secondRole(second[1]) : null;
+}
+
 async function sponsorGid(loader: Loader, id: string): Promise<number | null> {
   const s = id.trim().toLowerCase();
   const direct = /^(?:ga:)?(\d+)$/.exec(s);
@@ -135,7 +145,7 @@ export async function searchBills(
   const status = input.status?.trim().toLowerCase();
   const subject = input.subject?.trim().toLowerCase();
   found = found
-    .filter((f) => gid === null || f.row.sponsors.some(([g]) => g === gid))
+    .filter((f) => gid === null || sponsorRole(f.row, gid) !== null)
     .filter((f) => !status || (f.row.status ?? "").toLowerCase().includes(status))
     .filter((f) => !subject || f.row.subjects.some((s) => s.toLowerCase().includes(subject)));
   if (!forms) found.sort((a, b) => (b.row.statusDate ?? "").localeCompare(a.row.statusDate ?? ""));
@@ -149,6 +159,7 @@ export async function searchBills(
     status: row.status,
     statusDate: row.statusDate,
     primary_sponsors: row.sponsors.filter(([, primary]) => primary).map(([g]) => names[String(g)] ?? `ga:${g}`),
+    ...(gid === null ? {} : { sponsor_role: sponsorRole(row, gid) }),
     votegaUrl: votegaUrl(catalog, row),
   }));
   const summary = found.length
@@ -214,6 +225,12 @@ export async function getBill(
   if (!detail) return fail("VoteGA's data for that bill is unavailable right now. Try again later.");
   const members = await membersByGid(loader);
   const page = votegaUrl(catalog, row);
+  const person = (g: number) => ({
+    id: `ga:${g}`,
+    name: members.get(g)?.name ?? names[String(g)] ?? null,
+    votegaUrl: members.get(g)?.votegaUrl ?? null,
+  });
+  const second = row.secondChamberSponsor;
   const commons = detail.commonsUrl
     ? {
         label: catalog.metadata.commonsLabel,
@@ -234,12 +251,10 @@ export async function getBill(
       status: row.status,
       statusDate: row.statusDate,
       subjects: row.subjects,
-      sponsors: row.sponsors.map(([g, primary]) => ({
-        id: `ga:${g}`,
-        name: members.get(g)?.name ?? names[String(g)] ?? null,
-        primary,
-        votegaUrl: members.get(g)?.votegaUrl ?? null,
-      })),
+      sponsors: row.sponsors.map(([g, primary]) => ({ ...person(g), primary })),
+      ...(second
+        ? { second_chamber_sponsor: { ...person(second[0]), chamber: second[1], role: secondRole(second[1]) } }
+        : {}),
       passage_votes: detail.passageVotes,
       governor_action: detail.governorAction,
       billUrl: detail.billUrl,

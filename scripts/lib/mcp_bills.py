@@ -114,11 +114,17 @@ def build_bills(bill_docs, generated_at):
                     sponsors.append([gid, bool(s.get("primary"))])
                     if s.get("name"):
                         names[str(gid)] = s["name"]
-                rows.append(_clean({
+                row = {
                     "legislationId": b.get("legislationId"), "identifier": b["identifier"],
                     "billType": b.get("billType"), "title": b.get("title"), "status": b.get("status"),
                     "statusDate": b.get("statusDate"), "subjects": b.get("subjects") or [],
-                    "sponsors": sponsors}))
+                    "sponsors": sponsors}
+                second = b.get("secondChamberSponsor") or {}
+                if second.get("legisGaGovId") is not None:
+                    row["secondChamberSponsor"] = [second["legisGaGovId"], second.get("chamber")]
+                    if second.get("name"):
+                        names[str(second["legisGaGovId"])] = second["name"]
+                rows.append(_clean(row))
                 detail[b["identifier"]] = _clean({
                     "billUrl": b.get("billUrl"), "textUrl": b.get("textUrl"),
                     "commonsUrl": commons_url(session, b["identifier"]),

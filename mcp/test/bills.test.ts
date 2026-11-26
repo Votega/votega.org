@@ -32,11 +32,19 @@ describe("search_bills", () => {
   });
 
   it("filters by sponsor, status and subject", async () => {
-    expect(ids(await searchBills(loader(), { sponsor_id: "ga:3" }))).toEqual(["2025_26 HB 1"]);
-    expect(ids(await searchBills(loader(), { sponsor_id: "vg-ga-p-000003" }))).toEqual(["2025_26 HB 1"]);
+    expect(ids(await searchBills(loader(), { sponsor_id: "ga:3" }))).toEqual(["2025_26 HB 2", "2025_26 HB 1"]);
+    expect(ids(await searchBills(loader(), { sponsor_id: "vg-ga-p-000003" }))).toEqual(["2025_26 HB 2", "2025_26 HB 1"]);
     expect(ids(await searchBills(loader(), { status: "signed by governor" }))).toEqual(["2025_26 HB 2"]);
     expect(ids(await searchBills(loader(), { subject: "taxation" }))).toEqual(["2025_26 HB 2"]);
     expect((await searchBills(loader(), { sponsor_id: "us:A000001" })).isError).toBe(true);
+  });
+
+  it("says which role matched a sponsor search, and only then", async () => {
+    const r = body(await searchBills(loader(), { sponsor_id: "ga:3" }));
+    expect(r.results.map((b: { sponsor_role: string }) => b.sponsor_role)).toEqual(["Senate sponsor", "co-sponsor"]);
+    expect(body(await searchBills(loader(), { sponsor_id: "ga:1", query: "hb 2" })).results[0].sponsor_role)
+      .toBe("primary sponsor");
+    expect(body(await searchBills(loader(), { query: "income" })).results[0]).not.toHaveProperty("sponsor_role");
   });
 
   it("caps results and says how many matched", async () => {
@@ -74,6 +82,16 @@ describe("get_bill", () => {
       expect.objectContaining({ id: "ga:1", name: "Avery Able", primary: true, votegaUrl: "https://www.votega.org/x/ga:1/" }),
       expect.objectContaining({ id: "ga:3", name: "Casey Cole", primary: false }),
     ]);
+  });
+
+  it("returns the second-chamber sponsor apart from sponsors, and omits it when the data has none", async () => {
+    const r = body(await getBill(loader(), { identifier: "HB 2" }));
+    expect(r.bill.second_chamber_sponsor).toEqual({
+      id: "ga:3", name: "Casey Cole", chamber: "upper", role: "Senate sponsor",
+      votegaUrl: r.bill.second_chamber_sponsor.votegaUrl,
+    });
+    expect(r.bill.sponsors.map((s: { id: string }) => s.id)).toEqual(["ga:1"]);
+    expect(body(await getBill(loader(), { identifier: "HB 1" })).bill).not.toHaveProperty("second_chamber_sponsor");
   });
 
   it("takes a bare number as the regular session, and a session picks the special one", async () => {

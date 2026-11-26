@@ -17,7 +17,7 @@ import { explainBill, localOfficials, MAX_ARG, whoRepresentsArea } from "./promp
 import { readResource, RESOURCES } from "./resources";
 import { fail, type ToolResult } from "./util";
 
-export const VERSION = "0.4.2";
+export const VERSION = "0.4.3";
 
 const READ_ONLY = { readOnlyHint: true, openWorldHint: false } as const;
 
@@ -156,7 +156,8 @@ export function createServer(loader: Loader, nowMs: number) {
       description:
         "Search Georgia General Assembly bills and resolutions by title words or number, status, subject " +
         "or sponsor. Keyword search reads titles only, so a miss does not mean no bill covers the topic. " +
-        "Subjects are recorded for only some bills." + NONPARTISAN,
+        "Subjects are recorded for only some bills. sponsor_id matches authors and the member sponsoring a " +
+        "bill in the other chamber; sponsor_role says which." + NONPARTISAN,
       inputSchema: z.object({
         query: z.string().max(120).optional().describe('Title words or a number, e.g. "firearm storage" or "HB 1".'),
         session: SESSION,
