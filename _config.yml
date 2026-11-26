@@ -157,28 +157,20 @@ feed_show_tags: true
 # Add a search button to the navbar
 post_search: true
 
-# Home page: show the forward-looking "Next Election" card beside Latest Results.
-#
-# OFF while the November 3 count is being reported. The home page leads with
-# results in that window (see _includes/next-election-strip.html), and the
-# December 1 runoff card sat beside them advertising an election whose line-up
-# tonight's count is still deciding — several statewide races only go to a
-# runoff at all if no one clears 50%.
-#
-# TURN IT BACK ON once the results are certified. Early voting for the runoff
-# starts November 23, so this must be back before then even if certification
-# slips: the card is the only route to the sample ballot and the races list
-# outside the navbar dropdown. Nothing else needs changing — the card populates
-# itself from ga-election-calendar.json.
-home_next_election: false
+# The home page's "Next Election" card (see _includes/next-election-strip.html).
+# It fills itself from ga-election-calendar.json. Set false to switch it off for a
+# window, such as election night, when the runoff it would advertise is still
+# being decided; turn it back on once the results are certified.
+home_next_election: true
 
-# An optional link to a post, shown inside the home page's "Latest Results" card
-# (see _includes/next-election-strip.html). The card ages out by itself 30 days
-# after election day, and this link goes with it; clear `url` (or delete the key)
-# to take it down sooner. Point it at the post for the election the card is showing.
+# An optional link to a post, shown inside the home page's "Election Results" card
+# under the election held on `election_date` (see _includes/next-election-strip.html).
+# It shows while that election is one of the card's two; clear `url` (or delete the
+# key) to take it down sooner.
 home_results_post:
   url: /2026-11-04-georgia-general-assembly-majority-unofficial-results/
   label: What the results mean for the General Assembly
+  election_date: 2026-11-03
 
 # Add a button in the footer to edit the current page. Only works if your website is hosted on GitHub
 edit_page_button: false
