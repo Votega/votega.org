@@ -191,6 +191,9 @@ TOPICS = [
 ]
 
 
+VOTE_HASHES = {"ga-votes-index.json": "a" * 64, "ga-votes/ocd-person-aaaa-1111.json": "b" * 64}
+
+
 def build_all():
     county = counties_doc(B.load_json(TRACTS_SRC))
     docs = {
@@ -202,6 +205,7 @@ def build_all():
         "former-members-index.json": M.build_former_members(GA, FROZEN, LABELS, XWALK, FROZEN_SLICES, GEN),
         "local-mentions-index.json": M.build_local_mentions(TOPICS, PLACES, GA_COUNTY_FIPS, GEN),
     }
+    docs["vote-files.json"] = M.build_vote_files(VOTE_HASHES, GEN)
     docs.update(MB.build_bills([LIVE_BILLS, OLD_BILLS], GEN))
     docs.update(ME.build_elections(RACES, GA, FED, FROZEN, ELECTION_XWALK, RACE_URLS, GEN))
     for p, shard in M.build_zip_shards(ZIPDOC, GEN).items():
@@ -224,7 +228,7 @@ SRC = {"ga": GA, "federal": FED, "zipdoc": ZIPDOC, "county_fips": set(GA_COUNTY_
        "place_slugs": {"newton", "covington", "ben-hill"}, "jurisdiction_ids": {"newton", "covington"},
        "officer_ids": {"newton", "ben-hill"}, "slices": SLICES, "retired_vgids": {"vg-ga-p-000009"},
        "open_data_ids": {"ga-legislators"}, "frozen": FROZEN, "bill_docs": [LIVE_BILLS, OLD_BILLS],
-       "races": RACES, "topic_docs": TOPICS}
+       "races": RACES, "topic_docs": TOPICS, "vote_hashes": VOTE_HASHES}
 SRC["slices"] = SLICES | FROZEN_SLICES
 
 
@@ -432,6 +436,23 @@ neg("a lost candidate", lambda d, m: d["candidates-index.json"]["candidates"].po
 neg("a roster id used as a member key", lambda d, m: d["candidates-index.json"]["candidates"][0].update(
     memberKey="ocd-person/x"), "memberKey")
 neg("a lost mention", lambda d, m: d["local-mentions-index.json"]["mentions"].pop(), "mentions differ")
+neg("a vote file hashed wrongly", lambda d, m: d["vote-files.json"]["files"].update({"ga-votes-index.json": "0" * 64}),
+    "vote files differ")
+neg("a vote file left out", lambda d, m: d["vote-files.json"]["files"].pop("ga-votes-index.json"), "vote files differ")
+
+with tempfile.TemporaryDirectory() as root:
+    for name, text in (("ga-votes-index.json", "{}"), ("ga-votes/m.json", "[1]"), ("federal-votes-index.json", "[]"),
+                       ("federal-votes/A000001.json", "2"), ("ga-bienniums/2025_26/ga-votes-index.json", "3"),
+                       ("ga-bienniums/2025_26/ga-votes/m.json", "4"), ("federal-votes-keyvotes.json", "5")):
+        path = os.path.join(root, *name.split("/"))
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "wb") as f:
+            f.write(text.encode())
+    hashed = B.vote_hashes(root)
+check("hashes the vote indexes and member slices, live and frozen, and nothing else", sorted(hashed), [
+    "federal-votes-index.json", "federal-votes/A000001.json", "ga-bienniums/2025_26/ga-votes-index.json",
+    "ga-bienniums/2025_26/ga-votes/m.json", "ga-votes-index.json", "ga-votes/m.json"])
+check("sha256 of the bytes as served", hashed["ga-votes/m.json"], hashlib.sha256(b"[1]").hexdigest())
 
 print("isolation: a new group can fail without taking the live tools' files with it")
 check("files sorted into groups", [M.group_of(n) for n in (

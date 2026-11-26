@@ -3,12 +3,13 @@ import { createExecutionContext } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
 import { fixtureLoader } from "../src/data";
 import { makeWorker, MAX_BODY } from "../src/worker";
-import { FILES } from "./fixtures";
+import { PHASE3_FILES, voteFixtures } from "./phase3-fixtures";
 
-const worker = makeWorker(() => fixtureLoader(FILES));
+const files: Record<string, unknown> = { ...PHASE3_FILES, ...(await voteFixtures()) };
+const worker = makeWorker(() => fixtureLoader(files));
 
-async function rpc(method: string, params: unknown = {}, id = 1) {
-  const res = await worker.fetch(
+async function rpc(method: string, params: unknown = {}, id = 1, target = worker) {
+  const res = await target.fetch(
     new Request("http://localhost/mcp", {
       method: "POST",
       headers: {
@@ -29,11 +30,13 @@ async function rpc(method: string, params: unknown = {}, id = 1) {
 }
 
 describe("worker", () => {
-  it("lists the Phase 2 tools, all read-only", async () => {
+  it("lists the tools, all read-only", async () => {
     const { msg } = await rpc("tools/list");
     const tools = msg.result.tools as { name: string; annotations: { readOnlyHint: boolean } }[];
     expect(tools.map((t) => t.name).sort()).toEqual([
-      "find_local_officials", "find_my_representatives", "get_data_freshness", "get_legislator", "search_legislators",
+      "find_local_officials", "find_my_representatives", "get_bill", "get_candidate", "get_data_freshness",
+      "get_legislator", "get_legislator_votes", "search_bills", "search_legislators", "search_local_government",
+      "search_races",
     ]);
     expect(tools.every((t) => t.annotations.readOnlyHint)).toBe(true);
   });
@@ -43,6 +46,29 @@ describe("worker", () => {
     const out = JSON.parse(msg.result.content[0].text);
     expect(out.found).toBe(true);
     expect(out.us_senators).toHaveLength(2);
+  });
+
+  it("calls each Phase 3 tool", async () => {
+    const call = async (name: string, args: Record<string, unknown>) => {
+      const { msg } = await rpc("tools/call", { name, arguments: args });
+      expect(msg.result.isError, `${name}: ${msg.result.content[0].text}`).toBeFalsy();
+      return JSON.parse(msg.result.content[0].text);
+    };
+    expect((await call("search_bills", { query: "tax" })).total).toBe(2);
+    expect((await call("get_bill", { identifier: "HB 2" })).bill.legislationId).toBe(12);
+    expect((await call("search_races", { county_fips: "13217" })).total).toBe(2);
+    expect((await call("get_candidate", { id: "c-chal" })).candidates).toHaveLength(1);
+    expect((await call("search_local_government", { topic: "alpr" })).total).toBe(2);
+    expect((await call("get_legislator_votes", { id: "ga:1" })).total).toBe(3);
+    expect((await call("get_legislator", { id: "ga:1", session: "2023_24" })).legislator.district).toBe(44);
+  });
+
+  it("reports a missing data file as unavailable, never as no results", async () => {
+    const { "bills/sessions.json": _gone, ...rest } = files;
+    const broken = makeWorker(() => fixtureLoader(rest));
+    const { msg } = await rpc("tools/call", { name: "search_bills", arguments: { query: "tax" } }, 1, broken);
+    expect(msg.result.isError).toBe(true);
+    expect(msg.result.content[0].text).toContain("unavailable");
   });
 
   it("rejects invalid arguments", async () => {
@@ -66,9 +92,22 @@ describe("worker", () => {
     expect(ds.license).toBe("CC BY-SA 4.0");
   });
 
-  it("lists the two prompts and fills them", async () => {
+  it("fills explain_bill to link and chain to Georgia Commons", async () => {
+    const text = async (args: Record<string, string>) =>
+      (await rpc("prompts/get", { name: "explain_bill", arguments: args })).msg.result.messages[0].content.text as string;
+    const t = await text({ bill: "HB 2" });
+    expect(t).toContain('get_bill with identifier "HB 2"');
+    expect(t).toContain("mcp.georgiacommons.org/mcp");
+    expect(t).toContain("georgia_commons.id");
+    expect(t).toContain("AI-written");
+    expect(t).toContain("never present it as the bill's own text");
+    expect(t).toContain("no summary was retrieved");
+    expect(await text({ bill: "HB 1", session: "2026_ss" })).toContain('session "2026_ss"');
+  });
+
+  it("lists the prompts and fills them", async () => {
     const list = (await rpc("prompts/list")).msg.result.prompts as { name: string; arguments: { name: string; required: boolean }[] }[];
-    expect(list.map((p) => p.name).sort()).toEqual(["local_officials", "who_represents_area"]);
+    expect(list.map((p) => p.name).sort()).toEqual(["explain_bill", "local_officials", "who_represents_area"]);
     expect(list.find((p) => p.name === "who_represents_area")!.arguments[0]).toMatchObject({ name: "area", required: true });
 
     const get = async (name: string, args: Record<string, string>) =>

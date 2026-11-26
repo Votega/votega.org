@@ -3,8 +3,8 @@
 
 Spec: docs/superpowers/specs/2026-10-23-mcp-server-design.md §5.1, §12.2. Phase 1 builds the core
 indexes the Phase 2 tools read (members, ZIP shards, counties, local officials), the Phase 3
-indexes (former members, bills, races, candidates, local mentions; executive orders are left out
-for now), the MCP
+indexes (former members, bills, races, candidates, local mentions, vote file hashes; executive
+orders are left out for now), the MCP
 resources (resources.json, from _data/mcp.yml and _data/open_data.yml) and meta.json;
 the rules live in scripts/lib/mcp_index.py. Run scripts/validate_mcp_index.py afterwards.
 
@@ -55,6 +55,7 @@ SOURCES = {
     "races-index.json": ["races"],
     "candidates-index.json": ["races", "id-crosswalk", "entity-urls"],
     "local-mentions-index.json": ["local-topics"],
+    "vote-files.json": ["ga-member-votes", "federal-member-votes", "ga-bienniums"],
 }
 
 
@@ -93,6 +94,18 @@ def bill_docs():
 
 def topic_docs():
     return [load_json(p) for p in sorted(glob.glob(os.path.join(DATA, "local-topics-*.json")))]
+
+
+def vote_hashes(data_dir=DATA):
+    """{path under assets/data/: sha256} for the vote indexes and member slices, live and frozen."""
+    out = {}
+    for pattern in ("ga-votes-index.json", "federal-votes-index.json", "ga-votes/*.json",
+                    "federal-votes/*.json", "ga-bienniums/*/ga-votes-index.json",
+                    "ga-bienniums/*/ga-votes/*.json"):
+        for path in glob.glob(os.path.join(data_dir, *pattern.split("/"))):
+            with open(path, "rb") as f:
+                out[os.path.relpath(path, data_dir).replace(os.sep, "/")] = hashlib.sha256(f.read()).hexdigest()
+    return out
 
 
 def stamp_of(doc):
@@ -238,8 +251,11 @@ def build(out_dir, today):
         stamps["races"] = stamp_of(races)
         return built
 
+    def vote_files():
+        return {"vote-files.json": M.build_vote_files(vote_hashes(), generated_at)}
+
     optional, failed = build_optional({"former-members": former, "local-mentions": mentions,
-                                       "bills": bills, "elections": elections})
+                                       "bills": bills, "elections": elections, "vote-files": vote_files})
     docs.update(optional)
 
     catalog = (docs.get("bills/sessions.json") or {}).get("sessions") or []

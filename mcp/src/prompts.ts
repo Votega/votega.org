@@ -68,6 +68,24 @@ export async function whoRepresentsArea(loader: Loader, area: string): Promise<P
   );
 }
 
+export function explainBill(bill: string, session?: string): PromptResult {
+  const b = arg(bill).replace(/"/g, "");
+  const s = arg(session ?? "").replace(/"/g, "");
+  return message(
+    `Explain the Georgia bill "${b}" in plain language. ` +
+      `Call get_bill with identifier "${b}"${s ? ` and session "${s}"` : ""}.\n\n` +
+      "Then get the plain-language summary from Georgia Commons, an independent project: if its MCP server " +
+      "(mcp.georgiacommons.org/mcp) is connected, call its fetch tool with the id in georgia_commons.id; " +
+      "otherwise open georgia_commons.url if you can read web pages. Say that the summary is Georgia Commons' " +
+      "AI-written summary and link their page; never present it as the bill's own text or as VoteGA's. If you " +
+      "can do neither, or there is no summary, give the title, status and official links, say that no summary " +
+      "was retrieved, and do not write one from the title or from memory.\n\n" +
+      "Also report the status, sponsors, passage votes and governor action get_bill returns. Do not say " +
+      "whether the bill is good or bad, or what its sponsors intended.\n\n" +
+      RULES,
+  );
+}
+
 export function localOfficials(place: string): PromptResult {
   const p = arg(place);
   const call = /^13\d{3}$/.test(p)

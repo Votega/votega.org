@@ -110,7 +110,8 @@ def main():
             ("frozen", B.frozen_members, ("former-members", "elections")),
             ("bill_docs", B.bill_docs, ("bills",)),
             ("races", lambda: B.load_json(B.DATA, "races.json"), ("elections",)),
-            ("topic_docs", B.topic_docs, ("local-mentions",))):
+            ("topic_docs", B.topic_docs, ("local-mentions",)),
+            ("vote_hashes", B.vote_hashes, ("vote-files",))):
         try:
             src[key] = loader()
         except Exception as e:  # reported against the group(s) that need this source
