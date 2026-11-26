@@ -6,7 +6,7 @@
  */
 import { MismatchError, need, UnavailableError, type Loader } from "../data";
 import type { FederalVoteIndex, GaVoteIndex, Member, Meta, MembersIndex, VoteFiles, VoteSlice } from "../types";
-import { fail, GA_PASS_RULE, ok, type ToolResult } from "../util";
+import { asOf, fail, GA_PASS_RULE, ok, type ToolResult } from "../util";
 import { findMember, loadMembers, ordinal, sessionKey } from "./legislators";
 
 export const DEFAULT_LIMIT = 10;
@@ -63,18 +63,18 @@ function answer(
     ...(m.level === "state" ? { pass_rule: GA_PASS_RULE } : {}),
     total: votes.length,
     votes: shown,
-    as_of: meta.metadata.generatedAt,
+    as_of: asOf(loader, meta),
     source_url: m.votegaUrl ?? "https://www.votega.org/",
     license: "CC BY-SA 4.0",
   }, loader.stale);
 }
 
-function noRecord(m: Member, meta: Meta, why: string): ToolResult {
+function noRecord(m: Member, meta: Meta, loader: Loader, why: string): ToolResult {
   return ok({
     summary: `VoteGA has no voting record for ${m.name} ${why}. That is not a statement about how they voted.`,
     total: 0,
     votes: [],
-    as_of: meta.metadata.generatedAt,
+    as_of: asOf(loader, meta),
     source_url: m.votegaUrl ?? "https://www.votega.org/",
     license: "CC BY-SA 4.0",
   });
@@ -90,7 +90,7 @@ export async function getLegislatorVotes(
   if (!m) return fail(`No legislator with id ${input.id}. Use an id from search_legislators.`);
   const limit = Math.min(Math.max(input.limit ?? DEFAULT_LIMIT, 1), MAX_LIMIT);
   const path = m.slices.votes;
-  if (!path) return noRecord(m, meta, "in its data");
+  if (!path) return noRecord(m, meta, loader, "in its data");
   return m.level === "federal"
     ? federalVotes(loader, meta, members.live, m, path, input.session, limit)
     : stateVotes(loader, meta, m, path, input.session, limit);
@@ -159,7 +159,7 @@ async function stateVotes(
     const manifest = await need<VoteFiles>(loader, "vote-files.json");
     if (!manifest.files[`${prefix}ga-votes-index.json`]) return fail(`VoteGA has no votes for session ${session}.`);
     const frozenSlice = `${prefix}ga-votes/${path.slice(path.lastIndexOf("/") + 1)}`;
-    if (!manifest.files[frozenSlice]) return noRecord(m, meta, `in session ${wanted}`);
+    if (!manifest.files[frozenSlice]) return noRecord(m, meta, loader, `in session ${wanted}`);
     pair = await votePair<GaVoteIndex>(loader, `${prefix}ga-votes-index.json`, frozenSlice);
     if (!pair) return fail(UPDATING);
     sessionFilter = null; // the tag names the whole biennium

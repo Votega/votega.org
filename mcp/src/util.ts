@@ -52,6 +52,11 @@ export function ok(body: Envelope, stale = false): ToolResult {
   return { content: [{ type: "text", text: JSON.stringify(out) }] };
 }
 
+/** The answer's `as_of`: the oldest data it read, or the index build when it read only meta.json. */
+export function asOf(loader: { asOf: string | null }, meta: { metadata: { generatedAt: string } }): string {
+  return loader.asOf ?? meta.metadata.generatedAt;
+}
+
 export function fail(message: string): ToolResult {
   return { content: [{ type: "text", text: clean(message) }], isError: true };
 }

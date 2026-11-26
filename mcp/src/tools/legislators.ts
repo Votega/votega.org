@@ -7,7 +7,7 @@
  */
 import { need, UnavailableError, type Loader } from "../data";
 import type { CountiesIndex, FrozenMembers, Member, MembersIndex, Meta, PartyUnity, UnityRow } from "../types";
-import { fail, norm, ok, SITE, tokens, type ToolResult } from "../util";
+import { asOf, fail, norm, ok, SITE, tokens, type ToolResult } from "../util";
 import { inChamber, type Chamber } from "./representatives";
 
 export type ChamberInput = "house" | "senate" | "us_house" | "us_senate";
@@ -145,7 +145,7 @@ export async function searchLegislators(
     total: scored.length,
     results,
     sessions: { georgia: idx.metadata.state.session, congress: idx.metadata.federal.congress },
-    as_of: meta.metadata.generatedAt,
+    as_of: asOf(loader, meta),
     source_url: `${SITE}/ga-state-reps.html`,
     license: "CC BY-SA 4.0",
   }, loader.stale);
@@ -222,7 +222,7 @@ async function earlierRecord(loader: Loader, meta: Meta, m: Member, tag: string)
       votegaUrl: m.votegaUrl,
       record_covers: covers,
     },
-    as_of: meta.metadata.generatedAt,
+    as_of: asOf(loader, meta),
     source_url: m.votegaUrl ?? SITE,
     license: "CC BY-SA 4.0",
   }, loader.stale);
@@ -296,7 +296,7 @@ export async function getLegislator(loader: Loader, input: { id: string; session
       scorecard: await scorecard(loader, m),
       data_files: { votes: slice(m.slices.votes), sponsorship: slice(m.slices.sponsorship) },
     },
-    as_of: meta.metadata.generatedAt,
+    as_of: asOf(loader, meta),
     source_url: m.votegaUrl ?? SITE,
     license: "CC BY-SA 4.0",
   }, loader.stale);

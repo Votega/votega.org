@@ -5,7 +5,7 @@
  */
 import { need, type Loader } from "../data";
 import type { MentionsIndex, Meta } from "../types";
-import { fail, isoDate, ok, SITE, type ToolResult } from "../util";
+import { asOf, fail, isoDate, ok, SITE, type ToolResult } from "../util";
 import { matchPlaces } from "./officials";
 
 export const DEFAULT_LIMIT = 10;
@@ -67,7 +67,7 @@ export async function searchLocalGovernment(
     mentions,
     topics: topics.map((t) => ({ topic: t.slug, label: t.label, mentions: t.count })),
     meaning: index.metadata.meaning,
-    as_of: meta.metadata.generatedAt,
+    as_of: asOf(loader, meta),
     source_url: only.size === 1 && mentions[0].votegaUrl ? mentions[0].votegaUrl : `${SITE}/local/topics/`,
     license: "CC BY-SA 4.0",
   }, loader.stale);
