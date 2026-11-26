@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-25T16:28:19.846367+00:00",
+    "generatedAt": "2026-11-26T01:19:42.889710+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,14 +24,14 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 129,
+    "count": 131,
     "windowDays": 45,
-    "entityTagged": 80,
+    "entityTagged": 83,
     "topicCounts": {
-      "education": 11,
+      "elections": 47,
+      "courts": 11,
+      "education": 10,
       "healthcare": 18,
-      "elections": 44,
-      "courts": 9,
       "ethics": 4,
       "budget": 7,
       "surveillance": 1
@@ -39,6 +39,13 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000335": {
+      "name": "Keisha Lance Bottoms",
+      "url": null,
+      "candidateIds": [
+        "challenger-keisha-bottoms-gov-2026"
+      ]
+    },
     "vg-ga-p-000253": {
       "name": "Mike Collins",
       "url": null,
@@ -64,13 +71,6 @@
       "name": "Raphael G. Warnock",
       "url": null,
       "bioguideId": "W000790"
-    },
-    "vg-ga-p-000335": {
-      "name": "Keisha Lance Bottoms",
-      "url": null,
-      "candidateIds": [
-        "challenger-keisha-bottoms-gov-2026"
-      ]
     },
     "vg-ga-p-000021": {
       "name": "Brad Raffensperger",
@@ -166,6 +166,73 @@
   "mergedEntities": {},
   "items": [
     {
+      "id": "31cb8357e74a",
+      "title": "Inauguration ceremony for Gov.-elect Bottoms set for Jan. 12 in Atlanta's State Farm Arena",
+      "url": "https://www.gpb.org/news/2026/11/25/inauguration-ceremony-for-gov-elect-bottoms-set-for-jan-12-in-atlantas-state-farm",
+      "source": "GPB News",
+      "publishedAt": "2026-11-25T21:55:00+00:00",
+      "snippet": "Gov.-elect Keisha Lance Bottoms announced plans for her inauguration Jan. 12, at 11 a.m. at State Farm Arena in downtown Atlanta.",
+      "entityIds": [
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "4ff8e332ac82",
+      "title": "GPB evening headlines for November 25, 2026",
+      "url": "https://www.gpb.org/news/2026/11/25/gpb-evening-headlines-for-november-25-2026",
+      "source": "GPB News",
+      "publishedAt": "2026-11-25T21:40:12+00:00",
+      "snippet": "Keisha Lance Bottoms will be sworn in as Georgia's next governor at Atlanta's State Farm Arena on Tuesday, January 12th.\nA superior court judge has ruled that Fulton County will not have to turn over ",
+      "entityIds": [
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "courts"
+      ]
+    },
+    {
+      "id": "4cdbb0b67aa9",
+      "title": "Georgia Today: Winter storm prep; Fulton County ballots; Bottoms inaugural plan",
+      "url": "https://www.gpb.org/news/2026/11/25/georgia-today-winter-storm-prep-fulton-county-ballots-bottoms-inaugural-plan",
+      "source": "GPB News",
+      "publishedAt": "2026-11-25T21:17:13+00:00",
+      "snippet": "On today's Nov. 25 edition: Keisha Lance Bottoms will be sworn in as governor at the State Farm Arena; forecasters warn to be careful of unpredictable storms this upcoming winter; and a March of Dimes",
+      "entityIds": [
+        "vg-ga-p-000335"
+      ],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "5d49bde26be4",
+      "title": "Two Georgia GOP House lawmakers are challenging losses that helped House Democrats flip chamber",
+      "url": "https://georgiarecorder.com/2026/11/25/two-georgia-gop-house-lawmakers-are-challenging-november-losses/",
+      "source": "Georgia Recorder",
+      "publishedAt": "2026-11-25T19:56:09+00:00",
+      "snippet": "Two Georgia House Republicans are challenging their defeats in the Nov. 3 midterm election after House Democrats flipped enough seats to claim control of the chamber with a slim majority in January. H",
+      "entityIds": [],
+      "topics": [
+        "elections"
+      ]
+    },
+    {
+      "id": "da5800a7642a",
+      "title": "Judge halts order for Georgia's Fulton County to give 2020 election records to State Election Board",
+      "url": "https://www.gpb.org/news/2026/11/25/judge-halts-order-for-georgias-fulton-county-give-2020-election-records-state",
+      "source": "GPB News",
+      "publishedAt": "2026-11-25T17:06:00+00:00",
+      "snippet": "A judge has paused an order for Georgia's Fulton County to hand over digital copies of ballots and other records from the 2020 election to the State Election Board. Wednesday's decision came after cou",
+      "entityIds": [],
+      "topics": [
+        "elections",
+        "courts"
+      ]
+    },
+    {
       "id": "a38b39db5d08",
       "title": "GPB morning headlines for November 25, 2026",
       "url": "https://www.gpb.org/news/2026/11/25/gpb-morning-headlines-for-november-25-2026",
@@ -218,28 +285,6 @@
       "source": "Capitol Beat",
       "publishedAt": "2026-11-24T20:31:10+00:00",
       "snippet": "ATLANTA — Less than a month after he stepped in as interim president of Georgia Tech, Timothy C. Lieuwen will become the permanent president. On Tuesday, the University System of Georgia’s Board of Re",
-      "entityIds": [],
-      "topics": [
-        "education"
-      ]
-    },
-    {
-      "id": "3e7cb27c0ae9",
-      "title": "Federal regulators loosen up on cellphone jamming, a top goal in Georgia prisons",
-      "url": "https://www.gpb.org/news/2026/11/24/federal-regulators-loosen-on-cellphone-jamming-top-goal-in-georgia-prisons",
-      "source": "GPB News",
-      "publishedAt": "2026-11-24T20:25:00+00:00",
-      "snippet": "The Georgia Department of Corrections has long asked for more room to block cellphone signals. The FCC says prisons across the country can now experiment with jamming technology.",
-      "entityIds": [],
-      "topics": []
-    },
-    {
-      "id": "96690e201669",
-      "title": "GPB evening headlines for November 24, 2026",
-      "url": "https://www.gpb.org/news/2026/11/24/gpb-evening-headlines-for-november-24-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-24T20:24:37+00:00",
-      "snippet": "The Federal Communications Commission now says prisons can take steps to jam cellphone signals inside their walls.\nEnrollment declines are leading some Georgia school districts to difficult decisions ",
       "entityIds": [],
       "topics": [
         "education"
@@ -1737,18 +1782,6 @@
       ],
       "topics": [
         "education"
-      ]
-    },
-    {
-      "id": "e90b7a8747f8",
-      "title": "Ballot amendment would pave the way for dedicated funding to upgrade Georgia’s 911 system",
-      "url": "https://georgiarecorder.com/2026/10/21/ballot-amendment-would-pave-the-way-for-dedicated-funding-to-upgrade-georgias-911-system/",
-      "source": "Georgia Recorder",
-      "publishedAt": "2026-10-21T08:00:00+00:00",
-      "snippet": "Georgia is currently in the midst of transforming its 911 system to incorporate new technology in a world where most calls to emergency services are made from cell phones rather than landlines. But ho",
-      "entityIds": [],
-      "topics": [
-        "elections"
       ]
     },
     {
