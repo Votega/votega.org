@@ -50,7 +50,7 @@ on:
         default: true
         type: boolean
       commit_csv:
-        description: 'Also commit the downloaded export under _sources/election_results/. Off for unofficial counts (a 200KB file churning every 20 minutes); ON for the certified one you want kept.'
+        description: 'Keep this export under _sources/election_results/ (for the JSON feed, only its county breakdown). Off for unofficial counts; ON for the certified one.'
         required: true
         default: false
         type: boolean
@@ -189,6 +189,29 @@ jobs:
             --summary-out "$RUNNER_TEMP/results-summary.md"
           cat "$RUNNER_TEMP/results-summary.md" >> "$GITHUB_STEP_SUMMARY"
 
+      # County and vote-method figures for the open-data copy (publish_results.py);
+      # only the JSON feed carries them. Built for the export being kept
+      # (commit_csv: the certified one), and rebuilt whenever a breakdown already
+      # exists, because the publisher refuses one whose totals no longer match.
+      # Non-fatal: the results pages do not read it.
+      - name: Distill the county breakdown
+        env:
+          CSV: ${{ steps.source.outputs.csv }}
+          DATA_KEY: ${{ inputs.data_key }}
+          COMMIT_CSV: ${{ inputs.commit_csv }}
+        run: |
+          set -uo pipefail
+          [ "$(head -c 64 "$CSV" | tr -d '[:space:]' | head -c 1)" = "{" ] || exit 0
+          if [ "$COMMIT_CSV" != "true" ] && [ ! -f "_sources/election_results/$DATA_KEY-breakdown.json" ]; then
+            exit 0
+          fi
+          if python scripts/distill_results_breakdown.py "$CSV" "$DATA_KEY"; then
+            echo "- County and vote-method breakdown rebuilt from this export." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning title=County breakdown not rebuilt::distill_results_breakdown.py failed; the open-data county files will not match these counts."
+            echo "- :warning: County breakdown NOT rebuilt." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
       # The race pages' Results / Earlier This Cycle tab reads this index, which
       # is a build-time join of races.json to the results data. Rebuilt here, after
       # the gate, so the tallies on a race page move with the results page instead
@@ -209,13 +232,16 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if [ "$COMMIT_CSV" = "true" ]; then
+          # The JSON feed is 25-160 MB, so only its distilled breakdown is kept.
+          if [ "$COMMIT_CSV" = "true" ] && [ "$(head -c 64 "$CSV" | tr -d '[:space:]' | head -c 1)" != "{" ]; then
             mkdir -p _sources/election_results
             ext=csv
             head -c 4 "$CSV" | grep -q 'PK' && ext=xlsx
             cp "$CSV" "_sources/election_results/$DATA_KEY-export.$ext"
             git add -f "_sources/election_results/$DATA_KEY-export.$ext"
           fi
+          breakdown="_sources/election_results/$DATA_KEY-breakdown.json"
+          [ -f "$breakdown" ] && git add -f "$breakdown"
           git add -f "_data/election_results/$DATA_KEY.json" _data/results_updated.json
           [ -f _data/projected_majority_2026.json ] && git add -f _data/projected_majority_2026.json \
                      assets/data/race-results-index.json

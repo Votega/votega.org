@@ -27,7 +27,9 @@ on:
     paths:
       - 'ga-*results.html'
       - '_data/election_results/**'
+      - '_sources/election_results/*-breakdown.json'
       - 'scripts/publish_results.py'
+      - 'scripts/lib/ga_county_fips.py'
       - 'scripts/lib/sibling_publish.py'
       - '.github/workflows/publish-results-to-ga-races-elections.yml'
 
