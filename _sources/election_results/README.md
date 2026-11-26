@@ -68,7 +68,10 @@ Set the results page's `status: certified` (and `updated:`). That also publishes
 Use the **JSON feed**, which lives at a stable URL all night:
 
 ```
+# November 3 general
 https://results.sos.ga.gov/cdn/results/Georgia/export-11032026GeneralAndSpecialElection.json
+# December 1 runoff
+https://results.sos.ga.gov/cdn/results/Georgia/export-12012026GeneralElectionRunoff.json
 ```
 
 That is what the publish workflow can fetch on its own. The XLSX workbook the
