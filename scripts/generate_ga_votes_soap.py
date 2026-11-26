@@ -2,7 +2,7 @@
 """Generate ga-member-votes.json from the legis.ga.gov SOAP web service (official source).
 
 Third producer of the SAME compact v2 schema as generate_ga_votes_data.py (Open
-States) and generate_ga_votes_from_legis.py (legis.ga.gov /api). Nothing downstream
+States) and archive/generate_ga_votes_from_legis.py (legis.ga.gov /api). Nothing downstream
 changes — only the source of the per-member vote rows.
 
 Why this source over the other two:
@@ -10,7 +10,7 @@ Why this source over the other two:
     id (MemberVote.Member.Id == legisGaGovId), so the surname collisions Open States'
     person matcher introduces are resolved BY CONSTRUCTION — an integer join, never a
     name. And it reaches back to 2001 (Open States starts 2017).
-  * vs the legis.ga.gov /api producer (generate_ga_votes_from_legis.py): that one needs
+  * vs the legis.ga.gov /api producer (archive/generate_ga_votes_from_legis.py): that one needs
     a Bearer-JWT mint whose live call trips the agent credential guardrail (CI-only).
     This SOAP service (webservices.legis.ga.gov) is UNAUTHENTICATED — it runs in-agent,
     locally and in CI identically — and has no request quota (unlike Open States' 250/day).
