@@ -3,7 +3,6 @@ What the data does not cover, and what is easy to misread. If you find something
 ## State votes
 
 - **Passage votes only.** Amendments, procedural motions and committee votes are not included, so `rollNumber` has gaps.
-- **Check close votes against the official status.** Some failed votes are marked `"Pass"`. A Georgia bill needs a [majority of the chamber's total membership](https://www.georgiaencyclopedia.org/articles/government-politics/legislative-process-overview/) (91 in the House, 29 in the Senate), and a state constitutional amendment needs two-thirds (120 and 38). If an `HB`, `SB` or amendment vote marked `"Pass"` is below its number, check the measure on [legis.ga.gov](https://www.legis.ga.gov/). A low tally alone is not proof: a few such bills are officially recorded as passed.
 - **Bundled calendars repeat.** One floor vote appears once per bill with identical tallies.
 - **Use `chamber`, not the motion text.** "Agree to Senate Substitute" is a House vote.
 - **Two votes on one bill in one day happen.** Use `rollNumber` and `time` to order them.
