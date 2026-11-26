@@ -287,8 +287,17 @@ breadcrumb:
 <!-- sample-ballot.js is pure function definitions (no side effects on load); we use its
      exported geocodeAddress() so address→district logic lives in one place. -->
 <script src="{{ '/assets/scripts/sample-ballot.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+{%- comment -%} Default tab and decided-election checks. Tested in tests/js/elections-view.test.js. {%- endcomment -%}
+<script src="{{ '/assets/scripts/elections-view.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script>
   const RACES_URL = getBasePath() + 'assets/data/races.json';
+  // election date -> its results page, from the results pages themselves.
+  {%- assign results_pages = site.pages | where: 'layout', 'election_results' %}
+  const RESULTS_PAGES = {
+    {%- for p in results_pages %}
+    {{ p.election_date | date: '%Y-%m-%d' | jsonify }}: {{ p.url | relative_url | jsonify }},
+    {%- endfor %}
+  };
 
   const countySelect   = document.getElementById('countySelect');
   const countyFilter   = document.getElementById('countyFilter');
@@ -308,6 +317,7 @@ breadcrumb:
   const DECIDED_STATUSES = new Set(['certified', 'complete']);
 
   let allRaces    = [];
+  let decidedRaces = [];   // this cycle's retired races, for the empty-tab message
   let activeTab   = 'executive';
   let activeCycle = null;   // newest cycle present in races.json, set by loadData()
   let activePhase = null;   // set by buildPhaseToggle() from the data
@@ -614,6 +624,19 @@ breadcrumb:
     }
   }
 
+  // An empty tab is either one this election never touched, or one whose races
+  // are over. The second gets pointed at the results.
+  function emptyNote() {
+    const date = phaseDate(activePhase);
+    const filter = TAB_FILTER[activeTab];
+    if (!filter || !window.ElectionsView.isDecidedTab(allRaces, decidedRaces, activePhase, date, filter)) {
+      return phaseMeta(activePhase).empty;
+    }
+    const url = RESULTS_PAGES[date];
+    return `No ${formatDate(date)} races are left to list here: they have been decided or have moved to a runoff.`
+      + (url ? ` <a href="${url}">See the ${formatDate(date)} results &rarr;</a>` : '');
+  }
+
   function renderRaces() {
     renderDistrictNote();
     const races   = racesForTab(activeTab);
@@ -625,11 +648,7 @@ breadcrumb:
     }
 
     if (!races.length) {
-      const noFilter = !voterLoc && !zipFilter && !countySelect.value;
-      const hint = COUNTY_TABS.has(activeTab) && noFilter
-        ? 'Enter your address or select a county above to filter by district — all districts are shown when neither is set.'
-        : phaseMeta(activePhase).empty;
-      racesOutput.innerHTML = `<p class="empty-note">${hint}</p>`;
+      racesOutput.innerHTML = `<p class="empty-note">${emptyNote()}</p>`;
       return;
     }
 
@@ -876,6 +895,15 @@ breadcrumb:
     if (params.get('open') === '1') openSeatOnly.checked = true;
   }
 
+  // A visit that names no tab opens where the races are (a runoff may hold one
+  // district race and nothing statewide). Courts lists no races, so it never wins.
+  function openFirstTabWithRaces() {
+    if (new URLSearchParams(window.location.search).get('tab')) return;
+    const tabs = [...document.querySelectorAll('.tab-btn')].map(b => b.dataset.tab).filter(t => t !== 'courts');
+    activeTab = window.ElectionsView.firstTabWithRaces(allRaces, activePhase, tabs, TAB_FILTER);
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === activeTab));
+  }
+
   async function loadData() {
     racesOutput.innerHTML = '<p class="empty-note">Loading races…</p>';
     try {
@@ -909,8 +937,10 @@ breadcrumb:
       // as a stale tab. Absent/other status = still active. Kept in sync with the
       // "manual switch after certification" model in RECURRING-TASKS.md.
       allRaces = races.filter(r => r.cycle === activeCycle && !DECIDED_STATUSES.has(r.status));
+      decidedRaces = races.filter(r => r.cycle === activeCycle && DECIDED_STATUSES.has(r.status));
       buildPhaseToggle();
       applyURLParams();
+      openFirstTabWithRaces();
       // applyURLParams() only syncs the filters when the URL names a tab; the default
       // landing tab (Executive) needs them shown too.
       updateFilterVisibility();
