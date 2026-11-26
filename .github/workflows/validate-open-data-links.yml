@@ -12,6 +12,11 @@ name: Validate /open-data catalog links (weekly, Mon 06:30 UTC)
 #
 # A pull_request trigger alone would not have caught it, because the change that
 # broke the links landed in a DIFFERENT repo. Hence the weekly schedule.
+#
+# A second step checks what the sibling repos say about themselves: every file named
+# by their latest.json pointers and data/**/manifest.json must exist there
+# (scripts/validate_sibling_pointers.py). It runs even when the catalog step fails,
+# so one run reports both.
 
 on:
   push:
@@ -19,11 +24,13 @@ on:
     paths:
       - '_data/open_data.yml'
       - 'scripts/validate_open_data_links.py'
+      - 'scripts/validate_sibling_pointers.py'
       - '.github/workflows/validate-open-data-links.yml'
   pull_request:
     paths:
       - '_data/open_data.yml'
       - 'scripts/validate_open_data_links.py'
+      - 'scripts/validate_sibling_pointers.py'
       - '.github/workflows/validate-open-data-links.yml'
   schedule:
     # Monday 06:30 UTC — before the Monday 07:30 GA votes run, and off the
@@ -55,3 +62,9 @@ jobs:
 
       - name: Validate catalog links
         run: python scripts/validate_open_data_links.py
+
+      - name: Validate sibling repo pointers
+        if: ${{ !cancelled() }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python scripts/validate_sibling_pointers.py
