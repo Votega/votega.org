@@ -4654,8 +4654,11 @@ jurisdictions:
         term_end: 2029
         next_election: 2029
         term_provenance: verified
-        voting: false
-        tie_break_only: true
+        # Charter § 2-301(11): apart from the listed mayoral duties, the mayor
+        # has the same powers and duties as other council members.
+        # https://georgiacommons.org/cities/conyers/charter/2-301
+        voting: true
+        tie_break_only: false
         source: "https://www.conyersga.com/government/city-government/mayor-connie-alsobrook"
       - name: "Anthony Pacheco"
         role: Council Member
