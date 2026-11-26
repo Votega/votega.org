@@ -17,7 +17,8 @@ per-member files, written through lib.atomic_io):
                                           their bill-text documents live under),
                                           biennium and the bill file's own
                                           generatedAt, plus a
-                                          {legisGaGovId: [nPrimary, nCo]} count
+                                          {legisGaGovId: [nPrimary, nCo,
+                                          nSenateSponsor, nHouseSponsor]} count
                                           map. The counts are what let the page
                                           hide the tab for a member with no
                                           sponsorships — the one thing the old
@@ -63,6 +64,10 @@ SLICES_DIR = os.path.join(DATA_DIR, "ga-sponsorship")
 # holds four statewide executives under chamber "executive" (see CLAUDE.md); they
 # sponsor nothing, but filtering keeps the index's count map a legislator roster.
 VOTING_CHAMBERS = ("Senate", "House of Representatives")
+
+# Slice bucket keys, and the order of each member's counts in the index: primary sponsor,
+# co-sponsor, Senate sponsor of a House measure, House sponsor of a Senate measure.
+ROLES = ("p", "c", "ss", "hs")
 
 
 # Every bill's textUrl is this prefix + "<session segment>/<document id>" (verified
@@ -145,9 +150,9 @@ def main() -> int:
                 if m.get("chamber") in VOTING_CHAMBERS and m.get("legisGaGovId"):
                     roster.add(int(m["legisGaGovId"]))
 
-    # legisGaGovId -> session id -> {"p": [...], "c": [...]}. Primary vs co-sponsor
-    # is split here, not on the client, because it is the split the panel renders and
-    # the two say very different things about a legislator.
+    # legisGaGovId -> session id -> {bucket: [...]}, one bucket per role in ROLES.
+    # The split is made here, not on the client, because it is the split the panel
+    # renders and the roles say very different things about a legislator.
     by_member: dict[int, dict] = {}
     unknown_sponsors: set[int] = set()
     sponsorships = 0
@@ -156,6 +161,10 @@ def main() -> int:
     # future session needs no code change; first one wins, and a session whose bills
     # carry no parseable text URL simply gets no segment and renders no text links.
     doc_segments: dict[str, str] = {}
+
+    def add(gid, session, role, bill):
+        by_member.setdefault(gid, {}).setdefault(session, {}).setdefault(role, []).append(bill)
+
     for bill in bills:
         session = bill.get("session") or meta.get("activeSession") or "unknown"
         seg = split_text_url(bill.get("textUrl"))[0]
@@ -169,8 +178,14 @@ def main() -> int:
             if roster and gid not in roster:
                 unknown_sponsors.add(gid)
             sponsorships += 1
-            buckets = by_member.setdefault(gid, {}).setdefault(session, {"p": [], "c": []})
-            buckets["p" if sp.get("primary") else "c"].append(bill)
+            add(gid, session, "p" if sp.get("primary") else "c", bill)
+        second = bill.get("secondChamberSponsor") or {}
+        if second.get("legisGaGovId") is not None:
+            gid = int(second["legisGaGovId"])
+            if roster and gid not in roster:
+                unknown_sponsors.add(gid)
+            sponsorships += 1
+            add(gid, session, "ss" if second.get("chamber") == "upper" else "hs", bill)
 
     # Clear stale slices first, so a member who drops out of the bill file (a
     # biennium rollover, a re-keyed id) does not keep a dangling file that would
@@ -186,17 +201,14 @@ def main() -> int:
         status_table: list[str] = []
         status_index: dict[str, int] = {}
         out_sessions = {}
-        n_primary = n_co = 0
+        totals = dict.fromkeys(ROLES, 0)
         for sid, buckets in sessions.items():
             rows = {}
-            for key in ("p", "c"):
-                if not buckets[key]:
+            for key in ROLES:
+                if not buckets.get(key):
                     continue
                 rows[key] = [compact_row(b, status_table, status_index) for b in buckets[key]]
-                if key == "p":
-                    n_primary += len(rows[key])
-                else:
-                    n_co += len(rows[key])
+                totals[key] += len(rows[key])
             if rows:
                 out_sessions[sid] = rows
         path = os.path.join(SLICES_DIR, f"{gid}.json")
@@ -205,7 +217,7 @@ def main() -> int:
             "statuses": status_table,
             "sessions": out_sessions,
         }, separators=(",", ":"))
-        counts[str(gid)] = [n_primary, n_co]
+        counts[str(gid)] = [totals[key] for key in ROLES]
         sizes.append(os.path.getsize(path))
 
     # The index is deliberately thin: provenance the panel prints (it must stamp the

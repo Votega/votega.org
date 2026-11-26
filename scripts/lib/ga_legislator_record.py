@@ -61,20 +61,27 @@ def voting_sentences(m, unity, past=None):
 
 
 def sponsorship_sentence(m, counts, past=None):
-    """counts is the [primary, cosponsored] pair from ga-sponsorship-index.json."""
-    if not counts or len(counts) != 2 or counts[0] + counts[1] <= 0:
+    """counts is a member's row in ga-sponsorship-index.json: [primary, cosponsored,
+    Senate sponsor, House sponsor]. Frozen indexes from before the last two carry only
+    the first pair."""
+    if not counts or len(counts) not in (2, 4) or sum(counts) <= 0:
         return None
-    primary, co = counts
+    primary, co, senate, house = (list(counts) + [0, 0])[:4]
     name = m.get("name") or "This member"
     verb = "was" if past else "is"
     when = f"in the {past} General Assembly" if past else "in the current biennium"
-    if primary and co:
-        return (f"{name} {verb} the primary sponsor of {_count(primary, 'bill or resolution', 'bills and resolutions')} "
-                f"and a cosponsor of {_count(co, 'other measure', 'other measures')} {when}.")
+    roles = []
     if primary:
-        return (f"{name} {verb} the primary sponsor of {_count(primary, 'bill or resolution', 'bills and resolutions')} "
-                f"{when}.")
-    return f"{name} {verb} a cosponsor of {_count(co, 'bill or resolution', 'bills and resolutions')} {when}."
+        roles.append(f"the primary sponsor of {_count(primary, 'bill or resolution', 'bills and resolutions')}")
+    if co:
+        nouns = ("other measure", "other measures") if primary else ("bill or resolution", "bills and resolutions")
+        roles.append(f"a cosponsor of {_count(co, *nouns)}")
+    if senate:
+        roles.append(f"the Senate sponsor of {_count(senate, 'House measure', 'House measures')}")
+    if house:
+        roles.append(f"the House sponsor of {_count(house, 'Senate measure', 'Senate measures')}")
+    said = roles[0] if len(roles) == 1 else ", ".join(roles[:-1]) + " and " + roles[-1]
+    return f"{name} {verb} {said} {when}."
 
 
 def leadership_sentence(m, past=None):

@@ -603,6 +603,17 @@ breadcrumb:
     return extra > 0 ? lead + ' +' + extra + ' others' : lead;
   }
 
+  // The member sponsoring a measure in the other chamber. Kept apart from sponsors[]
+  // (they are not an author), and labelled with the legislature's own term.
+  function secondSponsorHtml(s) {
+    if (!s || !s.name) return '';
+    const href = sponsorHref[s.legisGaGovId];
+    const name = href ? '<a href="' + escHtml(href) + '">' + escHtml(s.name) + '</a>' : escHtml(s.name);
+    return '<div class="detail-section"><div class="detail-label">'
+      + (s.chamber === 'upper' ? 'Senate sponsor' : 'House sponsor')
+      + '</div><div class="detail-body">' + name + '</div></div>';
+  }
+
   // ── Party-line classification ───────────────────────────────────────────────
   // A "party-line vote" (a.k.a. party unity vote): a majority of Democrats
   // voted opposite a majority of Republicans on the same roll call. Uses the
@@ -970,6 +981,7 @@ breadcrumb:
       + abstract
       + governorDetail
       + allSponsors
+      + secondSponsorHtml(bill.secondChamberSponsor)
       + voteBars
       + links
       + '</div>'
@@ -1014,7 +1026,8 @@ breadcrumb:
       if (subj && !(b.subjects || []).some(function (s) { return s === subj; })) return false;
       if (q) {
         const hay = (b.identifier + ' ' + b.title + ' ' + b.abstract + ' '
-          + (b.sponsors || []).map(function (s) { return s.name; }).join(' ')).toLowerCase();
+          + (b.sponsors || []).concat(b.secondChamberSponsor || [])
+              .map(function (s) { return s.name; }).join(' ')).toLowerCase();
         if (!hay.includes(q)) return false;
       }
       return true;

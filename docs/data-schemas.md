@@ -194,3 +194,5 @@ Built by `scripts/build_id_crosswalk.py` from the roster, finance and races file
 
 **⚠ A null filing list is not "no filing".** Check `provenance`: `confirmed-none` means a human verified there is none; `no-match` and `ambiguous` mean the join didn't resolve, which is not the same claim.
 
+## GA bill sponsors (`ga-bills.json`, `ga-sponsorship-index.json`, `ga-sponsorship/<gid>.json`)
+`sponsors[]` is the legislature's `Authors` list (`{name, legisGaGovId, primary}`; `primary` = first listed). `secondChamberSponsor` is its separate `Sponsor` field: `{name, legisGaGovId, chamber}`, the senator sponsoring a House measure or the reverse (`chamber` is theirs: `upper`/`lower`), `null` when the source lists none, and **absent** on a bill not re-fetched since the field was added, so absent never means none. It is deliberately outside `sponsors[]` so nothing counts it as co-sponsorship; any reader of who is on a bill must look at both. Slice buckets are `p`, `c`, `ss` (Senate sponsor), `hs` (House sponsor), and each index row is the four counts in that order; frozen indexes written earlier carry two.

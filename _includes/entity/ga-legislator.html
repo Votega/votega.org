@@ -1533,7 +1533,9 @@
   // The index is tiny (~4KB) and is wanted in two places - here, and at render time
   // to decide whether the tab appears at all - so fetch it at most once per page.
   let sponIndexPromise = null;
-  let sponCounts = null;   // { "<legisGaGovId>": [nPrimary, nCoSponsor] }
+  // { "<legisGaGovId>": [nPrimary, nCoSponsor, nSenateSponsor, nHouseSponsor] }; frozen
+  // indexes from before the last two carry only the first pair.
+  let sponCounts = null;
   function loadSponsorshipIndex() {
     if (!sponIndexPromise) {
       sponIndexPromise = fetch(SPON_INDEX_URL)
@@ -1554,7 +1556,7 @@
     if (!member?.legisGaGovId) return false;
     if (!sponCounts) return true;
     const c = sponCounts[String(member.legisGaGovId)];
-    return Array.isArray(c) && (c[0] + c[1]) > 0;
+    return Array.isArray(c) && c.some(n => n > 0);
   }
 
   // Same reasoning as CURATED_BILLS_REPO above: the published, archived home for
@@ -1617,16 +1619,18 @@
       }
     });
 
-    // The primary/co-sponsor split (the member who introduced the bill versus the ones
-    // who signed on afterwards) and the per-session grouping are both precomputed in
-    // the slice, so this is a rename rather than the old full-file scan. Keeping the
-    // two apart still matters: they say very different things about a legislator, and
-    // the co-sponsor list is an order of magnitude the longer of the two.
+    // The split by role (introduced it, signed on to it, or sponsored it in the other
+    // chamber) and the per-session grouping are both precomputed in the slice, so this
+    // is a rename rather than the old full-file scan. Keeping the roles apart still
+    // matters: they say very different things about a legislator, and the co-sponsor
+    // list is an order of magnitude the longer.
     const statuses = slice.statuses || [];
-    const primary = {}, cosponsored = {};
+    const primary = {}, cosponsored = {}, senateSponsor = {}, houseSponsor = {};
     for (const [sid, buckets] of Object.entries(slice.sessions || {})) {
       if (buckets.p?.length) primary[sid] = buckets.p;
       if (buckets.c?.length) cosponsored[sid] = buckets.c;
+      if (buckets.ss?.length) senateSponsor[sid] = buckets.ss;
+      if (buckets.hs?.length) houseSponsor[sid] = buckets.hs;
     }
 
     // Most recent action first; the identifier breaks the many ties, so the order is
@@ -1709,7 +1713,9 @@
 
     const groups =
       groupHtml('Primary sponsor', 'Bills and resolutions this member introduced.', primary) +
-      groupHtml('Co-sponsor', 'Measures this member signed on to after introduction.', cosponsored);
+      groupHtml('Co-sponsor', 'Measures this member signed on to after introduction.', cosponsored) +
+      groupHtml('Senate sponsor', 'House measures this member sponsored in the Senate.', senateSponsor) +
+      groupHtml('House sponsor', 'Senate measures this member sponsored in the House.', houseSponsor);
 
     // Per-block provenance from the BILL file's own generatedAt - not the roster stamp
     // at the foot of the page, which supplies none of the data in this panel. Omit the

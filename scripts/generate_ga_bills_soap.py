@@ -300,6 +300,26 @@ def _sponsors(detail, roster):
     return out
 
 
+SECOND_CHAMBER = {"SenateSponsor": "upper", "HouseSponsor": "lower"}
+
+
+def _second_chamber_sponsor(detail, roster):
+    """{name, legisGaGovId, chamber} for the member sponsoring the bill in the OTHER
+    chamber, or None. legis.ga.gov keeps them in `Sponsor`, apart from `Authors`; they
+    stay out of sponsors[] so nobody counts them as a co-sponsor."""
+    sp = detail.find("d:Sponsor", ns)
+    mid = _text(sp, "MemberId", int)
+    if not mid:
+        return None
+    kind = _text(sp, "Type")
+    if kind not in SECOND_CHAMBER:
+        print("  bill %s: unknown Sponsor type %r — left out" % (_text(detail, "Id"), kind),
+              file=sys.stderr)
+        return None
+    name = roster.get(mid) or _clean_member_desc(_text(sp, "MemberDescription") or "")
+    return {"name": name or None, "legisGaGovId": mid, "chamber": SECOND_CHAMBER[kind]}
+
+
 def _clean_member_desc(desc):
     """'Cannon, Chas 172nd' -> 'Chas Cannon'. Falls back to the raw string."""
     m = re.match(r"\s*([^,]+),\s*(.*?)\s*\d+\w*\s*$", desc or "")
@@ -402,6 +422,7 @@ def map_bill(detail, our_session, roster, titles_map):
         "statusDate":  (_text(status, "Date") or "")[:19] if status is not None else "",
         "subjects":    subjects,
         "sponsors":    _sponsors(detail, roster),
+        "secondChamberSponsor": _second_chamber_sponsor(detail, roster),
         "billUrl":     "https://www.legis.ga.gov/legislation/%s" % lid,
         "textUrl":     (_text(latest, "Url") or "") if latest is not None else "",
         "passageVotes": _passage_votes(

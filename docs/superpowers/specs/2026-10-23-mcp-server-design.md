@@ -628,6 +628,12 @@ Where this differs from the plan above:
     the other parts are left out. The assistant may reproduce the summary: their terms allow
     quoting with credit and a link, although the note their server returns with it asks that it
     not be quoted or cited as source text. It is never shown as the bill's wording.
+  - **Checked against the bill** (0.4.2, 2026-11-26): the assistant compares the summary with the
+    bill text (coverage, amounts, deadlines, penalties, exceptions, triggers) and lists
+    differences, quoting the bill, without rewriting the summary; it never calls a summary
+    verified. Prompted by two test runs: on 2025-26 HB 105 the summary did not limit the higher
+    death benefit to public school teachers and employees, and on HB 1 it said "adult" where the
+    bill says "a person".
   - Checked 2026-11-25 against their server (2.1.0): `fetch` takes
     `bill:<session-slug>/<number>` and returns the summary at `metadata.summary.headline` (their
     note on it: not source text, never quote or cite it); `search` results carry
@@ -669,6 +675,9 @@ prompt. `search_legislators` includes earlier-term former members with `include_
 - **Pass thresholds travel with the results** (0.4.1): state votes and a bill's passage votes
   carry `pass_rule`, a summary of `scripts/lib/ga_vote_rules.py`, because a correct "Fail" on 97
   yeas to 72 nays reads as an error. Keep the two in step.
+- **Second-chamber sponsor** (0.4.3, 2026-11-26): `get_bill` returns `second_chamber_sponsor`
+  apart from `sponsors`, and omits it when the row has none (a bill not yet re-fetched is not
+  claimed to have none). `search_bills` `sponsor_id` matches it and adds `sponsor_role`.
 - **CPU on the live Worker** (0.4.0, 2026-11-26): 60 requests, no errors, median 9 ms, p90 27 ms,
   max 55 ms against the 100 ms cap (§10). A small sample: look again after real use. The largest
   reads are a bill search with no keyword (all current shards, about 2 MB) and a state vote lookup

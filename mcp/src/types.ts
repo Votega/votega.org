@@ -135,6 +135,9 @@ export type BillRow = {
   statusDate: string | null;
   subjects: string[];
   sponsors: [number, boolean][]; // [legisGaGovId, primary]
+  // [legisGaGovId, chamber] of the member sponsoring it in the other chamber. Absent when the
+  // bill has none, or when it has not been re-fetched since the field was added.
+  secondChamberSponsor?: [number, "lower" | "upper"];
 };
 export type BillShard = { sponsorNames: Record<string, string>; bills: BillRow[] };
 export type BillDetail = {

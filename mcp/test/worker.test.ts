@@ -112,6 +112,21 @@ describe("worker", () => {
     expect(await text({ bill: "HB 1", session: "2026_ss" })).toContain('session "2026_ss"');
   });
 
+  it("has explain_bill check the summary against the bill text", async () => {
+    const t = (await rpc("prompts/get", { name: "explain_bill", arguments: { bill: "HB 105" } })).msg.result
+      .messages[0].content.text as string;
+    expect(t).toContain("check the summary against the bill text");
+    // What has drifted before: who a change covers, and when a duty is triggered.
+    for (const point of ["who it applies to", "amounts", "deadlines", "what triggers"]) expect(t).toContain(point);
+    expect(t).toContain("the title and the Code section being amended");
+    // Differences are shown beside the summary, quoting the bill, not silently rewritten.
+    expect(t).toContain('"Where the summary differs from the bill"');
+    expect(t).toContain("do not silently rewrite");
+    // No check, or nothing found, is never presented as verification.
+    expect(t).toContain("was not checked against the bill text");
+    expect(t).toContain("do not call the summary verified or accurate");
+  });
+
   it("lists the prompts and fills them", async () => {
     const list = (await rpc("prompts/list")).msg.result.prompts as { name: string; arguments: { name: string; required: boolean }[] }[];
     expect(list.map((p) => p.name).sort()).toEqual(["explain_bill", "local_officials", "who_represents_area"]);

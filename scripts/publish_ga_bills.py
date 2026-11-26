@@ -87,7 +87,8 @@ def bills_csv(bills):
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
     w.writerow(["identifier", "billType", "chamber", "title", "status", "statusDate",
-                "subjects", "primarySponsors", "sponsorCount", "billUrl"])
+                "subjects", "primarySponsors", "sponsorCount", "billUrl",
+                "secondChamberSponsor"])
     for b in bills:
         sponsors = b.get("sponsors") or []
         primary = [s.get("name") for s in sponsors if s.get("primary")]
@@ -97,6 +98,7 @@ def bills_csv(bills):
             b.get("title"), b.get("status"), b.get("statusDate"),
             "; ".join(b.get("subjects") or []),
             "; ".join(primary), len(sponsors), b.get("billUrl"),
+            (b.get("secondChamberSponsor") or {}).get("name"),
         ])
     return buf.getvalue().encode()
 
@@ -166,6 +168,14 @@ def schema():
                         "sponsors": {"type": "array", "items": {
                             "type": "object",
                             "properties": {"name": {"type": "string"}, "primary": {"type": "boolean"}}}},
+                        "secondChamberSponsor": {
+                            "type": ["object", "null"],
+                            "description": "The member sponsoring the measure in the other chamber (a "
+                                           "senator for a House measure, or the reverse). Not part of "
+                                           "sponsors[]. null when the legislature lists none.",
+                            "properties": {"name": {"type": ["string", "null"]},
+                                           "legisGaGovId": {"type": "integer"},
+                                           "chamber": {"type": "string", "enum": ["lower", "upper"]}}},
                         "billUrl": {"type": ["string", "null"]},
                         "textUrl": {"type": ["string", "null"]},
                         "passageVotes": {"type": "array"},
