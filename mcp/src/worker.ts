@@ -1,9 +1,10 @@
 /**
- * VoteGA MCP server (Phase 2: the core tools; live but unannounced until launch, spec §13).
+ * VoteGA MCP server (Phase 3: the full v1 tool set except executive orders; live but unannounced
+ * until launch, spec §13).
  *
  * A stateless, read-only MCP server on Cloudflare Workers (createMcpHandler, MCP SDK v2, no
- * Durable Objects). It reads only the index files build_mcp_index.py publishes under
- * https://www.votega.org/assets/data/mcp/ (src/data.ts). Spec:
+ * Durable Objects). It reads only listed files under https://www.votega.org/assets/data/: the
+ * index files build_mcp_index.py publishes, and the site's vote files (src/data.ts). Spec:
  * docs/superpowers/specs/2026-10-23-mcp-server-design.md.
  *
  * Privacy (spec §9): no request logging (Workers Observability is off in wrangler.jsonc), no

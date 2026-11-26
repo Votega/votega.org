@@ -1,10 +1,12 @@
 /**
  * search_legislators and get_legislator (spec §6.1, §5.5). Keys: ga:<legisGaGovId>,
  * us:<bioguideId>; a vgId is accepted as input too. Members who left office appear only with
- * include_former or when looked up by id, and never with contact details.
+ * include_former or when looked up by id, and never with contact details; those from an earlier
+ * General Assembly come from former-members-index.json. get_legislator can read an earlier
+ * biennium's frozen record, and adds the party-unity and participation scorecard, never a rank.
  */
-import type { Loader } from "../data";
-import type { CountiesIndex, Member, MembersIndex, Meta } from "../types";
+import { need, UnavailableError, type Loader } from "../data";
+import type { CountiesIndex, FrozenMembers, Member, MembersIndex, Meta, PartyUnity, UnityRow } from "../types";
 import { fail, norm, ok, SITE, tokens, type ToolResult } from "../util";
 import { inChamber, type Chamber } from "./representatives";
 
@@ -36,6 +38,26 @@ function chamberOf(m: Member): Chamber | "us_senate" {
   return m.chamber === "Senate" ? "state_senate" : "state_house";
 }
 
+/** Sitting and former members. A missing former index only means no earlier-term rows. */
+export async function loadMembers(loader: Loader) {
+  const [live, former] = await Promise.all([
+    loader.load<MembersIndex>("members-index.json"),
+    loader.load<MembersIndex>("former-members-index.json"),
+  ]);
+  if (!live) throw new UnavailableError("VoteGA data is unavailable right now (members-index.json is missing)");
+  return { live, formerMissing: !former, all: [...live.members, ...(former?.members ?? [])] };
+}
+
+/** "2023-2024" or "2023_24" -> "2023_24"; "2026-special" -> "2026_ss". */
+export function sessionKey(input: string): string {
+  const s = input.trim().toLowerCase();
+  const years = /^(\d{4})-(?:\d{2})?(\d{2})$/.exec(s);
+  if (years) return `${years[1]}_${years[2]}`;
+  return s.replace(/-(special|ss)$/, "_ss");
+}
+
+const years = (tag: string) => tag.replace("_", "-");
+
 export function row(m: Member) {
   return {
     id: m.key,
@@ -48,6 +70,7 @@ export function row(m: Member) {
     status: m.status,
     serving: m.serving,
     votegaUrl: m.votegaUrl,
+    ...(m.biennium ? { biennium: m.biennium, departure: m.departure ?? null } : {}),
   };
 }
 
@@ -74,11 +97,9 @@ export async function searchLegislators(
     limit?: number;
   },
 ): Promise<ToolResult> {
-  const [meta, idx] = await Promise.all([
-    loader.load<Meta>("meta.json"),
-    loader.load<MembersIndex>("members-index.json"),
-  ]);
-  if (!meta || !idx) return fail("VoteGA's data index is unavailable right now. Try again later.");
+  const meta = await need<Meta>(loader, "meta.json");
+  const members = await loadMembers(loader);
+  const idx = members.live;
   const limit = Math.min(Math.max(input.limit ?? DEFAULT_LIMIT, 1), MAX_LIMIT);
 
   let inCounty: ((m: Member) => boolean) | null = null;
@@ -98,7 +119,7 @@ export async function searchLegislators(
 
   const q = tokens(input.query);
   const party = input.party ? norm(input.party) : null;
-  const scored = idx.members
+  const scored = (input.include_former ? members.all : idx.members)
     .filter((m) => input.include_former || m.serving)
     .filter((m) => !input.chamber || inChamber(m, CHAMBER_MAP[input.chamber]))
     .filter((m) => input.district === undefined || m.district === input.district)
@@ -116,8 +137,11 @@ export async function searchLegislators(
       : `${scored.length} ${input.include_former ? "" : "sitting "}legislator(s) match${where}` +
         (scored.length > limit ? `; showing ${limit}.` : ".") +
         (countyName ? " A county is not a district: these members represent districts that touch it." : "");
+  const gap = input.include_former && members.formerMissing
+    ? " Members from earlier General Assemblies are unavailable right now."
+    : "";
   return ok({
-    summary,
+    summary: summary + gap,
     total: scored.length,
     results,
     sessions: { georgia: idx.metadata.state.session, congress: idx.metadata.federal.congress },
@@ -136,22 +160,106 @@ export function findMember(members: Member[], id: string): Member | undefined {
   return members.find((m) => m.key === k || m.key.toLowerCase() === k.toLowerCase());
 }
 
-export async function getLegislator(loader: Loader, input: { id: string }): Promise<ToolResult> {
-  const [meta, idx, counties] = await Promise.all([
-    loader.load<Meta>("meta.json"),
-    loader.load<MembersIndex>("members-index.json"),
+const slug = (id: string) => id.replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
+/** Party unity and participation, or null when VoteGA has none or the file cannot be read. */
+async function scorecard(loader: Loader, m: Member) {
+  try {
+    let doc: PartyUnity | null;
+    let found: UnityRow | undefined;
+    if (m.level === "federal") {
+      doc = await loader.load<PartyUnity>("data/federal-party-unity.json");
+      found = (doc?.members as Record<string, UnityRow> | undefined)?.[m.key.slice(3)];
+    } else {
+      if (!m.slices.votes) return null;
+      const prefix = /^(ga-bienniums\/[^/]+\/)/.exec(m.slices.votes)?.[1] ?? "";
+      const file = m.slices.votes.slice(m.slices.votes.lastIndexOf("/") + 1, -".json".length);
+      doc = await loader.load<PartyUnity>(`data/${prefix}ga-party-unity.json`);
+      found = (doc?.members as UnityRow[] | undefined)?.find((r) => r.id !== undefined && slug(r.id) === file);
+    }
+    if (!doc || !found) return null;
+    return {
+      covers: doc.metadata.biennium ?? doc.metadata.sessionName ?? null,
+      party_unity: found.partyUnity,
+      party_line_votes: found.partyLineVotes,
+      voted_with_party: found.votedWithParty,
+      participation_rate: found.participationRate,
+      roll_calls: found.totalRollCalls,
+      cast: found.cast,
+      missed: found.missed,
+      presiding_officer: found.presidingOfficer ?? false,
+      methodology: doc.metadata.methodology,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** A sitting or former state member as they were in an earlier General Assembly. */
+async function earlierRecord(loader: Loader, meta: Meta, m: Member, tag: string): Promise<ToolResult> {
+  const frozen = await loader.load<FrozenMembers>(`data/ga-bienniums/${tag}/ga-members.json`);
+  if (!frozen) return fail(`VoteGA has no frozen record for session ${tag}.`);
+  const was = frozen.members.find((r) => `ga:${r.legisGaGovId}` === m.key);
+  if (!was) return fail(`VoteGA's frozen ${years(tag)} record does not include ${m.name}.`);
+  const covers = `the ${years(tag)} General Assembly`;
+  const office = `${was.chamber === "Senate" ? "Georgia Senate" : "Georgia House"} district ${was.district}`;
+  return ok({
+    summary: `${was.name} (${was.party ?? "party unknown"}), ${office}, in ${covers}.`,
+    legislator: {
+      id: m.key,
+      vgId: m.vgId,
+      name: was.name,
+      party: was.party,
+      level: m.level,
+      chamber: was.chamber,
+      district: was.district,
+      status: was.status,
+      serving: m.serving,
+      leadershipRole: was.leadershipRole || null,
+      committees: was.committees ?? [],
+      phone: null,
+      email: null,
+      votegaUrl: m.votegaUrl,
+      record_covers: covers,
+    },
+    as_of: meta.metadata.generatedAt,
+    source_url: m.votegaUrl ?? SITE,
+    license: "CC BY-SA 4.0",
+  }, loader.stale);
+}
+
+export async function getLegislator(loader: Loader, input: { id: string; session?: string }): Promise<ToolResult> {
+  const meta = await need<Meta>(loader, "meta.json");
+  const [members, counties] = await Promise.all([
+    loadMembers(loader),
     loader.load<CountiesIndex>("counties-index.json"),
   ]);
-  if (!meta || !idx) return fail("VoteGA's data index is unavailable right now. Try again later.");
-  const m = findMember(idx.members, input.id);
+  const idx = members.live;
+  const m = findMember(members.all, input.id);
   if (!m) {
     return fail(
       `No legislator with id ${input.id}. Use ga:<legisGaGovId> or us:<bioguideId> from search_legislators.`,
     );
   }
+  if (input.session !== undefined) {
+    const tag = sessionKey(input.session);
+    if (m.level === "federal") {
+      if (tag.replace(/(st|nd|rd|th)$/, "") !== String(idx.metadata.federal.congress)) {
+        return fail("This server has federal records for the current Congress only.");
+      }
+    } else {
+      const live = idx.metadata.state.session ?? "";
+      const isCurrent = tag === live || (tag.endsWith("_ss") && Number(tag.slice(0, 4)) >= Number(live.slice(0, 4)));
+      if (!isCurrent && tag !== m.biennium) {
+        if (!/^\d{4}_\d{2}$/.test(tag)) return fail(`VoteGA has no record for session ${input.session}.`);
+        return earlierRecord(loader, meta, m, tag);
+      }
+    }
+  }
   const ch = chamberOf(m);
+  // The county table is the current map, so it says nothing about an earlier term's district.
   const countiesTouched =
-    ch === "us_senate" || m.district === null || !counties
+    m.biennium || ch === "us_senate" || m.district === null || !counties
       ? null
       : Object.entries(counties.counties)
           .flatMap(([fips, c]) => {
@@ -160,15 +268,16 @@ export async function getLegislator(loader: Loader, input: { id: string }): Prom
           });
   const covers =
     m.level === "state"
-      ? `the ${(idx.metadata.state.session ?? "current").replace("_", "-")} General Assembly`
+      ? `the ${years(m.biennium ?? idx.metadata.state.session ?? "current")} General Assembly`
       : `the ${idx.metadata.federal.congress ? ordinal(idx.metadata.federal.congress) : "current"} Congress`;
   const office =
     ch === "us_senate"
       ? "U.S. Senator for Georgia"
       : `${ch === "us_house" ? "U.S. House" : ch === "state_senate" ? "Georgia Senate" : "Georgia House"} district ${m.district}`;
+  const left = m.departure ?? (m.status ? `${m.status}${m.statusDate ? `, ${m.statusDate}` : ""}` : null);
   const summary = m.serving
     ? `${m.name} (${m.party ?? "party unknown"}), ${office}${m.status ? ` (status: ${m.status})` : ""}.`
-    : `${m.name} (${m.party ?? "party unknown"}) held ${office} in ${covers} and is no longer serving (${m.status}${m.statusDate ? `, ${m.statusDate}` : ""}).`;
+    : `${m.name} (${m.party ?? "party unknown"}) held ${office} in ${covers} and is no longer serving${left ? ` (${left.replace(/\.$/, "")})` : ""}.`;
   const slice = (p: string | null) => (p ? `${SITE}/assets/data/${p}` : null);
   return ok({
     summary,
@@ -184,6 +293,7 @@ export async function getLegislator(loader: Loader, input: { id: string }): Prom
       officialWebsiteUrl: m.officialWebsiteUrl,
       counties: countiesTouched,
       record_covers: covers,
+      scorecard: await scorecard(loader, m),
       data_files: { votes: slice(m.slices.votes), sponsorship: slice(m.slices.sponsorship) },
     },
     as_of: meta.metadata.generatedAt,

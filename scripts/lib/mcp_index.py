@@ -14,6 +14,7 @@ Phase 1 (core): the four index families the Phase 2 tools read.
 Phase 3 (the indexes for the remaining tools; executive orders are left out for now):
   former-members-index.json  members found only in a frozen biennium
   local-mentions-index.json  local-topic mentions from agendas and minutes
+  vote-files.json            sha256 of each vote index and member slice
   bills/                     lib/mcp_bills.py
   races-, candidates-index   lib/mcp_elections.py
 
@@ -497,6 +498,29 @@ def resources_errors(doc, open_data_ids):
     return errs
 
 
+# ---------------------------------------------------------------- vote file hashes
+
+VOTE_FILES_MEANING = (
+    "sha256 of every vote index and per-member vote slice under assets/data/. A slice names votes "
+    "by their POSITION in its index, and positions move between builds, so a reader must use only "
+    "an index and a slice that both match this list.")
+
+
+def build_vote_files(hashes, generated_at):
+    """`hashes` = {path under assets/data/: sha256 hex}."""
+    return {"metadata": {"generatedAt": generated_at, "count": len(hashes), "meaning": VOTE_FILES_MEANING},
+            "files": {k: hashes[k] for k in sorted(hashes)}}
+
+
+def vote_file_errors(docs, src):
+    doc = docs.get("vote-files.json")
+    if doc is None:
+        return ["vote-files.json is missing"]
+    if doc["metadata"].get("count") != len(doc.get("files") or {}) or doc.get("files") != src["vote_hashes"]:
+        return ["vote files differ from the files on disk (hashes or the list of files)"]
+    return []
+
+
 # ---------------------------------------------------------------- groups
 # The core files are what the live tools read: any error there fails the whole index. Each other
 # group stands alone: if it cannot be built or fails a check, only its files are dropped.
@@ -506,6 +530,7 @@ OPTIONAL_GROUPS = {
     "local-mentions": ("local-mentions-index.json",),
     "bills": ("bills/",),
     "elections": ("races-index.json", "candidates-index.json"),
+    "vote-files": ("vote-files.json",),
 }
 
 
@@ -574,7 +599,7 @@ def grouped_errors(docs, file_meta, src):
                jurisdiction_ids (set), officer_ids (set), slices (set of existing paths),
                retired_vgids (set, the keys of id-crosswalk.json metadata.mergedVgIds),
                frozen (ga_former.load_frozen()), bill_docs (live ga-bills.json first, then
-               frozen), races (races.json), topic_docs (local-topics-*.json), and optionally
+               frozen), races (races.json), topic_docs (local-topics-*.json), vote_hashes, and optionally
                load_errors ({group: reason}) for a group whose sources could not be read
     """
     out = {}
@@ -728,6 +753,7 @@ def grouped_errors(docs, file_meta, src):
         "local-mentions": lambda: mention_errors(docs, src),
         "bills": lambda: bill_errors(docs, src["bill_docs"]),
         "elections": lambda: election_errors(docs, src["races"]),
+        "vote-files": lambda: vote_file_errors(docs, src),
     }
     load_errors = src.get("load_errors") or {}
     for group, check in checks.items():

@@ -634,6 +634,35 @@ Where this differs from the plan above:
 - The Worker's path allowlist (`mcp/src/data.ts`) still covers only the Phase 2 files; the tools
   work extends it.
 
+### 12.15 Phase 3 tools (built 2026-11-26, server 0.4.0)
+
+Six tools join the five from Phase 2: `search_bills`, `get_bill`, `search_races`,
+`get_candidate`, `get_legislator_votes` and `search_local_government`; plus the `explain_bill`
+prompt. `search_legislators` includes earlier-term former members with `include_former`;
+`get_legislator` takes `session` and returns the scorecard. `list_executive_orders` is not built
+(§12.14).
+
+- **A missing file is "unavailable", never "no results"** (`need()` in `mcp/src/data.ts`).
+- **Votes need two files from the same build.** A member's vote slice names votes by position in
+  the shared index, and positions move between builds (3 of the last 5 federal index revisions).
+  A new group `vote-files` publishes `vote-files.json`, the sha256 of every vote index and slice;
+  the Worker uses only a pair that matches it, refetches past the caches once, and otherwise says
+  the records are updating.
+- **Upstream paths.** The Worker now also reads the site's vote files, party-unity files and
+  frozen `ga-members.json`, all under `www.votega.org/assets/data/`, each on an explicit
+  allowlist.
+- **Scorecard:** party unity and participation with the published method; ranks are not returned.
+- **Narrower than §6.1:** `search_local_government` also takes `county_fips`. `search_races` with
+  a county leaves out judicial circuits and local races, which have no county mapping here, and
+  says how many. `search_bills` matches title words (word beginnings) or a number. `get_candidate`
+  has no finance summary. Federal votes cover the current Congress only.
+- **Checked against real data** (local build, 2026-11-26): every tool answered through the HTTP
+  loader, and for all 262 members with a vote file the totals and the newest votes (6,545) matched
+  the monolithic source files. Bundle 1,302 KB raw, 231 KB gzipped.
+- **Not yet measured:** CPU on the live Worker. The largest reads are a bill search with no
+  keyword (all current shards, about 2 MB) and a state vote lookup (the 1.2 MB index), against the
+  100 ms cap (§10).
+
 ## 13. Rollout
 
 | Phase | Scope | Exit criteria |
@@ -641,7 +670,7 @@ Where this differs from the plan above:
 | 0. Spike | Hello-world `createMcpHandler` Worker on `mcp.votega.org`; pinned SDK versions; Worker CPU time for a bills shard, a ZIP shard and the federal votes index; the bot-protection and isolate-reuse checks (§12.9) | Each §12 measurement confirmed on a Worker, or the named fallback chosen |
 | 1. Indexes (core: done 2026-11-21, §12.12) | `build_mcp_index.py` + validator in `deploy-pages.yml`: members, ZIP shards, county index, local officials, meta. Bills shards + token table, races, candidates, EOs, local mentions and former members moved to Phase 3 | Index files built at deploy, within budgets |
 | 2. Core tools (what a voter asks first; built 2026-11-21, §12.13) | `find_my_representatives`, `find_local_officials`, `search_legislators` / `get_legislator` (state and federal), `get_data_freshness` | Passes Inspector + unit tests |
-| 3. Remaining tools | Indexes built 2026-11-25 except EOs (§12.14). Then: `search_races` / `get_candidate`, `get_legislator_votes` (GA and federal), bills, EOs, local government, former members and `session`, the `explain_bill` prompt (resources and the two area prompts shipped 2026-11-21, §8) | Full v1 tool set |
+| 3. Remaining tools | Built 2026-11-26 except EOs (§12.14, §12.15). Original scope: `search_races` / `get_candidate`, `get_legislator_votes` (GA and federal), bills, EOs, local government, former members and `session`, the `explain_bill` prompt (resources and the two area prompts shipped 2026-11-21, §8) | Full v1 tool set |
 | 4. Launch | Unstage the `/ai-assistants/` page (built 2026-11-21, §8: client config snippets included) and link it from `/open-data`, README entry; the rate-limit rule, CPU cap and Workers Paid are already in place (§9, §10); proposed for after the 2027-01-11 rollover (§7) | Public, announced |
 | 5. v2 | Street-address lookup (needs a geocoding and privacy decision), federal bills and sponsorship, seat history, optional KV/D1 search, Georgia Commons text if their license allows it | Separate spec |
 

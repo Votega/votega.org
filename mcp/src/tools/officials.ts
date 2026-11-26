@@ -14,7 +14,9 @@ export function holdsSeat(o: Official, today: string): boolean {
 
 const PLACE_AFFIX = /^(cityof|townof)|(county|consolidatedgovernment|unifiedgovernment|city|town)$/g;
 
-function keys(p: Place): Set<string> {
+type Named = Pick<Place, "slug" | "name" | "type">;
+
+function keys(p: Named): Set<string> {
   const k = new Set([norm(p.slug), norm(p.name)]);
   for (const s of [...k]) k.add(s.replace(PLACE_AFFIX, ""));
   return k;
@@ -22,12 +24,16 @@ function keys(p: Place): Set<string> {
 
 /** Places whose slug or name matches the query (letters only, "City of"/"County" ignored). */
 export function resolvePlaces(index: OfficialsIndex, query: string): Place[] {
+  return matchPlaces(Object.values(index.places), query);
+}
+
+export function matchPlaces<T extends Named>(places: T[], query: string): T[] {
   const q = norm(query);
   const bare = q.replace(PLACE_AFFIX, "");
   if (!bare) return [];
   const wantsCounty = /county$/.test(q);
   const wantsCity = /^(cityof|townof)/.test(q) || /(city|town)$/.test(q);
-  return Object.values(index.places).filter((p) => {
+  return places.filter((p) => {
     const k = keys(p);
     if (!(k.has(q) || k.has(bare))) return false;
     if (wantsCounty && p.type === "city") return false;
