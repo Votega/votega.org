@@ -53,10 +53,11 @@ def all_orders(years):
 def orders_csv(orders):
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
-    w.writerow(["year", "date", "number", "title", "category", "url"])
+    w.writerow(["year", "date", "number", "title", "category", "url", "issuedBy"])
     for o in orders:
         w.writerow([o.get("_year") or (o.get("date") or "")[:4], o.get("date"),
-                    o.get("number"), o.get("title"), o.get("category"), o.get("url")])
+                    o.get("number"), o.get("title"), o.get("category"), o.get("url"),
+                    (o.get("issuedBy") or {}).get("name") or ""])
     return buf.getvalue().encode()
 
 
@@ -104,6 +105,14 @@ def summary_md(years, orders):
     for year in sorted(by_year, reverse=True):
         L.append(f"| {year} | {by_year[year]} |")
     L.append("")
+    by_gov = Counter(((o.get("issuedBy") or {}).get("name") or "Not yet confirmed") for o in orders)
+    L.append("## By Governor")
+    L.append("")
+    L.append("| Issued by | Orders |")
+    L.append("|-----------|--------|")
+    for gov, n in by_gov.most_common():
+        L.append(f"| {gov} | {n} |")
+    L.append("")
     L.append("## By category")
     L.append("")
     L.append("| Category | Orders |")
@@ -130,7 +139,8 @@ def schema():
         "$id": "https://raw.githubusercontent.com/Votega/ga-executive-orders/main/data/executive-orders.schema.json",
         "title": "Georgia Executive Orders (per-year file)",
         "description": "Executive orders issued by the Governor of Georgia in one calendar year. "
-                       "One file per year (data/<year>.json).",
+                       "One file per year (data/<year>.json). metadata.governor names every Governor "
+                       "who issued an order that year, e.g. two in an inauguration year.",
         "type": "object",
         "required": ["orders"],
         "properties": {
@@ -150,6 +160,18 @@ def schema():
                         "bytes": {"type": "integer", "description": "Size of the PDF in bytes."},
                         "fetchedAt": {"type": "string", "description": "UTC timestamp the PDF was downloaded (ISO-8601)."},
                         "archiveUrl": {"type": ["string", "null"], "description": "Wayback Machine snapshot of the PDF, if archived."},
+                        "issuedBy": {
+                            "type": ["object", "null"],
+                            "description": "The Governor who issued the order. Worked out from the order's date "
+                                           "and the Governor's term (basis \"date\"); an order signed on an "
+                                           "inauguration day is checked by hand (basis \"verified\"). null until "
+                                           "a new Governor's term is confirmed.",
+                            "properties": {
+                                "name": {"type": "string"},
+                                "execId": {"type": ["string", "null"], "description": "VoteGA executive id; null before 2019."},
+                                "basis": {"enum": ["date", "verified"]},
+                            },
+                        },
                     },
                     "additionalProperties": True,
                 },

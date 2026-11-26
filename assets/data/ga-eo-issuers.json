@@ -1,0 +1,4 @@
+{
+  "_note": "Hand-verified issuers for executive orders whose date cannot tell which Governor signed them: an order dated on an inauguration day, when both the outgoing and incoming Governor can sign. validate_ga_executive_orders.py refuses to commit such an order until it is listed here. Each entry: \"<order number>\": {\"execId\": \"exec:...\" (a confirmed Governor in ga-executive-seats.json), \"_note\": \"how it was verified, e.g. the signature or letterhead on the PDF\"}. An entry here also overrides the date for any other order. See scripts/lib/ga_governors.py.",
+  "orders": {}
+}
