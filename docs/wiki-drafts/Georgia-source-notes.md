@@ -42,7 +42,7 @@ Things that cost us time:
 
 *Checked 26 November 2026.*
 
-The results site serves JSON:
+Certified 2026 results are already published as CSV and JSON in [ga-races-elections](https://github.com/Votega/ga-races-elections#election-results). To read the source yourself, the results site serves JSON:
 
 | Request | Returns |
 |---|---|
