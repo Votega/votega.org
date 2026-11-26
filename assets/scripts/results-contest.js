@@ -71,6 +71,19 @@
     return Math.min(percent(candidate.votes, contest.totalVotes), 100);
   }
 
+  // The line under a contest's title. Before the election it says when votes
+  // arrive: "No results reported" on a page with nothing to report yet reads as
+  // an empty page, to a search engine too.
+  function totalText(contest, contestStatus, cfg) {
+    if (contestStatus !== 'no-results') {
+      return 'Total votes: ' + Number(contest.totalVotes || 0).toLocaleString('en-US');
+    }
+    if (cfg && cfg.status === 'upcoming' && cfg.electionDay) {
+      return 'Votes are reported after polls close at 7:00 PM ET on ' + cfg.electionDay;
+    }
+    return 'No results reported';
+  }
+
   function partyLabel(party) {
     return party === 'rep' ? 'Republican' : party === 'dem' ? 'Democrat' : 'Nonpartisan';
   }
@@ -137,6 +150,7 @@
     advanceTitle: advanceTitle,
     percentText: percentText,
     barWidth: barWidth,
+    totalText: totalText,
     partyLabel: partyLabel,
     normalizeOffice: normalizeOffice,
     officeNote: officeNote,
