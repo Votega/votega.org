@@ -45,9 +45,11 @@ Publishing/dry-run behavior comes from lib.sibling_publish. Usage:
     python3 scripts/publish_ga_legislators.py <members|votes|freeze-roster> [session-slug]
 """
 import csv
+import glob
 import io
 import json
 import os
+import re
 import sys
 
 from lib.ga_voters import VOTING_CHAMBERS
@@ -66,6 +68,9 @@ RAW_BASE = "https://raw.githubusercontent.com/Votega/ga-legislators/main"
 SRC_MEMBERS = "assets/data/ga-members.json"
 SRC_VOTES = "assets/data/ga-member-votes.json"
 SRC_SCORECARD = "assets/data/ga-party-unity.json"
+#: On-site frozen bienniums (freeze_ga_biennium.py, freeze_ga_party_unity.py): one folder
+#: per closed General Assembly. Read only to INDEX the sibling repo's earlier sessions.
+FROZEN_ROOT = "assets/data/ga-bienniums"
 
 DEPARTED = {"Resigned", "Removed", "Deceased"}
 
@@ -444,6 +449,68 @@ def compact_json(obj):
     return json.dumps(obj, ensure_ascii=False, separators=(",", ":")).encode()
 
 
+def _slug(session_id, name):
+    """sessions/<slug>/ as the publishers wrote it: a regular session's two-year span, or a
+    special session's own id. Works for a closed biennium, which lib.ga_sessions no
+    longer lists after the rollover."""
+    m = re.search(r"(\d{4})\D+(\d{4})", name or "")
+    return f"{m.group(1)}-{m.group(2)}" if m else session_id.replace("_", "-")
+
+
+def _votes_files(slug):
+    base = f"sessions/{slug}"
+    return {"votes": f"{base}/votes.json", "votesCsv": f"{base}/votes.csv",
+            "votesSchema": f"{base}/votes.schema.json"}
+
+
+def _scorecard_files(biennium):
+    base = f"sessions/{biennium}"
+    return {"scorecard": f"{base}/scorecard.json", "scorecardCsv": f"{base}/scorecard.csv",
+            "scorecardSchema": f"{base}/scorecard.schema.json"}
+
+
+def earlier_bienniums(current=BIENNIUM, frozen_root=FROZEN_ROOT, archive=None):
+    """Index entries for every closed General Assembly this repo holds, newest first.
+
+    Two sources, both already published under sessions/ and never rewritten here:
+      * the backfilled archive (lib.ga_sessions.ARCHIVE_SESSIONS: regular sessions only,
+        votes and roster, no scorecard);
+      * the on-site frozen bienniums (assets/data/ga-bienniums/<tag>/), i.e. the General
+        Assemblies this site covered live: every session with its vote count, the roster
+        frozen at sine die and, once frozen, the scorecard.
+    The current biennium is never listed, even if it was frozen early.
+    """
+    archive = ARCHIVE_SESSIONS if archive is None else archive
+    out = {}
+    for sid, name in archive.items():
+        slug = _slug(sid, name)
+        out[slug] = {"biennium": slug, "roster": f"sessions/{slug}/members.json",
+                     "sessions": [{"id": sid, "name": name, "slug": slug, "voteCount": None,
+                                   "files": _votes_files(slug)}]}
+    for path in sorted(glob.glob(os.path.join(frozen_root, "*", "ga-votes-index.json"))):
+        try:
+            with open(path, encoding="utf-8") as fh:
+                meta = json.load(fh).get("metadata") or {}
+        except (OSError, ValueError) as exc:
+            sys.exit(f"refusing to publish: cannot read {path}: {exc}")
+        biennium = meta.get("biennium")
+        if not biennium:
+            sys.exit(f"refusing to publish: {path} names no biennium")
+        if biennium == current:
+            continue
+        sessions = []
+        for s in meta.get("sessions") or []:
+            slug = _slug(s["id"], s.get("name"))
+            sessions.append({"id": s["id"], "name": s.get("name"), "slug": slug,
+                             "voteCount": s.get("voteCount"), "files": _votes_files(slug)})
+        entry = {"biennium": biennium, "roster": f"sessions/{biennium}/members.json",
+                 "sessions": sorted(sessions, key=lambda s: s["slug"])}
+        if os.path.exists(os.path.join(os.path.dirname(path), "ga-party-unity.json")):
+            entry["scorecard"] = _scorecard_files(biennium)
+        out[biennium] = entry
+    return [out[k] for k in sorted(out, reverse=True)]
+
+
 def build_votes():
     """Split the biennium's roll calls by session into per-session archive dirs and
     refresh the root latest.json pointer. ga-member-votes.json now covers the whole
@@ -513,6 +580,8 @@ def build_votes():
         "currentRoster": "data/all.json",
         "rosterArchive": f"sessions/{BIENNIUM}/members.json",
         "sessions": sorted(sessions_index, key=lambda s: s["slug"]),
+        # Closed General Assemblies, newest first: their folders stay under sessions/.
+        "earlierBienniums": earlier_bienniums(),
     })
     return artifacts
 
@@ -630,6 +699,9 @@ def build_scorecard():
             "scorecardSchema": f"{base}/scorecard.schema.json",
         },
         "derivedFrom": ["sessions/{}/votes.json".format(slug), "data/all.json"],
+        # Earlier General Assemblies' final scorecards, newest first (none before 2025-26).
+        "earlierBienniums": [{"biennium": b["biennium"], "files": b["scorecard"]}
+                             for b in earlier_bienniums() if b.get("scorecard")],
     })
     return artifacts
 
