@@ -31,6 +31,11 @@ python scripts/build_results_json.py _sources/election_results/<file>.csv <data-
 | `ga-primary-runoff-results.csv`         | Jun 16 2026 primary runoff         | `ga-primary-runoff-results.json` |
 | `ga-special-2026-results-official.csv`  | Jul 28 2026 CD-13 special          | `ga-special-2026-results.json` |
 | `ga-special-2026-runoff-results.csv`    | Aug 25 2026 CD-13 special runoff   | `ga-special-2026-runoff-results.json` |
+| `ga-general-2026-results-official.xlsx` | Nov 3 2026 general (certified Nov 20) | `ga-general-2026-results.json` (see note) |
+
+The certified general export omits District Attorney - Waycross Judicial Circuit
+(273 contests; the page lists 274). Rebuild it with `--fill-missing-from` the
+committed JSON, or that race disappears from the page.
 
 ## After certification
 
