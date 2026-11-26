@@ -9,9 +9,15 @@ Artifacts (repo root, matching ga-legislation's layout):
   ga-bills.schema.json     JSON Schema for ga-bills.json
   BILLS.md                 Overview: counts by chamber, status, type, and top subjects
 
+latest.json also lists every EARLIER General Assembly under `earlierBienniums`, read from
+the frozen files scripts/freeze_ga_bills.py writes (assets/data/ga-bienniums/<tag>/). Their
+session folders were published while they were current and are never rewritten here, so
+without this index a rollover would leave them in the repo with nothing pointing to them.
+
 Writes artifacts only; the workflow commits them. Dry-run to $OUT_DIR standalone.
 """
 import csv
+import glob
 import io
 import json
 import os
@@ -27,6 +33,7 @@ TOKEN_ENV = "GA_BILLS_TOKEN"
 
 SRC_JSON = "assets/data/ga-bills.json"
 SRC_SUBJECTS = "assets/data/ga-bills-subjects.json"
+FROZEN_GLOB = "assets/data/ga-bienniums/*/ga-bills.json"
 
 CHAMBER_LABEL = {"lower": "House", "upper": "Senate"}
 
@@ -35,6 +42,45 @@ def compact_json(obj):
     """Compact UTF-8 JSON bytes for the large per-session bills.json (pretty-printing
     the ~9 MB regular-session file would roughly double it)."""
     return json.dumps(obj, ensure_ascii=False, separators=(",", ":")).encode()
+
+
+def session_files(slug, with_subjects=True):
+    """The files a session folder holds, by role. One definition for every biennium."""
+    base = f"sessions/{slug}"
+    files = {"bills": f"{base}/bills.json", "billsCsv": f"{base}/bills.csv",
+             "schema": f"{base}/bills.schema.json", "summary": f"{base}/BILLS.md"}
+    if with_subjects:
+        files["subjects"] = f"{base}/bills-subjects.json"
+    return files
+
+
+def earlier_bienniums(pattern=FROZEN_GLOB, current=BIENNIUM):
+    """Index entries for every frozen General Assembly other than the current one.
+
+    Reads only what the freeze recorded; writes nothing for these bienniums. A frozen
+    file for the CURRENT biennium (frozen early, before the rollover) is not earlier and
+    is skipped. A frozen file that cannot be read, or is not marked frozen, refuses the
+    publish rather than silently dropping a General Assembly from the index.
+    """
+    out = []
+    for path in sorted(glob.glob(pattern)):
+        try:
+            with open(path, encoding="utf-8") as fh:
+                meta = json.load(fh).get("metadata") or {}
+        except (OSError, ValueError) as exc:
+            raise SystemExit(f"refusing to publish: cannot read frozen bills {path}: {exc}")
+        if not meta.get("frozen") or not meta.get("biennium"):
+            raise SystemExit(f"refusing to publish: {path} is not a frozen bills file")
+        if meta["biennium"] == current:
+            continue
+        sessions = [{"id": s["id"], "name": s.get("name") or session_name(s["id"]),
+                     "slug": session_slug(s["id"]), "billCount": s.get("billCount"),
+                     "files": session_files(session_slug(s["id"]))}
+                    for s in meta.get("sessions") or []]
+        out.append({"biennium": meta["biennium"], "frozenAt": meta.get("frozenAt"),
+                     "billCount": meta.get("totalBills"),
+                     "sessions": sorted(sessions, key=lambda s: s["slug"])})
+    return sorted(out, key=lambda b: b["biennium"], reverse=True)
 
 
 def bills_csv(bills):
@@ -154,7 +200,6 @@ def build_artifacts():
     for sid in list(all_session_ids()) + [s for s in bills_by_session if s not in all_session_ids()]:
         sess_bills = bills_by_session.get(sid, [])
         slug = session_slug(sid)
-        base = f"sessions/{slug}"
         sess_doc = {
             "metadata": {
                 "session": sid,
@@ -166,18 +211,13 @@ def build_artifacts():
             },
             "bills": sess_bills,
         }
-        files = {
-            "bills": f"{base}/bills.json",
-            "billsCsv": f"{base}/bills.csv",
-            "schema": f"{base}/bills.schema.json",
-            "summary": f"{base}/BILLS.md",
-        }
+        files = session_files(slug, with_subjects=False)
         artifacts[files["bills"]] = compact_json(sess_doc)
         artifacts[files["billsCsv"]] = bills_csv(sess_bills)
         artifacts[files["schema"]] = build_json(schema())
         artifacts[files["summary"]] = bills_md(sess_doc)
         if subjects_bytes is not None:
-            files["subjects"] = f"{base}/bills-subjects.json"
+            files["subjects"] = session_files(slug)["subjects"]
             artifacts[files["subjects"]] = subjects_bytes
         sessions_index.append({
             "id": sid, "name": session_name(sid), "slug": slug,
@@ -194,6 +234,8 @@ def build_artifacts():
         "generatedAt": meta.get("generatedAt"),
         "billCount": len(all_bills),
         "sessions": sorted(sessions_index, key=lambda s: s["slug"]),
+        # Earlier General Assemblies, newest first; [] until the first rollover.
+        "earlierBienniums": earlier_bienniums(),
     })
 
     # latest.json above is a BILLS pointer (biennium, currentSession, sessions[]),
