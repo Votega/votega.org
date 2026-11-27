@@ -479,6 +479,23 @@ def attach_unlinked_votes(bills, listings_for=None, detail_for=None):
                              bill["identifier"]))
     return attached
 
+
+def _status_history(detail):
+    """[[datetime, code]] (with a third item, the AmSub qualifier, when set) for every
+    StatusHistory row, oldest first. Codes, not descriptions: a code covers its variants
+    and the descriptions carry trailing spaces (docs/ga-soap-data-dictionary.md 2.4). The
+    Governor's decision is already decoded in governorAction."""
+    rows = []
+    for sl in detail.findall("d:StatusHistory/d:StatusListing", ns):
+        code = (_text(sl, "Code") or "").strip()
+        date = (_text(sl, "Date") or "")[:19]
+        if not code or not date:
+            continue
+        amsub = (_text(sl, "AmSub") or "").strip().upper()
+        rows.append([date, code, amsub] if amsub else [date, code])
+    rows.sort(key=lambda r: r[0])
+    return rows
+
 def _governor_action(detail):
     """Derive {status, sentDate, decisionDate, actNumber} from StatusHistory, or None.
     StatusHistory codes seen: H/SSG = Sent to Governor; H/SDSG + synthetic 'Signed Gov'
@@ -557,6 +574,8 @@ def map_bill(detail, our_session, roster, titles_map):
                                         legislation_type=leg_type),
             lid),
         "governorAction": _governor_action(detail),
+        # Every action, for the "where is this bill" stage (lib/ga_bill_stage.py).
+        "statusHistory": _status_history(detail),
         # Procedural notes ("Modified Structured Rule", "Tabled in Senate"), oldest first.
         "footnotes":   footnotes,
     }
