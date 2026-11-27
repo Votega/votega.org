@@ -142,6 +142,8 @@ Producers, data dictionaries and conventions there:
   columns are appended, never inserted. A schema gains `properties` but never a new
   `required`. Each schema's `$id` is its own path, and it carries `schemaVersion`
   (bumped for a change a consumer must act on) and `schemaStability`.
+- `docs/data-catalog.md`: where each dataset comes from, the script that builds it,
+  when it refreshes, and which sibling repo it is published to.
 - `docs/data-schemas.md` and `docs/ga-soap-data-dictionary.md`: what the source fields
   mean and how the published ones are built.
 
