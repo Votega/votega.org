@@ -155,7 +155,7 @@ def main() -> int:
         rec = dict(meta)
         if vid in tallies:
             rec["partyTally"] = tallies[vid]
-        doc_id = bill_docs.get((meta.get("session"), meta.get("bill")))
+        doc_id = bill_docs.get((meta.get("billSession") or meta.get("session"), meta.get("bill")))
         if doc_id:
             rec["doc"] = doc_id
             matched += 1

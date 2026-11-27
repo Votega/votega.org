@@ -267,8 +267,8 @@ def build_session(our_session, by_legis_id, os_index, title_index,
             caption, date10, legn, rows = detail
             if not any(e["legislationId"] is not None for e in legn) and bill_index:
                 # GetVote linked no bill: fall back to the listing's own text.
-                legn = [{"legislationId": lid, "description": ident}
-                        for ident, _s, lid in resolve_listing_bills(
+                legn = [{"legislationId": lid, "description": ident, "session": bill_session}
+                        for ident, bill_session, lid in resolve_listing_bills(
                             lst.get("legislation"), our_session, bill_index)]
                 if legn:
                     stats["linkedFromListing"] += 1
@@ -339,6 +339,11 @@ def build_session(our_session, by_legis_id, os_index, title_index,
                     "billUrl": ("https://www.legis.ga.gov/legislation/%d" % lid),
                     "title": title_index.get(lid, "") or (bill_titles or {}).get(lid, ""),
                     "session": our_session,
+                    # The bill's own session when the roll call was held in another
+                    # (2026 SS's veto override on the 2025-26 HB 1192), so its text link
+                    # and bill page resolve against the right session.
+                    **({"billSession": entry["session"]}
+                       if entry.get("session") and entry["session"] != our_session else {}),
                     "motionText": caption,
                     # The chamber that actually held this roll call, straight from the
                     # GetVotes(Branch, ...) call that produced the listing. Readers used to

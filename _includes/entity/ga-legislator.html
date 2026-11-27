@@ -2061,7 +2061,8 @@
       // slices use.
       const docSegments = data.metadata?.docSegments || {};
       const billTextUrl = meta => {
-        const seg = docSegments[meta.session];
+        // billSession: a roll call held in a later session on an earlier bill.
+        const seg = docSegments[meta.billSession || meta.session];
         return (seg && meta.doc)
           ? `https://www.legis.ga.gov/api/legislation/document/${encodeURIComponent(seg)}/${encodeURIComponent(meta.doc)}`
           : '';
