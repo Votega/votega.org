@@ -104,6 +104,14 @@
   --chart-peach: var(--peach-300);
   --chart-gray: var(--gray-chart);
 
+  /* Election phases. Categorical, not status. */
+  --color-phase-primary: var(--teal-700);
+  --color-phase-primary-tint: var(--teal-50);
+  --color-phase-general: var(--pine-600);
+  --color-phase-general-tint: var(--pine-50);
+  --color-phase-runoff: var(--clay-700);
+  --color-phase-runoff-tint: var(--clay-50);
+
   /* Topic-watch flags on local pages (ALPR, land use, data centers, local taxes, budgets). Categorical, so they avoid
      red and green (danger and success) and every party hue. */
   --color-watch-alpr: var(--clay-700);

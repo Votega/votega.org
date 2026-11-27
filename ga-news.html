@@ -15,14 +15,13 @@ share-description: "Headlines about Georgia's elected officials, candidates, and
     --gn-panel:    var(--color-surface-sunken);
     --gn-accent:   var(--color-link);
     --gn-accent-w: var(--color-surface-tint);
-    --gn-gold:     var(--color-warning);
-    --t-elections: var(--color-link);
-    --t-ethics:    var(--color-danger);
-    --t-surveillance: var(--color-link);
-    --t-budget:    var(--color-warning);
-    --t-courts:    var(--color-link);
-    --t-education: var(--color-link);
-    --t-healthcare:var(--color-link);
+    --t-elections: var(--chart-clay);
+    --t-ethics:    var(--chart-slate);
+    --t-surveillance: var(--chart-teal);
+    --t-budget:    var(--chart-gold);
+    --t-courts:    var(--chart-pine);
+    --t-education: var(--chart-sage);
+    --t-healthcare:var(--chart-peach);
   }
   #ganews { color: var(--gn-ink); }
   #ganews .masthead { border-bottom: 2px solid var(--gn-ink); padding-bottom: 0.8rem; margin-bottom: 0.3rem; }
@@ -60,8 +59,8 @@ share-description: "Headlines about Georgia's elected officials, candidates, and
   #ganews a.tag.person { color: var(--gn-accent); background: var(--gn-accent-w); border-color: color-mix(in srgb, var(--gn-accent) 22%, transparent); }
   #ganews a.tag.person:hover { border-color: var(--gn-accent); }
   #ganews span.tag.person { color: var(--gn-muted); background: var(--gn-panel); border-color: var(--gn-border-2); }
-  #ganews .tag.topic { background: transparent; border-color: color-mix(in srgb, var(--tc) 40%, transparent); color: var(--tc); }
-  #ganews .tag.topic .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--tc); margin-right: 0.3rem; vertical-align: 1px; }
+  #ganews .tag.topic { background: transparent; border-color: var(--gn-border-2); color: var(--gn-muted); }
+  #ganews .tag.topic .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--tc, var(--chart-gray)); margin-right: 0.3rem; vertical-align: 1px; }
 
   #ganews .empty, #ganews .state { padding: 2.2rem 1rem; text-align: center; color: var(--gn-muted); }
   #ganews .footnote { margin-top: 2.2rem; padding-top: 1rem; border-top: 1px solid var(--gn-border); font-size: 0.78rem; color: var(--gn-faint); max-width: 74ch; }

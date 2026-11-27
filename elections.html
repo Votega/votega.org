@@ -77,10 +77,11 @@ breadcrumb:
     font-size: 0.75rem;
     font-weight: bold;
   }
-  .phase-primary { background: var(--color-success-tint); color: var(--color-success); }
-  .phase-general { background: var(--color-success-tint); color: var(--color-success); }
-  .phase-runoff  { background: var(--color-warning-tint); color: var(--color-warning); }
-  .phase-open-seat { background: var(--color-danger-tint); color: var(--color-danger); }
+  .phase-primary { background: var(--color-phase-primary-tint); color: var(--color-phase-primary); }
+  .phase-general { background: var(--color-phase-general-tint); color: var(--color-phase-general); }
+  .phase-runoff  { background: var(--color-phase-runoff-tint); color: var(--color-phase-runoff); }
+  /* Open Seat is amber with an icon, as on the race page banner. */
+  .phase-open-seat { background: var(--color-warning-tint); color: var(--color-warning); }
   .race-date { font-size: 0.8rem; color: var(--color-text-muted); margin-top: 0.3rem; }
 
   .view-arrow { color: var(--color-link); font-size: 1.1rem; flex-shrink: 0; }
@@ -196,12 +197,10 @@ breadcrumb:
     white-space: nowrap;
   }
   .phase-btn:hover { border-color: var(--color-text-muted); color: var(--color-text); }
-  .phase-btn.active[data-phase="primary"] { background: var(--color-success-tint); border-color: var(--color-success); color: var(--color-success); font-weight: 700; }
-  .phase-btn.active[data-phase="runoff"]  { background: var(--color-warning-tint); border-color: var(--color-warning); color: var(--color-warning); font-weight: 700; }
-  .phase-btn.active[data-phase="general"] { background: var(--color-success-tint); border-color: var(--color-success); color: var(--color-success); font-weight: 700; }
+  .phase-btn.active { background: var(--color-surface-tint); border-color: var(--color-accent); color: var(--color-accent-strong); font-weight: 700; }
   /* When only one phase is in play the button is a status label, not a control. */
   .phase-toggle.single .phase-btn { cursor: default; }
-  .phase-toggle.single .phase-btn:hover { border-color: var(--color-success); color: var(--color-success); }
+  .phase-toggle.single .phase-btn:hover { border-color: var(--color-accent); color: var(--color-accent-strong); }
 
   @media (max-width: 600px) {
     .race-row { flex-wrap: wrap; }
@@ -598,7 +597,7 @@ breadcrumb:
         </div>
         <div class="race-meta">
           <span class="phase-badge ${phaseClass}">${phaseLabel}</span>
-          ${isOpenSeat(race) ? `<span class="phase-badge phase-open-seat">Open Seat</span>` : ''}
+          ${isOpenSeat(race) ? `<span class="phase-badge phase-open-seat"><i class="fa-solid fa-door-open" aria-hidden="true"></i> Open Seat</span>` : ''}
           ${dateStr ? `<div class="race-date">${dateStr}</div>` : ''}
         </div>
         <span class="view-arrow">›</span>
