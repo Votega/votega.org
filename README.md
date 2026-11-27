@@ -21,7 +21,7 @@ Every repository has JSON, a CSV for spreadsheets and a JSON Schema.
 |---|---|---|---|
 | [ga-legislators](https://github.com/Votega/ga-legislators) | Georgia General Assembly members: the current roster (name, party, district, committees, contact, official page), each session's passage votes, and a derived voting scorecard (party unity and participation). Earlier General Assemblies back to 2017 | `latest.json`, `data/all.json` | Roster daily · votes and scorecard weekly |
 | [ga-federal-legislators](https://github.com/Votega/ga-federal-legislators) | Georgia's U.S. Senators and Representatives and every roll call of the current Congress, with a frozen record of each finished Congress | `data/members.json`, `data/votes.json` | Roster daily · votes weekly |
-| [ga-legislation](https://github.com/Votega/ga-legislation) | Georgia General Assembly bills and resolutions by session, and every statewide ballot measure | `latest.json`, `ga-ballot-measures.json` | Bills weekly · ballot measures as they change |
+| [ga-legislation](https://github.com/Votega/ga-legislation) | Georgia General Assembly bills and resolutions by session, and every statewide ballot measure | `latest.json`, `ga-ballot-measures.json` | Bills daily during the session (Jan–Apr), weekly otherwise · ballot measures as they change |
 | [ga-executive-orders](https://github.com/Votega/ga-executive-orders) | The Governor's executive orders since 2020: date, number, title, category, issuing Governor and PDF link | `data/executive-orders.csv`, `data/<year>.json` | Twice daily |
 | [ga-races-elections](https://github.com/Votega/ga-races-elections) | Georgia races and candidates, one folder per election cycle; certified election results; and early-voting turnout by county | `data/races/manifest.json`, `data/results/manifest.json` | Races daily · results after certification · early voting during each voting period |
 | [ga-local-government](https://github.com/Votega/ga-local-government) | What Georgia county and city governments discuss on their published agendas and minutes (license-plate readers, data centers, land use, local taxes), classified by keyword with the source document for every mention; current boards and term history of local officials; millage rates | `latest.json` | Twice weekly · millage monthly |
@@ -141,7 +141,7 @@ scripts/             Build-time Python generators (run by Actions)
 |---|---|---|
 | `update-current-members.yml` | Federal Congress members | Daily 06:00 UTC |
 | `update-ga-members.yml` | GA state legislators | Daily 07:00 UTC |
-| `update-ga-bills.yml` | GA bills | Weekly, Sun 07:30 UTC |
+| `update-ga-bills.yml` | GA bills | Daily 05:30 UTC January–April; weekly, Sun 07:30 UTC, May–December |
 | `update-ga-votes.yml` | GA passage votes | Weekly, Mon 07:30 UTC |
 | `update-federal-votes.yml` | Federal roll call votes | Weekly, Sun 09:00 UTC |
 | `update-scotus-decisions.yml` | SCOTUS decisions | Weekly, Sun 10:00 UTC |
