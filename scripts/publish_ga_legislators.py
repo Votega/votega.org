@@ -60,7 +60,7 @@ from lib.votes_schema import member_votes_map
 
 REPO = "Votega/ga-legislators"
 TOKEN_ENV = "GA_LEGISLATORS_TOKEN"
-SCHEMA_VERSION = "1.0.0"
+SCHEMA_VERSION = "1.1.0"
 #: Base for every published schema's $id. Each schema appends the path it is
 #: actually written to, via schema_url().
 RAW_BASE = "https://raw.githubusercontent.com/Votega/ga-legislators/main"
@@ -88,7 +88,11 @@ STABILITY = {
     "votes":
         "Stable field names and meanings. `bill` and `billUrl` are null on procedural "
         "roll calls that are attached to no measure; `chamber` is published because it "
-        "cannot be re-derived from the motion text.",
+        "cannot be re-derived from the motion text. 1.1.0 describes `billSession`, "
+        "optional and present only on a roll call held in a later session than its "
+        "bill's (2026 special session's veto override of the 2025-2026 HB 1192): the "
+        "record sits in the session that held the vote, and `billSession` names the "
+        "bill's.",
     "scorecard":
         "Stable field names and meanings. partyUnity and independenceRate are null for "
         "a member with too few eligible votes to score.",
@@ -403,7 +407,12 @@ def votes_schema(schema_path):
                         "bill": {"type": ["string", "null"]},
                         "billUrl": {"type": ["string", "null"]},
                         "title": {"type": ["string", "null"]},
-                        "session": {"type": ["string", "null"], "description": "Session id, e.g. '2025_26' or '2026_ss'."},
+                        "session": {"type": ["string", "null"], "description": "Session id, e.g. '2025_26' or '2026_ss': the session that HELD the roll call."},
+                        "billSession": {"type": "string",
+                                        "description": "The bill's own session, present only when it differs "
+                                                       "from `session` (a vote held in a later session on an "
+                                                       "earlier bill, e.g. a veto override in a special "
+                                                       "session). Join to the bill on this session and `bill`."},
                         "motionText": {"type": ["string", "null"]},
                         "chamber": {"type": ["string", "null"],
                                     "enum": ["Senate", "House of Representatives", None],
