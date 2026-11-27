@@ -454,6 +454,50 @@ def legislative_calendar(sessions, committed=None, fetch=None):
 STATEMENTS_FILE = "assets/data/ga-governor-statements.json"
 
 
+def _biennium_years(tag):
+    """'2025_26' -> {2025, 2026}; '2026_ss' -> {2026}."""
+    head, _, tail = str(tag or "").partition("_")
+    if not head.isdigit():
+        return set()
+    if tail.isdigit():
+        return {int(head), int(head[:2] + tail)}
+    return {int(head)}
+
+
+def attach_committee_chairs(bills, path=MEMBERS_FILE):
+    """Set `chair` ({name, legisGaGovId, party}) on each bill committee, joined on the
+    committee id (ga-members.json committeeRoles[].id = a bill's committees[].id; both are
+    legis.ga.gov's). The roster is the current biennium's, so only bills of that biennium
+    and its special sessions get one; a committee with no sitting chair gets none.
+    Returns the number of committees given a chair."""
+    try:
+        roster = json.load(open(path, encoding="utf-8"))
+    except (OSError, ValueError):
+        return 0
+    years = _biennium_years((roster.get("metadata") or {}).get("session"))
+    chairs = {}
+    for m in roster.get("members") or []:
+        if m.get("status"):                     # resigned, deceased, suspended
+            continue
+        chamber = {"House": "lower", "House of Representatives": "lower",
+                   "Senate": "upper"}.get(m.get("chamber"))
+        for r in m.get("committeeRoles") or []:
+            if r.get("role") == "Chairman" and r.get("id") is not None:
+                chairs.setdefault((chamber, r["id"]), []).append(
+                    {"name": m.get("name"), "legisGaGovId": m.get("legisGaGovId"),
+                     "party": m.get("party")})
+    n = 0
+    for b in bills:
+        in_term = bool(years) and _biennium_years(b.get("session")) <= years
+        for c in b.get("committees") or []:
+            c.pop("chair", None)
+            found = chairs.get((c.get("chamber"), c.get("id"))) if in_term else None
+            if found and len(found) == 1:       # two would be a data error: show neither
+                c["chair"] = found[0]
+                n += 1
+    return n
+
+
 def attach_governor_statements(bills, path=STATEMENTS_FILE):
     """Add the Governor's veto messages and signing statements (curated from the
     Governor's published PDFs by scripts/import_governor_statements.py) to their bills
@@ -956,6 +1000,7 @@ def main():
               % carry_committee_history(bills, committed_bills,
                                         datetime.now(timezone.utc).date().isoformat()))
     print("Governor's statements attached: %d" % attach_governor_statements(bills))
+    print("Committee chairs attached: %d" % attach_committee_chairs(bills))
     # Where each bill is (lib/ga_bill_stage.py), after the votes attached above.
     calendar = legislative_calendar(sorted({b["session"] for b in bills if b.get("session")}),
                                     (committed_meta or {}).get("legislativeCalendar"))

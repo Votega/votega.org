@@ -37,6 +37,14 @@ Where a meaning is inferred rather than confirmed, it says so.
 7. **Faults arrive as HTTP 500.** `RollCallNotPublishedFault` is deterministic (attendance,
    procedural): do not retry it.
 8. **Every operation has `…Json` / `…Xml` twins.** We use the SOAP form only.
+9. **Ended rows are kept, not removed.** A member's `CommitteeMembership` that ended
+   mid-biennium stays in `GetMember` with a `DateVacated`, next to its replacement. On
+   2026-01-13 Harbin handed the Senate Government Oversight chair to Bearden and took
+   Insurance and Labor from Walker, so the record lists Harbin as both Chairman and
+   Member of Government Oversight, and both committees had two chairs. Filter on
+   `DateVacated` before reading a role (`generate_ga_members_soap.build_record` keeps
+   only current memberships, or all of them for a member whose every one ended). 16
+   members carried such rows in 2025-26.
 
 ---
 
@@ -61,18 +69,18 @@ Operations: `GetLegislationForSession` ✓, `GetLegislationDetail` ✓, `GetTitl
 | `Id` | legislationId | ✓ |
 | `DocumentType` | enum `HB` `HR` `SB` `SR` | ✓ |
 | `Number`, `Suffix` | `14`; suffix `EX` marks special-session bills | ✓ |
-| **`LegislationType`** | enum `GEN` `CA` `LOC` `PRIV` `NP` (see 2.3) | **—** |
+| `LegislationType` | enum `GEN` `CA` `LOC` `PRIV` `NP` (see 2.3) | ✓ `legislationType` |
 | `Caption` | full title | ✓ `title` |
 | `Summary` | abstract, "A BILL to be entitled an Act…" | ✓ `abstract` (cut to 500 chars) |
 | `Status` | **latest** history row (`StatusBase`: Code, Date, Description, Id). Not an outcome; see gotcha 1 | ✓ `status`, `statusDate` |
-| `StatusHistory` | every action, `StatusListing` rows (2.4) | ✓ governor action only |
-| `ActVetoNumber` | the act number when signed (`73`); the **veto number** when vetoed (`V1`, `V6`), which the int parse drops, so `governorAction.actNumber` is null on vetoes. No veto message: a vetoed bill's `Versions` are its text versions only (the Governor publishes veto statements separately) | ✓ `actNumber` (signed only) |
+| `StatusHistory` | every action, `StatusListing` rows (2.4) | ✓ `statusHistory`, `governorAction`, `stage` |
+| `ActVetoNumber` | the act number when signed (`73`); the **veto number** when vetoed (`V1`, `V6`), kept as `governorAction.vetoNumber` (`actNumber` is null on vetoes). No veto message: a vetoed bill's `Versions` are its text versions only (the Governor publishes veto statements separately) | ✓ `actNumber`, `vetoNumber` |
 | `Authors` | `Sponsorship` rows (2.5) | ✓ `sponsors` |
 | `Sponsor` | single `Sponsorship`: the other chamber's carrier | ✓ `secondChamberSponsor` |
-| `Committees` | one `CommitteeListing` per chamber (Id, Code, Name, Type). The **current** committee: overwritten when a bill is moved or recommitted (HB 520 shows Health after "Move from P&CH to Hth"; HB 1066 shows Governmental Affairs after recommittal). The original referral is not kept anywhere. Ids match GetCommitteesBySession; member records hold committee **names** only, so a member join folds "&"/"and". Moves are recorded by the pipeline in `committeeHistory` (compared with the previous run; from the 2027 session on, no backfill) | ✓ `committees` |
+| `Committees` | one `CommitteeListing` per chamber (Id, Code, Name, Type). The **current** committee: overwritten when a bill is moved or recommitted (HB 520 shows Health after "Move from P&CH to Hth"; HB 1066 shows Governmental Affairs after recommittal). The original referral is not kept anywhere. Ids match GetCommitteesBySession and the member records' `CommitteeMembership` ids (section 5), so the bill-to-chair join is on the id. Moves are recorded by the pipeline in `committeeHistory` (compared with the previous run; from the 2027 session on, no backfill) | ✓ `committees` |
 | `Versions`, `LatestVersion` | `DocumentBase` (Url, Version, Description) | ✓ `textUrl` (latest only) |
 | `Votes` | `VoteListing` rows for this bill (3.1) | ✓ `passageVotes` (filtered) |
-| **`Footnotes`** | free-text procedural notes, `;`-separated: "Modified Structured Rule", "Withdrawn from General Calendar and recommitted…", "Tabled in Senate". 24 of 160 sampled bills | **—** |
+| `Footnotes` | free-text procedural notes, `;`-separated: "Modified Structured Rule", "Withdrawn from General Calendar and recommitted…", "Tabled in Senate". 24 of 160 sampled bills | ✓ `footnotes` |
 | `Session` | `Session` object | — |
 
 ### 2.3 `LegislationType`
@@ -153,7 +161,7 @@ Operations: `GetVotes` ✓, `GetVote` ✓, `GetVotesForLegislation` —.
 | `Number` | the chamber's own roll-call number, dense from 1 per session | ✓ listings |
 | `Branch` | enum `House` `Senate` | ✓ |
 | `Caption` | motion text (3.3). Free text, trailing spaces | ✓ passage filter |
-| `Date` | **datetime** `2025-04-04T17:33:00`: the time of day is here | ✓ but cut to the date (see 4) |
+| `Date` | **datetime** `2025-04-04T17:33:00`: the time of day is here | ✓ `date` + `time` (HH:MM) |
 | `Time` | `"5:33 PM"` | ✓ listings only |
 | `Day` | `"April 4, 2025"` | — |
 | `Description` | `"House Vote #434 - 2025-2026 Regular Session"` | — |
@@ -209,8 +217,9 @@ Speaker elections, `Move from <committee> to <committee>`.
 | 4 | Two-thirds inferred from abstract text, `LegislationType` ignored | `lib/ga_vote_rules.requires_two_thirds` | regex guesses + hand pins |
 | 5 | `get_detail` failure skipped without a count | `generate_ga_bills_soap.main` | a bill can vanish from a live run |
 | 6 | Roll calls with an empty `ItemVotedOn` dropped | both producers | HB 1192's override and HB 973's House CCR vote missing |
+| 7 | Ended committee memberships (`DateVacated`) kept as current | `generate_ga_members_soap.build_record` | two chairs on Senate Government Oversight and Insurance and Labor; 16 members listed on committees they had left |
 
-Fixed: 1–5 in #541/#542, 6 after them. "Local Calendar as a Whole" (2026-06-20, 93-68)
+Fixed: 1–5 in #541/#542, 6 after them, 7 on 2026-11-27 (gotcha 9). "Local Calendar as a Whole" (2026-06-20, 93-68)
 is not a passage vote and is now classed as procedural (`lib/ga_passage.PROCEDURAL_CAPTION`):
 the House floor transcript (Georgia Commons, `meeting:2026-06-20/house-floor`) shows it
 decided an objection to voting on the local calendar in one block ("All those in favor of
@@ -229,6 +238,12 @@ passage of uncontested local bills" in the order of business.
 - `Party` enum: `Democrat` `Republican` `Independent` `Other`, recorded **per session** in
   `LegislativeService` (party-switch history).
 - `DateVacated` gives the date only, never the reason.
+- `CommitteeMemberships/CommitteeMembership` ✓ per session: `Committee` (`Id`, `Code`,
+  `Name`, `Type`), `Role` (`Member`, `Chairman`, `Vice Chairman`, `Secretary`,
+  `Ex-Officio`, `Chairman of Subcommittee`, `Vice-Chairman of Subcommittee`) and
+  `DateVacated`. Kept in ga-members.json as `committees` (names) and `committeeRoles`
+  (`[{id, name, role}]`, current memberships only: gotcha 9). The subcommittee roles name
+  only the parent committee; which subcommittee is in `GetCommittee`.
 - `Birthday` is month and day only. Unread: `Bio`, `Education`, `Religion`, `Spouse`,
   `CellPhone`, `HomePhone`, `Map`, `DistrictMap`, `LegislativeComments`.
 
@@ -258,19 +273,19 @@ Producers: `scripts/generate_ga_bills_soap.py` (ga-bills.json) and
 |---|---|---|
 | `legislationType` | `LegislationType` | GEN / LOC / CA / PRIV / NP (2.3). Decides the two-thirds rule when present (`lib/ga_vote_rules.requires_two_thirds`) |
 | `footnotes` | `Footnotes` split on `;` | procedural notes, oldest first |
-| `committees` | `Committees/CommitteeListing` | `[{chamber, id, code, name}]`, House first. The **current** committee per chamber (2.2) |
+| `committees` | `Committees/CommitteeListing` | `[{chamber, id, code, name, chair}]`, House first. The **current** committee per chamber (2.2). `chair` (`{name, legisGaGovId, party}`) is the sitting member whose current `CommitteeMembership` role is `Chairman`, joined on the committee **id** (`generate_ga_bills_soap.attach_committee_chairs`); only on bills of the roster's biennium and its special sessions, absent when no sitting member chairs it (2025-26: Senate Interstate Cooperation, Special Committee on Investigations) |
 | `committeeHistory` | `committees` compared with the previous run's file | `[{chamber, from, to, seenOn}]`, `from`/`to` = `{id, code, name}`. Appended when a chamber's committee id changes; carried forward run to run. `seenOn` is the day of the run that noticed the move, not the day of the move (a recommittal's date is in `statusHistory`, code `HRECM`). A first referral is not a move. **Starts with the 2027 session; 2025-26 is not backfilled.** A bill that moves twice between two runs records only the net change |
-| `stage` | `statusHistory` + `committees` + `passageVotes` + `governorAction` (`lib/ga_bill_stage.py`) | where the bill is: `{kind, label, path, steps}`; `path` "full" = six steps (origin committee, origin floor, other committee, other floor, final version, Governor), "short" = filed/adopted for a simple resolution; each step `[state, headline, detail]`, state done/current/stopped/ahead. A session is adjourned once today is past the last day of its legislative calendar (`metadata.legislativeCalendar`; for the regular session, day 40 of the biennium's second year, since first-year bills carry over), and a dead bill's stopped step names that day; without a calendar the fallback is 45 days with no legislative action on any of its bills; a bill whose session adjourned short of the Governor is dead, so its step becomes `stopped` ("Died in Senate Finance"). While a bill waits on the Governor, `stage.governorDeadline` is the day the Governor must act by (Ga. Const. Art. III, Sec. V, Para. XIII(a): six days from transmission, or 40 days from the year's adjournment when that falls inside the six days or came first; checked against all 743 decisions of 2025-26), and once it passes with no signature or veto on record the stage reads "Became law without the Governor's signature" (Georgia has no pocket veto). Shown on ga-bills (badge, progress bar, "Where this bill is" panel; the calendar also drives the page's "legislative day N of 40" line while a session sits) and in the MCP's `get_bill` |
+| `stage` | `statusHistory` + `committees` + `passageVotes` + `governorAction` (`lib/ga_bill_stage.py`) | where the bill is: `{kind, label, path, steps}`; `path` "full" = six steps (origin committee, origin floor, other committee, other floor, final version, Governor), "short" = filed/adopted for a simple resolution; each step `[state, headline, detail]`, state done/current/stopped/ahead. A session is adjourned once today is past the last day of its legislative calendar (`metadata.legislativeCalendar`; for the regular session, day 40 of the biennium's second year, since first-year bills carry over), and a dead bill's stopped step names that day; without a calendar the fallback is 45 days with no legislative action on any of its bills; a bill whose session adjourned short of the Governor is dead, so its step becomes `stopped` ("Died in Senate Finance"). While a bill waits on the Governor, `stage.governorDeadline` is the day the Governor must act by (Ga. Const. Art. III, Sec. V, Para. XIII(a): six days from transmission, or 40 days from the year's adjournment when that falls inside the six days or came first; checked against all 743 decisions of 2025-26), and once it passes with no signature or veto on record the stage reads "Became law without the Governor's signature" (Georgia has no pocket veto). Stall reasons from the status codes (2.4): `HPOST` → "Postponed in the House" until a third reading (`HTR`/`STR`) takes it up; `HRECO`/`SRECO` after a loss undoes it (the floor step reads "Lost 52–114 Mar 6 · reconsidered Mar 6" and the bill is awaiting a vote, not lost: 2025-26 HB 1446); `HRECL` is a second loss on reconsideration (2026 SS HB 10EX, counted on the later vote); `HRECM`/`SR` puts the committee step back to "Recommitted <date>". The committee step a bill is in, or died in, ends "· Chair: Rep. X (R)" from `committees[].chair`. Shown on ga-bills (badge, progress bar, "Where this bill is" panel; the calendar also drives the page's "legislative day N of 40" line while a session sits) and in the MCP's `get_bill` |
 | `statusHistory` | `StatusHistory/StatusListing` | `[[datetime, code]]`, or `[datetime, code, AmSub]` when AmSub is set; oldest first. Codes in 2.4 |
 | `status` | `Status.Description`, stripped | legis.ga.gov's latest action, **not an outcome** (gotcha 1). The MCP index and the page's fallback list replace it with the Governor's decision (`lib/mcp_bills.outcome_status`) and keep the original as `officialStatus` |
 | `governorStatements` | not SOAP: the Governor's yearly veto messages and signing statements PDF, imported by `scripts/import_governor_statements.py` into `assets/data/ga-governor-statements.json` | `[{kind: veto/signing, number, year, text, sourceUrl}]`, word for word; the import refuses unless every veto matches a vetoed bill and every vetoed bill has a message. Also sets `governorAction.vetoNumber` |
-| `governorAction` | `StatusHistory` + `ActVetoNumber` | `{status: Signed / Vetoed / Sent to Governor, sentDate, decisionDate, actNumber}` |
+| `governorAction` | `StatusHistory` + `ActVetoNumber` | `{status: Signed / Vetoed / Sent to Governor, sentDate, decisionDate, actNumber, vetoNumber}` |
 | `secondChamberSponsor` | `Sponsor` | the other chamber's carrier, kept out of `sponsors[]` |
 | `passageVotes[]` | the bill's `Votes`, filtered by `lib/ga_passage.native_is_passage` | plus `time` (HH:MM, from `Date`), which orders same-day votes. A vote attached from a listing's text (3.1, "Unlinked roll calls") carries `linkedBy: "listing"` |
 
 Published to `Votega/ga-legislation` by `scripts/publish_ga_bills.py`: each session's
 `bills.json` carries every field above and its own `metadata.legislativeCalendar`;
-`bills.schema.json` (schemaVersion 1.1.0, `$id` = its own path) describes them, none
+`bills.schema.json` (schemaVersion 1.3.0, `$id` = its own path) describes them, none
 `required`; `bills.csv` appends `legislationType`, `stage` (the label), `houseCommittee`,
 `senateCommittee`.
 

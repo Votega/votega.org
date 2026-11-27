@@ -26,7 +26,9 @@ OTHER = {"lower": "upper", "upper": "lower"}
 REFERRED = {"HFR", "HSR", "SRAR"}
 REPORTED = {"HCFR", "SCFR"}
 PASSED = {"HPA", "SPA", "SRECP", "HRA", "SRA"}
-LOST = {"HTRL", "S3RLT"}
+LOST = {"HTRL", "S3RLT", "HRECL"}          # HRECL: lost again on reconsideration
+RECONSIDERED = {"HRECO", "SRECO"}            # the vote is undone; the bill is back on the floor
+POSTPONED = {"HPOST"}
 RECOMMITTED = {"HRECM", "SR"}
 TABLED, UNTABLED = {"STAB"}, {"STT"}
 AGREED = {"HASAS", "SAHAS", "HCA", "SCRA"}
@@ -75,8 +77,12 @@ def session_over(bills, now, biennium_end_year=None):
 
 
 def _walk(history):
-    """Per chamber: {referred, reported, passed, lost, tabled} dates (or None), in order."""
-    st = {c: dict.fromkeys(("referred", "reported", "passed", "lost", "tabled")) for c in OTHER}
+    """Per chamber: {referred, reported, passed, lost, tabled, postponed, reconsidered,
+    recommitted} dates (or None), in order. `reconsidered` is the day a LOSS was undone
+    (HRECO/SRECO after HTRL/S3RLT): the bill is back awaiting a vote, not lost."""
+    keys = ("referred", "reported", "passed", "lost", "tabled", "postponed", "reconsidered",
+            "recommitted", "lostOn")
+    st = {c: dict.fromkeys(keys) for c in OTHER}
     agreed = sent = None
     for date, code, *_ in history:
         c = _chamber_of(code)
@@ -93,10 +99,19 @@ def _walk(history):
             s["reported"] = date
         elif code in RECOMMITTED and not s["passed"]:
             s["reported"] = None                     # back in committee
+            s["recommitted"] = date
+            s["postponed"] = s["reconsidered"] = None
         elif code in PASSED:
             s["passed"], s["lost"], s["tabled"] = date, None, None
         elif code in LOST and not s["passed"]:
-            s["lost"] = date
+            s["lost"] = s["lostOn"] = date
+            s["reconsidered"] = None
+        elif code in RECONSIDERED and s["lost"] and not s["passed"]:
+            s["lost"], s["reconsidered"] = None, date
+        elif code in POSTPONED and not s["passed"]:
+            s["postponed"] = date
+        elif code in ("HTR", "STR"):
+            s["postponed"] = None                    # read the third time: taken up again
         elif code in TABLED and not s["passed"]:
             s["tabled"] = date
         elif code in UNTABLED:
@@ -123,6 +138,17 @@ def _committee(bill, chamber):
         if c.get("chamber") == chamber and c.get("name"):
             return c["name"]
     return None
+
+
+def _chair(bill, chamber):
+    """'Chair: Sen. Randal Mangham (D)' from committees[].chair, or ''."""
+    for c in bill.get("committees") or []:
+        ch = c.get("chair") if c.get("chamber") == chamber else None
+        if ch and ch.get("name"):
+            party = (ch.get("party") or "")[:1]
+            return "Chair: %s %s%s" % ("Rep." if chamber == "lower" else "Sen.", ch["name"],
+                                       " (%s)" % party if party else "")
+    return ""
 
 
 def bill_stage(bill, over):
@@ -155,6 +181,8 @@ def bill_stage(bill, over):
         if s["reported"] or s["passed"]:
             detail = ("Reported %s" % _day(s["reported"])) if s["reported"] else ""
             steps.append(["done", name, detail])
+        elif s["recommitted"]:
+            steps.append(["current", name, "Recommitted %s" % _day(s["recommitted"])])
         else:
             detail = ("Referred %s" % _day(s["referred"])) if s["referred"] else ""
             steps.append(["current", name, detail])
@@ -166,6 +194,13 @@ def bill_stage(bill, over):
             steps.append(["stopped", ("Lost %s" % tally) if tally else "Lost", _day(s["lost"])])
         elif s["tabled"]:
             steps.append(["stopped", "Tabled", _day(s["tabled"])])
+        elif s["reconsidered"]:
+            tally = _floor_tally(bill, c, "fail", s["lostOn"])
+            steps.append(["current", "Awaiting %s vote" % word,
+                          "Lost %s%s · reconsidered %s" % (("%s " % tally) if tally else "",
+                                                           _day(s["lostOn"]), _day(s["reconsidered"]))])
+        elif s["postponed"]:
+            steps.append(["current", "Postponed", _day(s["postponed"])])
         elif s["reported"]:
             steps.append(["current", "Awaiting %s vote" % word, ""])
         else:
@@ -212,6 +247,8 @@ def bill_stage(bill, over):
             steps[at][1] = "No vote"
         if at in (0, 2) and steps[at][2].startswith("Referred"):
             steps[at][2] += " · never reported"
+        elif at in (0, 2) and steps[at][2].startswith("Recommitted"):
+            steps[at][2] += " · not reported again"
 
     kind, label = _label(bill, steps, at, origin, other, status)
     return {"kind": kind, "label": label, "path": "full", "steps": steps}
@@ -240,7 +277,10 @@ def _label(bill, steps, at, origin, other, status):
             return "lost", lead + "Lost on the %s floor" % word
         if state == "stopped":
             return "died-floor", lead + ("Tabled in the %s" % word if headline == "Tabled"
+                                         else "Postponed in the %s" % word if headline == "Postponed"
                                          else "Died awaiting a %s vote" % word)
+        if headline == "Postponed":
+            return "floor", lead + "Postponed in the %s" % word
         return "floor", lead + "Awaiting %s vote" % word
     if at == 4:
         if state == "stopped":
@@ -311,6 +351,23 @@ def _apply_governor_deadline(bill, now, calendar_days):
         stage["label"] = "Sent to Governor · must act by %s" % _day(deadline)
 
 
+def _add_chair(bill):
+    """Name the chair of the committee a bill is in, or died in: the person who decides
+    whether it gets a hearing. From committees[].chair (generate_ga_bills_soap.
+    attach_committee_chairs), the current biennium's chair."""
+    stage = bill.get("stage") or {}
+    steps = stage.get("steps") or []
+    if stage.get("path") != "full":
+        return
+    origin = bill.get("chamber") if bill.get("chamber") in OTHER else "lower"
+    for i in (0, 2):
+        if i < len(steps) and steps[i][0] in ("current", "stopped"):
+            chair = _chair(bill, origin if i == 0 else OTHER[origin])
+            if chair:
+                steps[i][2] = ("%s · %s" % (steps[i][2], chair)) if steps[i][2] else chair
+            return
+
+
 def apply_stages(bills, now, biennium_end_year=None, calendar=None):
     """Set `stage` on every bill, deciding per session whether it has adjourned.
     Returns {session: over}.
@@ -336,6 +393,7 @@ def apply_stages(bills, now, biennium_end_year=None, calendar=None):
             _apply_governor_deadline(b, now, days)
             if over[session] and last:
                 for step in b["stage"]["steps"]:
-                    if step[0] == "stopped" and step[2].endswith("never reported"):
+                    if step[0] == "stopped" and step[2].endswith(("never reported", "not reported again")):
                         step[2] += " · session ended %s" % _day(last)
+            _add_chair(b)
     return over

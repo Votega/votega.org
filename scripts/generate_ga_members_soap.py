@@ -208,6 +208,12 @@ def build_record(listing, detail, legis_session, committees, prior, rollover=Fal
     # the site already consumes. `role` is kept separately rather than folded into the
     # string, so nothing that renders the list has to parse it back out.
     coms = [c for c in (svc.get("committees") or []) if c.get("name")]
+    # A membership that ended mid-biennium stays in the record with a `dateVacated`
+    # (2026-01-13: Harbin's Government Oversight chair passed to Bearden and he moved to
+    # chair Insurance and Labor, so both rows were listed). Keep only current ones; a
+    # member whose every membership ended (a departure) keeps them as served.
+    current = [c for c in coms if not c.get("dateVacated")]
+    coms = current or coms
     committee_names = sorted({n for n in (display_committee(c["name"]) for c in coms) if n})
 
     badge, badge_note = normalize_title(svc.get("title"), listing.get("chamber"), committees)
@@ -259,7 +265,10 @@ def build_record(listing, detail, legis_session, committees, prior, rollover=Fal
         "leadershipRole":   badge,
         # Same display names as `committees` above — the two must agree, or a consumer
         # joining one to the other silently loses the aliased committee.
-        "committeeRoles":   [{"name": display_committee(c["name"]), "role": c.get("role")}
+        # `id` is legis.ga.gov's committee id, the same one a bill's `committees[].id`
+        # carries, so the bills producer joins chairs to bills on it, not on the name.
+        "committeeRoles":   [{"id": c.get("id"), "name": display_committee(c["name"]),
+                              "role": c.get("role")}
                              for c in coms],
         "termStartSession": term_session,
         "birthdayMonthDay": detail.get("birthday") or None,
