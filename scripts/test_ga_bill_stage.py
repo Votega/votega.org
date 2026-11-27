@@ -190,6 +190,68 @@ apply_stages([s2], datetime(2026, 11, 27), 2026, cal)
 check("a decided bill gets no deadline", ("governorDeadline" in s2["stage"], s2["stage"]["label"]),
       (False, "Signed · Act 5"))
 
+# --- stall reasons: postponed, reconsidered, recommitted ------------------------
+pp = bill(h(("2026-02-02", "HSR"), ("2026-02-25", "HCFR"), ("2026-03-04", "HPOST")), [WM])
+check("postponed, sitting", (bill_stage(pp, False)["label"], bill_stage(pp, False)["steps"][1]),
+      ("Postponed in the House", ["current", "Postponed", "Mar 4, 2026"]))
+check("postponed, adjourned", (bill_stage(pp, True)["kind"], bill_stage(pp, True)["label"]),
+      ("died-floor", "Postponed in the House"))
+pp_up = bill(h(("2026-02-02", "HSR"), ("2026-02-25", "HCFR"), ("2026-03-04", "HPOST"),
+               ("2026-03-05", "HTR")), [WM])
+check("third reading clears a postponement", bill_stage(pp_up, False)["label"], "Awaiting House vote")
+# HB 1446: lost 52-114, reconsidered the same day, never voted on again.
+rc = bill(h(("2026-02-02", "HSR"), ("2026-03-03", "HCFR"), ("2026-03-06", "HTR"),
+            ("2026-03-06", "HTRL"), ("2026-03-06", "HRECO")), [WM],
+          [vote("lower", "2026-03-06", 52, 114, "fail")])
+s = bill_stage(rc, True)
+check("reconsidered loss is no longer a loss", (s["kind"], s["label"]), ("died-floor", "Died awaiting a House vote"))
+check("reconsidered detail", s["steps"][1], ["stopped", "No vote", "Lost 52–114 Mar 6, 2026 · reconsidered Mar 6, 2026"])
+# HB 10EX: lost, reconsidered, lost again (HRECL) -> lost, on the second vote.
+rl = bill(h(("2026-06-18", "HSR"), ("2026-06-20", "HCFR"), ("2026-06-20", "HTRL"), ("2026-06-20", "HNOM"),
+            ("2026-06-22", "HRECO"), ("2026-06-22", "HRECL")), [WM],
+          [vote("lower", "2026-06-20", 95, 67, "fail"), vote("lower", "2026-06-22", 99, 74, "fail")])
+s = bill_stage(rl, True)
+check("lost on reconsideration", (s["kind"], s["steps"][1]), ("lost", ["stopped", "Lost 99–74", "Jun 22, 2026"]))
+rm = bill(h(("2025-01-14", "HSR"), ("2025-03-01", "HCFR"), ("2025-04-04", "HRECM")), [WM])
+check("recommitted", bill_stage(rm, False)["steps"][0], ["current", "Ways & Means", "Recommitted Apr 4, 2025"])
+check("recommitted, adjourned", bill_stage(rm, True)["steps"][0],
+      ["stopped", "Ways & Means", "Recommitted Apr 4, 2025 · not reported again"])
+
+# --- the chair of the committee the bill is in, or died in ----------------------
+chaired = dict(WM, chair={"name": "Shaw Blackmon", "legisGaGovId": 1, "party": "Republican"})
+live = dict(bill(h(("2026-01-20", "HSR")), [chaired]), session="2025_26")
+dead = dict(bill(h(("2025-01-20", "HSR")), [chaired]), session="2025_26")
+done = dict(bill(h(("2026-01-20", "HSR"), ("2026-02-01", "HCFR")), [chaired]), session="2025_26")
+apply_stages([live], datetime(2026, 2, 1), 2026, cal)
+apply_stages([dead, done], datetime(2026, 11, 27), 2026, cal)
+check("chair on a live committee step", live["stage"]["steps"][0][2], "Referred Jan 20, 2026 · Chair: Rep. Shaw Blackmon (R)")
+check("chair after the session-ended note", dead["stage"]["steps"][0][2],
+      "Referred Jan 20, 2025 · never reported · session ended Apr 2, 2026 · Chair: Rep. Shaw Blackmon (R)")
+check("no chair once reported", "Chair:" in done["stage"]["steps"][0][2], False)
+
+# --- attach_committee_chairs: joined on the id, this biennium only --------------
+import json as _json  # noqa: E402
+import tempfile as _tf  # noqa: E402
+with _tf.TemporaryDirectory() as td:
+    roster = {"metadata": {"session": "2025_26"}, "members": [
+        {"name": "A", "legisGaGovId": 1, "party": "Republican", "chamber": "House of Representatives",
+         "committeeRoles": [{"id": 101, "name": "Ways & Means", "role": "Chairman"}]},
+        {"name": "B", "legisGaGovId": 2, "party": "Democratic", "chamber": "Senate",
+         "committeeRoles": [{"id": 138, "name": "Finance", "role": "Vice Chairman"}]},
+        {"name": "C", "legisGaGovId": 3, "party": "Republican", "chamber": "Senate", "status": "Resigned",
+         "committeeRoles": [{"id": 138, "name": "Finance", "role": "Chairman"}]}]}
+    rp = os.path.join(td, "m.json")
+    _json.dump(roster, open(rp, "w"))
+    bs = [dict(bill([], [dict(WM), dict(FIN)]), session="2025_26"),
+          dict(bill([], [dict(WM)]), session="2026_ss"),
+          dict(bill([], [dict(WM, chair={"name": "stale"})]), session="2023_24")]
+    check("chairs attached", G.attach_committee_chairs(bs, rp), 2)
+    check("House chair by id", bs[0]["committees"][0].get("chair"),
+          {"name": "A", "legisGaGovId": 1, "party": "Republican"})
+    check("a departed chair is not shown", "chair" in bs[0]["committees"][1], False)
+    check("special session of the biennium", bs[1]["committees"][0]["chair"]["name"], "A")
+    check("another biennium gets none (stale removed)", "chair" in bs[2]["committees"][0], False)
+
 if failures:
     print("FAIL (%d):" % len(failures))
     for f in failures:

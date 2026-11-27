@@ -39,7 +39,7 @@ CHAMBER_LABEL = {"lower": "House", "upper": "Senate"}
 
 RAW_BASE = "https://raw.githubusercontent.com/Votega/ga-legislation/main"
 #: Bumped on a change a consumer must act on; adding optional properties is a minor bump.
-SCHEMA_VERSION = "1.2.0"
+SCHEMA_VERSION = "1.3.0"
 SCHEMA_STABILITY = (
     "Stable field names and meanings. 1.1.0 describes fields added in 2026-11, all "
     "optional and absent from files published before then: legislationType, footnotes, "
@@ -51,7 +51,10 @@ SCHEMA_STABILITY = (
     "between publisher runs from the 2027 session on; it is empty before then. 1.2.0 "
     "adds governorStatements (the Governor's veto message or signing statement, word "
     "for word, from the Governor's published documents) and governorAction.vetoNumber, "
-    "both optional.")
+    "both optional. 1.3.0 adds committees[].chair (the committee's chair in the current "
+    "biennium, joined on the committee id; optional, absent on bills of other bienniums) "
+    "and new stage readings: Postponed, a loss undone by reconsideration (no longer "
+    "'lost'), and Recommitted.")
 
 
 def schema_url(path):
@@ -173,7 +176,13 @@ def bills_md(doc):
 _COMMITTEE = {"type": "object", "properties": {
     "chamber": {"type": "string", "enum": ["lower", "upper"]},
     "id": {"type": "integer", "description": "legis.ga.gov committee id (GetCommitteesBySession)."},
-    "code": {"type": ["string", "null"]}, "name": {"type": ["string", "null"]}}}
+    "code": {"type": ["string", "null"]}, "name": {"type": ["string", "null"]},
+    "chair": {"type": "object", "description": "The committee's chair in the current "
+              "biennium (legis.ga.gov member records, joined on the committee id). Absent "
+              "when no sitting member chairs it, and on bills of other bienniums.",
+              "properties": {"name": {"type": "string"},
+                             "legisGaGovId": {"type": "integer"},
+                             "party": {"type": ["string", "null"]}}}}}
 
 
 def schema(path=None):
