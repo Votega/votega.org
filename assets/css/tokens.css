@@ -133,6 +133,13 @@
   --color-party-vacant-tint: var(--gray-vacant-tint);
   --color-party-vacant-text: var(--gray-vacant-text);
 
+  /* Elevation. card: hover lift; raised: an enlarged chart mark; popover: tooltips;
+     focus-glow: the halo on the search field over its dark overlay. */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-raised: 0 2px 8px rgba(0, 0, 0, 0.18);
+  --shadow-popover: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-focus-glow: 0 0.15rem 1rem var(--clay-50);
+
   /* Type */
   --font-sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Consolas, 'Liberation Mono', monospace;
