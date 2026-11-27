@@ -327,6 +327,27 @@ def _second_chamber_sponsor(detail, roster):
     return {"name": name or None, "legisGaGovId": mid, "chamber": SECOND_CHAMBER[kind]}
 
 
+
+def _committees(detail):
+    """[{chamber, id, code, name}] for the committee holding the bill in each chamber.
+
+    legis.ga.gov keeps ONE committee per chamber and overwrites it when the bill moves:
+    HB 520 shows Health after its 2025-02-27 "Move from P&CH to Hth", and HB 1066 shows
+    Governmental Affairs after it was recommitted. So this is the CURRENT committee, not
+    the original referral, which the status history does not name either. Ids are those
+    of GetCommitteesBySession (docs/ga-soap-data-dictionary.md 2.2)."""
+    out = []
+    for c in detail.findall("d:Committees/d:CommitteeListing", ns):
+        kind = (_text(c, "Type") or "").strip()
+        cid = _text(c, "Id", int)
+        if kind not in ("House", "Senate") or cid is None:
+            continue
+        out.append({"chamber": _chamber(None, kind), "id": cid,
+                    "code": (_text(c, "Code") or "").strip() or None,
+                    "name": (_text(c, "Name") or "").strip() or None})
+    out.sort(key=lambda c: c["chamber"])           # lower (House) first
+    return out
+
 def _clean_member_desc(desc):
     """'Cannon, Chas 172nd' -> 'Chas Cannon'. Falls back to the raw string."""
     m = re.match(r"\s*([^,]+),\s*(.*?)\s*\d+\w*\s*$", desc or "")
@@ -527,6 +548,8 @@ def map_bill(detail, our_session, roster, titles_map):
         "subjects":    subjects,
         "sponsors":    _sponsors(detail, roster),
         "secondChamberSponsor": _second_chamber_sponsor(detail, roster),
+        # The committee holding the bill in each chamber now (see _committees).
+        "committees":  _committees(detail),
         "billUrl":     "https://www.legis.ga.gov/legislation/%s" % lid,
         "textUrl":     (_text(latest, "Url") or "") if latest is not None else "",
         "passageVotes": _passage_votes(
