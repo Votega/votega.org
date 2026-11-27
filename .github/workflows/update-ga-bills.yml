@@ -1,4 +1,4 @@
-name: Update Georgia legislative bill data (weekly, Sun 07:30 UTC)
+name: Update Georgia legislative bill data (daily Jan-Apr 05:30 UTC, weekly Sun 07:30 otherwise)
 
 permissions:
   contents: write
@@ -12,10 +12,16 @@ on:
         type: boolean
         default: false
   schedule:
-    # Weekly on Sundays at 07:30 UTC. update-ga-votes.yml runs MONDAY 07:30 and
-    # re-enriches ga-bills.json with that day's vote data, so the party tallies written
-    # by the enrichment step below are always one cycle behind until that Monday run.
-    - cron: '30 7 * * 0'
+    # Daily January through April, while the General Assembly sits: legis.ga.gov
+    # overwrites a bill's committee when it moves, so committeeHistory only sees a move
+    # that happens between two runs (docs/ga-soap-data-dictionary.md, section 6). 05:30
+    # leaves the incremental run time to finish before update-ga-votes.yml (Mon 07:30),
+    # which also writes ga-bills.json.
+    - cron: '30 5 * 1-4 *'
+    # Weekly on Sundays at 07:30 UTC the rest of the year. update-ga-votes.yml runs
+    # MONDAY 07:30 and re-enriches ga-bills.json with that day's vote data, so the party
+    # tallies written by the enrichment step below lag until that Monday run.
+    - cron: '30 7 * 5-12 0'
 
 concurrency:
   group: update-ga-bills

@@ -1455,7 +1455,7 @@ breadcrumb:
     const coverageNote = withVotes && withParty < withVotes
       ? ' Party-line tags and Democrat/Republican vote tallies are still being backfilled. Available for ' + withParty.toLocaleString() + ' of ' + withVotes.toLocaleString() + ' bills with recorded votes, so some party-line votes may not yet be flagged.'
       : '';
-    return 'Data from the Georgia General Assembly (legis.ga.gov), refreshed weekly. Last data pull generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) + (window.VotegaFreshness ? window.VotegaFreshness.suffix('ga-bills', meta.generatedAt) : '') : '') + '. Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote)
+    return 'Data from the Georgia General Assembly (legis.ga.gov), refreshed daily during the session (January–April) and weekly otherwise. Last data pull generated ' + (meta.generatedAt ? escHtml(meta.generatedAt.slice(0, 10)) + (window.VotegaFreshness ? window.VotegaFreshness.suffix('ga-bills', meta.generatedAt) : '') : '') + '. Statuses below reflect this snapshot and may lag the legislature by a few days.' + escHtml(coverageNote)
       // Published as open data (JSON/CSV/schema) in the ga-legislation repo —
       // the stable home, not the internal asset this page fetches. See CLAUDE.md.
       + open;

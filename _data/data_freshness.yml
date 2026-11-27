@@ -24,7 +24,7 @@ datasets:
   curated-ga-bill-votes:     { window_days: 6,  cadence: "Tue/Thu" }
   local-government:          { window_days: 5,  cadence: "Mon/Thu 08:40 UTC", note: "per-place meetings files; bot_protected places count as stale at once" }
   # --- Weekly ---
-  ga-bills:                  { window_days: 10, cadence: "weekly (Sun)" }
+  ga-bills:                  { window_days: 10, cadence: "daily Jan–Apr, weekly (Sun) otherwise" }
   ga-member-votes:           { window_days: 10, cadence: "weekly (Mon)" }
   federal-member-votes:      { window_days: 10, cadence: "weekly (Sun)" }
   ga-campaign-finance:       { window_days: 10, cadence: "weekly (Sun)",      note: "PeachFile" }
