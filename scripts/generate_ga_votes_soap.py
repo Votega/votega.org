@@ -100,7 +100,8 @@ from collections import Counter
 from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic
-from lib.ga_passage import classify, load_os_passage_index, normalize_bill
+from lib.ga_passage import (classify, load_os_passage_index, normalize_bill,
+                             resolve_listing_bills)
 from lib.ga_vote_results import amendment_ids_from_soap, rederive_votes, two_thirds_candidate_ids
 from lib.ga_vote_rules import STORED_ABSTRACT_MAX, requires_two_thirds, vote_passed
 from lib.ga_sessions import (ACTIVE_SESSION, ARCHIVE_SESSIONS, BIENNIUM, all_session_ids,
@@ -136,6 +137,29 @@ def derive_result(yea, nay, chamber=None, constitutional_amendment=False, motion
     if passed is None:
         return None
     return "Pass" if passed else "Fail"
+
+
+class BillIndex(dict):
+    """{(session, identifier): legislationId}, plus `titles` {legislationId: title}."""
+    titles = None
+
+
+def load_bill_index(bills_file):
+    """The committed ga-bills.json as a BillIndex, for roll calls that link no bill
+    (lib/ga_passage.resolve_listing_bills). Empty if the file cannot be read."""
+    idx = BillIndex()
+    idx.titles = {}
+    try:
+        with open(bills_file, encoding="utf-8") as f:
+            bills = json.load(f).get("bills", [])
+    except (OSError, ValueError):
+        return idx
+    for b in bills:
+        lid = b.get("legislationId")
+        if lid is not None and b.get("session") and b.get("identifier"):
+            idx[(b["session"], b["identifier"])] = lid
+            idx.titles[lid] = b.get("title") or ""
+    return idx
 
 
 def load_amendment_ids(bills_file):
@@ -203,12 +227,13 @@ def roll_call_anomaly(rows, yea, nay, branch):
 
 def build_session(our_session, by_legis_id, os_index, title_index,
                   chambers=CHAMBERS, sample=None, verbose=True, amendment_ids=frozenset(),
-                  skip_anomalous=False):
+                  skip_anomalous=False, bill_index=None):
     """Fetch one session's roll calls across `chambers`, keep PASSAGE votes (overlay-
     primary), resolve members by id ONLY, and explode each roll call into one record
     per bundled bill. Returns (votes_meta, member_votes, stats)."""
     legis_session = legis_session_id(our_session)
     votes_meta, member_votes = {}, {}
+    bill_titles = getattr(bill_index, "titles", None)
     seen = set()
     stats = Counter()
     unresolved_members = Counter()
@@ -240,6 +265,13 @@ def build_session(our_session, by_legis_id, os_index, title_index,
                 stats["faults"] += 1
                 continue
             caption, date10, legn, rows = detail
+            if not any(e["legislationId"] is not None for e in legn) and bill_index:
+                # GetVote linked no bill: fall back to the listing's own text.
+                legn = [{"legislationId": lid, "description": ident, "session": bill_session}
+                        for ident, bill_session, lid in resolve_listing_bills(
+                            lst.get("legislation"), our_session, bill_index)]
+                if legn:
+                    stats["linkedFromListing"] += 1
 
             bundled = [l["description"] for l in legn if l["description"]]
             is_passage, _result, source = classify(caption, bundled, date10, os_index)
@@ -305,8 +337,13 @@ def build_session(our_session, by_legis_id, os_index, title_index,
                 votes_meta[key] = {
                     "bill": bill,
                     "billUrl": ("https://www.legis.ga.gov/legislation/%d" % lid),
-                    "title": title_index.get(lid, ""),
+                    "title": title_index.get(lid, "") or (bill_titles or {}).get(lid, ""),
                     "session": our_session,
+                    # The bill's own session when the roll call was held in another
+                    # (2026 SS's veto override on the 2025-26 HB 1192), so its text link
+                    # and bill page resolve against the right session.
+                    **({"billSession": entry["session"]}
+                       if entry.get("session") and entry["session"] != our_session else {}),
                     "motionText": caption,
                     # The chamber that actually held this roll call, straight from the
                     # GetVotes(Branch, ...) call that produced the listing. Readers used to
@@ -584,6 +621,7 @@ def main():
     print("Loaded crosswalk: %d legisGaGovId joins (id-only resolution)" % len(by_legis_id))
 
     amendment_ids = load_amendment_ids(BILLS_FILE)
+    bill_index = load_bill_index(BILLS_FILE)
     print("Two-thirds bills/resolutions (constitutional amendments, tax exemptions): %d" % len(amendment_ids))
 
     # Closed sessions are carried forward, not re-fetched, but their results are
@@ -622,7 +660,7 @@ def main():
 
         vm, mv, stats = build_session(our_session, by_legis_id, os_index, title_index,
                                       chambers=chambers, sample=sample,
-                                      amendment_ids=amendment_ids)
+                                      amendment_ids=amendment_ids, bill_index=bill_index)
         votes_meta.update(vm)
         for ocd, entries in mv.items():
             member_votes.setdefault(ocd, []).extend(entries)
