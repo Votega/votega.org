@@ -7,6 +7,20 @@ import { need, type Loader } from "../data";
 import type { BillCatalog, BillDetail, BillRow, BillSession, BillShard, BillTokens, Member, Meta, MembersIndex } from "../types";
 import { asOf, fail, GA_PASS_RULE, ok, SITE, tokens, type ToolResult } from "../util";
 
+// The stage's steps named by position, as the bills page names them.
+function stageOut(row: { identifier: string }, stage: NonNullable<BillDetail["bills"][string]["stage"]>) {
+  const origin = /^S/.test(row.identifier) ? "Senate" : "House";
+  const other = origin === "House" ? "Senate" : "House";
+  const names = stage.path === "short"
+    ? ["Filed", "Adoption"]
+    : [`${origin} committee`, `${origin} floor`, `${other} committee`, `${other} floor`, "Final version", "Governor"];
+  return {
+    kind: stage.kind,
+    label: stage.label,
+    steps: stage.steps.map(([state, headline, detail], i) => ({ stage: names[i], state, headline, detail: detail || undefined })),
+  };
+}
+
 export const DEFAULT_LIMIT = 10;
 export const MAX_LIMIT = 25;
 
@@ -241,7 +255,8 @@ export async function getBill(
   return ok({
     summary:
       `${row.identifier} (${session.session}): ${row.title ?? "untitled"}. ` +
-      `Status: ${row.status ?? "unknown"}${row.statusDate ? ` (${row.statusDate.slice(0, 10)})` : ""}.`,
+      `Status: ${row.status ?? "unknown"}${row.statusDate ? ` (${row.statusDate.slice(0, 10)})` : ""}.` +
+      (detail.stage?.label ? ` Where it is: ${detail.stage.label}.` : ""),
     bill: {
       session: session.session,
       identifier: row.identifier,
@@ -258,6 +273,8 @@ export async function getBill(
         : {}),
       passage_votes: detail.passageVotes,
       governor_action: detail.governorAction,
+      ...(detail.stage ? { stage: stageOut(row, detail.stage) } : {}),
+      ...(detail.committees?.length ? { committees: detail.committees } : {}),
       billUrl: detail.billUrl,
       textUrl: detail.textUrl,
       votegaUrl: page,

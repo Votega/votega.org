@@ -151,7 +151,10 @@ def build_bills(bill_docs, generated_at):
                     "billUrl": b.get("billUrl"), "textUrl": b.get("textUrl"),
                     "commonsUrl": commons_url(session, b["identifier"]),
                     "passageVotes": b.get("passageVotes") or [],
-                    "governorAction": b.get("governorAction")})
+                    "governorAction": b.get("governorAction"),
+                    # Where the bill is (lib/ga_bill_stage.py): {kind, label, path, steps}.
+                    "stage": b.get("stage"),
+                    "committees": b.get("committees") or None})
             path = f"bills/{session}-{kind}.json"
             detail_path = f"bills/{session}-{kind}-detail.json"
             meta = {"generatedAt": generated_at, "count": len(rows), "session": session, "type": kind,

@@ -107,4 +107,5 @@ Full annotated tree: `docs/project-structure.md`. Run `git ls-files` for the cur
 | Sibling-repo publishing, schemas, licenses, open-data catalog, federal freeze | `docs/conventions-publishing.md` |
 | Portraits, per-dataset provenance, stale stamps | `docs/conventions-general.md` |
 | Site size, page weight, GitHub limits, the inline-script REVISIT item | `docs/scaling-and-limits.md` |
+| legis.ga.gov SOAP fields, enums, status codes, caption shapes, and the fields our GA bills/votes producers derive from them | `docs/ga-soap-data-dictionary.md` |
 | Manual per-cycle work | `docs/RECURRING-TASKS.md` |
