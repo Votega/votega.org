@@ -268,7 +268,13 @@ jobs:
       - name: Publish ga-local-government open-data
         env:
           GA_LOCAL_GOVERNMENT_TOKEN: ${{ secrets.GA_LOCAL_GOVERNMENT_TOKEN }}
-        run: python scripts/publish_ga_local_government.py
+          GH_TOKEN: ${{ github.token }}
+        # The school-district files are stamped with the date their source last
+        # changed. This checkout is shallow, so ask the API for it.
+        run: |
+          SCHOOL_DISTRICTS_UPDATED_AT="$(gh api "repos/$GITHUB_REPOSITORY/commits?sha=$GITHUB_REF_NAME&path=_data/school_districts.yml&per_page=1" --jq '.[0].commit.committer.date')"
+          export SCHOOL_DISTRICTS_UPDATED_AT
+          python scripts/publish_ga_local_government.py
 
       # Everything above ran and the good data is committed; now surface any
       # validation or enrichment failure as a job failure, so

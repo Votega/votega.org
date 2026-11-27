@@ -32,8 +32,10 @@ work happened. This block is the resume point.
 1. **Board rosters** — the renderer is in place and gated, so every district the
    owner confirms turns on by itself. Drafter output in `draft_school_boards.py`
    is the starting point; nothing displays until `members:` lands.
-2. **Publish the district registry** to `ga-local-government` (decision 2:
-   registry lives in this repo, machine-readable copy published).
+2. **District registry publish: BUILT (2026-11-27).**
+   `publish_ga_local_government.py` writes `data/school-districts/` (decision 2).
+   Add the `_data/open_data.yml` entry after the first publish run. Rosters are
+   not included.
 3. **`/local/<slug>/taxes/` URL split** — owner liked the idea; capacity is a
    non-issue (~4 MB for 68 pages). Property tax is 78% of a place page's content
    and has the highest search intent, so it is competing with officials for the

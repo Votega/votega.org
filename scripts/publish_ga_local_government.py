@@ -26,6 +26,11 @@ Artifacts published:
                                  every member row, one per person per term, no contact;
                                  history is NOT backfilled (see lib/local_officials_export)
   data/officials/manifest.json   the officials dataset's own manifest
+  data/school-districts/districts{.json,.csv,.schema.json}
+                                 every Georgia school district, from
+                                 _data/school_districts.yml; no board members
+                                 (see lib/school_districts_export)
+  data/school-districts/manifest.json  that dataset's own manifest
 
 EXCERPT POLICY (deliberate): a per-mention quoted excerpt is published ONLY when the
 mention's `context` is "agenda-action" — i.e. the topic surfaced as government
@@ -60,6 +65,7 @@ from lib.sibling_publish import (add_dataset_manifest, build_json,  # noqa: E402
                                  publish_or_dry_run)
 from lib import meeting_topics as mt  # noqa: E402
 from lib import local_officials_export as lo  # noqa: E402
+from lib import school_districts_export as sd  # noqa: E402
 from lib import mention_outcomes as mo  # noqa: E402
 
 REPO = "Votega/ga-local-government"
@@ -71,10 +77,13 @@ DATASET = "agenda-mentions"
 # can only resolve a constant written in this file. The assert keeps the two in step.
 OFFICIALS_DATASET = "officials"
 assert OFFICIALS_DATASET == lo.DATASET, (OFFICIALS_DATASET, lo.DATASET)
+DISTRICTS_DATASET = "school-districts"
+assert DISTRICTS_DATASET == sd.DATASET, (DISTRICTS_DATASET, sd.DATASET)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PLACES_YML = os.path.join(ROOT, "_data", "places.yml")
 OFFICIALS_YML = os.path.join(ROOT, "_data", "local_officials.yml")
+DISTRICTS_YML = os.path.join(ROOT, "_data", "school_districts.yml")
 DATA_DIR = os.path.join(ROOT, "assets", "data")
 
 TOPICS = ["alpr", "data-center", "land-use", "local-taxes"]
@@ -97,6 +106,11 @@ def load_places():
 def load_officials():
     with open(OFFICIALS_YML, encoding="utf-8") as fh:
         return (yaml.safe_load(fh) or {}).get("jurisdictions", [])
+
+
+def load_school_districts():
+    with open(DISTRICTS_YML, encoding="utf-8") as fh:
+        return yaml.safe_load(fh) or {}
 
 
 VOTES_INDEX = os.path.join(ROOT, "_data", "local_votes.json")
@@ -471,6 +485,8 @@ def main():
         # only as fresh as the enrichment run that produced them.
         generated_at=max((feeds[t]["metadata"].get("generatedAt") or ""
                           for t in TOPICS), default="") or now,
+        source=("the published agendas and minutes of Georgia county and "
+                "municipal governments"),
         update_cadence="Twice weekly (Mondays and Thursdays).",
         schema_version=SCHEMA_VERSION,
         row_count=len(all_mentions),
@@ -526,8 +542,40 @@ def main():
         ],
     )
 
+    # School districts: the registry only. Stamped with the date the registry
+    # file last changed, not this job's clock. See lib/school_districts_export.py.
+    updated_at = sd.source_updated_at("_data/school_districts.yml")
+    sd_artifacts, districts = sd.build_district_artifacts(
+        load_school_districts(), places, updated_at)
+    artifacts.update(sd_artifacts)
+    sd_paths = districts["paths"]
+    add_dataset_manifest(
+        artifacts, REPO, DISTRICTS_DATASET,
+        title="Georgia school districts",
+        description=("Every Georgia county and independent city school "
+                     "district, keyed by the state district code, with the "
+                     "counties it serves. Board facts are null where not yet "
+                     "recorded; board members are not included."),
+        generated_at=updated_at,
+        source=("Georgia Civic Data districts dimension (georgiacivicdata.org, "
+                "CC BY 4.0; GOSA district codes and the NCES Common Core of "
+                "Data), with service counties checked against Georgia "
+                "Department of Revenue millage reports and board facts "
+                "recorded by a person"),
+        update_cadence="Checked twice weekly; changes only when the registry does.",
+        schema_version=sd.SCHEMA_VERSION,
+        row_count=districts["count"],
+        files=[
+            {"path": sd_paths["districts.json"], "description": "Every school district."},
+            {"path": sd_paths["districts.csv"], "description": "The same, as a spreadsheet."},
+            {"path": sd_paths["districts.schema.json"], "description": "JSON Schema for one district."},
+        ],
+    )
+
     def _validate(arts):
         min_items("data/places.json", "places")(arts)
+        # One county system per county, at the least.
+        min_items(sd_paths["districts.json"], "districts", minimum=159)(arts)
         min_items(paths["officials.json"], "officials", minimum=100)(arts)
         min_items(paths["officials-history.json"], "officials", minimum=100)(arts)
 
