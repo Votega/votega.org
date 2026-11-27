@@ -3,16 +3,16 @@
 Moved out of `CLAUDE.md` (verbatim, no edits) so the always-loaded file stays short. `CLAUDE.md` points here.
 
 
-This map shows categories and representative examples, not an exhaustive file list — run `ls` / `Glob` for the current full set. As of 2026-08, the repo has ~35 top-level HTML pages, ~43 tracked scripts (incl. `scripts/lib/`), and 28 GitHub Actions workflows. (Counts drift — `git ls-files` is the source of truth.)
+This map shows categories and representative examples, not an exhaustive file list — run `ls` / `Glob` for the current full set. It keeps no file counts, because they drift: `git ls-files` is the source of truth.
 
 ```
 votega.org/
 ├── _config.yml                          # Jekyll + Beautiful Jekyll theme config
 ├── CLAUDE.md                            # This file
-├── README.md / CHANGELOG.md / LICENSE
+├── README.md / LICENSE
 ├── Gemfile / Gemfile.lock               # Ruby dependencies
 │
-├── 📄 Pages (HTML/Markdown, ~26 top-level)
+├── 📄 Pages (HTML/Markdown, top-level)
 │   ├── index.html, about.md, 404.html, tags.html, about-the-data.md
 │   ├── Federal: my-representatives.html, member.html, federal-reps.html, find-my-reps.html
 │   ├── GA Legislature: ga-state-reps.html, ga-member.html,
@@ -65,7 +65,7 @@ votega.org/
 │   ├── img/                             # Images (logo.png, avatar-icon.png, bgimage.png, etc.)
 │   └── docs/                            # PDFs (flock_safety_covington_pd_contract.pdf)
 │
-├── scripts/                             # Build-time data generation (run by GitHub Actions), ~43 tracked
+├── scripts/                             # Build-time data generation (run by GitHub Actions)
 │   ├── generate_current_members_data.py # Congress.gov API → assets/data/current-members.json
 │   │                                     # + federal-sponsorship-index.json & federal-sponsorship/
 │   │                                     # (GA delegation's complete sponsored + cosponsored
@@ -99,7 +99,7 @@ votega.org/
 │   ├── inspect_ga_bill_votes.py / inspect_openstates_fields.py  # diagnostics, each backed by its own workflow
 │   └── (one-off/local-machine scripts — e.g. debug_*.py, watch_downloads.py — are gitignored, not tracked)
 │
-├── .github/workflows/                   # 28 workflows: deploy, per-dataset daily/scheduled updates
+├── .github/workflows/                   # deploy, per-dataset daily/scheduled updates
 │   │                                     # (update-*.yml), and publish-*-to-<sibling-repo>.yml syncs
 │   ├── deploy-pages.yml
 │   ├── update-current-members.yml       # Daily: runs generate_current_members_data.py, commits JSON
