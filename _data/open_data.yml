@@ -288,6 +288,28 @@ datasets:
     docs: /about-the-data#local-government-counties--cities
     contribute: https://github.com/Votega/ga-local-government/issues
 
+  - id: ga-school-districts
+    title: Georgia School Districts
+    hosting: repo
+    summary: >
+      Every Georgia public school district: 159 county systems and 21 independent
+      city systems, keyed by the state's own district code, with the counties each
+      system serves and, where recorded, board size, term length, whether board
+      races are partisan, and the official website. The county list is not a
+      boundary and does not say which district serves an address. Board members
+      are not included.
+    source: Georgia Civic Data (GOSA and NCES district codes), checked against Georgia Department of Revenue millage reports
+    scope: All 180 Georgia school districts
+    cadence: Changes by hand; republished twice weekly
+    repo_url: https://github.com/Votega/ga-local-government
+    files:
+      - { name: "data/school-districts/manifest.json", desc: "Start here: files and row counts", url: "https://github.com/Votega/ga-local-government/blob/main/data/school-districts/manifest.json" }
+      - { name: "data/school-districts/districts.json", desc: "One row per school district", url: "https://github.com/Votega/ga-local-government/blob/main/data/school-districts/districts.json" }
+      - { name: "data/school-districts/districts.csv", desc: "Same, flat for spreadsheets", url: "https://github.com/Votega/ga-local-government/blob/main/data/school-districts/districts.csv" }
+      - { name: "data/school-districts/districts.schema.json", desc: "JSON Schema for a district row", url: "https://github.com/Votega/ga-local-government/blob/main/data/school-districts/districts.schema.json" }
+    docs: /about-the-data#local-government-counties--cities
+    contribute: https://github.com/Votega/ga-local-government/issues
+
   - id: ga-district-information
     title: Georgia District Crosswalks (ZIP, County, Tract)
     hosting: repo
