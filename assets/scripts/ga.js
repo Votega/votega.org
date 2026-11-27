@@ -51,10 +51,6 @@ function partyAbbrev(party) {
   return party[0].toUpperCase();
 }
 
-function getBasePath() {
-  return '/';
-}
-
 // Canvas cannot take var(--token) as a fillStyle, so resolve the token to its computed color.
 function tokenColor(v) {
   var m = /^var\((--[^)]+)\)$/.exec(v);

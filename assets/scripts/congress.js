@@ -13,11 +13,6 @@ function formatMemberName(m) {
     : (honorific ? `${honorific} ${fallback}` : fallback);
 }
 
-// Site is served at the domain root (www.votega.org), so the base path is '/'.
-function getBasePath() {
-  return '/';
-}
-
 function partyAbbrev(partyName) {
   if (!partyName) return '';
   const p = partyName.toLowerCase();

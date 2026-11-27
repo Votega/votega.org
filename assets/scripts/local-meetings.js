@@ -23,9 +23,6 @@
 (function (global) {
   'use strict';
 
-  function getBasePath() {
-    return '/';
-  }
   function esc(v) { return global.VoteGA.escapeHtml(v); }
   function bodySlug(name) {
     return (name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');

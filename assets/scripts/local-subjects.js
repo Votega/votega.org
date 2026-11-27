@@ -9,9 +9,6 @@
 (function (global) {
   'use strict';
 
-  function getBasePath() {
-    return '/';
-  }
   function esc(v) { return global.VoteGA.escapeHtml(v); }
 
   // Strip the leading "Commission District(s): …" boilerplate Legistar puts on
