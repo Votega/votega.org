@@ -37,6 +37,26 @@ FROZEN_GLOB = "assets/data/ga-bienniums/*/ga-bills.json"
 
 CHAMBER_LABEL = {"lower": "House", "upper": "Senate"}
 
+RAW_BASE = "https://raw.githubusercontent.com/Votega/ga-legislation/main"
+#: Bumped on a change a consumer must act on; adding optional properties is a minor bump.
+SCHEMA_VERSION = "1.1.0"
+SCHEMA_STABILITY = (
+    "Stable field names and meanings. 1.1.0 describes fields added in 2026-11, all "
+    "optional and absent from files published before then: legislationType, footnotes, "
+    "committees, committeeHistory, statusHistory, stage, passageVotes[].time and "
+    "passageVotes[].linkedBy on each bill, and metadata.legislativeCalendar. Nothing "
+    "new is `required`, so older copies still validate. `status` is legis.ga.gov's "
+    "latest action, not an outcome (a vetoed bill's reads 'Date Signed by Governor'): "
+    "read governorAction or stage for the outcome. committeeHistory records moves seen "
+    "between publisher runs from the 2027 session on; it is empty before then.")
+
+
+def schema_url(path):
+    """The $id for a schema published at `path`: each file declares the path it
+    actually lives at (docs/conventions-publishing.md). Every session's
+    bills.schema.json used to claim one hardcoded root URL that no file occupies."""
+    return f"{RAW_BASE}/{path}"
+
 
 def compact_json(obj):
     """Compact UTF-8 JSON bytes for the large per-session bills.json (pretty-printing
@@ -83,12 +103,21 @@ def earlier_bienniums(pattern=FROZEN_GLOB, current=BIENNIUM):
     return sorted(out, key=lambda b: b["biennium"], reverse=True)
 
 
+def _committee_name(bill, chamber):
+    for c in bill.get("committees") or []:
+        if c.get("chamber") == chamber:
+            return c.get("name")
+    return None
+
+
 def bills_csv(bills):
     buf = io.StringIO()
     w = csv.writer(buf, lineterminator="\n")
+    # New columns are APPENDED, never inserted, so positional readers keep working.
     w.writerow(["identifier", "billType", "chamber", "title", "status", "statusDate",
                 "subjects", "primarySponsors", "sponsorCount", "billUrl",
-                "secondChamberSponsor"])
+                "secondChamberSponsor", "legislationType", "stage",
+                "houseCommittee", "senateCommittee"])
     for b in bills:
         sponsors = b.get("sponsors") or []
         primary = [s.get("name") for s in sponsors if s.get("primary")]
@@ -99,6 +128,9 @@ def bills_csv(bills):
             "; ".join(b.get("subjects") or []),
             "; ".join(primary), len(sponsors), b.get("billUrl"),
             (b.get("secondChamberSponsor") or {}).get("name"),
+            b.get("legislationType"),
+            (b.get("stage") or {}).get("label"),
+            _committee_name(b, "lower"), _committee_name(b, "upper"),
         ])
     return buf.getvalue().encode()
 
@@ -135,10 +167,19 @@ def bills_md(doc):
     return ("\n".join(L) + "\n").encode()
 
 
-def schema():
+_COMMITTEE = {"type": "object", "properties": {
+    "chamber": {"type": "string", "enum": ["lower", "upper"]},
+    "id": {"type": "integer", "description": "legis.ga.gov committee id (GetCommitteesBySession)."},
+    "code": {"type": ["string", "null"]}, "name": {"type": ["string", "null"]}}}
+
+
+def schema(path=None):
+    path = path or session_files(session_slug(ACTIVE_SESSION))["schema"]
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://raw.githubusercontent.com/Votega/ga-legislation/main/ga-bills.schema.json",
+        "$id": schema_url(path),
+        "schemaVersion": SCHEMA_VERSION,
+        "schemaStability": SCHEMA_STABILITY,
         "title": "Georgia Bills",
         "description": "Bills and resolutions from the Georgia General Assembly, sourced from its "
                        "own web service at legis.ga.gov (topical subject tags originate from "
@@ -146,7 +187,24 @@ def schema():
         "type": "object",
         "required": ["metadata", "bills"],
         "properties": {
-            "metadata": {"type": "object"},
+            "metadata": {"type": "object", "properties": {
+                "session": {"type": "string", "description": "Session id, e.g. 2025_26, 2026_ss."},
+                "sessionName": {"type": ["string", "null"]},
+                "biennium": {"type": "string", "description": "e.g. 2025-2026."},
+                "generatedAt": {"type": ["string", "null"], "description": "When the source file was generated (ISO 8601)."},
+                "source": {"type": "string"},
+                "totalBills": {"type": "integer"},
+                "legislativeCalendar": {
+                    "type": "object",
+                    "description": "This session's legislative days per chamber, from legis.ga.gov "
+                                   "GetSessionSchedule: {\"lower\": [[day, \"YYYY-MM-DD\"], ...], "
+                                   "\"upper\": [...]}, by date. A regular session numbers days 1-40 in "
+                                   "EACH year (day 28 = Crossover Day; day 40 of the second year = sine "
+                                   "die); a special session 1-N.",
+                    "properties": {c: {"type": "array", "items": {
+                        "type": "array", "prefixItems": [{"type": "integer"}, {"type": "string"}]}}
+                        for c in ("lower", "upper")}},
+            }},
             "bills": {
                 "type": "array",
                 "items": {
@@ -178,8 +236,51 @@ def schema():
                                            "chamber": {"type": "string", "enum": ["lower", "upper"]}}},
                         "billUrl": {"type": ["string", "null"]},
                         "textUrl": {"type": ["string", "null"]},
-                        "passageVotes": {"type": "array"},
+                        "passageVotes": {"type": "array", "items": {"type": "object", "properties": {
+                            "chamber": {"type": "string", "enum": ["lower", "upper"]},
+                            "date": {"type": "string"},
+                            "time": {"type": ["string", "null"], "description": "HH:MM; orders same-day votes."},
+                            "result": {"type": "string", "description": "pass / fail under Georgia's "
+                                       "constitutional thresholds, never yea > nay."},
+                            "motionText": {"type": "string"},
+                            "yea": {"type": "integer"}, "nay": {"type": "integer"}, "other": {"type": "integer"},
+                            "linkedBy": {"type": "string", "enum": ["listing"],
+                                         "description": "Present when legis.ga.gov links the roll call "
+                                                        "to no bill and the link was read from the vote "
+                                                        "listing's text."}}}},
                         "governorAction": {"type": ["object", "string", "null"]},
+                        "legislationType": {"type": ["string", "null"], "enum": ["GEN", "LOC", "CA", "PRIV", "NP", None],
+                                            "description": "legis.ga.gov's kind: general bill, local act, "
+                                                           "constitutional amendment, privileged or "
+                                                           "non-privileged resolution."},
+                        "footnotes": {"type": "array", "items": {"type": "string"},
+                                      "description": "legis.ga.gov procedural notes, oldest first."},
+                        "committees": {"type": "array", "items": _COMMITTEE,
+                                       "description": "The committee holding the bill in each chamber "
+                                                      "now; legis.ga.gov overwrites it on a move."},
+                        "committeeHistory": {"type": "array", "items": {"type": "object", "properties": {
+                            "chamber": {"type": "string", "enum": ["lower", "upper"]},
+                            "from": _COMMITTEE, "to": _COMMITTEE,
+                            "seenOn": {"type": "string", "description": "Day the publisher's run noticed "
+                                       "the move, not the day of the move."}}},
+                            "description": "Committee moves, recorded from the 2027 session on."},
+                        "statusHistory": {"type": "array", "items": {"type": "array"},
+                                          "description": "[datetime, code(, AmSub)] for every action, "
+                                                         "oldest first; codes are legis.ga.gov's."},
+                        "stage": {"type": ["object", "null"], "description": "Where the bill is.",
+                                  "properties": {
+                                      "kind": {"type": "string", "enum": [
+                                          "signed", "vetoed", "governor", "agreement", "committee",
+                                          "died-committee", "floor", "died-floor", "lost", "adopted"]},
+                                      "label": {"type": "string", "description": "e.g. 'Passed House · Died in Senate Finance'."},
+                                      "path": {"type": "string", "enum": ["full", "short"],
+                                               "description": "full: origin committee, origin floor, other "
+                                                              "committee, other floor, final version, Governor. "
+                                                              "short: filed, adopted (a simple resolution)."},
+                                      "steps": {"type": "array", "items": {
+                                          "type": "array", "prefixItems": [
+                                              {"type": "string", "enum": ["done", "current", "stopped", "ahead"]},
+                                              {"type": "string"}, {"type": "string"}]}}}},
                     },
                     "additionalProperties": True,
                 },
@@ -218,13 +319,16 @@ def build_artifacts():
                 "generatedAt": meta.get("generatedAt"),
                 "source": meta.get("source", "legis.ga.gov official web service"),
                 "totalBills": len(sess_bills),
+                # This session's own legislative days, when the source file has them.
+                **({"legislativeCalendar": meta["legislativeCalendar"][sid]}
+                   if sid in (meta.get("legislativeCalendar") or {}) else {}),
             },
             "bills": sess_bills,
         }
         files = session_files(slug, with_subjects=False)
         artifacts[files["bills"]] = compact_json(sess_doc)
         artifacts[files["billsCsv"]] = bills_csv(sess_bills)
-        artifacts[files["schema"]] = build_json(schema())
+        artifacts[files["schema"]] = build_json(schema(files["schema"]))
         artifacts[files["summary"]] = bills_md(sess_doc)
         if subjects_bytes is not None:
             files["subjects"] = session_files(slug)["subjects"]
@@ -261,7 +365,7 @@ def build_artifacts():
                      "status and roll-call votes, plus archived past sessions."),
         # The source file's own stamp, not this mirror's clock.
         generated_at=meta.get("generatedAt") or "",
-        update_cadence="Weekly while the General Assembly is in session.",
+        update_cadence="Daily January through April, while the General Assembly sits; weekly otherwise.",
         row_count=len(all_bills),
         coverage={"biennium": BIENNIUM, "activeSession": active_slug,
                   "sessions": sorted(s["slug"] for s in sessions_index)},

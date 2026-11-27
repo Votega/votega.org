@@ -267,6 +267,12 @@ Producers: `scripts/generate_ga_bills_soap.py` (ga-bills.json) and
 | `secondChamberSponsor` | `Sponsor` | the other chamber's carrier, kept out of `sponsors[]` |
 | `passageVotes[]` | the bill's `Votes`, filtered by `lib/ga_passage.native_is_passage` | plus `time` (HH:MM, from `Date`), which orders same-day votes. A vote attached from a listing's text (3.1, "Unlinked roll calls") carries `linkedBy: "listing"` |
 
+Published to `Votega/ga-legislation` by `scripts/publish_ga_bills.py`: each session's
+`bills.json` carries every field above and its own `metadata.legislativeCalendar`;
+`bills.schema.json` (schemaVersion 1.1.0, `$id` = its own path) describes them, none
+`required`; `bills.csv` appends `legislationType`, `stage` (the label), `houseCommittee`,
+`senateCommittee`.
+
 ### 6.2 ga-member-votes.json, per vote record
 
 | Field | Built from | Notes |

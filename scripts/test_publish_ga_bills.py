@@ -95,6 +95,45 @@ check("today latest.json lists no earlier biennium (the freeze is the current on
 check("current-session fields unchanged", sorted(k for k in latest if k != "earlierBienniums"),
       ["activeSession", "biennium", "billCount", "currentSession", "generatedAt", "sessions"])
 
+# --- published artifacts: schema identity, version, calendar, CSV columns -----
+import csv  # noqa: E402
+import io  # noqa: E402
+arts = P.build_artifacts()
+schemas = {k: json.loads(v) for k, v in arts.items() if k.endswith("bills.schema.json")}
+check("a schema per session", len(schemas) >= 2, True)
+check("each $id is its own path", all(v["$id"] == P.schema_url(k) for k, v in schemas.items()), True)
+check("no two schemas share an $id", len({v["$id"] for v in schemas.values()}), len(schemas))
+check("version and stability", all(v.get("schemaVersion") == P.SCHEMA_VERSION and v.get("schemaStability")
+                                   for v in schemas.values()), True)
+item = P.schema()["properties"]["bills"]["items"]
+for f in ("legislationType", "footnotes", "committees", "committeeHistory", "statusHistory", "stage"):
+    check("schema describes " + f, f in item["properties"], True)
+check("nothing new required", item["required"], ["id", "identifier", "title"])
+meta_props = P.schema()["properties"]["metadata"]["properties"]
+check("schema describes the calendar", "legislativeCalendar" in meta_props, True)
+
+docs = {k: json.loads(v) for k, v in arts.items() if k.endswith("/bills.json")}
+cal = real["metadata"].get("legislativeCalendar") or {}
+for k, d in docs.items():
+    sid = d["metadata"]["session"]
+    check(k + " carries its own calendar", d["metadata"].get("legislativeCalendar"), cal.get(sid))
+
+csv_key = next(k for k in arts if k.endswith("/bills.csv"))
+rows = list(csv.reader(io.StringIO(arts[csv_key].decode())))
+check("CSV columns appended in order", rows[0][-5:],
+      ["secondChamberSponsor", "legislationType", "stage", "houseCommittee", "senateCommittee"])
+check("CSV keeps its old columns first", rows[0][:3], ["identifier", "billType", "chamber"])
+signed = next((r for r in rows[1:] if r[rows[0].index("stage")].startswith("Signed")), None)
+check("CSV carries a stage label", signed is not None, True)
+
+try:
+    import jsonschema  # noqa: E402
+    for k, d in docs.items():
+        jsonschema.Draft202012Validator(schemas[k.replace("bills.json", "bills.schema.json")]).validate(d)
+    check("each session file validates against its schema", True, True)
+except ImportError:
+    print("  skip jsonschema not installed")
+
 if failures:
     print(f"\n{len(failures)} failure(s)")
     sys.exit(1)
