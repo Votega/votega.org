@@ -232,8 +232,13 @@ passage of uncontested local bills" in the order of business.
 - `Birthday` is month and day only. Unread: `Bio`, `Education`, `Religion`, `Spouse`,
   `CellPhone`, `HomePhone`, `Map`, `DistrictMap`, `LegislativeComments`.
 
-**Session**: `GetSessions` ✓; `GetSessionSchedule` — (legislative days per chamber: the
-official calendar, e.g. for "day N of 40"); `GetYears` —.
+**Session**: `GetSessions` ✓; `GetSessionSchedule` ✓ (`ga_soap.get_session_schedule`): the
+legislative days of one chamber's calendar, `[[day, date]]`. `Chamber` (House/Senate) is
+**required**; without it the service faults. A regular session numbers days 1-40 in EACH
+year (2025-26: 80 rows; day 28 = Crossover Day, day 40 = sine die, 2026-04-02); a special
+session 1-N (2026 SS: 1-5, Jun 17-23). Stored as ga-bills.json
+`metadata.legislativeCalendar` and re-fetched every run (the calendar can change by
+adjournment resolution); a failed call keeps the committed calendar. `GetYears` —.
 
 **Committees**: `GetCommitteesBySession` ✓ (top level only); `GetCommittee` —
 (`CommitteeDetail`: `SubCommittees`, `Members` with `Role`/`RoleSort`, agenda/minutes/
@@ -255,7 +260,7 @@ Producers: `scripts/generate_ga_bills_soap.py` (ga-bills.json) and
 | `footnotes` | `Footnotes` split on `;` | procedural notes, oldest first |
 | `committees` | `Committees/CommitteeListing` | `[{chamber, id, code, name}]`, House first. The **current** committee per chamber (2.2) |
 | `committeeHistory` | `committees` compared with the previous run's file | `[{chamber, from, to, seenOn}]`, `from`/`to` = `{id, code, name}`. Appended when a chamber's committee id changes; carried forward run to run. `seenOn` is the day of the run that noticed the move, not the day of the move (a recommittal's date is in `statusHistory`, code `HRECM`). A first referral is not a move. **Starts with the 2027 session; 2025-26 is not backfilled.** A bill that moves twice between two runs records only the net change |
-| `stage` | `statusHistory` + `committees` + `passageVotes` + `governorAction` (`lib/ga_bill_stage.py`) | where the bill is: `{kind, label, path, steps}`; `path` "full" = six steps (origin committee, origin floor, other committee, other floor, final version, Governor), "short" = filed/adopted for a simple resolution; each step `[state, headline, detail]`, state done/current/stopped/ahead. A session counts as adjourned after 45 days with no legislative action on any of its bills, and for the regular session only in the biennium's second year (first-year bills carry over); a bill whose session adjourned short of the Governor is dead, so its step becomes `stopped` ("Died in Senate Finance"). Shown on ga-bills (badge, progress bar, "Where this bill is" panel) and in the MCP's `get_bill` |
+| `stage` | `statusHistory` + `committees` + `passageVotes` + `governorAction` (`lib/ga_bill_stage.py`) | where the bill is: `{kind, label, path, steps}`; `path` "full" = six steps (origin committee, origin floor, other committee, other floor, final version, Governor), "short" = filed/adopted for a simple resolution; each step `[state, headline, detail]`, state done/current/stopped/ahead. A session is adjourned once today is past the last day of its legislative calendar (`metadata.legislativeCalendar`; for the regular session, day 40 of the biennium's second year, since first-year bills carry over), and a dead bill's stopped step names that day; without a calendar the fallback is 45 days with no legislative action on any of its bills; a bill whose session adjourned short of the Governor is dead, so its step becomes `stopped` ("Died in Senate Finance"). Shown on ga-bills (badge, progress bar, "Where this bill is" panel; the calendar also drives the page's "legislative day N of 40" line while a session sits) and in the MCP's `get_bill` |
 | `statusHistory` | `StatusHistory/StatusListing` | `[[datetime, code]]`, or `[datetime, code, AmSub]` when AmSub is set; oldest first. Codes in 2.4 |
 | `status` | `Status.Description`, stripped | legis.ga.gov's latest action, **not an outcome** (gotcha 1). The MCP index and the page's fallback list replace it with the Governor's decision (`lib/mcp_bills.outcome_status`) and keep the original as `officialStatus` |
 | `governorAction` | `StatusHistory` + `ActVetoNumber` | `{status: Signed / Vetoed / Sent to Governor, sentDate, decisionDate, actNumber}` |

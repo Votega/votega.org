@@ -54,6 +54,7 @@ ACTION = {
     # The Session contract is the odd one out: its soapAction is the BARE operation
     # name, with no namespace and no contract prefix. Taken from the WSDL, not guessed.
     "GetSessions":              "GetSessions",
+    "GetSessionSchedule":       "GetSessionSchedule",
     "GetMembersBySession":      SVC_NS + "MemberFinder/GetMembersBySession",
     "GetMember":                SVC_NS + "MemberFinder/GetMember",
     "GetCommitteesBySession":   SVC_NS + "CommitteeFinder/GetCommitteesBySession",
@@ -246,6 +247,26 @@ def get_sessions():
         })
     return out
 
+
+
+def get_session_schedule(legis_session, branch):
+    """GetSessionSchedule(SessionId, Chamber) -> [[day number, 'YYYY-MM-DD'], ...] by date.
+
+    The legislative days of one chamber's calendar. A regular session numbers its days
+    1-40 in EACH year (2025-26: 80 rows); a special session 1-N. Day 40 of the
+    biennium's second year is sine die; day 28 is Crossover Day. `Chamber` is required:
+    without it the service faults. Returns [] on a transport failure."""
+    root = soap_call(SESSION_URL, "GetSessionSchedule",
+                     "<s:SessionId>%d</s:SessionId><s:Chamber>%s</s:Chamber>" % (legis_session, branch))
+    if root is None:
+        return []
+    days = []
+    for d in root.iter("{%s}LegislativeDay" % DATA_NS):
+        num, date = _text(d, "Number", int), (_text(d, "Date") or "")[:10]
+        if num is not None and date:
+            days.append([num, date])
+    days.sort(key=lambda r: r[1])
+    return days
 
 def get_members_by_session(legis_session):
     """GetMembersBySession -> one dict per member who served in that session.
