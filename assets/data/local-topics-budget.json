@@ -43,12 +43,6 @@
    "region": "Metro Atlanta"
   },
   {
-   "placeId": "camden",
-   "placeName": "Camden County",
-   "placeType": "county",
-   "region": "Coastal Georgia"
-  },
-  {
    "placeId": "carroll",
    "placeName": "Carroll County",
    "placeType": "county",
@@ -235,6 +229,89 @@
    "sourceUrl": "https://henrycoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=2716,plainText=false)",
    "tags": [],
    "terms": [],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-12-01",
+   "docType": "agenda",
+   "excerpt": "… 6-1477 Approval/authorization of the October 31, 2026 Monthly Financial Status Report and ratification of all budget amendments. Approval/authorization of a Resolution amending the FY2026 budget to reflect adjustments to revenues …",
+   "excerptTerm": "budget amendment",
+   "fips": "13135",
+   "placeId": "gwinnett",
+   "placeName": "Gwinnett County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261201/a_30839_2026.12.01___Work_Session_Agenda.pdf",
+   "tags": [],
+   "terms": [
+    "budget amendment"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": null,
+   "date": "2026-12-01",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13135",
+   "placeId": "gwinnett",
+   "placeName": "Gwinnett County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261201/a_27510_2026.12.01___Informal_Presentation_Agenda_1100am.pdf",
+   "tags": [],
+   "terms": [],
+   "vendors": []
+  },
+  {
+   "body": "Mayor & Commission Meetings",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-12-01",
+   "docType": "agenda",
+   "excerpt": "… 5. ADOPT: TSPLOST 2023 Project 11, East Athens MLK Parkway Oconee River Greenway Trail – Budget Ordinance 6. ADOPT: Expansion of the Residential Parking Permit Program to the 200 Block of Hampton …",
+   "excerptTerm": "budget ordinance",
+   "fips": "13059",
+   "placeId": "clarke",
+   "placeName": "Athens-Clarke County",
+   "placeType": "consolidated",
+   "region": "Northeast Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.accgov.com/AgendaCenter/ViewFile/Agenda/_12012026-3158",
+   "tags": [],
+   "terms": [
+    "budget ordinance",
+    "operating budget"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of County Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-12-01",
+   "docType": "agenda",
+   "excerpt": "… Commissioner for the following purposes; General Fund Countywide millage rate. 1. 13.000 mills for the general operating budget for the County. Tax Service District millage rate. 1. 1.294 mills for the Incorporated Service District. 2. 1 …",
+   "excerptTerm": "operating budget",
+   "fips": "13039",
+   "placeId": "camden",
+   "placeName": "Camden County",
+   "placeType": "county",
+   "region": "Coastal Georgia",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.camdencountyga.gov/AgendaCenter/ViewFile/Agenda/_12012026-681",
+   "tags": [],
+   "terms": [
+    "operating budget"
+   ],
    "vendors": []
   },
   {
@@ -1350,30 +1427,6 @@
    "vendors": []
   },
   {
-   "body": "Public Safety & Legal Administration Committee",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-11-09",
-   "docType": "agenda",
-   "excerpt": "… RANT AGREEMENTS AND RELATED DOCUMENTS NECESSARY TO EFFECTUATE THE GRANT; TO AMEND THE FY2026 BUDGET BY ADDING TO ANTICIPATIONS AND APPROPRIATIONS AN AMOUNT NOT TO EXCEED EIGHTY-TWO …",
-   "excerptTerm": "decision-then-budget",
-   "fips": null,
-   "followThrough": "no-results",
-   "meetingId": "4349",
-   "minutesDraft": true,
-   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4170&Inline=True",
-   "outcomes": [],
-   "placeId": "atlanta",
-   "placeName": "City of Atlanta",
-   "placeType": "city",
-   "region": "Metro Atlanta",
-   "sourceType": "ocr",
-   "sourceUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=3964&Inline=True",
-   "tags": [],
-   "terms": [],
-   "vendors": []
-  },
-  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "unknown",
@@ -1591,6 +1644,27 @@
    "vendors": []
   },
   {
+   "body": "Finance Committee",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-10-28",
+   "docType": "minutes",
+   "excerpt": "… :00 p.m. DELEGATIONS: None. OLD BUSINESS: None. NEW BUSINESS/MANAGER’S REPORT/ FINANCE REPORT: 1. Review of final budget amendments. County Manager Denton summarized the final budget amendments to go before the Board for consideration at their …",
+   "excerptTerm": "budget amendment",
+   "fips": "13233",
+   "placeId": "polk",
+   "placeName": "Polk County",
+   "placeType": "county",
+   "region": "",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.polkga.org/Documents/Government/Minutes%20and%20Agendas/Finance%20Committee%20Minutes%20October%2028,%202026.pdf",
+   "tags": [],
+   "terms": [
+    "budget amendment"
+   ],
+   "vendors": []
+  },
+  {
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "agenda-action",
@@ -1612,7 +1686,7 @@
    "vendors": []
   },
   {
-   "body": "Board of Commissioners",
+   "body": "Public Safety Committee",
    "confidence": "high",
    "context": "agenda-action",
    "date": "2026-10-19",
@@ -1698,27 +1772,6 @@
    "sourceUrl": "https://socialcirclecityga.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=2173&Inline=True",
    "tags": [],
    "terms": [],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
-   "date": "2026-10-08",
-   "docType": "minutes",
-   "excerpt": "… :00 p.m. DELEGATIONS: None. OLD BUSINESS: None. NEW BUSINESS/MANAGER’S REPORT/ FINANCE REPORT: 1. Review of final budget amendments. County Manager Denton summarized the final budget amendments to go before the Board for consideration at their …",
-   "excerptTerm": "budget amendment",
-   "fips": "13233",
-   "placeId": "polk",
-   "placeName": "Polk County",
-   "placeType": "county",
-   "region": "",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.polkga.org/Documents/Government/Minutes%20and%20Agendas/Finance%20Committee%20Minutes%20October%2028,%202026.pdf",
-   "tags": [],
-   "terms": [
-    "budget amendment"
-   ],
    "vendors": []
   },
   {
@@ -2137,6 +2190,72 @@
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "agenda-action",
+   "date": "2026-06-25",
+   "docType": "agenda",
+   "excerpt": "… Recognition of the Fayette County State Court Summer Interns. (page 4) PUBLIC HEARING: 2. Second of two Public Hearings on Fayette County's proposed annual budget for Fiscal Year 2027 which begins on July 1, 2026 and ends June 30, 2027, and approval of Resolution 2026-13 t …",
+   "excerptTerm": "decision-then-budget",
+   "fips": "13113",
+   "placeId": "fayette",
+   "placeName": "Fayette County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/Agenda/06-25-2026%20BOC%20Agenda.pdf",
+   "tags": [],
+   "terms": [
+    "annual budget",
+    "budget adoption",
+    "budget presentation",
+    "capital budget",
+    "operating budget",
+    "proposed budget"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Finance Committee",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-06-22",
+   "docType": "minutes",
+   "excerpt": "… hey had no issue with adding the $6,000.00 back to the budget so, as a formality, he is making the Board aware that the budget has been amended to include this. He also mentioned that he has reviewed the new digest numbers received from Chief Appraiser Dana Shell …",
+   "excerptTerm": "budget-then-decision",
+   "fips": "13233",
+   "placeId": "polk",
+   "placeName": "Polk County",
+   "placeType": "county",
+   "region": "",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.polkga.org/Documents/Government/Finance/Finance%20Committee%20Minutes%20June%2022,%202026.pdf",
+   "tags": [],
+   "terms": [],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
+   "date": "2026-06-22",
+   "docType": "minutes",
+   "excerpt": "… e the agenda. Second by Commissioner Floyd. Motion passed unanimously. BUSINESS 1. Consider a resolution adopting the operating budgets for Fiscal Year 2027. Chairman Thaxton called for a Motion. Motion was made by Commissioner Floyd to approve th …",
+   "excerptTerm": "operating budget",
+   "fips": "13233",
+   "placeId": "polk",
+   "placeName": "Polk County",
+   "placeType": "county",
+   "region": "",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.polkga.org/Documents/Government/Minutes%20and%20Agendas/Called%20Meeting%20Minutes%20of%20June%2022,%202026.pdf",
+   "tags": [],
+   "terms": [
+    "operating budget"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
    "date": "2026-06-18",
    "docType": "agenda",
    "excerpt": "… er Maintenance and Services contract in the amount of $67,167 with funding to be provided by the FY27 County Department Operating Budgets. (R. Talbert) REPORT 8. Approve the Interagency Agreement between the Brunswick Job Corps and Glynn County, Georgia. ( …",
@@ -2242,6 +2361,33 @@
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "agenda-action",
+   "date": "2026-06-11",
+   "docType": "agenda",
+   "excerpt": "… sioner Edward Gibbons Acceptance of Agenda PROCLAMATION/RECOGNITION: PUBLIC HEARING: 1. First of two Public Hearings on Fayette County's proposed annual budget for Fiscal Year 2027 which begins on July 1, 2026, and ends June 30, 2027. (pages 3-94) PUBLIC COMMENT: Spe …",
+   "excerptTerm": "decision-then-budget",
+   "fips": "13113",
+   "placeId": "fayette",
+   "placeName": "Fayette County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/06-11-2026%20BOC%20Agenda.pdf",
+   "tags": [],
+   "terms": [
+    "annual budget",
+    "budget adoption",
+    "budget presentation",
+    "budget public hearing",
+    "capital budget",
+    "operating budget",
+    "proposed budget"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "agenda-action",
    "date": "2026-06-09",
    "docType": "agenda",
    "excerpt": "… revaluation of commercial, industrial, and agricultural properties. 7. PUBLIC HEARING A) A Public Hearing regarding the proposed 2026-2027 Budget for the Board of Commissioners. B) Z26-005 – Conditional Use Request for a Ground-Mounted Solar Energy System o …",
@@ -2303,18 +2449,18 @@
    "context": "agenda-action",
    "date": "2026-06-02",
    "docType": "minutes",
-   "excerpt": "… e the agenda. Second by Commissioner Floyd. Motion passed unanimously. BUSINESS 1. Consider a resolution adopting the operating budgets for Fiscal Year 2027. Chairman Thaxton called for a Motion. Motion was made by Commissioner Floyd to approve th …",
-   "excerptTerm": "operating budget",
+   "excerpt": "… candidates on their campaigns. Commissioner Floyd echoed Commissioner McElwee’s comments and reminded everyone of the Budget Work Session scheduled for Friday, June 05 at 9:00 a.m. Commissioner Paschal expressed his appreciation to all of those in attendan …",
+   "excerptTerm": "budget work session",
    "fips": "13233",
    "placeId": "polk",
    "placeName": "Polk County",
    "placeType": "county",
    "region": "",
    "sourceType": "ocr",
-   "sourceUrl": "https://www.polkga.org/Documents/Government/Minutes%20and%20Agendas/Called%20Meeting%20Minutes%20of%20June%2022,%202026.pdf",
+   "sourceUrl": "https://www.polkga.org/Documents/Government/Minutes%20and%20Agendas/Regular%20Meeting%20Minutes%20of%20June%2002,%202026.pdf",
    "tags": [],
    "terms": [
-    "operating budget"
+    "budget work session"
    ],
    "vendors": []
   },
@@ -2467,6 +2613,27 @@
    "confidence": "high",
    "context": "unknown",
    "date": "2026-04-28",
+   "docType": "minutes",
+   "excerpt": "… re at 87.6% and Expenses were at 82.4%. County Manager Denton also asked Commissioners to be thinking of May dates for budget hearings. COMMISSIONER COMMENTS Commissioner McElwee expressed his appreciation of the Chairman and his fellow Commissioners. …",
+   "excerptTerm": "budget hearing",
+   "fips": "13233",
+   "placeId": "polk",
+   "placeName": "Polk County",
+   "placeType": "county",
+   "region": "",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.polkga.org/Documents/Government/Minutes%20and%20Agendas/Regular%20Meeting%20Minutes%20of%20April%2028,%202026.pdf",
+   "tags": [],
+   "terms": [
+    "budget hearing"
+   ],
+   "vendors": []
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-04-28",
    "docType": "agenda",
    "excerpt": "… building on a regular basis. The remainder of the budget corrections will be completed through a budget transfer and will move the remaining unused budget from the Old Courthouse accounts to the Law Enforcement Center acc …",
    "excerptTerm": "budget transfer",
@@ -2544,27 +2711,6 @@
    "tags": [],
    "terms": [
     "capital budget"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "unknown",
-   "date": "2026-04-08",
-   "docType": "minutes",
-   "excerpt": "… re at 87.6% and Expenses were at 82.4%. County Manager Denton also asked Commissioners to be thinking of May dates for budget hearings. COMMISSIONER COMMENTS Commissioner McElwee expressed his appreciation of the Chairman and his fellow Commissioners. …",
-   "excerptTerm": "budget hearing",
-   "fips": "13233",
-   "placeId": "polk",
-   "placeName": "Polk County",
-   "placeType": "county",
-   "region": "",
-   "sourceType": "ocr",
-   "sourceUrl": "https://www.polkga.org/Documents/Government/Minutes%20and%20Agendas/Regular%20Meeting%20Minutes%20of%20April%2028,%202026.pdf",
-   "tags": [],
-   "terms": [
-    "budget hearing"
    ],
    "vendors": []
   },
@@ -2810,11 +2956,11 @@
   "consolidatedScanned": 4,
   "countiesScanned": 54,
   "emoji": "💰",
-  "generatedAt": "2026-11-25T18:58:19Z",
+  "generatedAt": "2026-11-27T20:43:14Z",
   "label": "Budgets",
   "mentionsWithOutcomes": 7,
   "placesScanned": 68,
-  "placesWithMentions": 39,
+  "placesWithMentions": 40,
   "topic": "budget",
   "universeCities": 537,
   "universeConsolidated": 9,

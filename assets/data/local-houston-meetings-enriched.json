@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-25T18:31:52Z",
+  "generatedAt": "2026-11-27T20:24:16Z",
   "source": "Houston County (htmltable agenda/minutes PDFs, poppler+OCR)",
   "place": "Houston County",
   "count": 25
@@ -11,19 +11,30 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-17",
+  "lastActivity": "2026-12-01",
   "topicTotals": {
+   "comprehensive-plan": 3,
    "contract": 23,
-   "development": 9,
+   "development": 10,
    "local-taxes": 25,
    "millage-budget": 20,
    "appointment": 11,
-   "annexation": 9,
-   "rezoning": 6,
-   "comprehensive-plan": 2
+   "annexation": 8,
+   "rezoning": 5
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "December 1, 2026 Meeting",
+    "date": "2026-12-01",
+    "sourceUrl": "https://www.houstoncountyga.gov/minutes/2026-12-01%20(3)%20Agenda.pdf",
+    "tags": [
+     "comprehensive-plan",
+     "development"
+    ],
+    "excerpt": "… mber 17, 2026 New Business 1. Special Exception Applications – Commissioner Talton 2. Public Hearing (Houston County Comprehensive Plan) – Chairman Perdue 3. Resolution (Arts Auth Act) – Commissioner Talton 4. Sales Contract Approval (10121 Hawkinsville R …",
+    "excerptTerm": "comprehensive plan"
+   },
    {
     "title": "November 17, 2026 Meeting",
     "date": "2026-11-17",
@@ -177,23 +188,20 @@
     ],
     "excerpt": "… of Minutes from December 2, 2025 New Business 1. Public Hearing (Right of Way Abandonment) – Commissioner Byrd 2. Annexation (City of Warner Robins) – Commissioner Byrd 3. Board Resolution – Commissioner Byrd 4. Approval of a Bid (Juvenile Truc …",
     "excerptTerm": "annexation"
-   },
-   {
-    "title": "December 2, 2025 Meeting",
-    "date": "2025-12-02",
-    "sourceUrl": "https://www.houstoncountyga.gov/minutes/2025-12-02%20Meeting%20Agenda.pdf",
-    "tags": [
-     "annexation",
-     "rezoning"
-    ],
-    "excerpt": "… pecial Exception Applications – Commissioner Talton 2. Public Hearing (Rezoning Application) – Commissioner Talton 3. Annexation Request (City of Warner Robins) – Commissioner Talton 4. Selection of Architect – Commissioner Talton 5. Memorandum o …",
-    "excerptTerm": "annexation"
    }
   ],
   "landUseMeetings": 17,
   "alprItems": [],
   "alprMeetings": 0,
   "localTaxItems": [
+   {
+    "title": "December 1, 2026 Meeting",
+    "date": "2026-12-01",
+    "sourceUrl": "https://www.houstoncountyga.gov/minutes/2026-12-01%20(3)%20Agenda.pdf",
+    "terms": [
+     "splost"
+    ]
+   },
    {
     "title": "November 17, 2026 Meeting",
     "date": "2026-11-17",
@@ -354,14 +362,6 @@
     "terms": [
      "splost"
     ]
-   },
-   {
-    "title": "February 17, 2026 Meeting",
-    "date": "2026-02-17",
-    "sourceUrl": "https://www.houstoncountyga.gov/minutes/2026-02-17%20Department%20Heads.pdf",
-    "terms": [
-     "splost"
-    ]
    }
   ],
   "localTaxCitations": 25,
@@ -372,6 +372,63 @@
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "2026-12-01-meeting",
+   "date": "2026-12-01",
+   "body": "Board of Commissioners",
+   "title": "December 1, 2026 Meeting",
+   "sourceUrl": "https://www.houstoncountyga.gov/minutes/2026-12-01%20(3)%20Agenda.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.houstoncountyga.gov/minutes/2026-12-01%20(3)%20Agenda.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 7846,
+   "pdfSha256": "4a1413d24c866844e2c15cfd7907483bc755973fdfe8dcb58fcc3677e43cbfc5",
+   "topics": {
+    "comprehensive-plan": 1,
+    "contract": 1,
+    "development": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "comprehensive-plan",
+    "contract",
+    "development",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "comprehensive plan",
+    "contract",
+    "splost",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "comprehensive-plan": {
+     "term": "comprehensive plan",
+     "excerpt": "… mber 17, 2026 New Business 1. Special Exception Applications – Commissioner Talton 2. Public Hearing (Houston County Comprehensive Plan) – Chairman Perdue 3. Resolution (Arts Auth Act) – Commissioner Talton 4. Sales Contract Approval (10121 Hawkinsville R …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… ring (Houston County Comprehensive Plan) – Chairman Perdue 3. Resolution (Arts Auth Act) – Commissioner Talton 4. Sales Contract Approval (10121 Hawkinsville Rd) – Commissioner Robinson 5. Bond Release Approval (Harley Farms South, Phase 3) – Commi …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… missioner Robinson This request is for the release of a bond associated with a section of roadway in Harley Farms South Subdivision. Motion by _____________, second by _______________ and carried _______________ to approve disapprove …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… an Act (230) $371,124.29 Fire District Fund (270) $54,651.99 2018 SPLOST Fund (320) $739,738.66 2024 SPLOST Fund (320) $1,469,635.88 …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "land-use",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "2026-11-17-meeting",
    "date": "2026-11-17",
@@ -1807,63 +1864,6 @@
    "flags": [
     "land-use",
     "millage-budget",
-    "local-taxes"
-   ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2025-12-02-meeting",
-   "date": "2025-12-02",
-   "body": "Board of Commissioners",
-   "title": "December 2, 2025 Meeting",
-   "sourceUrl": "https://www.houstoncountyga.gov/minutes/2025-12-02%20Meeting%20Agenda.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.houstoncountyga.gov/minutes/2025-12-02%20Meeting%20Agenda.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 21025,
-   "pdfSha256": "958f8fae552705eb1d85c2dc5f0c6b01e69b8f7b79f1634a6fd4fd5e80976f57",
-   "topics": {
-    "annexation": 1,
-    "contract": 1,
-    "local-taxes": 1,
-    "rezoning": 1
-   },
-   "tags": [
-    "annexation",
-    "contract",
-    "local-taxes",
-    "rezoning"
-   ],
-   "matchedTerms": [
-    "annexation",
-    "contract",
-    "rezon",
-    "splost"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… pecial Exception Applications – Commissioner Talton 2. Public Hearing (Rezoning Application) – Commissioner Talton 3. Annexation Request (City of Warner Robins) – Commissioner Talton 4. Selection of Architect – Commissioner Talton 5. Memorandum o …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… Warner Robins) – Commissioner Robinson 6. Approval of Grant (Juvenile Court) – Commissioner Robinson 7. Approval of Contract (Tax Assessor) – Commissioner Robinson 8. Approval of Bid (Sheriff’s Office) – Commissioner Robinson 9. Approval of Bid …",
-     "context": "agenda-action"
-    },
-    "local-taxes": {
-     "term": "splost",
-     "excerpt": "… n the Public Buildings Department with an estimated delivery date of January 2026. This purchase will be funded by 2018 SPLOST. Houston County Commissioners Purchasing …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… ovember 18, 2025 meeting New Business 1. Special Exception Applications – Commissioner Talton 2. Public Hearing (Rezoning Application) – Commissioner Talton 3. Annexation Request (City of Warner Robins) – Commissioner Talton 4. Selectio …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
     "local-taxes"
    ],
    "dataCenterItems": []

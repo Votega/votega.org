@@ -1,12 +1,13 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-25T18:29:24Z",
+  "generatedAt": "2026-11-27T20:24:04Z",
   "source": "Cobb County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Cobb County",
   "count": 25
  },
  "summary": {
   "flags": [
+   "alpr",
    "budget",
    "data-center",
    "land-use",
@@ -16,18 +17,24 @@
   "lastActivity": "2027-01-13",
   "topicTotals": {
    "variance": 10,
+   "alpr": 1,
+   "annexation": 5,
+   "data-center": 2,
+   "local-taxes": 6,
    "rezoning": 6,
    "special-land-use": 6,
-   "annexation": 5,
-   "appointment": 7,
+   "appointment": 6,
    "budget": 2,
-   "contract": 10,
-   "development": 6,
-   "local-taxes": 6,
-   "millage-budget": 5,
-   "data-center": 1
+   "contract": 9,
+   "development": 5,
+   "millage-budget": 4
   },
   "dataCenterItems": [
+   {
+    "title": "Legislative Breakfast @ 10:00 a.m.",
+    "date": "2026-12-04",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10375,plainText=false)"
+   },
    {
     "title": "BOC Regular Meeting",
     "date": "2026-10-13",
@@ -182,23 +189,35 @@
     ],
     "excerpt": "… y's Hazard Mitigation Plan. Withdrawn from the Agenda. Community Development 25. To approve the annexation notice of Non-Objection per HB 489 Intergovernmental Agreement and HB 2 regarding a petition for the annex …",
     "excerptTerm": "annexation"
-   },
-   {
-    "title": "BOC Regular Meeting",
-    "date": "2026-08-25",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10169,plainText=false)",
-    "tags": [
-     "annexation",
-     "development"
-    ],
-    "excerpt": "… uction grant award from the Governor's Office of Planning and Budget. Community Development 21. To approve an annexation Intent to Object and the Basis of Objection per HB 489 Intergovernmental Agreement and HB 2 regarding a pet …",
-    "excerptTerm": "annexation"
    }
   ],
   "landUseMeetings": 16,
-  "alprItems": [],
-  "alprMeetings": 0,
+  "alprItems": [
+   {
+    "title": "Legislative Breakfast @ 10:00 a.m.",
+    "date": "2026-12-04",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10375,plainText=false)",
+    "terms": [
+     "automated license plate",
+     "flock",
+     "license plate reader",
+     "plate reader"
+    ]
+   }
+  ],
+  "alprMeetings": 1,
   "localTaxItems": [
+   {
+    "title": "Legislative Breakfast @ 10:00 a.m.",
+    "date": "2026-12-04",
+    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10375,plainText=false)",
+    "terms": [
+     "homestead exemption",
+     "millage",
+     "property tax increase",
+     "referendum"
+    ]
+   },
    {
     "title": "BOC Regular Meeting",
     "date": "2026-11-19",
@@ -250,16 +269,6 @@
     ],
     "excerpt": "… platform, under provisions of an OMNIA Partners contract (OMNIA). This project is partially funded by 2022 SPLOST Projects Support Services Information Services program B0040 and Countywide Improvements program B0010. …",
     "excerptTerm": "splost"
-   },
-   {
-    "title": "BOC Regular Meeting",
-    "date": "2026-08-25",
-    "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10169,plainText=false)",
-    "terms": [
-     "splost"
-    ],
-    "excerpt": "… or the LED sports field lighting fixtures on all four fields at Hubert Soccer Complex under the 2022 PARKS SPLOST program. Support Services Agency Facilities Management 34. To approve a Purchase Agreem …",
-    "excerptTerm": "splost"
    }
   ],
   "localTaxCitations": 6,
@@ -290,9 +299,9 @@
    }
   ],
   "budgetCitations": 2,
-  "landUseCitations": 15,
-  "alprCitations": 0,
-  "dataCenterCitations": 1
+  "landUseCitations": 14,
+  "alprCitations": 1,
+  "dataCenterCitations": 2
  },
  "meetings": [
   {
@@ -376,6 +385,56 @@
     "land-use"
    ],
    "dataCenterItems": []
+  },
+  {
+   "id": "1386",
+   "date": "2026-12-04",
+   "body": "Board of Commissioners",
+   "title": "Legislative Breakfast @ 10:00 a.m.",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10375,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10375,plainText=false)",
+   "textMethod": "ocr",
+   "textChars": 8941,
+   "pdfSha256": "858bba9388291accf5c9be63ee28a89ddebf5873873b9d5181b800e3c15f5ac2",
+   "topics": {
+    "alpr": 1,
+    "annexation": 1,
+    "data-center": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "alpr",
+    "annexation",
+    "data-center",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "annexation",
+    "automated license plate",
+    "data center",
+    "flock",
+    "homestead exemption",
+    "license plate reader",
+    "millage",
+    "plate reader",
+    "property tax increase",
+    "referendum"
+   ],
+   "topicExcerpts": {},
+   "flags": [
+    "land-use",
+    "data-center",
+    "alpr",
+    "local-taxes"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Legislative Breakfast @ 10:00 a.m.",
+     "date": "2026-12-04",
+     "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10375,plainText=false)"
+    }
+   ]
   },
   {
    "id": "1266",
@@ -1335,82 +1394,6 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1201",
-   "date": "2026-08-25",
-   "body": "Board of Commissioners",
-   "title": "BOC Regular Meeting",
-   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10169,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10169,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 10237,
-   "pdfSha256": "aaa1aef3c05391fdef02a63ac51301aa205bf380f24a40a8bcda376a8fdb529b",
-   "topics": {
-    "annexation": 1,
-    "appointment": 1,
-    "contract": 1,
-    "development": 1,
-    "local-taxes": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "annexation",
-    "appointment",
-    "contract",
-    "development",
-    "local-taxes",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "annexation",
-    "appoint",
-    "budget",
-    "contract",
-    "procurement",
-    "reappoint",
-    "splost",
-    "warehouse"
-   ],
-   "topicExcerpts": {
-    "annexation": {
-     "term": "annexation",
-     "excerpt": "… uction grant award from the Governor's Office of Planning and Budget. Community Development 21. To approve an annexation Intent to Object and the Basis of Objection per HB 489 Intergovernmental Agreement and HB 2 regarding a pet …",
-     "context": "agenda-action"
-    },
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… Juvenile Court 3. To authorize the acceptance and appropriation of grant funds from Georgia Court Appointed Special Advocates, Inc. for the Juvenile Court's Court Appointed Special Advocates (CASA) Program. Water …",
-     "context": "agenda-action"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… am. Water System 4. To approve a work order under the FY25-FY26 Stormwater Management Unit Price Contract with W.E. Contracting Co., Inc. for 1434 Woodwind Court, Program No. ST2412. …",
-     "context": "agenda-action"
-    },
-    "development": {
-     "term": "warehouse",
-     "excerpt": "… t and the expenditure of any associated land acquisition costs for the purchase of a 15,000 +/- Square Foot Warehouse/Office Building on approximately 1.83 +/- acres of land, located at 550 Commerce Park Drive, Ma …",
-     "context": "agenda-action"
-    },
-    "local-taxes": {
-     "term": "splost",
-     "excerpt": "… or the LED sports field lighting fixtures on all four fields at Hubert Soccer Complex under the 2022 PARKS SPLOST program. Support Services Agency Facilities Management 34. To approve a Purchase Agreem …",
-     "context": "agenda-action"
-    },
-    "millage-budget": {
-     "term": "budget",
-     "excerpt": "… ARPA Public Safety and Community Violence Reduction grant award from the Governor's Office of Planning and Budget. Community Development 21. To approve an annexation Intent to Object and the Basis of Objection per HB 489 …",
-     "context": "agenda-action"
-    }
-   },
-   "flags": [
-    "land-use",
-    "millage-budget",
-    "local-taxes"
-   ],
    "dataCenterItems": []
   }
  ]

@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-25T18:31:49Z",
+  "generatedAt": "2026-11-27T20:24:10Z",
   "source": "Meriwether County (civicplus agenda/minutes PDFs, poppler+OCR)",
   "place": "Meriwether County",
   "count": 25
@@ -13,19 +13,26 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-24",
+  "lastActivity": "2026-11-30",
   "topicTotals": {
-   "appointment": 17,
-   "contract": 18,
-   "local-taxes": 16,
-   "data-center": 3,
+   "data-center": 4,
+   "appointment": 16,
+   "contract": 17,
+   "local-taxes": 15,
    "development": 1,
-   "millage-budget": 17,
+   "millage-budget": 16,
    "rezoning": 7,
    "variance": 1,
    "alpr": 1
   },
   "dataCenterItems": [
+   {
+    "title": "Agenda November 30, 2026 Work Session 5:00 p.m.",
+    "date": "2026-11-30",
+    "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_11302026-664",
+    "excerpt": "… d Discussion of Proposed Amendments to Appendix A – Zoning and Development Ordinance (Digital Infrastructure and Data Centers) VI. EXECUTIVE SESSION 1. Litigation 2. Personnel 3. Real Estate 4. Tax Matters 5. Cybersecur …",
+    "excerptTerm": "data center"
+   },
    {
     "title": "Agenda November 9, 2026, Regular Meeting 6:00 p.m.",
     "date": "2026-11-09",
@@ -102,7 +109,7 @@
     ]
    }
   ],
-  "landUseMeetings": 10,
+  "landUseMeetings": 11,
   "alprItems": [
    {
     "title": "Agenda April 13, 2026, Regular Meeting 6:00 p.m.",
@@ -256,24 +263,57 @@
      "splost",
      "tax digest"
     ]
-   },
-   {
-    "title": "Agenda March 24, 2026 Regular Meeting 6:00 p.m.",
-    "date": "2026-03-24",
-    "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_03242026-639",
-    "terms": [
-     "splost"
-    ]
    }
   ],
-  "localTaxCitations": 16,
+  "localTaxCitations": 15,
   "budgetItems": [],
   "budgetCitations": 0,
   "landUseCitations": 7,
   "alprCitations": 1,
-  "dataCenterCitations": 3
+  "dataCenterCitations": 4
  },
  "meetings": [
+  {
+   "id": "664",
+   "date": "2026-11-30",
+   "body": "Board of Commissioners",
+   "title": "Agenda November 30, 2026 Work Session 5:00 p.m.",
+   "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_11302026-664",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_11302026-664",
+   "textMethod": "pdftotext",
+   "textChars": 992,
+   "pdfSha256": "39742bd1aa2bebb0b390f127d1ad7a10ee9d078a144a73e8251d119873982c6a",
+   "topics": {
+    "data-center": 1
+   },
+   "tags": [
+    "data-center"
+   ],
+   "matchedTerms": [
+    "data center"
+   ],
+   "topicExcerpts": {
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… d Discussion of Proposed Amendments to Appendix A – Zoning and Development Ordinance (Digital Infrastructure and Data Centers) VI. EXECUTIVE SESSION 1. Litigation 2. Personnel 3. Real Estate 4. Tax Matters 5. Cybersecur …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Agenda November 30, 2026 Work Session 5:00 p.m.",
+     "date": "2026-11-30",
+     "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_11302026-664",
+     "excerpt": "… d Discussion of Proposed Amendments to Appendix A – Zoning and Development Ordinance (Digital Infrastructure and Data Centers) VI. EXECUTIVE SESSION 1. Litigation 2. Personnel 3. Real Estate 4. Tax Matters 5. Cybersecur …",
+     "excerptTerm": "data center"
+    }
+   ]
+  },
   {
    "id": "663",
    "date": "2026-11-24",
@@ -1154,43 +1194,6 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "639",
-   "date": "2026-03-24",
-   "body": "Board of Commissioners",
-   "title": "Agenda March 24, 2026 Regular Meeting 6:00 p.m.",
-   "sourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_03242026-639",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.meriwethercountyga.gov/AgendaCenter/ViewFile/Agenda/_03242026-639",
-   "textMethod": "ocr",
-   "textChars": 25514,
-   "pdfSha256": "a2c246f6f349375613059a771f7af678fede2d0de83e98056575f4dec92fd32b",
-   "topics": {
-    "appointment": 1,
-    "contract": 1,
-    "local-taxes": 1,
-    "millage-budget": 1
-   },
-   "tags": [
-    "appointment",
-    "contract",
-    "local-taxes",
-    "millage-budget"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "budget",
-    "contract",
-    "fiscal year",
-    "splost"
-   ],
-   "topicExcerpts": {},
-   "flags": [
-    "millage-budget",
-    "local-taxes"
-   ],
    "dataCenterItems": []
   }
  ]

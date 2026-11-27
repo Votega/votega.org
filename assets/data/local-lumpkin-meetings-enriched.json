@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-25T18:31:49Z",
+  "generatedAt": "2026-11-27T20:24:10Z",
   "source": "Lumpkin County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Lumpkin County",
   "count": 24
@@ -17,9 +17,9 @@
    "variance": 3,
    "development": 9,
    "appointment": 4,
-   "budget": 3,
    "contract": 7,
-   "local-taxes": 8,
+   "local-taxes": 9,
+   "budget": 3,
    "millage-budget": 3
   },
   "dataCenterItems": [],
@@ -120,6 +120,16 @@
   "alprMeetings": 0,
   "localTaxItems": [
    {
+    "title": "Lumpkin County Board of Commissioners Work Session",
+    "date": "2026-12-01",
+    "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4538,plainText=false)",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… 26 5:30 PM 7. Board of Commissioners - Regular Meeting - November 17, 2026 6:00 PM • RESOLUTIONS 8. 2026-68 TSPLOST Resolution Call for Election 9. 2026-71 Resolution Revising the Donation/Loan Policy (County Clerk Melissa Witc …",
+    "excerptTerm": "splost"
+   },
+   {
     "title": "Lumpkin County Board of Commissioners Regular Meeting",
     "date": "2026-11-17",
     "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4499,plainText=false)",
@@ -192,7 +202,7 @@
     "excerptTerm": "ad valorem"
    }
   ],
-  "localTaxCitations": 8,
+  "localTaxCitations": 9,
   "budgetItems": [
    {
     "title": "Lumpkin County Board of Commissioners Regular Meeting",
@@ -287,6 +297,55 @@
    },
    "flags": [
     "land-use"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "1099",
+   "date": "2026-12-01",
+   "body": "Board of Commissioners",
+   "title": "Lumpkin County Board of Commissioners Work Session",
+   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4538,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4538,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 6379,
+   "pdfSha256": "e0a6ab19dd747e2f7cb66ad7f9e5f6259d5ddc6e4897fc49a41153f28d78afe6",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "contract",
+    "reappoint",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "reappoint",
+     "excerpt": "… or Election 9. 2026-71 Resolution Revising the Donation/Loan Policy (County Clerk Melissa Witcher) 10. 2026-72 Reappoint Members to Board of Elections & Registration - Ben English to Seat 1, John Webb to Seat 4, and Ashley Peck to Seat …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… on Center Manager Jared Ray) 14. 2026-76 Update the Lumpkin County Fee Schedule (Finance Director Abby Branan) • CONTRACTS/AGREEMENTS 15. 2026-099 Inmate Food Services Contract – Agape Food Service (Sheriff Stacy Jarrard) 16. 2026-100 …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… 26 5:30 PM 7. Board of Commissioners - Regular Meeting - November 17, 2026 6:00 PM • RESOLUTIONS 8. 2026-68 TSPLOST Resolution Call for Election 9. 2026-71 Resolution Revising the Donation/Loan Policy (County Clerk Melissa Witc …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "local-taxes"
    ],
    "dataCenterItems": []
   },
@@ -1046,44 +1105,6 @@
     "millage-budget",
     "local-taxes"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "1120",
-   "date": "2026-09-15",
-   "body": "Board of Commissioners",
-   "title": "Lumpkin County Board of Commissioners Regular Meeting",
-   "sourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4337,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://lumpkincoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=4337,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 2041,
-   "pdfSha256": "88e6e23608820f62f426ae1719261db912caee402a751f3d3b56ba52cf6979f9",
-   "topics": {
-    "appointment": 1,
-    "contract": 1
-   },
-   "tags": [
-    "appointment",
-    "contract"
-   ],
-   "matchedTerms": [
-    "appoint",
-    "contract"
-   ],
-   "topicExcerpts": {
-    "appointment": {
-     "term": "appoint",
-     "excerpt": "… 8, 2026 5:30 PM 5. Board of Commissioners - Regular Meeting - August 18, 2026 6:00 PM • RESOLUTIONS 6. 2026-50 Appoint Member to Airport Authority - Alan Redmon to Seat B, of an unexpired term ending 02/19/2029 7. 2026-51 Update t …",
-     "context": "public-comment"
-    },
-    "contract": {
-     "term": "contract",
-     "excerpt": "… Director Abby Branan) • REPORTS Department reports can be viewed on www.lumpkincounty.gov • ELECTED OFFICIALS • CONTRACTS/AGREEMENTS 9. 2026-082 GDOT 5311 Rural Transportation Grant Application (Public Works Director Chris Thomas) …",
-     "context": "public-comment"
-    }
-   },
-   "flags": [],
    "dataCenterItems": []
   }
  ]

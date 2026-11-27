@@ -1,9 +1,9 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-25T18:29:24Z",
+  "generatedAt": "2026-11-27T20:23:52Z",
   "source": "Gwinnett County (gwinnett agenda/minutes PDFs, poppler+OCR)",
   "place": "Gwinnett County",
-  "count": 20
+  "count": 22
  },
  "summary": {
   "flags": [
@@ -13,16 +13,16 @@
    "local-taxes",
    "millage-budget"
   ],
-  "lastActivity": "2026-11-17",
+  "lastActivity": "2026-12-01",
   "topicTotals": {
-   "development": 1,
-   "local-taxes": 12,
-   "rezoning": 4,
-   "variance": 4,
-   "appointment": 9,
+   "appointment": 10,
+   "budget": 3,
    "contract": 13,
+   "local-taxes": 13,
+   "development": 1,
+   "rezoning": 3,
+   "variance": 3,
    "millage-budget": 5,
-   "budget": 1,
    "alpr": 2
   },
   "dataCenterItems": [],
@@ -54,18 +54,9 @@
      "rezoning",
      "variance"
     ]
-   },
-   {
-    "title": "Public Hearing",
-    "date": "2026-08-25",
-    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260825/a_86782_2026.08.25___AMENDED_Public_Hearing_Agenda.pdf",
-    "tags": [
-     "rezoning",
-     "variance"
-    ]
    }
   ],
-  "landUseMeetings": 4,
+  "landUseMeetings": 3,
   "alprItems": [
    {
     "title": "Business Session",
@@ -86,6 +77,14 @@
   ],
   "alprMeetings": 2,
   "localTaxItems": [
+   {
+    "title": "Work Session",
+    "date": "2026-12-01",
+    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261201/a_30839_2026.12.01___Work_Session_Agenda.pdf",
+    "terms": [
+     "splost"
+    ]
+   },
    {
     "title": "Public Hearing",
     "date": "2026-11-17",
@@ -183,8 +182,28 @@
     ]
    }
   ],
-  "localTaxCitations": 12,
+  "localTaxCitations": 13,
   "budgetItems": [
+   {
+    "title": "Work Session",
+    "date": "2026-12-01",
+    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261201/a_30839_2026.12.01___Work_Session_Agenda.pdf",
+    "terms": [
+     "budget amendment",
+     "budget-then-decision",
+     "decision-then-budget"
+    ],
+    "excerpt": "… 6-1477 Approval/authorization of the October 31, 2026 Monthly Financial Status Report and ratification of all budget amendments. Approval/authorization of a Resolution amending the FY2026 budget to reflect adjustments to revenues …",
+    "excerptTerm": "budget amendment"
+   },
+   {
+    "title": "Informal Presentation",
+    "date": "2026-12-01",
+    "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261201/a_27510_2026.12.01___Informal_Presentation_Agenda_1100am.pdf",
+    "terms": [
+     "decision-then-budget"
+    ]
+   },
    {
     "title": "Business Session",
     "date": "2026-11-03",
@@ -195,12 +214,115 @@
     ]
    }
   ],
-  "budgetCitations": 1,
-  "landUseCitations": 4,
+  "budgetCitations": 3,
+  "landUseCitations": 3,
   "alprCitations": 2,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "82270",
+   "date": "2026-12-01",
+   "body": "Board of Commissioners",
+   "title": "Informal Business Discussion",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261201/a_82270_2026.12.01___Informal_Business_Discussion_Agenda_1200pm.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261201/a_82270_2026.12.01___Informal_Business_Discussion_Agenda_1200pm.pdf",
+   "textMethod": "ocr",
+   "textChars": 389,
+   "pdfSha256": "0b7a13f8db070e9c6688c3e6b1216c6b152c693f01437f23ae89185fa38e2ed6",
+   "topics": {},
+   "tags": [],
+   "matchedTerms": [],
+   "topicExcerpts": {},
+   "flags": [],
+   "dataCenterItems": []
+  },
+  {
+   "id": "30839",
+   "date": "2026-12-01",
+   "body": "Board of Commissioners",
+   "title": "Work Session",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261201/a_30839_2026.12.01___Work_Session_Agenda.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261201/a_30839_2026.12.01___Work_Session_Agenda.pdf",
+   "textMethod": "pdftotext",
+   "textChars": 21677,
+   "pdfSha256": "220a8528c9ca2d78415e2be80f4c83d89bc14f61a3273c778666bad2b1be31c5",
+   "topics": {
+    "appointment": 1,
+    "budget": 1,
+    "contract": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "budget",
+    "contract",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "budget amendment",
+    "budget-then-decision",
+    "contract",
+    "decision-then-budget",
+    "splost"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… y Approved on November 23, 2026, Vote 4-0.) IV. New Business 1. Commissioners 2026-1469 Approval to appoint Incumbent Raven Brannon to the Region Three Department of Behavioral Health and Development Disabilities. Ter …",
+     "context": "unknown"
+    },
+    "budget": {
+     "term": "budget amendment",
+     "excerpt": "… 6-1477 Approval/authorization of the October 31, 2026 Monthly Financial Status Report and ratification of all budget amendments. Approval/authorization of a Resolution amending the FY2026 budget to reflect adjustments to revenues …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "contract",
+     "excerpt": "… Tuesday, December 1, 2026 - 10:00 AM I. Call To Order II. Approval of Agenda III. New Business - Contract Renewals 1. Multiple Departments 2026-1494 Approval to renew BL106-22, purchase of duty and traini …",
+     "context": "unknown"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… ces, LLC and Quality Traffic Data, LLC, amount not to exceed $288,600.00. This contract is funded by the 2023 SPLOST Program. (Recommendation: Approval) 10. Water Resources/Rebecca Shelton 2026-1463 Approval …",
+     "context": "unknown"
+    }
+   },
+   "flags": [
+    "budget",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
+  {
+   "id": "27510",
+   "date": "2026-12-01",
+   "body": "Board of Commissioners",
+   "title": "Informal Presentation",
+   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261201/a_27510_2026.12.01___Informal_Presentation_Agenda_1100am.pdf",
+   "textSource": "agenda",
+   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20261201/a_27510_2026.12.01___Informal_Presentation_Agenda_1100am.pdf",
+   "textMethod": "ocr",
+   "textChars": 418,
+   "pdfSha256": "c0180a71faf0f435c625ae2db8940879d74ddf7747819306b2b4820c188d0af9",
+   "topics": {
+    "budget": 1
+   },
+   "tags": [
+    "budget"
+   ],
+   "matchedTerms": [
+    "decision-then-budget"
+   ],
+   "topicExcerpts": {},
+   "flags": [
+    "budget"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "80124",
    "date": "2026-11-17",
@@ -1020,54 +1142,6 @@
    "matchedTerms": [],
    "topicExcerpts": {},
    "flags": [],
-   "dataCenterItems": []
-  },
-  {
-   "id": "86782",
-   "date": "2026-08-25",
-   "body": "Board of Commissioners",
-   "title": "Public Hearing",
-   "sourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260825/a_86782_2026.08.25___AMENDED_Public_Hearing_Agenda.pdf",
-   "textSource": "agenda",
-   "textSourceUrl": "https://www.gwinnettcounty.com/static/upload/bac/52/20260825/a_86782_2026.08.25___AMENDED_Public_Hearing_Agenda.pdf",
-   "textMethod": "pdftotext",
-   "textChars": 7722,
-   "pdfSha256": "6c351bd3424fa498935fe82d501317099d89e6d7b8a15c65cae9b10e47428124",
-   "topics": {
-    "contract": 1,
-    "rezoning": 1,
-    "variance": 1
-   },
-   "tags": [
-    "contract",
-    "rezoning",
-    "variance"
-   ],
-   "matchedTerms": [
-    "contract",
-    "rezon",
-    "variance"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "contract",
-     "excerpt": "… ison 2026-0912 Award RP006-26, provision of professional on-call planning services on a multi-year contract, to multiple vendors. The initial term of this contract shall be August 25, 2026 through December 31, 2026, a …",
-     "context": "unknown"
-    },
-    "rezoning": {
-     "term": "rezon",
-     "excerpt": "… mmendation: Approve with Conditions] [Planning Commission Recommendation: Approve with Conditions] 2. Rezonings 2026-1102 REZ2026-00031, Applicant: Atlantic Development Group, LLC c/o Mahaffey Pickens Tucke …",
-     "context": "unknown"
-    },
-    "variance": {
-     "term": "variance",
-     "excerpt": "… l Nos. R7287 064 and 436; 5282 and the 5200 Block of Moore Road; Special Use Permit with Concurrent Variances in an R-100 Zoning District for a Place of Worship; 7.65 acres; District 4/Holtkamp [Planning Department Rec …",
-     "context": "unknown"
-    }
-   },
-   "flags": [
-    "land-use"
-   ],
    "dataCenterItems": []
   }
  ]

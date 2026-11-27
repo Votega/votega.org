@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-25T18:29:25Z",
+  "generatedAt": "2026-11-27T20:24:07Z",
   "source": "Columbia County (civicclerk agenda/minutes PDFs, poppler+OCR)",
   "place": "Columbia County",
   "count": 25
@@ -8,23 +8,33 @@
  "summary": {
   "flags": [
    "alpr",
+   "data-center",
    "land-use",
    "local-taxes",
    "millage-budget"
   ],
   "lastActivity": "2026-12-03",
   "topicTotals": {
-   "rezoning": 17,
-   "variance": 19,
-   "development": 3,
-   "special-land-use": 7,
-   "appointment": 3,
+   "rezoning": 18,
+   "variance": 20,
    "contract": 12,
+   "data-center": 1,
+   "development": 4,
+   "special-land-use": 8,
+   "appointment": 3,
    "alpr": 2,
    "millage-budget": 3,
    "local-taxes": 2
   },
-  "dataCenterItems": [],
+  "dataCenterItems": [
+   {
+    "title": "Board of Commissioners Meeting",
+    "date": "2026-12-01",
+    "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13973,plainText=false)",
+    "excerpt": "… Commissioner Carraway 1. (I2b1) Resolution Number 26-30 Halting the Acceptance of New Data Center Zoning Applications. Authorizing Staff to Initiate an Amendment to Chapter 90 Zoning …",
+    "excerptTerm": "data center"
+   }
+  ],
   "landUseItems": [
    {
     "title": "Planning Commission",
@@ -235,7 +245,7 @@
     ]
    }
   ],
-  "landUseMeetings": 22,
+  "landUseMeetings": 23,
   "alprItems": [
    {
     "title": "Board of Commissioners Meeting",
@@ -285,7 +295,7 @@
   "budgetCitations": 0,
   "landUseCitations": 22,
   "alprCitations": 2,
-  "dataCenterCitations": 0
+  "dataCenterCitations": 1
  },
  "meetings": [
   {
@@ -327,6 +337,87 @@
     "land-use"
    ],
    "dataCenterItems": []
+  },
+  {
+   "id": "2577",
+   "date": "2026-12-01",
+   "body": "Board of Commissioners",
+   "title": "Board of Commissioners Meeting",
+   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13973,plainText=false)",
+   "textSource": "agenda",
+   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13973,plainText=false)",
+   "textMethod": "pdftotext",
+   "textChars": 13623,
+   "pdfSha256": "74d99404dfd2884615ee9c49b4c0188f2f88aa65ca506e7ae12ac8dbd19c5c3d",
+   "topics": {
+    "contract": 1,
+    "data-center": 1,
+    "development": 1,
+    "rezoning": 1,
+    "special-land-use": 1,
+    "variance": 1
+   },
+   "tags": [
+    "contract",
+    "data-center",
+    "development",
+    "rezoning",
+    "special-land-use",
+    "variance"
+   ],
+   "matchedTerms": [
+    "conditional use",
+    "contract",
+    "data center",
+    "rezon",
+    "subdivision",
+    "variance"
+   ],
+   "topicExcerpts": {
+    "contract": {
+     "term": "contract",
+     "excerpt": "… a. (H1a) Proclamation Recognizing December 10, 2026 as Columbia County Heritage Day b. (H1b) Independent Contractor Agreement with Bliss Products and Services, Inc. for the Replacement of the Gateway Park Splash Pa …",
+     "context": "agenda-action"
+    },
+    "data-center": {
+     "term": "data center",
+     "excerpt": "… Commissioner Carraway 1. (I2b1) Resolution Number 26-30 Halting the Acceptance of New Data Center Zoning Applications. Authorizing Staff to Initiate an Amendment to Chapter 90 Zoning …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… ry Use of the Code of Ordinances - First Reading 10. (I2a10) Ordinance Number 26-04 Amending Chapter 74 Subdivision Sections 74-36 Generally, 74-37 Preliminary Plat, 74-39 Final Plat of Record and 74-118 …",
+     "context": "agenda-action"
+    },
+    "rezoning": {
+     "term": "rezon",
+     "excerpt": "… currently zoned C-2 (General Commercial). 2. (I2a2) RZ26-11-02, Rezoning from R-1 (Single Family Residential) to S-1 (Special), 4933 Hereford Farm Road, Tax …",
+     "context": "unknown"
+    },
+    "special-land-use": {
+     "term": "conditional use",
+     "excerpt": "… ly zoned R-2 (Single Family Residential). 5. (I2a5) RZ26-11-05, Conditional use for Therapeutic Massage, 4143 Columbia Road, Tax Map 079 Parcel 095E, 2.00 +/- acres, …",
+     "context": "unknown"
+    },
+    "variance": {
+     "term": "variance",
+     "excerpt": "… Commissioner Melear 1. (I2a1) VA26-11-04, Variance to Sections 90-98 List of lot & structure requirements, 90- 133 Parking, and 90-139 Bu …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "data-center"
+   ],
+   "dataCenterItems": [
+    {
+     "title": "Board of Commissioners Meeting",
+     "date": "2026-12-01",
+     "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13973,plainText=false)",
+     "excerpt": "… Commissioner Carraway 1. (I2b1) Resolution Number 26-30 Halting the Acceptance of New Data Center Zoning Applications. Authorizing Staff to Initiate an Amendment to Chapter 90 Zoning …",
+     "excerptTerm": "data center"
+    }
+   ]
   },
   {
    "id": "2629",
@@ -1402,36 +1493,6 @@
     "millage-budget",
     "alpr"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "2562",
-   "date": "2026-06-09",
-   "body": "Board of Commissioners",
-   "title": "Audit Committee",
-   "sourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13626,plainText=false)",
-   "textSource": "agenda",
-   "textSourceUrl": "https://columbiacoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=13626,plainText=false)",
-   "textMethod": "pdftotext",
-   "textChars": 3449,
-   "pdfSha256": "2362feda64796be3b4e65831f31a1c7edb36511143005f3a3eabea825dd82c28",
-   "topics": {
-    "contract": 1
-   },
-   "tags": [
-    "contract"
-   ],
-   "matchedTerms": [
-    "procurement"
-   ],
-   "topicExcerpts": {
-    "contract": {
-     "term": "procurement",
-     "excerpt": "… Chairman Couch a. Management Services 1. Draft Reports a. (G1a1a) Procurement Internal Audit Report b. (G1a1b) Recycling Internal Audit Report 2. Internal Au …",
-     "context": "unknown"
-    }
-   },
-   "flags": [],
    "dataCenterItems": []
   }
  ]

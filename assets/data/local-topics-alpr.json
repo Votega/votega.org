@@ -85,12 +85,6 @@
    "region": "South Georgia"
   },
   {
-   "placeId": "cobb",
-   "placeName": "Cobb County",
-   "placeType": "county",
-   "region": "Metro Atlanta"
-  },
-  {
    "placeId": "coweta",
    "placeName": "Coweta County",
    "placeType": "county",
@@ -225,6 +219,32 @@
  ],
  "mentions": [
   {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": null,
+   "date": "2026-12-04",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13067",
+   "placeId": "cobb",
+   "placeName": "Cobb County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://cobbcoga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=10375,plainText=false)",
+   "tags": [],
+   "terms": [
+    "automated license plate",
+    "flock",
+    "license plate reader",
+    "plate reader"
+   ],
+   "vendors": [
+    "Flock Safety"
+   ]
+  },
+  {
    "body": "Committee of the Whole",
    "confidence": "medium",
    "context": null,
@@ -246,6 +266,27 @@
    "vendors": []
   },
   {
+   "body": "ERPS-Employee Relations & Public Safety Committee",
+   "confidence": "medium",
+   "context": null,
+   "date": "2026-12-01",
+   "docType": "agenda",
+   "excerpt": null,
+   "excerptTerm": null,
+   "fips": "13089",
+   "placeId": "dekalb",
+   "placeName": "DeKalb County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "legistar",
+   "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4702&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
+   "tags": [],
+   "terms": [
+    "crime center"
+   ],
+   "vendors": []
+  },
+  {
    "body": "Public Safety & Legal Administration Committee",
    "confidence": "medium",
    "context": null,
@@ -254,6 +295,11 @@
    "excerpt": null,
    "excerptTerm": null,
    "fips": null,
+   "followThrough": "not-in-minutes",
+   "meetingId": "4350",
+   "minutesDraft": true,
+   "minutesUrl": "https://atlantacityga.iqm2.com/Citizens/FileOpen.aspx?Type=15&ID=4178&Inline=True",
+   "outcomes": [],
    "placeId": "atlanta",
    "placeName": "City of Atlanta",
    "placeType": "city",
@@ -682,7 +728,7 @@
    "vendors": []
   },
   {
-   "body": "Board of Commissioners",
+   "body": "Public Safety Committee",
    "confidence": "high",
    "context": "agenda-action",
    "date": "2026-10-19",
@@ -1715,28 +1761,6 @@
    "body": "Board of Commissioners",
    "confidence": "high",
    "context": "agenda-action",
-   "date": "2026-06-23",
-   "docType": "agenda",
-   "excerpt": "… (CEW). Ratifying increase in contract funds for 100 additional tasers and previously issued purchase order. Awarded to Axon Enterprise, Inc. Amount Not To Exceed: $1,442,514.00. Resolution",
-   "excerptTerm": "axon enterprise",
-   "fips": "13089",
-   "placeId": "dekalb",
-   "placeName": "DeKalb County",
-   "placeType": "county",
-   "region": "Metro Atlanta",
-   "sourceType": "legistar",
-   "sourceUrl": "https://dekalbcountyga.legistar.com/MeetingDetail.aspx?LEGID=4479&GID=570&G=38B42E79-166F-4337-AE30-3665ECD50E7A",
-   "tags": [],
-   "terms": [
-    "axon enterprise",
-    "body cam"
-   ],
-   "vendors": []
-  },
-  {
-   "body": "Board of Commissioners",
-   "confidence": "high",
-   "context": "agenda-action",
    "date": "2026-06-16",
    "docType": "agenda",
    "excerpt": "… r Munis 2026-2027 Authorization of Payment g. (H1g) Agreement Renewal Number Four with A3 Communications for Genetec Video Management System Support h. (H1h) Agreement Renewal Number Two with Structure Med …",
@@ -1807,6 +1831,29 @@
    "vendors": [
     "Flock Safety"
    ]
+  },
+  {
+   "body": "Board of Commissioners",
+   "confidence": "high",
+   "context": "unknown",
+   "date": "2026-06-11",
+   "docType": "agenda",
+   "excerpt": "… GBI Latent Workstation $44,600 $44,600 Sheriff Completed Replacement Body - Dash Camera System $636,858 $583,358 Sheriff Completed Taser ReplacementProgram-FY26 …",
+   "excerptTerm": "dash cam",
+   "fips": "13113",
+   "placeId": "fayette",
+   "placeName": "Fayette County",
+   "placeType": "county",
+   "region": "Metro Atlanta",
+   "sourceType": "ocr",
+   "sourceUrl": "https://www.fayettecountyga.gov/Documents/Government/Board%20of%20Commissioners/Agendas%20And%20Minutes/2026/06-11-2026%20BOC%20Agenda.pdf",
+   "tags": [],
+   "terms": [
+    "body cam",
+    "dash cam",
+    "surveillance system"
+   ],
+   "vendors": []
   },
   {
    "body": "Board of Commissioners",
@@ -2169,11 +2216,11 @@
   "consolidatedScanned": 4,
   "countiesScanned": 54,
   "emoji": "📷",
-  "generatedAt": "2026-11-25T18:58:18Z",
+  "generatedAt": "2026-11-27T20:43:13Z",
   "label": "ALPR / surveillance",
   "mentionsWithOutcomes": 4,
   "placesScanned": 68,
-  "placesWithMentions": 31,
+  "placesWithMentions": 32,
   "topic": "alpr",
   "universeCities": 537,
   "universeConsolidated": 9,

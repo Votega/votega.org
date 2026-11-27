@@ -1,6 +1,6 @@
 {
  "metadata": {
-  "generatedAt": "2026-11-25T18:37:10Z",
+  "generatedAt": "2026-11-27T20:24:55Z",
   "source": "Glynn County (granicus agenda HTML)",
   "place": "Glynn County",
   "count": 25
@@ -12,20 +12,30 @@
    "land-use",
    "local-taxes"
   ],
-  "lastActivity": "2026-11-19",
+  "lastActivity": "2026-12-03",
   "topicTotals": {
+   "appointment": 6,
+   "contract": 17,
+   "development": 12,
+   "local-taxes": 14,
    "budget": 13,
-   "contract": 16,
-   "development": 11,
-   "local-taxes": 13,
    "rezoning": 11,
    "alpr": 1,
    "variance": 3,
-   "appointment": 5,
    "special-land-use": 2
   },
   "dataCenterItems": [],
   "landUseItems": [
+   {
+    "title": "Name, Glynn County Board of Commissioners",
+    "date": "2026-12-03",
+    "sourceUrl": "https://glynncounty.granicus.com/AgendaViewer.php?view_id=1&event_id=680",
+    "tags": [
+     "development"
+    ],
+    "excerpt": "… with no financial impact on the award. (L. Johnson) REPORT 4. FP-26-9 Majestic Oaks, Phase 2B Final Plat: Consider the subdivision approval of a 22.9-acre parcel to create a 43-lot residential subdivision, Majestic Oaks, Phase 2B, including acceptanc …",
+    "excerptTerm": "subdivision"
+   },
    {
     "title": "Name, Glynn County Board of Commissioners",
     "date": "2026-11-19",
@@ -180,7 +190,7 @@
     "excerptTerm": "rezon"
    }
   ],
-  "landUseMeetings": 14,
+  "landUseMeetings": 15,
   "alprItems": [
    {
     "title": "Name, Glynn County Board of Commissioners",
@@ -195,6 +205,16 @@
   ],
   "alprMeetings": 1,
   "localTaxItems": [
+   {
+    "title": "Name, Glynn County Board of Commissioners",
+    "date": "2026-12-03",
+    "sourceUrl": "https://glynncounty.granicus.com/AgendaViewer.php?view_id=1&event_id=680",
+    "terms": [
+     "splost"
+    ],
+    "excerpt": "… related to the Saint Simons Island Gateway Project in an amount not to exceed $667,576, with funding to be provided by SPLOST 2022 Tier 2+ (Additional Collections). (R. Talbert) REPORT 8. Approve a Utility Relocation Agreement (Distribution) bet …",
+    "excerptTerm": "splost"
+   },
    {
     "title": "Name, Glynn County Board of Commissioners",
     "date": "2026-11-19",
@@ -328,7 +348,7 @@
     "excerptTerm": "splost"
    }
   ],
-  "localTaxCitations": 13,
+  "localTaxCitations": 14,
   "budgetItems": [
    {
     "title": "Name, Glynn County Board of Commissioners",
@@ -473,11 +493,68 @@
    }
   ],
   "budgetCitations": 13,
-  "landUseCitations": 14,
+  "landUseCitations": 15,
   "alprCitations": 1,
   "dataCenterCitations": 0
  },
  "meetings": [
+  {
+   "id": "680",
+   "date": "2026-12-03",
+   "body": "Board of Commissioners",
+   "title": "Name, Glynn County Board of Commissioners",
+   "sourceUrl": "https://glynncounty.granicus.com/AgendaViewer.php?view_id=1&event_id=680",
+   "textSource": "agenda",
+   "textSourceUrl": "https://glynncounty.granicus.com/AgendaViewer.php?view_id=1&event_id=680",
+   "textMethod": "html",
+   "textChars": 4672,
+   "contentSha256": "2badd3faf731e9a88033991dc2f38549908158ffacc83cb7508a9fd6cd8a5922",
+   "topics": {
+    "appointment": 1,
+    "contract": 1,
+    "development": 1,
+    "local-taxes": 1
+   },
+   "tags": [
+    "appointment",
+    "contract",
+    "development",
+    "local-taxes"
+   ],
+   "matchedTerms": [
+    "appoint",
+    "purchase order",
+    "splost",
+    "subdivision"
+   ],
+   "topicExcerpts": {
+    "appointment": {
+     "term": "appoint",
+     "excerpt": "… he regular meeting held on November 19, 2026, subject to any necessary corrections. (R. Vakulich) REPORT 2. Approve the appointment of Teresa LaRosa to the Dangerous or Vicious Dog Hearing Board as an alternate for a four-year term. The term begin …",
+     "context": "agenda-action"
+    },
+    "contract": {
+     "term": "purchase order",
+     "excerpt": "… unding to be provided by SPLOST 2022 Tier 2+ (Additional Collections). (R. Talbert) REPORT 9. Approve the issuance of a purchase order to H2I Group in the amount of $92,000 to purchase safety netting for the Mallery Park Renovation Project, utilizing a c …",
+     "context": "agenda-action"
+    },
+    "development": {
+     "term": "subdivision",
+     "excerpt": "… with no financial impact on the award. (L. Johnson) REPORT 4. FP-26-9 Majestic Oaks, Phase 2B Final Plat: Consider the subdivision approval of a 22.9-acre parcel to create a 43-lot residential subdivision, Majestic Oaks, Phase 2B, including acceptanc …",
+     "context": "agenda-action"
+    },
+    "local-taxes": {
+     "term": "splost",
+     "excerpt": "… related to the Saint Simons Island Gateway Project in an amount not to exceed $667,576, with funding to be provided by SPLOST 2022 Tier 2+ (Additional Collections). (R. Talbert) REPORT 8. Approve a Utility Relocation Agreement (Distribution) bet …",
+     "context": "agenda-action"
+    }
+   },
+   "flags": [
+    "land-use",
+    "local-taxes"
+   ],
+   "dataCenterItems": []
+  },
   {
    "id": "1038",
    "date": "2026-11-19",
@@ -1689,24 +1766,6 @@
     "budget",
     "local-taxes"
    ],
-   "dataCenterItems": []
-  },
-  {
-   "id": "915",
-   "date": "2026-03-17",
-   "body": "Board of Commissioners",
-   "title": "Name, Glynn County Board of Commissioners",
-   "sourceUrl": "https://glynncounty.granicus.com/AgendaViewer.php?view_id=1&clip_id=915",
-   "textSource": "agenda",
-   "textSourceUrl": "https://glynncounty.granicus.com/AgendaViewer.php?view_id=1&clip_id=915",
-   "textMethod": "html",
-   "textChars": 546,
-   "contentSha256": "4ab1404eaa0d1ac9142a2900ee7803ee59db3aa431a375c915c29c08d9c194ff",
-   "topics": {},
-   "tags": [],
-   "matchedTerms": [],
-   "topicExcerpts": {},
-   "flags": [],
    "dataCenterItems": []
   }
  ]
