@@ -70,7 +70,7 @@ breadcrumb:
   .member-card-stats { display: flex; flex-wrap: wrap; gap: 0.1rem 0.75rem; margin-top: 0.35rem; font-size: 0.75rem; }
   .member-card-stats .stat-volume { flex-basis: 100%; }
   .stat-trades { color: var(--color-link); font-weight: 600; }
-  .stat-late { color: var(--color-danger); font-weight: 600; }
+  .stat-late { color: var(--color-warning); font-weight: 600; }
   .stat-volume { color: var(--color-text); }
   .member-card-profile-link {
     display: inline-block;
@@ -144,8 +144,7 @@ breadcrumb:
   .trade-table tr.is-late td { background: var(--color-warning-tint); }
   .trade-table tr.is-late:hover td { background: var(--color-warning-tint); }
 
-  .type-purchase { color: var(--color-success); font-weight: 600; }
-  .type-sale     { color: var(--color-danger); font-weight: 600; }
+  .type-purchase, .type-sale { color: var(--color-text); font-weight: 600; }
   .ticker-chip {
     display: inline-block;
     background: var(--color-surface-chrome);
@@ -158,8 +157,10 @@ breadcrumb:
   }
   .late-badge {
     display: inline-block;
-    background: var(--color-danger-tint);
-    color: var(--color-danger);
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-warning-line);
+    color: var(--color-warning);
+    white-space: nowrap;
     font-size: 0.7rem;
     font-weight: 700;
     padding: 0.1rem 0.35rem;
@@ -183,13 +184,9 @@ breadcrumb:
     margin-left: 0.3rem;
     vertical-align: middle;
     white-space: nowrap;
+    background: var(--color-surface-chrome);
+    color: var(--color-text);
   }
-  .asset-CT { background: var(--color-warning-tint); color: var(--color-warning); }  /* Crypto */
-  .asset-ST { background: var(--color-surface-tint); color: var(--color-link); }  /* Stock */
-  .asset-GS { background: var(--color-success-tint); color: var(--color-success); }  /* Gov Security */
-  .asset-CS { background: var(--color-surface-tint); color: var(--color-link); }  /* Corporate Security */
-  .asset-OT { background: var(--color-surface-chrome); color: var(--color-text); }  /* Other */
-  .asset-HN { background: var(--color-surface-tint); color: var(--color-link); }  /* Hedge/Note */
 
   #tradeCount { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 0.5rem; }
   #loadMore {
@@ -505,7 +502,7 @@ breadcrumb:
         : '';
 
       const lateHtml = info.lateFilings > 0
-        ? `<span class="stat-late">${info.lateFilings} late</span>`
+        ? `<span class="stat-late"><i class="fa-solid fa-clock" aria-hidden="true"></i> ${info.lateFilings} late</span>`
         : '';
 
       const imgHtml = info.photoUrl
@@ -640,7 +637,7 @@ breadcrumb:
         : `<span style="color:var(--color-text-muted);font-size:0.8rem;">—</span>`;
 
       const daysHtml = t.days_to_file != null
-        ? `${t.days_to_file}d${t.is_late ? ' <span class="late-badge">LATE</span>' : ''}`
+        ? `${t.days_to_file}d${t.is_late ? ' <span class="late-badge"><i class="fa-solid fa-clock" aria-hidden="true"></i> LATE</span>' : ''}`
         : '—';
 
       const ownerMap = { 'SP': 'Spouse', 'JT': 'Joint', 'DC': 'Dependent' };
