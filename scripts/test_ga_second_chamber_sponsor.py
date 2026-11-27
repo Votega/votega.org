@@ -138,8 +138,9 @@ check("all zero says nothing", prose([0, 0, 0, 0]), "")
 
 print("published dataset")
 rows = list(csv.reader(io.StringIO(P.bills_csv(BILLS).decode())))
-check("new CSV column goes last", rows[0][-2:], ["billUrl", "secondChamberSponsor"])
-check("CSV carries the name, blank when none", [r[-1] for r in rows[1:]], ["M201", "M101", ""])
+sc = rows[0].index("secondChamberSponsor")
+check("column appended after billUrl", rows[0][sc - 1:sc + 1], ["billUrl", "secondChamberSponsor"])
+check("CSV carries the name, blank when none", [r[sc] for r in rows[1:]], ["M201", "M101", ""])
 check("sponsorCount does not count them", [r[rows[0].index("sponsorCount")] for r in rows[1:]], ["2", "1", "1"])
 item = P.schema()["properties"]["bills"]["items"]
 check("schema describes the field", item["properties"].get("secondChamberSponsor", {}).get("type"),
