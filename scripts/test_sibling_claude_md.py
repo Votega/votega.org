@@ -47,6 +47,7 @@ check("names the repo", text.startswith("# Votega/ga-legislation:"), True)
 check("names both publishers", ("`scripts/publish_ga_bills.py`" in text,
                                 "`scripts/publish_ga_ballot_measures.py`" in text), (True, True))
 check("points at the conventions", "docs/conventions-publishing.md" in text, True)
+check("points at the data catalog", "docs/data-catalog.md" in text, True)
 check("README and CHANGES are hand-maintained", ("`README.md` at the root" in text, "`CHANGES.md` at the root" in text),
       (True, True))
 check("credits the upstream", "legis.ga.gov" in text, True)
