@@ -255,7 +255,9 @@ for cap, want in [("SBs 234,  235,  & 336 Passage", True), ("Veto Override", Tru
                   ("Remove from Local Cal/Vote Separately", False), ("Attendance", False),
                   ("MORNING ROLL CALL", False),
                   ("ADOPTION OF AMENDMENT #1 BY THE SENATOR FROM THE 22ND", False),
-                  ("MOTION FOR THE PREVIOUS QUESTION", False)]:
+                  ("MOTION FOR THE PREVIOUS QUESTION", False),
+                  ("Local Calendar as a Whole", False), ("Local Calendar ", True),
+                  ("Supplemental Local Calendar", True)]:
     check("passage %r" % cap, native_is_passage(cap), want)
 
 if failures:

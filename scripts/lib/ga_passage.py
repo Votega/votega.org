@@ -67,7 +67,12 @@ LOCAL_CALENDAR = re.compile(r"local\s+(consent\s+)?calendar", re.IGNORECASE)
 #: broadened `adopt` rule — including "ADOPTION OF THE AMENDMENT BY THE SENATOR…".
 PROCEDURAL_CAPTION = re.compile(
     r"^\s*(adoption of (the\s+|an?\s+)?amend|motion to|motion for|shall the ruling|"
-    r"previous question|point of order|reconsider)",
+    r"previous question|point of order|reconsider)"
+    # "Local Calendar as a Whole" (2026 SS House, 2026-06-20, 93-68) decided an
+    # OBJECTION to voting on the local calendar in one block, not the bills: the floor
+    # transcript has the Speaker put "voting on the local calendar as a whole", then
+    # "the objection is lost", then the passage vote ("Local Calendar", 95-67).
+    r"|\bas\s+a\s+whole\b",
     re.IGNORECASE)
 
 

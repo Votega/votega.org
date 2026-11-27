@@ -164,8 +164,8 @@ Operations: `GetVotes` ✓, `GetVote` ✓, `GetVotesForLegislation` —.
 GetLegislationDetail then leaves the vote out of the bill's `Votes` too. Only the listing's
 `Legislation` text names the bill. 2025-26 + 2026 SS have three: 2026 SS House
 `Veto Override` (`HB 1192`, a **2025-26** bill), 2025-26 House `Adopt CCR` (`HB 973`, the
-amended FY2026 budget), and 2026 SS House `Local Calendar as a Whole` (text empty: no bill
-can be named). Both producers resolve the text with `lib/ga_passage.resolve_listing_bills`
+amended FY2026 budget), and 2026 SS House `Local Calendar as a Whole` (text empty; a
+procedural vote on how to vote, not a final action: see section 4). Both producers resolve the text with `lib/ga_passage.resolve_listing_bills`
 (own session first, else a unique match in the biennium); a vote attached this way carries
 `linkedBy: "listing"` in ga-bills.json.
 | **`Tag`** (GetVote only) | journal vote key: `hv0434` (House), `sv0114` (Senate) = chamber + `Number` | — |
@@ -211,7 +211,13 @@ Speaker elections, `Move from <committee> to <committee>`.
 | 6 | Roll calls with an empty `ItemVotedOn` dropped | both producers | HB 1192's override and HB 973's House CCR vote missing |
 
 Fixed: 1–5 in #541/#542, 6 after them. "Local Calendar as a Whole" (2026-06-20, 93-68)
-remains unattached: neither its record nor its listing names a bill.
+is not a passage vote and is now classed as procedural (`lib/ga_passage.PROCEDURAL_CAPTION`):
+the House floor transcript (Georgia Commons, `meeting:2026-06-20/house-floor`) shows it
+decided an objection to voting on the local calendar in one block ("All those in favor of
+voting on the local calendar as a whole will vote yes … the objection is lost"); the
+passage vote on the 66 bills followed as "Local Calendar", 95-67, lost short of two-thirds.
+The House Rules do not describe the step; Rule 31(10) only lists "third reading and
+passage of uncontested local bills" in the order of business.
 
 ---
 
