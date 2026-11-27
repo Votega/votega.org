@@ -100,6 +100,7 @@ Full annotated tree: `docs/project-structure.md`. Run `git ls-files` for the cur
 ## Reference docs (read before touching the area)
 | Working on | Read |
 |---|---|
+| Where any dataset comes from: its source, the script that builds it, refresh schedule, readers, sibling repo | `docs/data-catalog.md` |
 | Any dataset's JSON shape (`current-members`, `ga-members`, `ga-member-votes`, federal votes/sponsorship, `id-crosswalk`, seats/holds, ZIP districts, executive orders, agency actions) | `docs/data-schemas.md` |
 | Roster, overrides, identity, key votes, AI bill summaries, seat history, biennium/Congress turnover | `docs/conventions-ga-legislature.md` (+ `docs/seat-history-design.md`, `docs/ga-biennium-rollover-decisions.md`, `docs/georgia-civic-data-collaboration.md`) |
 | Races, candidates, results pages, share cards, election-night and post-election runbooks | `docs/conventions-elections.md` |
