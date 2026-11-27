@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-26T20:42:55.024595+00:00",
+    "generatedAt": "2026-11-27T03:23:33.035887+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,21 +24,30 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 129,
+    "count": 126,
     "windowDays": 45,
-    "entityTagged": 83,
+    "entityTagged": 81,
     "topicCounts": {
-      "elections": 45,
-      "education": 10,
-      "courts": 10,
+      "elections": 44,
+      "education": 9,
+      "courts": 9,
       "ethics": 4,
       "healthcare": 17,
-      "budget": 7,
+      "budget": 6,
       "surveillance": 1
     },
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000014": {
+      "name": "Bill Hitchens",
+      "url": null,
+      "ocdPersonId": "ocd-person/4a9ef816-9130-4510-a19e-3124e3f2aeed",
+      "rosterId": "ocd-person/4a9ef816-9130-4510-a19e-3124e3f2aeed",
+      "candidateIds": [
+        "ga-house-161-2026-r-1"
+      ]
+    },
     "vg-ga-p-000211": {
       "name": "Soo Hong",
       "url": null,
@@ -176,12 +185,13 @@
   "items": [
     {
       "id": "f8ffee501f12",
-      "title": "Two Georgia GOP House lawmakers challenge losses that helped House Democrats flip chamber",
+      "title": "Suits challenge losses by Georgia GOP House lawmakers that helped Democrats flip chamber",
       "url": "https://thecurrentga.org/2026/11/26/two-georgia-gop-house-lawmakers-challenge-losses-that-helped-house-democrats-flip-chamber/",
       "source": "The Current GA",
       "publishedAt": "2026-11-26T14:18:26+00:00",
-      "snippet": "Two Georgia House Republicans filed legal challenges to their November midterm election losses, alleging voter ineligibility in the contests involving Representative Soo Hong and Representative Bill H",
+      "snippet": "Two Georgia Republicans filed legal challenges to November midterm election losses, alleging voter ineligibility in the contests involving Representative Soo Hong and Representative Bill Hitchens.\nThe",
       "entityIds": [
+        "vg-ga-p-000014",
         "vg-ga-p-000211"
       ],
       "topics": [
@@ -222,20 +232,6 @@
       ],
       "topics": [
         "elections"
-      ]
-    },
-    {
-      "id": "4ff8e332ac82",
-      "title": "GPB evening headlines for November 25, 2026",
-      "url": "https://www.gpb.org/news/2026/11/25/gpb-evening-headlines-for-november-25-2026",
-      "source": "GPB News",
-      "publishedAt": "2026-11-25T21:40:12+00:00",
-      "snippet": "Keisha Lance Bottoms will be sworn in as Georgia's next governor at Atlanta's State Farm Arena on Tuesday, January 12th.\nA superior court judge has ruled that Fulton County will not have to turn over ",
-      "entityIds": [
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "courts"
       ]
     },
     {
@@ -441,22 +437,6 @@
       "entityIds": [],
       "topics": [
         "courts"
-      ]
-    },
-    {
-      "id": "da56a39b1e7a",
-      "title": "Bottoms proposes directing gambling revenue to education",
-      "url": "https://thecurrentga.org/2026/11/21/bottoms-proposes-directing-gambling-revenue-to-education/",
-      "source": "The Current GA",
-      "publishedAt": "2026-11-21T19:26:53+00:00",
-      "snippet": "Georgia Governor-elect Keisha Lance Bottoms expressed support for a potential gambling referendum to fund education and announced several policy committees to guide her administration's transition.\nTh",
-      "entityIds": [
-        "vg-ga-p-000335"
-      ],
-      "topics": [
-        "elections",
-        "budget",
-        "education"
       ]
     },
     {
@@ -1817,16 +1797,6 @@
       "entityIds": [
         "vg-ga-p-000254"
       ],
-      "topics": []
-    },
-    {
-      "id": "42de9ecb8837",
-      "title": "Dr. Tim Lieuwen Named Interim President of Georgia Tech",
-      "url": "https://www.usg.edu/news/release/lieuwen-named-interim-georgia-tech-president-2026/",
-      "source": "University System of Georgia",
-      "publishedAt": "2026-10-13T00:00:00+00:00",
-      "snippet": null,
-      "entityIds": [],
       "topics": []
     }
   ]
