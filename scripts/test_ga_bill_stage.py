@@ -131,6 +131,32 @@ bills = [dict(hb1148, session="2025_26"), dict(hb520, session="2026_ss")]
 check("apply_stages", apply_stages(bills, datetime(2026, 11, 27), 2026), {"2025_26": True, "2026_ss": True})
 check("stage set", bills[0]["stage"]["kind"], "died-committee")
 
+# --- the legislative calendar decides adjournment when present ---------------
+from lib.ga_bill_stage import sine_die  # noqa: E402
+CAL = {"2025_26": {"lower": [[40, "2025-04-04"], [1, "2026-01-12"], [40, "2026-04-02"]]},
+       "2026_ss": {"lower": [[1, "2026-06-17"], [5, "2026-06-23"]]}}
+check("sine die is the last day of the whole calendar", sine_die(CAL["2025_26"]["lower"]), "2026-04-02")
+check("no calendar", sine_die([]), None)
+fresh = [dict(hb1148, session="2025_26"), dict(hb520, session="2026_ss")]
+check("calendar: both over", apply_stages(fresh, datetime(2026, 11, 27), 2026, CAL),
+      {"2025_26": True, "2026_ss": True})
+check("dead step names the day", fresh[0]["stage"]["steps"][2][2],
+      "Referred Mar 6, 2026 · never reported · session ended Apr 2, 2026")
+fresh = [dict(hb1148, session="2025_26")]
+check("calendar: sitting on sine die", apply_stages(fresh, datetime(2026, 4, 2), 2026, CAL), {"2025_26": False})
+check("calendar beats the quiet-days rule", apply_stages(
+    [dict(hb1148, session="2025_26")], datetime(2025, 9, 1), 2026, CAL), {"2025_26": False})
+check("no calendar for a session: fallback", apply_stages(
+    [dict(hb1148, session="2023_24")], datetime(2026, 11, 27), 2026, CAL), {"2023_24": True})
+
+# --- the producer keeps the committed calendar when a call fails --------------
+import generate_ga_bills_soap as G  # noqa: E402
+got = G.legislative_calendar(["2025_26"], {"2025_26": {"upper": [[1, "2025-01-13"]]}},
+                             fetch=lambda s, b: [[1, "2025-01-13"], [40, "2026-04-02"]] if b == "House" else [])
+check("fetched House, carried-forward Senate", got,
+      {"2025_26": {"lower": [[1, "2025-01-13"], [40, "2026-04-02"]], "upper": [[1, "2025-01-13"]]}})
+check("nothing at all", G.legislative_calendar(["2025_26"], None, fetch=lambda s, b: []), {})
+
 if failures:
     print("FAIL (%d):" % len(failures))
     for f in failures:

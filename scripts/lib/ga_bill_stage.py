@@ -247,16 +247,38 @@ def _label(bill, steps, at, origin, other, status):
     return "governor", "Sent to Governor"
 
 
-def apply_stages(bills, now, biennium_end_year=None):
+def sine_die(calendar_days):
+    """The last scheduled legislative day ('YYYY-MM-DD') of a session's calendar, or None.
+    For a regular session that is day 40 of the biennium's second year: first-year bills
+    carry over, so only the last day of the whole calendar ends them."""
+    dates = [d for _n, d in calendar_days or [] if d]
+    return max(dates) if dates else None
+
+
+def apply_stages(bills, now, biennium_end_year=None, calendar=None):
     """Set `stage` on every bill, deciding per session whether it has adjourned.
-    Returns {session: over}."""
+    Returns {session: over}.
+
+    `calendar` is metadata.legislativeCalendar ({session: {"lower": [[n, date]], ...}}):
+    a session is over once `now` is past its last scheduled day, and a dead bill's
+    stopped step names that day. A session with no calendar falls back to the
+    45-quiet-days rule (session_over)."""
     by_session = {}
     for b in bills:
         by_session.setdefault(b.get("session"), []).append(b)
     over = {}
     for session, group in by_session.items():
-        regular = not str(session or "").endswith("_ss")
-        over[session] = session_over(group, now, biennium_end_year if regular else None)
+        days = ((calendar or {}).get(session) or {}).get("lower") or []
+        last = sine_die(days)
+        if last:
+            over[session] = now.date().isoformat() > last
+        else:
+            regular = not str(session or "").endswith("_ss")
+            over[session] = session_over(group, now, biennium_end_year if regular else None)
         for b in group:
             b["stage"] = bill_stage(b, over[session])
+            if over[session] and last:
+                for step in b["stage"]["steps"]:
+                    if step[0] == "stopped" and step[2].endswith("never reported"):
+                        step[2] += " · session ended %s" % _day(last)
     return over

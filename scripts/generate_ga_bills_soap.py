@@ -426,6 +426,30 @@ def _passage_votes(detail, constitutional_amendment=False, legislation_id=None):
 
 
 
+
+def legislative_calendar(sessions, committed=None, fetch=None):
+    """{session: {"lower": [[day, date], ...], "upper": [...]}} from GetSessionSchedule.
+
+    Re-fetched every run: the General Assembly can revise its calendar mid-session by
+    adjournment resolution. A chamber whose call returns nothing keeps the committed
+    file's calendar for it, so one failed call never turns a known sine die into the
+    45-quiet-days fallback."""
+    from lib import ga_soap
+    fetch = fetch or ga_soap.get_session_schedule
+    out = {}
+    for session in sessions:
+        legis = legis_session_id(session)
+        if legis is None:
+            continue
+        entry = {}
+        for chamber, branch in (("lower", "House"), ("upper", "Senate")):
+            days = fetch(legis, branch) or ((committed or {}).get(session) or {}).get(chamber) or []
+            if days:
+                entry[chamber] = days
+        if entry:
+            out[session] = entry
+    return out
+
 def biennium_end_year():
     """2026 for the 2025-2026 biennium: the year its regular session's bills die."""
     try:
@@ -900,7 +924,9 @@ def main():
               % carry_committee_history(bills, committed_bills,
                                         datetime.now(timezone.utc).date().isoformat()))
     # Where each bill is (lib/ga_bill_stage.py), after the votes attached above.
-    adjourned = apply_stages(bills, datetime.now(timezone.utc), biennium_end_year())
+    calendar = legislative_calendar(sorted({b["session"] for b in bills if b.get("session")}),
+                                    (committed_meta or {}).get("legislativeCalendar"))
+    adjourned = apply_stages(bills, datetime.now(timezone.utc), biennium_end_year(), calendar)
     print("Bill stages: sessions adjourned %s"
           % ", ".join("%s=%s" % kv for kv in sorted(adjourned.items())))
 
@@ -941,6 +967,10 @@ def main():
                                    "billCount": by_session.get(sid, 0)}
                                   for sid in all_session_ids()],
             "activeSession":     ACTIVE_SESSION,
+            # Each session's legislative days per chamber (GetSessionSchedule):
+            # {session: {"lower": [[day, date]], "upper": [...]}}. Decides when a session
+            # has adjourned and drives the bills page's session-progress line.
+            "legislativeCalendar": calendar,
             "activeSessionName": session_name(ACTIVE_SESSION),
             "session":           ACTIVE_SESSION,
             "sessionName":       session_name(ACTIVE_SESSION),
