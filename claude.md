@@ -85,7 +85,7 @@ Full annotated tree: `docs/project-structure.md`. Run `git ls-files` for the cur
 - An `aka` is another NAME for the same organization, never a relationship (`c/o`, affiliates, individuals).
 - Read minutes with `pdftotext -raw`, never `-layout`.
 **Publishing** (`docs/conventions-publishing.md`)
-- Bot commits (GITHUB_TOKEN) fire no `on: push`: dispatch the deploy explicitly. Add a new sibling repo to `REPO_SOURCES` before publishing to it.
+- Bot commits (GITHUB_TOKEN) fire no `on: push`: dispatch the deploy explicitly. Add a new sibling repo to `REPO_SOURCES` and `REPO_PUBLISHERS` before publishing to it.
 - Publish a new artifact BEFORE adding its `_data/open_data.yml` entry, or the link validator goes red until the publisher runs.
 - Published schemas: `$id` built from the artifact's own path, carry `schemaVersion`; never add `required` to an existing schema.
 - Portrait cache: government hosts only, skip-if-cached (never re-download). A stamp means "content last changed", not "the job ran".

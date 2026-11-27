@@ -91,6 +91,81 @@ REPO_SOURCES = {
                                       "Code Crosswalk) and the U.S. Postal Service",
 }
 
+# The votega.org scripts that write each sibling repo, for the repo's CLAUDE.md. Keyed by
+# TARGET REPO, like REPO_SOURCES, so every publisher writing a repo emits the same file.
+# scripts/test_sibling_claude_md.py fails when a publish_*.py writes a repo not listed
+# here, or a listed script no longer exists.
+REPO_PUBLISHERS = {
+    "Votega/ga-legislators": ["publish_ga_legislators.py"],
+    "Votega/ga-legislation": ["publish_ga_bills.py", "publish_ga_ballot_measures.py"],
+    "Votega/ga-federal-legislators": ["publish_federal_delegation.py"],
+    "Votega/ga-races-elections": ["publish_races.py", "publish_results.py", "publish_early_vote.py"],
+    "Votega/ga-executive-orders": ["publish_ga_executive_orders.py"],
+    "Votega/ga-local-government": ["publish_ga_local_government.py", "publish_ga_millage.py"],
+    "Votega/ga-district-information": ["publish_ga_district_information.py"],
+}
+
+CLAUDE_MD_TEMPLATE = """\
+# {repo}: instructions for AI coding agents
+
+This repository is **published output**. Its data files are generated in
+[Votega/votega.org](https://github.com/Votega/votega.org) and overwritten on every
+publish, so an edit made here is undone by the next run. This file is generated too
+(`scripts/lib/sibling_publish.py`, `CLAUDE_MD_TEMPLATE`).
+
+## What not to edit here
+
+Every file in this repository except the ones listed below: the data (JSON, CSV,
+GeoJSON), the schemas, `latest.json`, the per-folder `README.md` / `.md` summaries
+inside data folders, `LICENSE`, `NOTICE.md`, `data/*/manifest.json` and this file.
+
+## What is maintained by hand here
+
+- `README.md` at the root: what the files are and the caveats a schema cannot express.
+- `CHANGES.md` at the root, where present: only changes a consumer must act on (a new
+  or renamed field, a changed `$id`, corrected values), newest first. Routine data
+  refreshes are not listed.
+- `.github/`, where present.
+
+When a published field or file changes, update `README.md` and `CHANGES.md` here in the
+same piece of work as the publisher change in votega.org.
+
+## Where a fix goes
+
+Wrong data, a missing field, a schema or CSV change: fix it in votega.org. This
+repository is written by:
+
+{publishers}
+Producers, data dictionaries and conventions there:
+
+- `docs/conventions-publishing.md`: the rules every sibling repo follows. New CSV
+  columns are appended, never inserted. A schema gains `properties` but never a new
+  `required`. Each schema's `$id` is its own path, and it carries `schemaVersion`
+  (bumped for a change a consumer must act on) and `schemaStability`.
+- `docs/data-schemas.md` and `docs/ga-soap-data-dictionary.md`: what the source fields
+  mean and how the published ones are built.
+
+## Upstream
+
+{source}
+"""
+
+
+def claude_md(repo):
+    """The CLAUDE.md every sibling repo carries, keyed by target repo (REPO_PUBLISHERS)."""
+    publishers = REPO_PUBLISHERS.get(repo)
+    if not publishers:
+        raise KeyError(
+            f"No publishers registered for {repo!r}. Add it to REPO_PUBLISHERS in "
+            "scripts/lib/sibling_publish.py so the published CLAUDE.md names them."
+        )
+    lines = "".join("- `scripts/%s`\n" % p for p in publishers)
+    source = REPO_SOURCES.get(repo, "")
+    return CLAUDE_MD_TEMPLATE.format(
+        repo=repo, publishers=lines,
+        source=("The facts come from %s." % source) if source else "See NOTICE.md.").encode()
+
+
 # Published under CC BY-SA 4.0: a data license, matching the attribution + share-alike
 # /open-data asks of reusers. LICENSE carries the canonical, unmodified legalcode so
 # GitHub detects the license; the attribution string reusers actually need lives in
@@ -396,9 +471,9 @@ def _dry_run(artifacts, out_dir):
 def publish_or_dry_run(repo, artifacts, token_env, validate=None):
     """Publish `artifacts` to `repo` if os.environ[token_env] is set, else dry-run to disk.
 
-    The reuse terms (LICENSE + NOTICE.md) are injected here, so no publisher can omit
-    them and all publishers targeting one repo emit byte-identical copies. A caller that
-    supplies its own LICENSE or NOTICE.md keeps it.
+    The reuse terms (LICENSE + NOTICE.md) and the agents' CLAUDE.md are injected here, so
+    no publisher can omit them and all publishers targeting one repo emit byte-identical
+    copies. A caller that supplies its own LICENSE, NOTICE.md or CLAUDE.md keeps it.
 
     Every artifact is gated before it can leave: `_assert_artifacts_sane` always runs, and
     an optional `validate(artifacts)` callback (see min_items) adds a dataset record floor.
@@ -407,6 +482,7 @@ def publish_or_dry_run(repo, artifacts, token_env, validate=None):
     """
     for path, data in license_artifacts(repo).items():
         artifacts.setdefault(path, data)
+    artifacts.setdefault("CLAUDE.md", claude_md(repo))
     _assert_artifacts_sane(artifacts)
     if validate is not None:
         validate(artifacts)
