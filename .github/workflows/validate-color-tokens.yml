@@ -1,0 +1,44 @@
+name: Validate color tokens
+
+# Runs scripts/test_color_tokens.py when pages, styles or scripts change. The same
+# suite also runs in run-script-tests.yml, whose path filter does not cover pages.
+# Offline, stdlib only. Not scheduled, so a failure shows on the PR.
+
+on:
+  push:
+    paths:
+      - '**.html'
+      - '**.css'
+      - '**.js'
+      - '**.md'
+      - 'scripts/test_color_tokens.py'
+      - '.github/workflows/validate-color-tokens.yml'
+  pull_request:
+    paths:
+      - '**.html'
+      - '**.css'
+      - '**.js'
+      - '**.md'
+      - 'scripts/test_color_tokens.py'
+      - '.github/workflows/validate-color-tokens.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  color-tokens:
+    runs-on: ubuntu-24.04  # pinned through the 2026 general — see RECURRING-TASKS.md
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Check that pages use color tokens
+        run: python scripts/test_color_tokens.py
