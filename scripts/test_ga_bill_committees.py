@@ -48,6 +48,30 @@ check("unknown type and missing id left out", G._committees(detail(
     "<Committees>" + listing("Joint", 5, "J", "Joint") + listing("House", None, "Hth", "Health")
     + "</Committees>")), [])
 
+# --- moves are recorded by comparing with the file the run replaces ----------
+PAC = {"chamber": "lower", "id": 120, "code": "P&CH", "name": "Public and Community Health"}
+HTH = {"chamber": "lower", "id": 196, "code": "Hth", "name": "Health"}
+GVT = {"chamber": "upper", "id": 130, "code": "GvtO", "name": "Government Oversight"}
+prior = [{"legislationId": 1, "committees": [PAC]},
+         {"legislationId": 2, "committees": [HTH]},
+         {"legislationId": 3, "committees": []}]
+now = [{"legislationId": 1, "committees": [HTH, GVT]},     # moved in House, then crossed over
+       {"legislationId": 2, "committees": [HTH]},           # unchanged
+       {"legislationId": 3, "committees": [HTH]},           # first referral
+       {"legislationId": 4, "committees": [HTH]}]           # new bill
+check("moves counted", G.carry_committee_history(now, prior, "2027-02-01"), 1)
+check("the move", now[0]["committeeHistory"], [
+    {"chamber": "lower", "from": {"id": 120, "code": "P&CH", "name": "Public and Community Health"},
+     "to": {"id": 196, "code": "Hth", "name": "Health"}, "seenOn": "2027-02-01"}])
+check("unchanged, first referral, new bill: no history",
+      [b["committeeHistory"] for b in now[1:]], [[], [], []])
+# the next run carries the history forward and adds only new moves
+prior2 = [dict(b) for b in now]
+again = [{"legislationId": 1, "committees": [HTH, GVT]}]
+check("second run adds nothing", G.carry_committee_history(again, prior2, "2027-02-08"), 0)
+check("carried forward", len(again[0]["committeeHistory"]), 1)
+check("no prior file", G.carry_committee_history([{"legislationId": 9, "committees": [HTH]}], [], "x"), 0)
+
 if failures:
     print("FAIL (%d):" % len(failures))
     for f in failures:

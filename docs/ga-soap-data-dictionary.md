@@ -69,7 +69,7 @@ Operations: `GetLegislationForSession` ✓, `GetLegislationDetail` ✓, `GetTitl
 | `ActVetoNumber` | act number when signed (on vetoes: not checked) | ✓ `actNumber` |
 | `Authors` | `Sponsorship` rows (2.5) | ✓ `sponsors` |
 | `Sponsor` | single `Sponsorship`: the other chamber's carrier | ✓ `secondChamberSponsor` |
-| `Committees` | one `CommitteeListing` per chamber (Id, Code, Name, Type). The **current** committee: overwritten when a bill is moved or recommitted (HB 520 shows Health after "Move from P&CH to Hth"; HB 1066 shows Governmental Affairs after recommittal). The original referral is not kept anywhere. Ids match GetCommitteesBySession; member records hold committee **names** only, so a member join folds "&"/"and" | ✓ `committees` |
+| `Committees` | one `CommitteeListing` per chamber (Id, Code, Name, Type). The **current** committee: overwritten when a bill is moved or recommitted (HB 520 shows Health after "Move from P&CH to Hth"; HB 1066 shows Governmental Affairs after recommittal). The original referral is not kept anywhere. Ids match GetCommitteesBySession; member records hold committee **names** only, so a member join folds "&"/"and". Moves are recorded by the pipeline in `committeeHistory` (compared with the previous run; from the 2027 session on, no backfill) | ✓ `committees` |
 | `Versions`, `LatestVersion` | `DocumentBase` (Url, Version, Description) | ✓ `textUrl` (latest only) |
 | `Votes` | `VoteListing` rows for this bill (3.1) | ✓ `passageVotes` (filtered) |
 | **`Footnotes`** | free-text procedural notes, `;`-separated: "Modified Structured Rule", "Withdrawn from General Calendar and recommitted…", "Tabled in Senate". 24 of 160 sampled bills | **—** |

@@ -348,6 +348,37 @@ def _committees(detail):
     out.sort(key=lambda c: c["chamber"])           # lower (House) first
     return out
 
+
+def carry_committee_history(bills, prior_bills, seen_on):
+    """Record committee moves by comparing each bill with the file this run replaces.
+    Returns the number of moves recorded.
+
+    legis.ga.gov overwrites a bill's committee when it moves within a chamber, so the
+    only way to keep "passed X committee, now in Y" is to notice the change between
+    runs. Each bill's `committeeHistory` is carried forward from the prior file, and a
+    chamber whose committee id changed gets {chamber, from, to, seenOn}, `from`/`to`
+    being {id, code, name}. `seenOn` is the day of the run that noticed it, not the
+    day of the move (the status history dates a recommittal, HRECM). A chamber the
+    prior file had no committee for is a first referral, not a move. Nothing is
+    backfilled: history starts with the first run that has `committees` both sides."""
+    prior = {b.get("legislationId"): b for b in prior_bills or []
+             if b.get("legislationId") is not None}
+    moved = 0
+    for bill in bills:
+        old = prior.get(bill.get("legislationId")) or {}
+        history = list(bill.get("committeeHistory") or old.get("committeeHistory") or [])
+        before = {c["chamber"]: c for c in old.get("committees") or []}
+        for now in bill.get("committees") or []:
+            was = before.get(now["chamber"])
+            if was and was.get("id") != now.get("id"):
+                history.append({"chamber": now["chamber"],
+                                "from": {k: was.get(k) for k in ("id", "code", "name")},
+                                "to": {k: now.get(k) for k in ("id", "code", "name")},
+                                "seenOn": seen_on})
+                moved += 1
+        bill["committeeHistory"] = history
+    return moved
+
 def _clean_member_desc(desc):
     """'Cannon, Chas 172nd' -> 'Chas Cannon'. Falls back to the raw string."""
     m = re.match(r"\s*([^,]+),\s*(.*?)\s*\d+\w*\s*$", desc or "")
@@ -730,12 +761,13 @@ def main():
     # lib/ga_sessions.py now builds. Detected from the data, not a flag, but only honoured
     # when the outgoing biennium is frozen (freeze_ga_bills.py): this run replaces the live
     # file, so without the freeze the old bills would exist nowhere on the site.
-    committed_meta, committed_total = None, None
+    committed_meta, committed_total, committed_bills = None, None, []
     try:
         with open(args.output_file, encoding="utf-8") as fh:
             _committed = json.load(fh)
         committed_meta = _committed.get("metadata") or {}
-        committed_total = len(_committed.get("bills") or [])
+        committed_bills = _committed.get("bills") or []
+        committed_total = len(committed_bills)
     except (OSError, json.JSONDecodeError, AttributeError):
         pass
     changeover = None if (sample or args.inspect) else detect_changeover(committed_meta, BIENNIUM)
@@ -855,6 +887,9 @@ def main():
     if not sample:
         print("Roll calls that link no bill: %d attached from their listings"
               % attach_unlinked_votes(bills))
+        print("Committee moves since the last run: %d recorded"
+              % carry_committee_history(bills, committed_bills,
+                                        datetime.now(timezone.utc).date().isoformat()))
 
     for bill in bills:
         apply_subjects(bill, base, overrides, ai_subjects)
