@@ -72,6 +72,7 @@ describe("get_bill", () => {
     expect(r.bill.stage.steps[0]).toEqual({ stage: "House committee", state: "done", headline: "Ways & Means" });
     expect(r.bill.stage.steps[5].stage).toBe("Governor");
     expect(r.bill.committees[0].name).toBe("Ways & Means");
+    expect(r.bill.governor_statements[0]).toMatchObject({ kind: "signing", text: "I therefore sign House Bill 2 into law." });
     expect(r.summary).toContain("Where it is: Signed · Act 374.");
     expect(r.georgia_commons).toEqual({
       label: "Plain-language summary (AI-written), Georgia Commons",

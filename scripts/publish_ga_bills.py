@@ -39,7 +39,7 @@ CHAMBER_LABEL = {"lower": "House", "upper": "Senate"}
 
 RAW_BASE = "https://raw.githubusercontent.com/Votega/ga-legislation/main"
 #: Bumped on a change a consumer must act on; adding optional properties is a minor bump.
-SCHEMA_VERSION = "1.1.0"
+SCHEMA_VERSION = "1.2.0"
 SCHEMA_STABILITY = (
     "Stable field names and meanings. 1.1.0 describes fields added in 2026-11, all "
     "optional and absent from files published before then: legislationType, footnotes, "
@@ -48,7 +48,10 @@ SCHEMA_STABILITY = (
     "new is `required`, so older copies still validate. `status` is legis.ga.gov's "
     "latest action, not an outcome (a vetoed bill's reads 'Date Signed by Governor'): "
     "read governorAction or stage for the outcome. committeeHistory records moves seen "
-    "between publisher runs from the 2027 session on; it is empty before then.")
+    "between publisher runs from the 2027 session on; it is empty before then. 1.2.0 "
+    "adds governorStatements (the Governor's veto message or signing statement, word "
+    "for word, from the Governor's published documents) and governorAction.vetoNumber, "
+    "both optional.")
 
 
 def schema_url(path):
@@ -248,7 +251,22 @@ def schema(path=None):
                                          "description": "Present when legis.ga.gov links the roll call "
                                                         "to no bill and the link was read from the vote "
                                                         "listing's text."}}}},
-                        "governorAction": {"type": ["object", "string", "null"]},
+                        "governorAction": {"type": ["object", "string", "null"],
+                                           "properties": {"vetoNumber": {
+                                               "type": "integer",
+                                               "description": "The Governor's veto number for the year "
+                                                              "(VETO 1 in the published veto messages)."}}},
+                        "governorStatements": {
+                            "type": "array",
+                            "description": "The Governor's veto message or signing statement for this "
+                                           "bill, word for word, from the Office of the Governor's "
+                                           "yearly 'Veto Messages and Signing Statements' document.",
+                            "items": {"type": "object", "properties": {
+                                "kind": {"type": "string", "enum": ["veto", "signing"]},
+                                "number": {"type": "integer"},
+                                "year": {"type": "integer"},
+                                "text": {"type": "string", "description": "Paragraphs separated by a blank line."},
+                                "sourceUrl": {"type": "string"}}}},
                         "legislationType": {"type": ["string", "null"], "enum": ["GEN", "LOC", "CA", "PRIV", "NP", None],
                                             "description": "legis.ga.gov's kind: general bill, local act, "
                                                            "constitutional amendment, privileged or "

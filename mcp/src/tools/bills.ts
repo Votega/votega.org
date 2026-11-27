@@ -275,6 +275,7 @@ export async function getBill(
       governor_action: detail.governorAction,
       ...(detail.stage ? { stage: stageOut(row, detail.stage) } : {}),
       ...(detail.committees?.length ? { committees: detail.committees } : {}),
+      ...(detail.governorStatements?.length ? { governor_statements: detail.governorStatements } : {}),
       billUrl: detail.billUrl,
       textUrl: detail.textUrl,
       votegaUrl: page,

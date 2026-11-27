@@ -152,6 +152,7 @@ export type BillDetail = {
     governorAction: unknown;
     // Where the bill is (scripts/lib/ga_bill_stage.py). Absent from files built before it.
     stage?: { kind: string; label: string; path: "full" | "short"; steps: [string, string, string][] } | null;
+    governorStatements?: { kind: "veto" | "signing"; number: number; year: number; text: string; sourceUrl: string }[] | null;
     committees?: { chamber: "lower" | "upper"; id: number; code: string | null; name: string | null }[] | null;
   }>;
 };

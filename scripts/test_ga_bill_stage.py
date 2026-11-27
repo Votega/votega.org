@@ -157,6 +157,39 @@ check("fetched House, carried-forward Senate", got,
       {"2025_26": {"lower": [[1, "2025-01-13"], [40, "2026-04-02"]], "upper": [[1, "2025-01-13"]]}})
 check("nothing at all", G.legislative_calendar(["2025_26"], None, fetch=lambda s, b: []), {})
 
+# --- the Governor's deadline (Ga. Const. Art. III, Sec. V, Para. XIII(a)) -------
+from lib.ga_bill_stage import governor_deadline  # noqa: E402
+REG = [[39, "2025-04-02"], [40, "2025-04-04"], [1, "2026-01-12"], [40, "2026-04-02"]]
+check("sent after sine die: 40 days", governor_deadline("2026-04-10", REG), "2026-05-12")
+check("sine die inside the six days: 40 days", governor_deadline("2025-04-01", REG), "2025-05-14")
+check("sent mid-session: six days", governor_deadline("2026-03-20", REG), "2026-03-26")
+check("first year adjourns on its own", governor_deadline("2025-04-10", REG), "2025-05-14")
+check("special session", governor_deadline("2026-06-23", [[1, "2026-06-17"], [5, "2026-06-23"]]), "2026-08-02")
+check("no calendar: six days", governor_deadline("2026-04-10", []), "2026-04-16")
+check("no sent date", governor_deadline(None, REG), None)
+desk = bill(both, [HOUSE_APP, SEN_APP], ga={"status": "Sent to Governor", "sentDate": "2026-04-10"})
+cal = {"2025_26": {"lower": REG}}
+apply_stages([dict(desk, session="2025_26")], datetime(2026, 4, 20), 2026, cal)
+b = dict(desk, session="2025_26")
+apply_stages([b], datetime(2026, 4, 20), 2026, cal)
+check("waiting: label names the deadline", (b["stage"]["kind"], b["stage"]["label"], b["stage"]["governorDeadline"]),
+      ("governor", "Sent to Governor · must act by May 12, 2026", "2026-05-12"))
+check("waiting: step detail", b["stage"]["steps"][5], ["current", "On the Governor's desk",
+                                                         "Sent Apr 10, 2026 · must act by May 12, 2026"])
+b = dict(desk, session="2025_26")
+apply_stages([b], datetime(2026, 5, 12, 20), 2026, cal)
+check("on the deadline day it is still waiting", b["stage"]["kind"], "governor")
+b = dict(desk, session="2025_26")
+apply_stages([b], datetime(2026, 5, 13), 2026, cal)
+check("deadline passed: law without signature", (b["stage"]["kind"], b["stage"]["label"], b["stage"]["steps"][5]),
+      ("signed", "Became law without the Governor's signature",
+       ["done", "Law without signature", "Not signed or vetoed by May 12, 2026"]))
+s2 = dict(bill(both, [HOUSE_APP, SEN_APP], ga={"status": "Signed", "decisionDate": "2026-05-11", "actNumber": 5}),
+          session="2025_26")
+apply_stages([s2], datetime(2026, 11, 27), 2026, cal)
+check("a decided bill gets no deadline", ("governorDeadline" in s2["stage"], s2["stage"]["label"]),
+      (False, "Signed · Act 5"))
+
 if failures:
     print("FAIL (%d):" % len(failures))
     for f in failures:

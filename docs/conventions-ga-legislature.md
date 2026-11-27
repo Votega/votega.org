@@ -22,3 +22,18 @@ Moved out of `CLAUDE.md` (verbatim, no edits) so the always-loaded file stays sh
   - History is scoped from January 2023; it publishes (later) as one dataset in `Votega/ga-district-information`. The 2021 and 2023 block-equivalency workbooks are local inputs in `data-inputs/redistricting/` (gitignored; `data-inputs/README.md` lists each with source and MD5); Census block population (`gageo2020.pl`) is needed only for lineage-link population shares.
 - **A federal URL never 404s either: former members keep frozen pages (D12 option B).** `scripts/freeze_federal_congress.py <slug> --final` (RECURRING-TASKS.md §3b step 5, by 2027-01-02, BEFORE the roster flips to the 120th) copies the sitting Georgia delegation's record into `assets/data/federal-congresses/<slug>/` (live file names; `freeze.json` carries each member's page `urls`, which is the permanence record: no separate ledger). `build_entity_pages.build_federal_legislators` builds a "Former member" page, indexed and in the sitemap, for every frozen member the live roster no longer lists, at the promised URL; their ids sit under `entity_urls['us-congress-former']`, NOT `['us-congress']` (the race and candidate pages read that one as "sitting"). The page include reads every per-Congress file through `dataUrl()` in frozen mode (`test_federal_former_pages.py` fails on a bare live path) and never joins the live `presidential-laws.json` (bill numbers restart each Congress). Departure labels (D6 wording) come only from the approved `assets/data/federal-departure-labels.json`; drafts are `docs/federal-departure-labels-draft.md`.
 - **January 2027 biennium rollover: read `docs/ga-biennium-rollover-decisions.md` before touching the roster, bills or member-page generation.** It lists what the rollover drops (non-returning members, their page URLs, bill-number reuse), the open decisions (former-member pages, bills session dropdown with a frozen prior biennium, departure wording), and the 2027-01-11 deadline. Nothing in it is built yet.
+
+## Governor's veto messages and signing statements (yearly, after the signing deadline)
+
+legis.ga.gov carries a veto's NUMBER (`ActVetoNumber` "V1") but not the message. The Office of the Governor posts one
+PDF a year at https://gov.georgia.gov/executive-action/legislation/vetoed-legislation/<year> ("<year> Veto Messages and
+Signing Statements"). After the signing deadline (mid-May; a special session has its own), once the bills workflow has
+recorded the Governor's actions:
+
+    python scripts/import_governor_statements.py <year> <session tag> <the PDF's download URL>
+
+It writes `assets/data/ga-governor-statements.json` word for word and refuses unless every VETO n is a bill
+ga-bills.json has as vetoed that year and every vetoed bill has a message. The next bills run attaches them
+(`governorStatements`, `governorAction.vetoNumber`); the bills page shows them in the tracker and the MCP's `get_bill`
+returns them. The same page links the budget's line-item vetoes and "disregard" statements, which are not imported.
+

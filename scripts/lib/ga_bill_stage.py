@@ -191,7 +191,9 @@ def bill_stage(bill, over):
         steps.append(["done", "Signed", ("%s · Act %s" % (_day(ga.get("decisionDate")), act)) if act
                       else _day(ga.get("decisionDate"))])
     elif status == "Vetoed":
-        steps.append(["stopped", "Vetoed", _day(ga.get("decisionDate"))])
+        vn = ga.get("vetoNumber")
+        steps.append(["stopped", "Vetoed", ("%s · Veto %s" % (_day(ga.get("decisionDate")), vn)) if vn
+                      else _day(ga.get("decisionDate"))])
     elif status == "Sent to Governor" or sent:
         steps.append(["current", "On the Governor's desk", "Sent %s" % _day(ga.get("sentDate") or sent)])
     else:
@@ -255,6 +257,60 @@ def sine_die(calendar_days):
     return max(dates) if dates else None
 
 
+#: Ga. Const. Art. III, Sec. V, Para. XIII(a): a bill becomes law unless vetoed within
+#: six days of reaching the Governor, or within 40 days of adjournment sine die when the
+#: General Assembly adjourns before those six days run out. Para. XIII(b) bars sending
+#: bills during a session except on the Governor's request or a two-thirds order, so
+#: nearly every bill gets the 40 days. Checked against 2025-26: all 743 decisions fell on
+#: or before the deadline this computes, and the busiest days were the deadlines
+#: themselves (May 14, 2025 and May 12, 2026).
+GOVERNOR_DAYS, GOVERNOR_DAYS_AFTER_ADJOURNMENT = 6, 40
+
+
+def governor_deadline(sent, calendar_days):
+    """'YYYY-MM-DD' the Governor must act by on a bill sent on `sent`, or None.
+
+    The adjournment that counts is the last legislative day of the year the bill was
+    sent in (a regular session adjourns each year; a special session once). Sent after
+    it, or with it falling inside the six days: 40 days from it. Otherwise six days."""
+    if not sent:
+        return None
+    sent = sent[:10]
+    try:
+        sent_d = datetime.strptime(sent, "%Y-%m-%d")
+    except ValueError:
+        return None
+    year_days = [d for _n, d in calendar_days or [] if d[:4] == sent[:4]]
+    six = sent_d + timedelta(days=GOVERNOR_DAYS)
+    if year_days:
+        adjourned = datetime.strptime(max(year_days), "%Y-%m-%d")
+        if adjourned < six:
+            return (adjourned + timedelta(days=GOVERNOR_DAYS_AFTER_ADJOURNMENT)).strftime("%Y-%m-%d")
+    return six.strftime("%Y-%m-%d")
+
+
+def _apply_governor_deadline(bill, now, calendar_days):
+    """On a bill waiting on the Governor: name the deadline, and once it has passed with
+    no signature or veto on record, the bill became law without the Governor's signature
+    (Para. XIII(a)); Georgia has no pocket veto."""
+    stage = bill.get("stage") or {}
+    if stage.get("kind") != "governor":
+        return
+    ga = bill.get("governorAction") or {}
+    sent = ga.get("sentDate") or next((r[0] for r in bill.get("statusHistory") or [] if r[1] in SENT), None)
+    deadline = governor_deadline(sent, calendar_days)
+    if not deadline:
+        return
+    stage["governorDeadline"] = deadline
+    step = stage["steps"][-1]
+    if now.date().isoformat() > deadline:
+        step[:] = ["done", "Law without signature", "Not signed or vetoed by %s" % _day(deadline)]
+        stage["kind"], stage["label"] = "signed", "Became law without the Governor's signature"
+    else:
+        step[2] = "Sent %s · must act by %s" % (_day(sent), _day(deadline))
+        stage["label"] = "Sent to Governor · must act by %s" % _day(deadline)
+
+
 def apply_stages(bills, now, biennium_end_year=None, calendar=None):
     """Set `stage` on every bill, deciding per session whether it has adjourned.
     Returns {session: over}.
@@ -277,6 +333,7 @@ def apply_stages(bills, now, biennium_end_year=None, calendar=None):
             over[session] = session_over(group, now, biennium_end_year if regular else None)
         for b in group:
             b["stage"] = bill_stage(b, over[session])
+            _apply_governor_deadline(b, now, days)
             if over[session] and last:
                 for step in b["stage"]["steps"]:
                     if step[0] == "stopped" and step[2].endswith("never reported"):
