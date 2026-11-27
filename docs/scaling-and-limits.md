@@ -3,7 +3,7 @@
 Moved out of `CLAUDE.md` (verbatim, no edits) so the always-loaded file stays short. `CLAUDE.md` points here.
 
 
-Measured from a clean `build_entity_pages.py` + `jekyll build` on `main`:
+Measured 2026-11-02 from a clean `build_entity_pages.py` + `jekyll build` on `main`:
 built `_site` = **312 MB**, **3,151 files**, **1,484 HTML pages** (1,411 generated
 entity pages), **27 s** Jekyll build.
 
