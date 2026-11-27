@@ -1512,7 +1512,17 @@ breadcrumb:
     Object.keys(cal).forEach(function (sid) {
       const days = ((cal[sid] || {}).lower || []).filter(function (d) { return String(d[1]).slice(0, 4) === year; })
         .sort(function (a, b) { return String(a[1]).localeCompare(String(b[1])); });
-      if (!days.length || todayIso < days[0][1] || todayIso > days[days.length - 1][1]) return;
+      if (!days.length || todayIso < days[0][1]) return;
+      const lastDay = days[days.length - 1][1];
+      if (todayIso > lastDay) {
+        // After adjournment: the Governor has 40 days to sign or veto what was sent
+        // (Ga. Const. Art. III, Sec. V, Para. XIII(a)); show that window until it closes.
+        const dl = new Date(lastDay + 'T00:00:00Z');
+        dl.setUTCDate(dl.getUTCDate() + 40);
+        const deadline = dl.toISOString().slice(0, 10);
+        if (todayIso <= deadline) best = { name: names[sid] || sid, adjourned: lastDay, governorDeadline: deadline };
+        return;
+      }
       const held = days.filter(function (d) { return d[1] <= todayIso; });
       const regular = !/_ss$/.test(sid);
       const find = function (n) { const d = days.find(function (x) { return x[0] === n; }); return d ? d[1] : null; };
@@ -1528,6 +1538,13 @@ breadcrumb:
     const todayIso = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
     const p = sessionProgress(meta, todayIso);
     if (!p) { elSessionProgress.hidden = true; return; }
+    if (p.governorDeadline) {
+      elSessionProgress.innerHTML = '<strong>' + escHtml(p.name) + ' adjourned ' + escHtml(formatDate(p.adjourned)) + '</strong>'
+        + ' &middot; The Governor has until ' + escHtml(formatDate(p.governorDeadline))
+        + ' to sign or veto bills sent after adjournment; a bill neither signed nor vetoed by then becomes law.';
+      elSessionProgress.hidden = false;
+      return;
+    }
     const parts = ['<strong>' + escHtml(p.name) + ': legislative day ' + p.day + (p.total ? ' of ' + p.total : '') + '</strong>'];
     if (p.crossover && todayIso <= p.crossover) parts.push('Crossover Day (day 28): ' + escHtml(formatDate(p.crossover)));
     if (p.sineDie) parts.push('Sine die (last day): ' + escHtml(formatDate(p.sineDie)));
