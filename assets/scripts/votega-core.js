@@ -89,7 +89,7 @@
       'font:600 .85rem/1.2 var(--font-sans,inherit);color:var(--color-link);background:var(--color-surface);' +
       'border:1px solid var(--color-border);border-radius:999px;cursor:pointer}' +
       '.vg-share:hover{background:var(--color-surface-sunken)}' +
-      '.vg-share:focus-visible{outline:2px solid var(--color-link);outline-offset:2px}';
+      '.vg-share:focus-visible{outline:3px solid var(--color-link);outline-offset:2px}';
     (document.head || document.documentElement).appendChild(style);
 
     window.VotegaShare = {
