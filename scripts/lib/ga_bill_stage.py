@@ -191,7 +191,9 @@ def bill_stage(bill, over):
         steps.append(["done", "Signed", ("%s · Act %s" % (_day(ga.get("decisionDate")), act)) if act
                       else _day(ga.get("decisionDate"))])
     elif status == "Vetoed":
-        steps.append(["stopped", "Vetoed", _day(ga.get("decisionDate"))])
+        vn = ga.get("vetoNumber")
+        steps.append(["stopped", "Vetoed", ("%s · Veto %s" % (_day(ga.get("decisionDate")), vn)) if vn
+                      else _day(ga.get("decisionDate"))])
     elif status == "Sent to Governor" or sent:
         steps.append(["current", "On the Governor's desk", "Sent %s" % _day(ga.get("sentDate") or sent)])
     else:

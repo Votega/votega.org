@@ -68,6 +68,8 @@ export const BILL_FILES: Record<string, unknown> = {
           steps: [["done", "Ways & Means", ""], ["done", "Passed 172–0", "Mar 4, 2025"], ["done", "Finance", ""],
             ["done", "Passed 50–0", ""], ["done", "Same version passed", ""], ["done", "Signed", "Mar 20, 2025 · Act 374"]] },
         committees: [{ chamber: "lower", id: 101, code: "W&M", name: "Ways & Means" }],
+        governorStatements: [{ kind: "signing", number: 1, year: 2025, text: "I therefore sign House Bill 2 into law.",
+          sourceUrl: "https://gov.georgia.gov/document/x/download" }],
       }),
     ],
     { firearms: [0], safe: [0], storage: [0], income: [1], tax: [1], credit: [1] }),

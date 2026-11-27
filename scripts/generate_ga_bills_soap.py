@@ -450,6 +450,38 @@ def legislative_calendar(sessions, committed=None, fetch=None):
             out[session] = entry
     return out
 
+
+STATEMENTS_FILE = "assets/data/ga-governor-statements.json"
+
+
+def attach_governor_statements(bills, path=STATEMENTS_FILE):
+    """Add the Governor's veto messages and signing statements (curated from the
+    Governor's published PDFs by scripts/import_governor_statements.py) to their bills
+    as `governorStatements`, and a vetoed bill's `governorAction.vetoNumber`. Returns
+    the number attached. A missing file attaches nothing."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            statements = json.load(f).get("statements") or []
+    except (OSError, ValueError):
+        return 0
+    by_bill = {}
+    for s in statements:
+        by_bill.setdefault((s.get("session"), s.get("bill")), []).append(
+            {k: s.get(k) for k in ("kind", "number", "year", "text", "sourceUrl")})
+    n = 0
+    for b in bills:
+        found = by_bill.get((b.get("session"), b.get("identifier")))
+        b.pop("governorStatements", None)
+        if not found:
+            continue
+        b["governorStatements"] = found
+        n += len(found)
+        ga = b.get("governorAction") or {}
+        veto = next((s for s in found if s["kind"] == "veto"), None)
+        if veto and ga.get("status") == "Vetoed":
+            ga["vetoNumber"] = veto["number"]
+    return n
+
 def biennium_end_year():
     """2026 for the 2025-2026 biennium: the year its regular session's bills die."""
     try:
@@ -923,6 +955,7 @@ def main():
         print("Committee moves since the last run: %d recorded"
               % carry_committee_history(bills, committed_bills,
                                         datetime.now(timezone.utc).date().isoformat()))
+    print("Governor's statements attached: %d" % attach_governor_statements(bills))
     # Where each bill is (lib/ga_bill_stage.py), after the votes attached above.
     calendar = legislative_calendar(sorted({b["session"] for b in bills if b.get("session")}),
                                     (committed_meta or {}).get("legislativeCalendar"))

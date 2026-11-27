@@ -106,7 +106,8 @@ check("no two schemas share an $id", len({v["$id"] for v in schemas.values()}), 
 check("version and stability", all(v.get("schemaVersion") == P.SCHEMA_VERSION and v.get("schemaStability")
                                    for v in schemas.values()), True)
 item = P.schema()["properties"]["bills"]["items"]
-for f in ("legislationType", "footnotes", "committees", "committeeHistory", "statusHistory", "stage"):
+for f in ("legislationType", "footnotes", "committees", "committeeHistory", "statusHistory", "stage",
+          "governorStatements"):
     check("schema describes " + f, f in item["properties"], True)
 check("nothing new required", item["required"], ["id", "identifier", "title"])
 meta_props = P.schema()["properties"]["metadata"]["properties"]

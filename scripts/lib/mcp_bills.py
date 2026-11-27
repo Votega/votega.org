@@ -154,6 +154,8 @@ def build_bills(bill_docs, generated_at):
                     "governorAction": b.get("governorAction"),
                     # Where the bill is (lib/ga_bill_stage.py): {kind, label, path, steps}.
                     "stage": b.get("stage"),
+                    # The Governor's veto message / signing statement, word for word.
+                    "governorStatements": b.get("governorStatements") or None,
                     "committees": b.get("committees") or None})
             path = f"bills/{session}-{kind}.json"
             detail_path = f"bills/{session}-{kind}-detail.json"

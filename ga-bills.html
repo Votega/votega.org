@@ -256,6 +256,9 @@ breadcrumb:
   .bill-track-steps li.ahead .bill-track-headline { color: var(--color-text-muted); font-weight: 400; }
   .bill-track-detail { font-size: 0.75rem; color: var(--color-text-secondary); line-height: 1.4; }
   .bill-track-moves { margin-top: 0.7rem; padding-top: 0.6rem; border-top: 1px solid var(--color-border-subtle); font-size: 0.8rem; }
+  .bill-track-statement { margin-top: 0.7rem; font-size: 0.85rem; }
+  .bill-track-statement summary { cursor: pointer; color: var(--color-link); font-weight: 600; }
+  .bill-track-statement p { margin: 0.45rem 0 0; line-height: 1.5; color: var(--color-text); }
   .bill-track-moves ul { margin: 0.3rem 0 0; padding-left: 1.1rem; }
   .bill-detail {
     display: none;
@@ -686,10 +689,21 @@ breadcrumb:
         + (m.seenOn ? ' <span class="bill-track-detail">(noticed ' + escHtml(formatDate(m.seenOn)) + ')</span>' : '')
         + '</li>';
     }).join('');
+    // The Governor's own words, from the published veto messages and signing statements.
+    const statements = (bill.governorStatements || []).map(function (st) {
+      const what = st.kind === 'veto' ? "Read the Governor's veto message" + (st.number ? ' (Veto ' + st.number + ')' : '')
+        : "Read the Governor's signing statement";
+      return '<details class="bill-track-statement"><summary>' + escHtml(what) + '</summary>'
+        + String(st.text || '').split(/\n\n+/).map(function (p) { return '<p>' + escHtml(p) + '</p>'; }).join('')
+        + (st.sourceUrl ? '<p class="bill-track-detail">Source: <a href="' + escHtml(st.sourceUrl) + '" target="_blank" rel="noopener">Office of the Governor, '
+          + escHtml(String(st.year || '')) + ' veto messages and signing statements</a></p>' : '')
+        + '</details>';
+    }).join('');
     return '<section class="bill-track" aria-label="Where this bill is">'
       + '<div class="bill-track-head">Where this bill is</div>'
       + '<p class="bill-track-where">' + escHtml(stg.label || '') + '</p>'
       + '<ol class="bill-track-steps" aria-label="Bill progress">' + steps + '</ol>'
+      + statements
       + (moves ? '<div class="bill-track-moves"><div class="bill-track-head">Committee history</div><ul>' + moves + '</ul></div>' : '')
       + '</section>';
   }
