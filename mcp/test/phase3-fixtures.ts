@@ -64,6 +64,10 @@ export const BILL_FILES: Record<string, unknown> = {
       detail(12, "2025-2026", "hb2", {
         passageVotes: [{ chamber: "lower", date: "2025-03-04", result: "pass", motionText: "PASSAGE", yea: 172, nay: 0, other: 8 }],
         governorAction: { status: "Signed", decisionDate: "2025-03-20", actNumber: 374 },
+        stage: { kind: "signed", label: "Signed · Act 374", path: "full",
+          steps: [["done", "Ways & Means", ""], ["done", "Passed 172–0", "Mar 4, 2025"], ["done", "Finance", ""],
+            ["done", "Passed 50–0", ""], ["done", "Same version passed", ""], ["done", "Signed", "Mar 20, 2025 · Act 374"]] },
+        committees: [{ chamber: "lower", id: 101, code: "W&M", name: "Ways & Means" }],
       }),
     ],
     { firearms: [0], safe: [0], storage: [0], income: [1], tax: [1], credit: [1] }),

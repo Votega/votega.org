@@ -229,6 +229,31 @@ breadcrumb:
   .vote-no-txt  { color: var(--color-danger); font-weight: 600; }
 
   /* ── Expanded detail ── */
+  /* Where the bill is (stage from lib/ga_bill_stage.py). Party colors and red/green are
+     never used for progress; every state carries a text label. */
+  .badge-committee { background: var(--color-surface-tint); color: var(--color-link); }
+  .badge-died      { background: var(--color-surface-chrome); color: var(--color-text-secondary); border: 1px solid var(--color-border-subtle); }
+  .bill-progress { display: flex; gap: 3px; max-width: 360px; margin-top: 0.4rem; }
+  .bill-progress span { flex: 1; height: 5px; border-radius: 3px; background: var(--color-border-subtle); }
+  .bill-progress span.done { background: var(--color-success); }
+  .bill-progress span.stopped { background: var(--color-text-secondary); }
+  .bill-progress span.current { background: var(--color-accent); }
+  .bill-track { margin-top: 0.75rem; padding: 0.8rem; border: 1px solid var(--color-border-subtle); border-radius: 7px; }
+  .bill-track-head { font-size: 0.72rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--color-text-secondary); }
+  .bill-track-where { margin: 0.3rem 0 0.6rem; font-size: 0.93rem; font-weight: 600; color: var(--color-text); }
+  .bill-track-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.75rem 0.6rem; }
+  .bill-track-steps li { flex: 1 1 120px; min-width: 0; }
+  .bill-track-bar { height: 4px; border-radius: 4px; background: var(--color-border-subtle); margin-bottom: 0.35rem; }
+  .bill-track-steps li.done .bill-track-bar { background: var(--color-success); }
+  .bill-track-steps li.stopped .bill-track-bar { background: var(--color-text-secondary); }
+  .bill-track-steps li.current .bill-track-bar { background: var(--color-accent); }
+  .bill-track-stage { font-size: 0.68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--color-text-secondary); }
+  .bill-track-state { font-size: 0.68rem; color: var(--color-text-secondary); }
+  .bill-track-headline { font-size: 0.85rem; font-weight: 700; color: var(--color-text); margin-top: 0.15rem; }
+  .bill-track-steps li.ahead .bill-track-headline { color: var(--color-text-muted); font-weight: 400; }
+  .bill-track-detail { font-size: 0.75rem; color: var(--color-text-secondary); line-height: 1.4; }
+  .bill-track-moves { margin-top: 0.7rem; padding-top: 0.6rem; border-top: 1px solid var(--color-border-subtle); font-size: 0.8rem; }
+  .bill-track-moves ul { margin: 0.3rem 0 0; padding-left: 1.1rem; }
   .bill-detail {
     display: none;
     padding: 0 1rem 0.9rem;
@@ -441,6 +466,10 @@ breadcrumb:
     <select id="billSubject">
       <option value="">All subjects</option>
     </select>
+    <label class="sr-only" for="billCommittee">Filter by committee</label>
+    <select id="billCommittee">
+      <option value="">All committees</option>
+    </select>
     <label class="sr-only" for="billBiennium">General Assembly</label>
     <select id="billBiennium" style="display:none"></select>
     <label class="sr-only" for="billSession">Filter by session</label>
@@ -471,6 +500,8 @@ breadcrumb:
     <button class="bills-status-btn" data-status="passed">Passed</button>
     <button class="bills-status-btn" data-status="progress">In progress</button>
     <button class="bills-status-btn" data-status="stalled">Stalled</button>
+    <button class="bills-status-btn" data-status="committee">In committee</button>
+    <button class="bills-status-btn" data-status="died">Died in committee</button>
     <button class="bills-status-btn" data-status="failed">Failed</button>
     <button class="bills-status-btn" id="partyLineToggle" style="margin-left:auto;" aria-pressed="false">&#9889; Party-line votes only</button>
   </div>
@@ -543,12 +574,20 @@ breadcrumb:
   const elSession    = document.getElementById('billSession');
   const elBiennium   = document.getElementById('billBiennium');
   const elSort       = document.getElementById('billSort');
+  const elCommittee  = document.getElementById('billCommittee');
 
   // ── Status classification ─────────────────────────────────────────────────
   // governorAction (from generate_ga_bills_soap.py) is authoritative for the
   // Governor's disposition — derived from the bill's official legis.ga.gov status
   // history, not guessed from the free-text last-action description.
+  // bill.stage (lib/ga_bill_stage.py, computed at build time) decides where a bill is
+  // when present; files written before it existed fall through to the rules below.
+  const STAGE_CLASS = { signed: 'signed', vetoed: 'vetoed', governor: 'pending', agreement: 'passed',
+    adopted: 'passed', committee: 'committee', 'died-committee': 'died', floor: 'progress',
+    'died-floor': 'stalled', lost: 'failed' };
   function classifyStatus(bill) {
+    const stg = bill.stage;
+    if (stg && STAGE_CLASS[stg.kind]) return STAGE_CLASS[stg.kind];
     const gaStatus = (bill.governorAction || {}).status;
     if (gaStatus === 'Vetoed')          return 'vetoed';
     if (gaStatus === 'Signed')          return 'signed';
@@ -594,9 +633,61 @@ breadcrumb:
     return 'progress';
   }
 
-  function badgeHtml(cls) {
-    const labels = { signed: 'Signed', vetoed: 'Vetoed', pending: 'Sent to Governor', failed: 'Failed', passed: 'Passed', stalled: 'Stalled', progress: 'In progress' };
-    return '<span class="bill-status-badge badge-' + cls + '">' + labels[cls] + '</span>';
+  function badgeHtml(cls, bill) {
+    const labels = { signed: 'Signed', vetoed: 'Vetoed', pending: 'Sent to Governor', failed: 'Failed', passed: 'Passed', stalled: 'Stalled', progress: 'In progress', committee: 'In committee', died: 'Died in committee' };
+    const text = (bill && bill.stage && bill.stage.label) || labels[cls];
+    return '<span class="bill-status-badge badge-' + cls + '">' + escHtml(text) + '</span>';
+  }
+
+  // Stage names for a stage's steps, by position (lib/ga_bill_stage.py).
+  function stageNames(bill) {
+    if (bill.stage && bill.stage.path === 'short') return ['Filed', 'Adoption'];
+    const o = bill.chamber === 'upper' ? 'Senate' : 'House';
+    const x = o === 'House' ? 'Senate' : 'House';
+    return [o + ' committee', o + ' floor', x + ' committee', x + ' floor', 'Final version', 'Governor'];
+  }
+  const STEP_STATE = { done: 'Done', current: 'Here now', stopped: 'Stopped here', ahead: 'Not reached' };
+
+  // Slim progress bar for the collapsed card.
+  function progressHtml(bill) {
+    const steps = (bill.stage && bill.stage.steps) || [];
+    if (!steps.length) return '';
+    const names = stageNames(bill);
+    const at = steps.findIndex(function (s) { return s[0] !== 'done'; });
+    const where = at < 0 ? 'all stages done' : (STEP_STATE[steps[at][0]] + ': ' + names[at]);
+    return '<div class="bill-progress" role="img" aria-label="Progress: ' + escHtml(where) + '">'
+      + steps.map(function (s) { return '<span class="' + escHtml(s[0]) + '"></span>'; }).join('')
+      + '</div>';
+  }
+
+  // The "Where this bill is" panel at the top of the expanded card. It replaces the
+  // Governor block: the Governor is the tracker's last step.
+  function trackerHtml(bill) {
+    const stg = bill.stage;
+    if (!stg || !(stg.steps || []).length) return '';
+    const names = stageNames(bill);
+    const steps = stg.steps.map(function (s, i) {
+      return '<li class="' + escHtml(s[0]) + '">'
+        + '<div class="bill-track-bar" aria-hidden="true"></div>'
+        + '<div class="bill-track-stage">' + escHtml(names[i] || '') + '</div>'
+        + '<div class="bill-track-state">' + (STEP_STATE[s[0]] || '') + '</div>'
+        + '<div class="bill-track-headline">' + escHtml(s[1] || '') + '</div>'
+        + (s[2] ? '<div class="bill-track-detail">' + escHtml(s[2]) + '</div>' : '')
+        + '</li>';
+    }).join('');
+    const moves = (bill.committeeHistory || []).map(function (m) {
+      const chamber = m.chamber === 'upper' ? 'Senate' : 'House';
+      return '<li>' + chamber + ': moved from ' + escHtml((m.from || {}).name || '?')
+        + ' to ' + escHtml((m.to || {}).name || '?')
+        + (m.seenOn ? ' <span class="bill-track-detail">(noticed ' + escHtml(formatDate(m.seenOn)) + ')</span>' : '')
+        + '</li>';
+    }).join('');
+    return '<section class="bill-track" aria-label="Where this bill is">'
+      + '<div class="bill-track-head">Where this bill is</div>'
+      + '<p class="bill-track-where">' + escHtml(stg.label || '') + '</p>'
+      + '<ol class="bill-track-steps" aria-label="Bill progress">' + steps + '</ol>'
+      + (moves ? '<div class="bill-track-moves"><div class="bill-track-head">Committee history</div><ul>' + moves + '</ul></div>' : '')
+      + '</section>';
   }
 
   // ── Sponsor display ───────────────────────────────────────────────────────
@@ -964,11 +1055,12 @@ breadcrumb:
       + '<div style="flex:1">'
       + '<div class="bill-id-status">'
       + '<span class="bill-id">' + escHtml(bill.identifier) + '</span>'
-      + badgeHtml(sc)
+      + badgeHtml(sc, bill)
       + (bill._partyLine ? '<span class="bill-status-badge badge-partyline">&#9889; Party-line</span>' : '')
       + sessionBadgeHtml(bill)
       + '</div>'
       + '<div class="bill-title">' + escHtml(bill.title) + '</div>'
+      + progressHtml(bill)
       + '</div>'
       + '<span class="bill-chevron" aria-hidden="true">&#8964;</span>'
       + '</div>'
@@ -981,9 +1073,10 @@ breadcrumb:
       + '</div>'
       + '</div>'
       + '<div class="bill-detail">'
+      + trackerHtml(bill)
       + summary
       + abstract
-      + governorDetail
+      + (bill.stage ? '' : governorDetail)
       + allSponsors
       + secondSponsorHtml(bill.secondChamberSponsor)
       + voteBars
@@ -1018,6 +1111,7 @@ breadcrumb:
   function applyFilters() {
     const q      = elSearch.value.trim().toLowerCase();
     const subj   = elSubject.value;
+    const comm   = elCommittee ? elCommittee.value : '';
     const sort   = elSort.value;
 
     filtered = allBills.filter(function (b) {
@@ -1028,6 +1122,8 @@ breadcrumb:
       if (statusFilter && b._status !== statusFilter) return false;
       if (partyLineOnly && !b._partyLine) return false;
       if (subj && !(b.subjects || []).some(function (s) { return s === subj; })) return false;
+      // A committee the bill was sent to in either chamber ("chamber:id").
+      if (comm && !(b.committees || []).some(function (c) { return c.chamber + ':' + c.id === comm; })) return false;
       if (q) {
         const hay = (b.identifier + ' ' + b.title + ' ' + b.abstract + ' '
           + (b.sponsors || []).concat(b.secondChamberSponsor || [])
@@ -1123,6 +1219,30 @@ breadcrumb:
     });
   }
 
+  // ── Populate committee dropdown ────────────────────────────────────────────
+  // From each bill's committees (the committee holding it in each chamber). Hidden for
+  // a dataset written before that field existed.
+  function buildCommitteeDropdown() {
+    if (!elCommittee) return;
+    while (elCommittee.options.length > 1) elCommittee.remove(1);
+    const seen = {};
+    allBills.forEach(function (b) {
+      (b.committees || []).forEach(function (c) {
+        const key = c.chamber + ':' + c.id;
+        if (!seen[key]) seen[key] = { label: (c.chamber === 'upper' ? 'Senate' : 'House') + ' · ' + (c.name || c.code || c.id), n: 0 };
+        seen[key].n += 1;
+      });
+    });
+    const keys = Object.keys(seen).sort(function (a, b) { return seen[a].label.localeCompare(seen[b].label); });
+    keys.forEach(function (k) {
+      const opt = document.createElement('option');
+      opt.value = k;
+      opt.textContent = seen[k].label + ' (' + seen[k].n + ')';
+      elCommittee.appendChild(opt);
+    });
+    elCommittee.style.display = keys.length ? '' : 'none';
+  }
+
   // Session filter — only surfaced when the biennium has more than one session
   // (e.g. once the 2026 special session appears). Built from metadata.sessions so
   // it stays data-driven; counts come from the bills actually present.
@@ -1201,6 +1321,7 @@ breadcrumb:
     searchTimer = setTimeout(applyFilters, 250);
   });
   elSubject.addEventListener('change', applyFilters);
+  if (elCommittee) elCommittee.addEventListener('change', applyFilters);
   elSession.addEventListener('change', function () {
     sessionFilter = elSession.value;
     buildStats(billsMeta);
@@ -1349,8 +1470,10 @@ breadcrumb:
     allBills  = ds.bills;
     sessionFilter = '';
     elSubject.value = '';
+    if (elCommittee) elCommittee.value = '';
     elLoading.style.display = 'none';
     buildSubjectDropdown();
+    buildCommitteeDropdown();
     buildSessionDropdown(meta);
     applySessionParam();          // sets sessionFilter from ?session=, if valid
     buildStats(meta);             // AFTER the param, so a deep link counts its own session
@@ -1396,6 +1519,7 @@ breadcrumb:
   function resetFilters() {
     elSearch.value = '';
     elSubject.value = '';
+    if (elCommittee) elCommittee.value = '';
     if (elSession) { elSession.value = ''; sessionFilter = ''; }
     chamberTab = '';
     statusFilter = '';

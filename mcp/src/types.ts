@@ -150,6 +150,9 @@ export type BillDetail = {
     commonsUrl: string | null;
     passageVotes: unknown[];
     governorAction: unknown;
+    // Where the bill is (scripts/lib/ga_bill_stage.py). Absent from files built before it.
+    stage?: { kind: string; label: string; path: "full" | "short"; steps: [string, string, string][] } | null;
+    committees?: { chamber: "lower" | "upper"; id: number; code: string | null; name: string | null }[] | null;
   }>;
 };
 export type BillTokens = {

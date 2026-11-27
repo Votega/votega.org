@@ -68,6 +68,11 @@ describe("get_bill", () => {
       votegaUrl: "https://www.votega.org/ga-bills.html?bill=HB%202&legislationId=12" });
     expect(r.bill.passage_votes[0].yea).toBe(172);
     expect(r.bill.governor_action.actNumber).toBe(374);
+    expect(r.bill.stage.label).toBe("Signed · Act 374");
+    expect(r.bill.stage.steps[0]).toEqual({ stage: "House committee", state: "done", headline: "Ways & Means" });
+    expect(r.bill.stage.steps[5].stage).toBe("Governor");
+    expect(r.bill.committees[0].name).toBe("Ways & Means");
+    expect(r.summary).toContain("Where it is: Signed · Act 374.");
     expect(r.georgia_commons).toEqual({
       label: "Plain-language summary (AI-written), Georgia Commons",
       url: "https://georgiacommons.org/bills/2025-2026/hb2",

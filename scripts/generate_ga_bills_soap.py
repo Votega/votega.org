@@ -74,6 +74,7 @@ from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic, atomic_write
 from lib.ga_passage import native_is_passage, resolve_listing_bills
+from lib.ga_bill_stage import apply_stages
 from lib.ga_vote_results import rederive_bill_passage_votes
 from lib.ga_vote_rules import STORED_ABSTRACT_MAX, requires_two_thirds, vote_passed
 from lib.ga_bill_subjects import infer_local_subject
@@ -423,6 +424,14 @@ def _passage_votes(detail, constitutional_amendment=False, legislation_id=None):
     return out
 
 
+
+
+def biennium_end_year():
+    """2026 for the 2025-2026 biennium: the year its regular session's bills die."""
+    try:
+        return int(str(BIENNIUM).split("-")[-1][:4])
+    except (TypeError, ValueError):
+        return None
 
 def _clock24(t):
     """'3:22 PM' -> '15:22'; None when unparseable."""
@@ -890,6 +899,10 @@ def main():
         print("Committee moves since the last run: %d recorded"
               % carry_committee_history(bills, committed_bills,
                                         datetime.now(timezone.utc).date().isoformat()))
+    # Where each bill is (lib/ga_bill_stage.py), after the votes attached above.
+    adjourned = apply_stages(bills, datetime.now(timezone.utc), biennium_end_year())
+    print("Bill stages: sessions adjourned %s"
+          % ", ".join("%s=%s" % kv for kv in sorted(adjourned.items())))
 
     for bill in bills:
         apply_subjects(bill, base, overrides, ai_subjects)
