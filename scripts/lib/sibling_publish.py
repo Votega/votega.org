@@ -79,8 +79,12 @@ REPO_SOURCES = {
                                  "(georgiacivicdata.org, CC BY 4.0)",
     "Votega/ga-executive-orders": "the Office of the Governor of Georgia "
                                   "(gov.georgia.gov)",
+    # School-district identifiers (data/school-districts/) are compiled by Georgia Civic Data.
     "Votega/ga-local-government": "the published agendas and minutes of Georgia "
-                                  "county and municipal governments",
+                                  "county and municipal governments; the school-district "
+                                  "registry in data/school-districts/ comes from Georgia "
+                                  "Civic Data (georgiacivicdata.org, CC BY 4.0; GOSA and "
+                                  "NCES codes)",
     # Every figure here is derived: HUD's ZIP crosswalk supplies the ZIP -> tract
     # address shares, and the district and population facts come from the General
     # Assembly's own plan files and the Census Bureau's 2020 block counts.

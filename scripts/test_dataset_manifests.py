@@ -234,6 +234,15 @@ check('artifacts["latest.json"]' in INFO['publish_ga_bills']['src'],
       'own meaning and no consumer of it breaks')
 check('"latest.json"' not in INFO['publish_ga_ballot_measures']['src'],
       'and the ballot-measures publisher still does not write it')
+# NOTICE.md's repo-wide source line names every upstream of every dataset in the
+# repo, so a manifest that defaults to it credits one dataset with another's.
+unsourced = [n.lineno for n in ast.walk(ast.parse(mentions_src))
+             if isinstance(n, ast.Call)
+             and getattr(n.func, 'id', None) == 'add_dataset_manifest'
+             and 'source' not in [k.arg for k in n.keywords]]
+check(not unsourced,
+      'every manifest the mentions publisher writes names its own source '
+      '(unsourced calls at lines %r)' % unsourced)
 
 print('\nThe shared pre-publish gates still accept a manifest build')
 SP._assert_artifacts_sane(dict(arts))

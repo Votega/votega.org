@@ -30,15 +30,19 @@ from lib import local_terms as lt  # noqa: E402
 from lib.sibling_publish import build_json  # noqa: E402
 
 REPO_RAW_BASE = "https://raw.githubusercontent.com/Votega/ga-local-government/main"
-SCHEMA_VERSION = "1.0.0"
+SCHEMA_VERSION = "1.1.0"   # 1.1.0: term_provenance
 OFFICIALS_DIR = "data/officials"
 DATASET = "officials"
 
-# Column order is the published contract; new columns are APPENDED only.
-HISTORY_COLUMNS = ["jurisdiction", "seat_id", "seat", "name", "role", "title",
-                   "party", "takes_office", "leaves_office", "leave_reason",
-                   "last_elected", "term_end", "source", "status"]
-CURRENT_COLUMNS = HISTORY_COLUMNS + ["email", "phone"]
+# Column order is the published contract; new columns are APPENDED to the end of
+# EACH file, so the current board's contact columns stay where they were.
+_COLUMNS_1_0 = ["jurisdiction", "seat_id", "seat", "name", "role", "title",
+                "party", "takes_office", "leaves_office", "leave_reason",
+                "last_elected", "term_end", "source", "status"]
+HISTORY_COLUMNS = _COLUMNS_1_0 + ["term_provenance"]
+CURRENT_COLUMNS = _COLUMNS_1_0 + ["email", "phone", "term_provenance"]
+# validate_local_officials.py gates the YAML on the same vocabulary.
+TERM_PROVENANCE = ["verified", "assumed", "unknown"]
 DATE_FIELDS = ("takes_office", "leaves_office")
 INT_FIELDS = ("last_elected", "term_end")
 
@@ -59,6 +63,10 @@ FIELD_DOC = {
     "status": "null for a normal holder; \"Suspended\" = still legally holds the seat while an interim serves",
     "email": "official contact email (current board only)",
     "phone": "official contact phone (current board only)",
+    "term_provenance": "how the term dates were established: verified = a person "
+                       "confirmed them against a source; assumed = derived from the "
+                       "election year and the body's term rules; unknown = no basis; "
+                       "null = not yet reviewed",
 }
 
 
@@ -117,6 +125,9 @@ def schema_url(path):
 
 
 def _prop(field):
+    if field == "term_provenance":
+        return {"type": ["string", "null"], "enum": TERM_PROVENANCE + [None],
+                "description": FIELD_DOC[field]}
     typ = "integer" if field in INT_FIELDS else "string"
     return {"type": [typ, "null"], "description": FIELD_DOC[field]}
 

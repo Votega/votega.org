@@ -38,9 +38,9 @@ J = [{"id": "demo", "members": [
      "leave_reason": "term-ended", "source": "https://x"},
     {"name": "Sitting", "role": "Commissioner", "seat": "District 1", "seat_id": "district-1",
      "party": "", "email": "", "phone": "555-1", "last_elected": 2024, "term_end": 2028,
-     "takes_office": "2025-01-01", "source": "https://x"},
+     "takes_office": "2025-01-01", "source": "https://x", "term_provenance": "verified"},
     {"name": "Staged", "role": "Commissioner", "seat": "District 2", "seat_id": "district-2",
-     "email": "s@x.gov", "takes_office": date(2027, 1, 1), "source": "https://x"},
+     "email": "s@x.gov", "takes_office": date(2027, 1, 1), "source": "https://x", "term_provenance": "assumed"},
     {"name": "Plain", "role": "Mayor", "seat": "At-large", "seat_id": "mayor", "source": "https://x"},
 ]}]
 
@@ -86,6 +86,23 @@ for key in ("officials.schema.json", "officials-history.schema.json"):
     check(sch.get("schemaVersion") and sch.get("schemaStability"), f"{key} needs version + stability")
 check("email" in json.loads(arts[P["officials.schema.json"]])["properties"], "current schema has email")
 check("email" not in json.loads(arts[P["officials-history.schema.json"]])["properties"], "history schema has no email")
+
+# term_provenance: both files, appended LAST so positional CSV readers keep working.
+prov = {r["name"]: r.get("term_provenance", "<absent>") for r in hist["officials"]}
+check(prov == {"Old Holder": None, "Sitting": "verified", "Staged": "assumed", "Plain": None},
+      f"history must carry term_provenance, null when unreviewed: {prov}")
+check(sitting.get("term_provenance") == "verified", "current rows carry term_provenance")
+cur_head = cur_csv.splitlines()[0].split(",")
+check(cur_head[-3:] == ["email", "phone", "term_provenance"],
+      f"current CSV appends term_provenance after the contact columns: {cur_head}")
+check(hist_csv[0][13:] == ["status", "term_provenance"], f"history CSV appends it last: {hist_csv[0]}")
+for key in ("officials.schema.json", "officials-history.schema.json"):
+    sch = json.loads(arts[P[key]])
+    spec = sch["properties"].get("term_provenance", {})
+    check(spec.get("enum") == ["verified", "assumed", "unknown", None], f"{key} enumerates term_provenance")
+    check(sch["required"] == ["jurisdiction", "seat_id", "name"], f"{key}: no new required field")
+    check(sch["schemaVersion"] == "1.1.0", f"{key} schemaVersion bumped")
+check(cur["metadata"]["schemaVersion"] == "1.1.0", "data files carry the bumped version")
 
 # The record floor refuses a gutted build.
 try:
