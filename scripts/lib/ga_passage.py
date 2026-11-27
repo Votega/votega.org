@@ -71,6 +71,45 @@ PROCEDURAL_CAPTION = re.compile(
     re.IGNORECASE)
 
 
+
+#: A bill named in a GetVotes listing's free-text `Legislation` ("HB 1192", "HB 9EX").
+_LISTING_BILL_RE = re.compile(r"\b(HB|HR|SB|SR)\s*(\d+)\s*(EX)?\b", re.IGNORECASE)
+
+
+def listing_bill_refs(text):
+    """Bill identifiers named in a vote listing's `Legislation` text, in order, as the
+    project spells them ("HB 1192", "HB 9EX")."""
+    out = []
+    for m in _LISTING_BILL_RE.finditer(text or ""):
+        ident = "%s %s%s" % (m.group(1).upper(), m.group(2), (m.group(3) or "").upper())
+        if ident not in out:
+            out.append(ident)
+    return out
+
+
+def resolve_listing_bills(text, vote_session, bill_index):
+    """[(identifier, session, legislationId)] for the bills a listing's text names.
+
+    For roll calls whose GetVote record links NO legislation (ItemVotedOn is empty), the
+    listing text is the only link left: 2026 SS's "Veto Override" (text "HB 1192", a
+    2025-26 bill) and 2025-26's "Adopt CCR" on HB 973. legis.ga.gov leaves these out of
+    the bill's own Votes list too (docs/ga-soap-data-dictionary.md).
+
+    `bill_index` is {(session, identifier): legislationId} for the biennium. A bill of
+    the vote's own session wins; otherwise the identifier must name exactly one bill in
+    the index, or it is left out rather than guessed."""
+    out = []
+    for ident in listing_bill_refs(text):
+        lid = bill_index.get((vote_session, ident))
+        session = vote_session
+        if lid is None:
+            hits = [(s, l) for (s, i), l in bill_index.items() if i == ident]
+            if len(hits) != 1:
+                continue
+            session, lid = hits[0]
+        out.append((ident, session, lid))
+    return out
+
 def normalize_bill(identifier):
     """Collapse a bill identifier for cross-source matching: 'HB 9EX' -> 'HB9EX'."""
     return re.sub(r"\s+", "", (identifier or "")).upper()

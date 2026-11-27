@@ -73,7 +73,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
 from lib.atomic_io import write_json_atomic, atomic_write
-from lib.ga_passage import native_is_passage
+from lib.ga_passage import native_is_passage, resolve_listing_bills
 from lib.ga_vote_results import rederive_bill_passage_votes
 from lib.ga_vote_rules import STORED_ABSTRACT_MAX, requires_two_thirds, vote_passed
 from lib.ga_bill_subjects import infer_local_subject
@@ -370,6 +370,93 @@ def _passage_votes(detail, constitutional_amendment=False, legislation_id=None):
     out.sort(key=lambda v: (v["date"], v["time"] or "", v["chamber"], v["motionText"]))
     return out
 
+
+
+def _clock24(t):
+    """'3:22 PM' -> '15:22'; None when unparseable."""
+    m = re.match(r"\s*(\d{1,2}):(\d{2})\s*([AP])\.?M\.?", t or "", re.IGNORECASE)
+    if not m:
+        return None
+    h = int(m.group(1)) % 12 + (12 if m.group(3).upper() == "P" else 0)
+    return "%02d:%s" % (h, m.group(2))
+
+
+def attach_unlinked_votes(bills, listings_for=None, detail_for=None):
+    """Add the passage roll calls legis.ga.gov links to NO bill to the bills their
+    listing names. Returns the number attached. An empty listing (an outage, or a
+    session with no roll calls yet; the two look alike) is reported and skipped: a missed
+    link is one vote, and the next run adds it.
+
+    GetVote's ItemVotedOn is empty on a few final votes, and GetLegislationDetail then
+    leaves them out of the bill's Votes too: 2026 SS's "Veto Override" on HB 1192 (a
+    2025-26 bill) and 2025-26's House "Adopt CCR" on HB 973 (the amended FY2026 budget).
+    Only the GetVotes listing's text names the bill (lib/ga_passage.resolve_listing_bills).
+    A vote already on the bill (same chamber, date, tally and caption) is not added
+    twice, so a carried-forward bill keeps one copy."""
+    from lib import ga_soap
+    listings_for = listings_for or ga_soap.get_vote_listings
+    detail_for = detail_for or ga_soap.get_vote_detail
+    by_lid = {b["legislationId"]: b for b in bills if b.get("legislationId") is not None}
+    index = {(b["session"], b["identifier"]): b["legislationId"]
+             for b in bills if b.get("legislationId") is not None}
+    attached = 0
+    for session in sorted({b["session"] for b in bills}):
+        legis_session = legis_session_id(session)
+        if legis_session is None:
+            continue
+        for branch in ga_soap.CHAMBERS:
+            listings = listings_for(legis_session, branch)
+            if not listings:
+                print("  GetVotes(%s, %d) returned nothing; unlinked roll calls not checked"
+                      % (branch, legis_session), file=sys.stderr)
+                continue
+            for lst in listings:
+                caption = (lst.get("caption") or "").strip()
+                if not native_is_passage(caption) or lst.get("yea") is None:
+                    continue
+                chamber = _chamber(None, branch)
+                targets = []
+                for _ident, _s, lid in resolve_listing_bills(lst.get("legislation"), session, index):
+                    bill = by_lid.get(lid)
+                    if bill and not any(
+                            (v["chamber"], v["date"], v["yea"], v["nay"], v["motionText"].strip())
+                            == (chamber, lst["date"], lst["yea"], lst["nay"] or 0, caption)
+                            for v in bill["passageVotes"]):
+                        targets.append(bill)
+                if not targets:
+                    continue
+                try:
+                    detail = detail_for(lst["voteId"])
+                except ga_soap.RollCallNotPublished:
+                    continue
+                if detail is None or any(e["legislationId"] is not None for e in detail[2]):
+                    continue        # linked: the bill's own Votes list is the source
+                for bill in targets:
+                    two_thirds = requires_two_thirds(bill.get("abstract"),
+                                                     bill.get("billType") == "resolution",
+                                                     STORED_ABSTRACT_MAX,
+                                                     legislation_type=bill.get("legislationType"))
+                    bill["passageVotes"].append({
+                        "chamber":    chamber,
+                        "date":       lst["date"],
+                        "time":       _clock24(lst.get("time")),
+                        "result":     derive_result(lst["yea"], lst["nay"] or 0, chamber, two_thirds,
+                                                    caption, bill["legislationId"], lst["date"]) or "",
+                        "motionText": caption,
+                        "yea":        lst["yea"],
+                        "nay":        lst["nay"] or 0,
+                        "other":      (lst.get("notVoting") or 0) + (lst.get("excused") or 0),
+                        # legis.ga.gov links this roll call to no bill; the link is read
+                        # from the vote listing's text.
+                        "linkedBy":   "listing",
+                    })
+                    bill["passageVotes"].sort(
+                        key=lambda v: (v["date"], v.get("time") or "", v["chamber"], v["motionText"]))
+                    attached += 1
+                    print("  linked roll call %d (%s %s, %s) to %s %s from its listing"
+                          % (lst["voteId"], branch, lst["date"], caption, bill["session"],
+                             bill["identifier"]))
+    return attached
 
 def _governor_action(detail):
     """Derive {status, sentDate, decisionDate, actNumber} from StatusHistory, or None.
@@ -722,6 +809,10 @@ def main():
                      ", ".join("%s (expected %d)" % (k, v) for k, v in shortfall.items())),
                   file=sys.stderr)
             sys.exit(1)
+
+    if not sample:
+        print("Roll calls that link no bill: %d attached from their listings"
+              % attach_unlinked_votes(bills))
 
     for bill in bills:
         apply_subjects(bill, base, overrides, ai_subjects)

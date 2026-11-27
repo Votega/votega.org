@@ -159,6 +159,15 @@ Operations: `GetVotes` ✓, `GetVote` ✓, `GetVotesForLegislation` —.
 | `Description` | `"House Vote #434 - 2025-2026 Regular Session"` | — |
 | `Yeas` `Nays` `Excused` `NotVoting` | official tally | ✓ |
 | `Legislation` | bills voted on, free text in the listing; `ItemVotedOn` rows in GetVote | ✓ |
+
+**Unlinked roll calls.** On a few final votes GetVote's `ItemVotedOn` is **empty**, and
+GetLegislationDetail then leaves the vote out of the bill's `Votes` too. Only the listing's
+`Legislation` text names the bill. 2025-26 + 2026 SS have three: 2026 SS House
+`Veto Override` (`HB 1192`, a **2025-26** bill), 2025-26 House `Adopt CCR` (`HB 973`, the
+amended FY2026 budget), and 2026 SS House `Local Calendar as a Whole` (text empty: no bill
+can be named). Both producers resolve the text with `lib/ga_passage.resolve_listing_bills`
+(own session first, else a unique match in the biennium); a vote attached this way carries
+`linkedBy: "listing"` in ga-bills.json.
 | **`Tag`** (GetVote only) | journal vote key: `hv0434` (House), `sv0114` (Senate) = chamber + `Number` | — |
 | `Votes` (GetVote only) | `MemberVote` rows: `Member.Id` + `MemberVoted` | ✓ |
 | `Session` | `Session` object | — |
@@ -199,6 +208,10 @@ Speaker elections, `Move from <committee> to <committee>`.
 | 3 | `Date` truncated to a day; same-day votes sorted by caption | `generate_ga_bills_soap._passage_votes` | "latest vote" can be the wrong one |
 | 4 | Two-thirds inferred from abstract text, `LegislationType` ignored | `lib/ga_vote_rules.requires_two_thirds` | regex guesses + hand pins |
 | 5 | `get_detail` failure skipped without a count | `generate_ga_bills_soap.main` | a bill can vanish from a live run |
+| 6 | Roll calls with an empty `ItemVotedOn` dropped | both producers | HB 1192's override and HB 973's House CCR vote missing |
+
+Fixed: 1–5 in #541/#542, 6 after them. "Local Calendar as a Whole" (2026-06-20, 93-68)
+remains unattached: neither its record nor its listing names a bill.
 
 ---
 
