@@ -96,6 +96,13 @@ check("second run adds nothing", again, 0)
 check("clock", (G._clock24("12:05 AM"), G._clock24("12:05 PM"), G._clock24("x")),
       ("00:05", "12:05", None))
 
+# --- ga-legislators documents billSession ------------------------------------
+import publish_ga_legislators as PL  # noqa: E402
+vote_props = PL.votes_schema("sessions/2026-ss/votes.schema.json")["properties"]["votes"][
+    "additionalProperties"]["properties"]
+check("votes schema describes billSession", vote_props.get("billSession", {}).get("type"), "string")
+check("votes schema version", PL.SCHEMA_VERSION, "1.1.0")
+
 if failures:
     print("FAIL (%d):" % len(failures))
     for f in failures:
