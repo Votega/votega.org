@@ -2381,3 +2381,18 @@ places:
             when: "1st Tuesday of every month, 6:00pm"
             location: "Ben Hill County Extension Service Building, 321 Dewey McGlamry Road"
 
+  - slug: oglethorpe
+    name: Oglethorpe County
+    type: county
+    fips: "13221"
+    parentCounty: null
+    region: Northeast Georgia
+    domains:
+      meetings:
+        platform: wix
+        base_url: "https://www.oglethorpecountyga.gov"
+        agendas_url: "https://www.oglethorpecountyga.gov/minutes-agendas"
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Monday of every month, 6:00pm; 2nd Monday of every month at 6:00pm (only when necessary)"
+            location: "105 Union Point Road, Lexington, GA"
