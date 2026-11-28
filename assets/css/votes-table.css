@@ -22,8 +22,8 @@
   border-bottom: 1px solid var(--color-border-subtle);
 }
 .vote-table th { background: var(--color-surface-tint); font-weight: bold; }
-.vote-yea   { color: var(--color-success); font-weight: bold; }
-.vote-nay   { color: var(--color-danger); font-weight: bold; }
+.vote-yea   { color: var(--color-outcome-yes); font-weight: bold; }
+.vote-nay   { color: var(--color-outcome-no); font-weight: bold; }
 .vote-other { color: var(--color-text-muted); }
 
 /* Filter row + progressive disclosure. A GA member has ~1,100 roll calls in a

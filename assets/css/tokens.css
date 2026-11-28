@@ -94,6 +94,17 @@
   --color-danger-tint: var(--red-50);
   --color-danger-line: var(--red-200);
 
+  /* Outcomes: the two sides of a vote or measure (Yes/No, Yea/Nay, Passed/Failed,
+     Signed/Failed, Support/Oppose, majority/minority opinion) and of money (raised/spent).
+     Teal and clay, not green and red: neither side is good or bad, and neither reads as
+     a party. Always labeled. Danger red stays for errors and emergencies. */
+  --color-outcome-yes: var(--teal-700);
+  --color-outcome-yes-tint: var(--teal-50);
+  --color-outcome-yes-line: var(--teal-200);
+  --color-outcome-no: var(--clay-700);
+  --color-outcome-no-tint: var(--clay-50);
+  --color-outcome-no-line: var(--clay-300);
+
   /* Categorical chart series (funding sources and the like). Deliberately avoids the
      three party hues so a series is never read as a party. Always label the series. */
   --chart-pine: var(--pine-600);

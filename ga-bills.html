@@ -30,10 +30,11 @@ breadcrumb:
   }
   .bills-stat-label { font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 2px; }
   .bills-stat-val   { font-size: 1.3rem; font-weight: 700; color: var(--color-text); }
-  .bills-stat-val.green  { color: var(--color-success); }
-  .bills-stat-val.red    { color: var(--color-danger); }
+  .bills-stat-val.green  { color: var(--color-outcome-yes); }
+  .bills-stat-val.red    { color: var(--color-warning); }
   .bills-stat-val.blue   { color: var(--color-link); }
-  .bills-stat-val.orange { color: var(--color-danger); }
+  .bills-stat-val.orange { color: var(--color-outcome-no); }
+  .bills-stat-val.pending { color: var(--color-link); }
   .bills-stat-sub   { font-size: 0.68rem; color: var(--color-text-muted); margin-top: 2px; }
 
   /* ── Filters ── */
@@ -181,12 +182,12 @@ breadcrumb:
     border-radius: 999px;
     white-space: nowrap;
   }
-  .badge-signed   { background: var(--color-success-tint); color: var(--color-success); }
+  .badge-signed   { background: var(--color-outcome-yes-tint); color: var(--color-outcome-yes); }
   .badge-vetoed   { background: var(--color-warning-tint); color: var(--color-warning); }
   .badge-pending  { background: var(--color-surface-tint); color: var(--color-link); }
-  .badge-failed   { background: var(--color-danger-tint); color: var(--color-danger); }
+  .badge-failed   { background: var(--color-outcome-no-tint); color: var(--color-outcome-no); }
   .badge-passed   { background: var(--color-surface-tint); color: var(--color-link); }
-  .badge-stalled  { background: var(--color-warning-tint); color: var(--color-danger); }
+  .badge-stalled  { background: var(--color-warning-tint); color: var(--color-warning); }
   .badge-progress { background: var(--color-surface-chrome); color: var(--color-text-secondary); border: 1px solid var(--color-border-subtle); }
 
   .bill-title {
@@ -228,8 +229,8 @@ breadcrumb:
     align-items: center;
     gap: 3px;
   }
-  .vote-yes-txt { color: var(--color-success); font-weight: 600; }
-  .vote-no-txt  { color: var(--color-danger); font-weight: 600; }
+  .vote-yes-txt { color: var(--color-outcome-yes); font-weight: 600; }
+  .vote-no-txt  { color: var(--color-outcome-no); font-weight: 600; }
 
   /* ── Expanded detail ── */
   /* Where the bill is (stage from lib/ga_bill_stage.py). Party colors and red/green are
@@ -305,9 +306,9 @@ breadcrumb:
     display: flex;
     margin-bottom: 2px;
   }
-  .vb-yes { background: var(--color-success); }
+  .vb-yes { background: var(--color-outcome-yes); }
   .vb-oth { background: var(--color-text-muted); }
-  .vb-no  { background: var(--color-danger); }
+  .vb-no  { background: var(--color-outcome-no); }
   .vote-bar-sub { font-size: 0.72rem; color: var(--color-text-muted); }
   .vote-bar-party { font-size: 0.72rem; margin-top: 2px; }
   .party-line-tag {
@@ -1314,7 +1315,7 @@ breadcrumb:
       stat('Signed into law', signed.toLocaleString(), 'green'),
       stat('Vetoed', vetoed.toLocaleString(), 'red'),
     ];
-    if (pending > 0) stats.push(stat('Sent to Governor', pending.toLocaleString(), 'orange', 'Awaiting signature or veto'));
+    if (pending > 0) stats.push(stat('Sent to Governor', pending.toLocaleString(), 'pending', 'Awaiting signature or veto'));
     stats.push(stat('Failed / stalled', (failed + stalled).toLocaleString(), 'orange'));
     const withVotes = scope.filter(function (b) { return b.passageVotes && b.passageVotes.length; }).length;
     const withParty = scope.filter(function (b) {
