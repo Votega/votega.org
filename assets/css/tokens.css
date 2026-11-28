@@ -149,6 +149,20 @@
   --shadow-popover: 0 2px 8px rgba(0, 0, 0, 0.3);
   --shadow-focus-glow: 0 0.15rem 1rem var(--clay-50);
 
+  /* Washes: translucent text color laid over any surface. hover/pressed: navbar
+     dropdowns and the open menu button; faint/fainter: code-block stripes. They
+     derive from --color-text, so a dark theme flips them with it. */
+  --color-wash-hover: color-mix(in srgb, var(--color-text) 10%, transparent);
+  --color-wash-pressed: color-mix(in srgb, var(--color-text) 20%, transparent);
+  --color-wash-faint: color-mix(in srgb, var(--color-text) 3%, transparent);
+  --color-wash-fainter: color-mix(in srgb, var(--color-text) 2%, transparent);
+
+  /* Over photos and full-screen backdrops: dark in every theme. scrim: the search
+     overlay; scrim-caption and shadow-on-image: text and rules on a cover image. */
+  --color-scrim: rgba(0, 0, 0, 0.9);
+  --color-scrim-caption: rgba(30, 30, 30, 0.6);
+  --shadow-on-image: 1px 1px 3px #000;
+
   /* Type */
   --font-sans: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Consolas, 'Liberation Mono', monospace;
