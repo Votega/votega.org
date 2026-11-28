@@ -203,7 +203,7 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     if (!u || u.yesPercent == null) return '';
     const yes = u.yesPercent;
     const no = u.noPercent != null ? u.noPercent : (100 - yes);
-    const asOf = u.asOf ? new Date(u.asOf + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '';
+    const asOf = VoteGA.formatDate(u.asOf);
     return `
       <div class="measure-results">
         <strong><i class="fa-solid fa-clock" aria-hidden="true"></i> Unofficial result: ${u.passing ? 'Leading (would pass)' : 'Trailing (would fail)'}</strong>

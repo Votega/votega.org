@@ -136,13 +136,13 @@ share-description: "Headlines about Georgia's elected officials, candidates, and
     var diff = Math.round((startOf(now) - startOf(d)) / 86400000);
     if (diff <= 0) return 'Today';
     if (diff === 1) return 'Yesterday';
-    if (diff < 7) return d.toLocaleDateString([], { weekday: 'long' });
-    return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    if (diff < 7) return d.toLocaleDateString('en-US', { weekday: 'long' });
+    return VoteGA.formatDate(d, { style: 'short', year: false });
   }
   function timeLabel(iso) {
     if (!iso) return '';
     var d = new Date(iso);
-    return isNaN(d) ? '' : d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    return isNaN(d) ? '' : d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   }
 
   function personTag(vgId) {
@@ -263,8 +263,8 @@ share-description: "Headlines about Georgia's elected officials, candidates, and
       el('gn-footnote').hidden = false;
       var gen = data.metadata && data.metadata.generatedAt;
       if (gen) {
-        var d = new Date(gen);
-        if (!isNaN(d)) el('gn-updated').textContent = 'Updated ' + d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) + '. ';
+        var when = VoteGA.formatDate(gen);
+        if (when) el('gn-updated').textContent = 'Updated ' + when + '. ';
       }
       buildFilters();
       applyEntityParam();

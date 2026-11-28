@@ -343,11 +343,8 @@
 
   function fmt(iso) {
     if (!iso) return '—';
-    // Parse date components directly to avoid UTC-to-local timezone shift.
-    // new Date('YYYY-MM-DD') treats the string as UTC midnight, which rolls
-    // back to the previous day for US timezones — manual parsing avoids this.
-    const [year, month, day] = iso.slice(0, 10).split('-').map(Number);
-    return new Date(year, month - 1, day).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    // The calendar date as written: slicing drops any time, so it cannot move the day.
+    return VoteGA.formatDate(iso.slice(0, 10)) || '—';
   }
 
   async function loadOfficial(id) {

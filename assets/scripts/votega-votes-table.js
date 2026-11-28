@@ -76,17 +76,11 @@ window.VotegaVotesTable = (function () {
     return 'vote-' + voteBucket(vote);
   }
 
-  // Parses the components directly rather than handing an ISO string to Date():
-  // '2026-01-01' parsed as UTC renders as Dec 31 for anyone west of UTC, which is
-  // the bug data-stamp.js documents. Returns the em dash for an absent or
-  // malformed value rather than the string "Invalid Date".
+  // The calendar date as written (a timestamp's time is dropped, so it cannot move
+  // the day). Returns the em dash for an absent or malformed value.
   function fmtDate(iso) {
-    if (!iso) return '—';
-    var parts = String(iso).slice(0, 10).split('-').map(Number);
-    var y = parts[0], m = parts[1], d = parts[2];
-    if (!y || !m || !d) return '—';
-    return new Date(y, m - 1, d).toLocaleDateString('en-US',
-      { month: 'short', day: 'numeric', year: 'numeric' });
+    var format = window.VoteGA && window.VoteGA.formatDate;
+    return (format && format(String(iso || '').slice(0, 10), { style: 'short' })) || '—';
   }
 
   // Most recent first. Returns a new array — callers hold the unsorted list.

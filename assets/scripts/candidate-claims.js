@@ -84,10 +84,7 @@
   }
 
   function formatDate(iso) {
-    if (!iso) return '';
-    const d = new Date(iso.length <= 10 ? iso + 'T00:00:00' : iso);
-    if (isNaN(d)) return '';
-    return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    return global.VoteGA && global.VoteGA.formatDate ? global.VoteGA.formatDate(iso) : '';
   }
 
   function maskEmail(email) {

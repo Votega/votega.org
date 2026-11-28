@@ -602,7 +602,7 @@ share-description: "How Georgians voted early in the November 3, 2026 general el
   var CMP = {{ ev.metadata.comparisons | jsonify }};  // per past year: the day it is compared at, and where its file stops being complete
   function endDay(y) { return y === NOW ? SAME : ((CMP[y] && CMP[y].lastCompleteDaysBefore) || 0); }
   function pointDay(y) { return y === NOW ? SAME : CMP[y].daysBefore; }
-  function shortDate(iso) { return new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); }
+  function shortDate(iso) { return VoteGA.formatDate(iso, { style: 'short', year: false }); }
   // ---- running-total sparkline in the "ballots cast" card ----
   // Same data and the same day window as the big chart below, drawn small: where this year's
   // running total sits on the curve, against the shape of the years it is compared with.

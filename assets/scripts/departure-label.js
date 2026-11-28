@@ -27,8 +27,8 @@
   }
   // "2027-01-11" -> "January 11, 2027"
   function longDate(iso) {
-    const d = new Date(iso + 'T00:00:00');
-    return isNaN(d) ? iso : d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    const format = root.VoteGA && root.VoteGA.formatDate;
+    return (format && format(iso)) || iso;
   }
   const api = { lameDuckLabel, longDate, todayIso };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

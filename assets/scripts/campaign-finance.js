@@ -390,9 +390,8 @@ window.CampaignFinance = (function () {
         cashOnHand: e.cashOnHand ?? null,
         totalIndividual: e.totalIndividual ?? null,
         cycleLabel: cycleLabelFor(fecCycle),
-        asOf: e.coverageEndDate
-          ? new Date(e.coverageEndDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-          : null,
+        // A calendar date written as a timestamp: take the date as printed.
+        asOf: formatDate(String(e.coverageEndDate || '').slice(0, 10), { style: 'short' }) || null,
         detailUrl: e.fecUrl || null,
         searchUrl: fecSearchUrl(fecCycle),
         raw: e,
@@ -635,16 +634,18 @@ window.CampaignFinance = (function () {
       + ' committees:</p><ul class="finance-meta finance-committees">' + items + '</ul>';
   }
 
+  // VoteGA.formatDate (format-date.js), or '' when it is absent or the value is no date.
+  function formatDate(value, options) {
+    return window.VoteGA && window.VoteGA.formatDate ? window.VoteGA.formatDate(value, options) : '';
+  }
+
   // Per-block provenance line ("Finance data from the FEC, updated October 4, 2026.").
   // Finance figures come from their own files (ga-fec-data.json /
   // ga-campaign-finance.json), not from the roster the page-level stamp describes, so
   // each panel dates itself from the finance file's own metadata.generatedAt. Returns ''
   // when the timestamp is absent or unparseable rather than printing a bare or wrong date.
   function provenanceDate(generatedAt) {
-    if (!generatedAt) return null;
-    const d = new Date(generatedAt);
-    if (isNaN(d)) return null;
-    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    return formatDate(generatedAt) || null;
   }
 
   // ── GA donor panel ─────────────────────────────────────────────────────────
@@ -738,10 +739,8 @@ window.CampaignFinance = (function () {
   // `dataset` (a key in _data/data_freshness.yml) adds the "checked" note and the
   // "older than usual" flag from freshness.js; omit it for a line that is never flagged.
   function provenanceLine(sourceName, generatedAt, dataset) {
-    if (!generatedAt) return '';
-    const d = new Date(generatedAt);
-    if (isNaN(d)) return '';
-    const when = d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    const when = formatDate(generatedAt);
+    if (!when) return '';
     const fresh = (dataset && window.VotegaFreshness) ? window.VotegaFreshness.suffix(dataset, generatedAt) : '';
     return '<p class="finance-meta">Finance data from ' + sourceName + ', updated ' + when + fresh + '.</p>';
   }

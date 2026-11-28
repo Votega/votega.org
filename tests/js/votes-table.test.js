@@ -17,6 +17,7 @@ const { loadBrowserModules } = require('./load-browser-module');
 
 const win = loadBrowserModules(
   'assets/scripts/html-escape.js',
+  'assets/scripts/format-date.js',
   'assets/scripts/votega-votes-table.js'
 );
 const VT = win.VotegaVotesTable;

@@ -26,24 +26,12 @@
 (function () {
   'use strict';
 
-  // Parse as a *local* calendar date for date-only strings, so a stamp does not
-  // read as the previous day for anyone west of UTC.
-  function parse(value) {
-    if (!value) return null;
-    var dateOnly = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value));
-    if (dateOnly) {
-      return new Date(+dateOnly[1], +dateOnly[2] - 1, +dateOnly[3]);
-    }
-    var d = new Date(value);
-    return isNaN(d.getTime()) ? null : d;
-  }
-
+  // Long form from VoteGA.formatDate (format-date.js). Unlike it, a stamp passes an
+  // unparseable value through verbatim.
   function formatDate(value) {
-    var d = parse(value);
-    if (!d) return value ? String(value) : '';
-    return d.toLocaleDateString('en-US', {
-      month: 'long', day: 'numeric', year: 'numeric',
-    });
+    if (!value) return '';
+    var format = window.VoteGA && window.VoteGA.formatDate;
+    return (format && format(value)) || String(value);
   }
 
   function escape(str) {

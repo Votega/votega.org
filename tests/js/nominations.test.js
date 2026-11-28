@@ -17,6 +17,7 @@ const { loadBrowserModules, REPO_ROOT } = require('./load-browser-module');
 
 const win = loadBrowserModules(
   'assets/scripts/html-escape.js',
+  'assets/scripts/format-date.js',
   'assets/scripts/votega-votes-table.js',
   'assets/scripts/votega-nominations.js'
 );

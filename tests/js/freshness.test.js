@@ -16,7 +16,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { loadBrowserModules } = require('./load-browser-module');
 
-const SRC = fs.readFileSync(path.join(__dirname, '..', '..', 'assets/scripts/freshness.js'), 'utf8');
+const read = file => fs.readFileSync(path.join(__dirname, '..', '..', file), 'utf8');
+// Same order as _includes/head.html: the formatter first.
+const SRC = read('assets/scripts/format-date.js') + read('assets/scripts/freshness.js');
 
 function withConfig(cfg) {
   // freshness.js reads window.VOTEGA_FRESHNESS at call time, so set it on the stub.

@@ -78,12 +78,10 @@
     return new Date(y, m - 1, d);
   }
   function fmtLong(iso) {
-    return parseLocalDate(iso).toLocaleDateString('en-US',
-      { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    return VoteGA.formatDate(iso, { weekday: true });
   }
   function fmtShort(iso) {
-    return parseLocalDate(iso).toLocaleDateString('en-US',
-      { month: 'short', day: 'numeric', year: 'numeric' });
+    return VoteGA.formatDate(iso, { style: 'short' });
   }
   function daysUntil(iso) {
     const today = new Date(); today.setHours(0, 0, 0, 0);
@@ -96,7 +94,7 @@
     const n = d.getDate();
     const suffix = (n % 100 >= 11 && n % 100 <= 13) ? 'th'
       : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th');
-    return d.toLocaleDateString('en-US', { month: 'long' }) + ' ' + n + suffix;
+    return VoteGA.formatDate(iso, { year: false }) + suffix;
   }
   function esc(value) { return VoteGA.escapeHtml(value); }
 

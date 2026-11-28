@@ -194,8 +194,7 @@ breadcrumb:
 
   function fmt(iso) {
     if (!iso) return '—';
-    const [y, m, d] = iso.slice(0, 10).split('-').map(Number);
-    return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    return VoteGA.formatDate(iso.slice(0, 10), { style: 'short' }) || '—';
   }
 
   function apptPartyColor(party) {
@@ -315,9 +314,9 @@ breadcrumb:
         const terms = (meta.terms || []).join(', ');
         // Decisions are generated and change only when the Court rules, so the stamp is a
         // prompt to review: freshness.js flags it only past the 90-day window.
-        const decGen = meta.generatedAt ? new Date(meta.generatedAt) : null;
-        const decStamp = decGen && !isNaN(decGen)
-          ? ` · Updated ${decGen.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`
+        const decGen = VoteGA.formatDate(meta.generatedAt);
+        const decStamp = decGen
+          ? ` · Updated ${decGen}`
             + (window.VotegaFreshness ? window.VotegaFreshness.suffix('scotus-decisions', meta.generatedAt) : '')
           : '';
         decisionsHtml = `
