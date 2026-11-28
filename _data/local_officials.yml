@@ -8257,7 +8257,7 @@ jurisdictions:
     type: county
     county: Ben Hill
     body: Board of Commissioners
-    partisan: false
+    partisan: true
     term_years: 4
     board_size: 5
     government_form: commission
@@ -8267,55 +8267,60 @@ jurisdictions:
       - name: "Hal Wiley"
         role: Chair
         seat: "At-Large"
-        party: 
-        email: 
-        phone: 
-        last_elected: 
-        term_end: 
-        next_election: 
+        seat_id: at-large
+        party: Republican
+        email:
+        phone:
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
         voting: true
-        source: 
-      - name: " Hope Harmen "
+        source: "https://results.sos.ga.gov/results/public/api/elections/ben-hill-county-ga/2024NovGen/data"
+      - name: "Hope Harmon"
         role: Vice Chair
         seat: "District 2, Post 2"
-        party: 
-        email: 
-        phone: 
-        last_elected: 
-        term_end: 
-        next_election: 
+        seat_id: district-2-post-2
+        party: Democratic
+        email:
+        phone:
+        last_elected:
+        term_end:
+        next_election:
         voting: true
-        source: 
+        source: "https://results.sos.ga.gov/results/public/api/elections/ben-hill-county-ga/GeneralPrimary51926/data"   # party and spelling from the 2026 primary; November result not in the SoS county feed
       - name: "Daniel Cowan"
         role: Commissioner
         seat: "District 3, Post 2"
-        party: 
-        email: 
-        phone: 
-        last_elected: 
-        term_end: 
-        next_election: 
+        seat_id: district-3-post-2
+        party: Republican
+        email:
+        phone:
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
         voting: true
-        source: 
-      - name: " Bennie Calloway "
+        source: "https://results.sos.ga.gov/results/public/api/elections/ben-hill-county-ga/2024NovGen/data"
+      - name: "Bennie Calloway"
         role: Commissioner
         seat: "District 2, Post 1"
-        party: 
-        email: 
-        phone: 
-        last_elected: 
-        term_end: 
-        next_election: 
+        seat_id: district-2-post-1
+        party: Democratic
+        email:
+        phone:
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
         voting: true
-        source: 
-      - name: " John William Mooney "
+        source: "https://results.sos.ga.gov/results/public/api/elections/ben-hill-county-ga/2024NovGen/data"
+      - name: "John William Mooney"
         role: Commissioner
         seat: "District 3, Post 1"
-        party: 
-        email: 
-        phone: 
-        last_elected: 
-        term_end: 
-        next_election: 
+        seat_id: district-3-post-1
+        party: Republican
+        email:
+        phone:
+        last_elected:
+        term_end:
+        next_election:
         voting: true
-        source: 
+        source: "https://results.sos.ga.gov/results/public/api/elections/ben-hill-county-ga/GeneralPrimary51926/data"   # party from the 2026 primary; November result not in the SoS county feed
