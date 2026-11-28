@@ -2,7 +2,9 @@ name: Update GA campaign finance history (legacy records)
 
 # Source: api-recordsearch.ethics.ga.gov — the Ethics Commission's LEGACY system,
 # holding filings through 2025-12-31. It is a frozen archive, not a live feed, so
-# this runs on demand plus quarterly in case the Commission backfills a record.
+# this runs on demand only. The quarterly schedule was removed 2026-11-27: the Oct 1
+# run changed nothing and the file has not changed since 2026-08-08. Run it by hand
+# if the Commission is known to have backfilled a record.
 # The live 2026-onward data comes from update-ga-campaign-finance.yml (PeachFile).
 
 permissions:
@@ -11,8 +13,6 @@ permissions:
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '30 9 1 1,4,7,10 *'   # 09:30 UTC on the 1st, quarterly
 
 concurrency:
   group: update-ga-campaign-finance-history

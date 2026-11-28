@@ -78,7 +78,7 @@ Field detail: `docs/data-schemas.md` (§ `current-members.json`, federal sponsor
 |---|---|---|---|---|---|
 | `ga-campaign-finance.json` | Georgia Ethics Commission PeachFile API (2026 onward), plus `ga-campaign-finance-overrides.json` | `generate_ga_campaign_finance.py` | `update-ga-campaign-finance`: Sundays | `ga-legislator.html`, `race.html`, `campaign-finance.js` | — |
 | `ga-campaign-finance-donors.json` | PeachFile API (donor summaries; sidecar) | `generate_ga_donor_summaries.py` | `update-ga-campaign-finance` | `campaign-finance.js` | — |
-| `ga-campaign-finance-history.json` | Ethics Commission legacy records search (pre-2026) | `generate_ga_campaign_finance_history.py` | `update-ga-campaign-finance-history`: quarterly | — (history panel) | — |
+| `ga-campaign-finance-history.json` | Ethics Commission legacy records search (pre-2026) | `generate_ga_campaign_finance_history.py` | `update-ga-campaign-finance-history`: manual only (frozen archive) | — (history panel) | — |
 | `ga-campaign-finance-overrides.json` | hand (filer-to-candidate matches) | hand, via `tools/ga-finance-overrides-editor.html` | — | `generate_ga_campaign_finance.py`, `build_id_crosswalk.py` | — |
 | `ga-fec-data.json` | FEC API (needs `FEC_API_KEY`) | `generate_fec_data.py` | `update-fec-data`: Sundays | `federal-legislator.html`, `race.html`, `campaign-finance.js` | — |
 
