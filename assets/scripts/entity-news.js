@@ -42,9 +42,8 @@ window.EntityNews = (function () {
   }
 
   function fmtDate(iso) {
-    if (!iso) return '';
-    var d = new Date(iso);
-    return isNaN(d) ? '' : d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+    var format = window.VoteGA && window.VoteGA.formatDate;
+    return format ? format(iso, { style: 'short' }) : '';
   }
 
   function hubHref(base, vgId) {

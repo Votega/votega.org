@@ -1009,8 +1009,7 @@
     const bornHtml = (() => {
       if (!age || member.status === 'Deceased') return ''; // an age from today would keep counting
       if (member.birthDate) {
-        const born = new Date(member.birthDate + 'T00:00:00')
-          .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+        const born = VoteGA.formatDate(member.birthDate) || '—';
         return `<p style="display:flex;justify-content:space-between;">
              <span><strong>Born:</strong> ${escHtml(born)}</span>
              <span><strong>Age:</strong> ${age.value}</span>
@@ -1090,9 +1089,7 @@
       if (ENTITY_FORMER && ['Resigned', 'Removed', 'Deceased'].includes(member.status)) return '';
       const slug = member.status.toLowerCase().replace(/\s+/g, '-');
       const knownSlug = ['resigned','removed','suspended','deceased','vacant'].includes(slug) ? slug : 'other';
-      const dateStr = member.statusDate
-        ? new Date(member.statusDate + 'T00:00:00').toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'})
-        : '';
+      const dateStr = VoteGA.formatDate(member.statusDate);
       const labelLine = `<span class="status-label">${escHtml(member.status)}${dateStr ? ` &nbsp;·&nbsp; ${escHtml(dateStr)}` : ''}</span>`;
       const noteText  = member.statusNote
         ? escHtml(member.statusNote).replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
@@ -1434,9 +1431,7 @@
         ? `<span class="bill-vote-badge ${voteInfo.cls}">${voteInfo.label}</span>`
         : `<span class="bill-vote-badge badge-other">${noVoteLabel(member, voteData, bills)}</span>`;
 
-      const statusDate = bill.statusDate
-        ? new Date(String(bill.statusDate).slice(0, 10) + 'T00:00:00').toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'})
-        : '';
+      const statusDate = VoteGA.formatDate(String(bill.statusDate || '').slice(0, 10), { style: 'short' });
       const statusTag = escHtml([bill.status, statusDate].filter(Boolean).join(' · '));
       // summarySource (generate_curated_ga_bills.py): "editor" = written by VoteGA,
       // "ai" = a reviewed AI summary used when no editor summary exists, "caption" =
@@ -1639,10 +1634,7 @@
       String(b[R_DATE] || '').localeCompare(String(a[R_DATE] || '')) ||
       String(a[R_ID] || '').localeCompare(String(b[R_ID] || ''));
 
-    const fmtDay = iso => iso
-      ? new Date(String(iso).slice(0, 10) + 'T00:00:00')
-          .toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
-      : '';
+    const fmtDay = iso => VoteGA.formatDate(String(iso || '').slice(0, 10), { style: 'short' });
 
     function itemHtml(row, hidden, sid) {
       // ?bill=<identifier> is the deep-link form jumpToBillFromURL() on ga-bills.html
@@ -2288,9 +2280,7 @@
       // Per-block provenance: roll calls come from the votes file's own
       // metadata.generatedAt, not the roster stamp the page header shows.
       const votesGenIso  = data.metadata?.generatedAt || null;
-      const votesGenDate = votesGenIso && !isNaN(new Date(votesGenIso))
-        ? new Date(votesGenIso).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-        : null;
+      const votesGenDate = VoteGA.formatDate(votesGenIso) || null;
 
       container.innerHTML = `
         <h2>Voting History${session ? ` <small style="font-weight:normal;font-size:0.75rem;color:var(--color-text-secondary);">${session}</small>` : ''}</h2>

@@ -38,6 +38,8 @@ def main():
         print("skip")
         return
     script = (
+        "global.window = global;\n"  # head.html loads the date formatter first
+        "require(" + json.dumps(str(JS.with_name("format-date.js"))) + ");\n"
         "const D = require(" + json.dumps(str(JS)) + ");\n"
         "const docs = " + json.dumps({"GA": GA, "FED": FED, "NO_END": NO_END}) + ";\n"
         "const cases = " + json.dumps(CASES) + ";\n"

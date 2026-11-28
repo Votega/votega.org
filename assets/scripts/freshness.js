@@ -38,7 +38,7 @@
   }
 
   function fmt(d) {
-    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    return global.VoteGA && global.VoteGA.formatDate ? global.VoteGA.formatDate(d) : '';
   }
 
   // { tracked, stale, ageDays, windowDays, updated, checked }.

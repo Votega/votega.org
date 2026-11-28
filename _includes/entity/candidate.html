@@ -39,7 +39,6 @@
 </div>
 
 <script src="{{ '/assets/scripts/html-escape.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
-<script src="{{ '/assets/scripts/format-date.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 <script src="{{ '/assets/scripts/data-stamp.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
 
 <p id="dataStamp" class="data-stamp"></p>
@@ -454,7 +453,7 @@
       : `${getBasePath()}candidate.html?id=${encodeURIComponent(id)}`;
   }
 
-  // Shared with race.html via assets/scripts/format-date.js (loaded above).
+  // Shared with race.html via assets/scripts/format-date.js (loaded by head.html).
   const formatDate = VoteGA.formatDate;
 
   function partyClass(party) {
@@ -876,7 +875,7 @@
 
     const cycleLabel = CampaignFinance.cycleLabelFor(fecCycle) || 'election cycle';
     const coverageNote = entry.coverageEndDate
-      ? `${cycleLabel} · Through ${new Date(entry.coverageEndDate).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}`
+      ? `${cycleLabel} · Through ${VoteGA.formatDate(String(entry.coverageEndDate).slice(0, 10), { style: 'short' }) || '—'}`
       : cycleLabel;
 
     const employersHtml = (entry.topEmployers || []).length ? `

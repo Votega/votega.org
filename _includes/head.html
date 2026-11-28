@@ -219,6 +219,9 @@
 
   {% include structured-data.html %}
 
+  {%- comment %} VoteGA.formatDate, the one date formatter. First, and synchronous, so it
+      exists before any later script formats a date. {% endcomment -%}
+  <script src="{{ '/assets/scripts/format-date.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
   {%- comment %} Shared front-end helpers (getBasePath, …). Loaded synchronously in
       <head> so it is defined before any page's inline scripts run. {% endcomment -%}
   {%- comment %} Stale-stamp windows (_data/data_freshness.yml) and the day each dataset was last
