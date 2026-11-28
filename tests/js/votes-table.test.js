@@ -269,8 +269,8 @@ test('chartHtml uses the chart palette, not the table text colors', () => {
   // swapped in the text colors, which a snapshot diff of the rendered panel caught;
   // this keeps it caught here instead. Tokens go in through style="fill:var(...)".
   const html = VT.chartHtml(6, 3, 1, 10, {});
-  assert.ok(html.includes('fill:var(--color-success)'), 'yea slice color');
-  assert.ok(html.includes('fill:var(--color-danger)'), 'nay slice color');
+  assert.ok(html.includes('fill:var(--color-outcome-yes)'), 'yea slice color');
+  assert.ok(html.includes('fill:var(--color-outcome-no)'), 'nay slice color');
   assert.ok(html.includes('fill:var(--color-text-muted)'), 'other slice color');
   assert.ok(!html.includes('vote-yea'), 'must not use the .vote-yea text color');
   assert.ok(!html.includes('vote-nay'), 'must not use the .vote-nay text color');

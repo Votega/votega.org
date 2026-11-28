@@ -69,8 +69,8 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   .badge-certified { background: var(--status-certified-bg); color: var(--status-certified-fg); }
   .badge-potential { background: var(--status-unofficial-bg); color: var(--status-unofficial-fg); }
   .badge-type { background: var(--color-surface-tint); color: var(--color-link); }
-  .badge-passed { background: var(--color-success-tint); color: var(--color-success); }
-  .badge-failed { background: var(--color-danger-tint); color: var(--color-danger); }
+  .badge-passed { background: var(--color-outcome-yes-tint); color: var(--color-outcome-yes); }
+  .badge-failed { background: var(--color-outcome-no-tint); color: var(--color-outcome-no); }
   /* Neutral grey, not red: the measure did not lose a vote, it never got one. */
   .badge-not-on-ballot { background: var(--color-surface-chrome); color: var(--color-text); }
   .measure-sub {
@@ -95,8 +95,8 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
   }
   .src-official { background: var(--color-surface-tint); color: var(--color-link); }
   .src-news     { background: var(--color-surface-chrome); color: var(--color-text); }
-  .src-support  { background: var(--color-success-tint); color: var(--color-success); }
-  .src-oppose   { background: var(--color-danger-tint); color: var(--color-danger); }
+  .src-support  { background: var(--color-outcome-yes-tint); color: var(--color-outcome-yes); }
+  .src-oppose   { background: var(--color-outcome-no-tint); color: var(--color-outcome-no); }
   .src-analysis { background: var(--color-surface-tint); color: var(--color-link); }
   .src-pub { color: var(--color-text-muted); }
   .measure-title {
@@ -152,8 +152,8 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
     margin: 0.4rem 0;
     background: var(--color-surface-chrome);
   }
-  .result-yes { background: var(--color-success); }
-  .result-no  { background: var(--color-danger); }
+  .result-yes { background: var(--color-outcome-yes); }
+  .result-no  { background: var(--color-outcome-no); }
   .section-heading {
     margin-top: 2rem;
     font-size: 1.1rem;
@@ -211,8 +211,8 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
           <div class="result-yes" style="width:${yes}%"></div>
           <div class="result-no" style="width:${no}%"></div>
         </div>
-        <span style="color:var(--color-success);">Yes ${yes}%</span> &nbsp;·&nbsp;
-        <span style="color:var(--color-danger);">No ${no}%</span>
+        <span style="color:var(--color-outcome-yes);">Yes ${yes}%</span> &nbsp;·&nbsp;
+        <span style="color:var(--color-outcome-no);">No ${no}%</span>
         ${u.totalVotes != null ? ` &nbsp;·&nbsp; ${u.totalVotes.toLocaleString('en-US')} votes counted` : ''}
         <div class="measure-status-note">Unofficial${asOf ? ' as of ' + escHtml(asOf) : ''} and not certified. The measure is not marked passed or failed until results are certified.</div>
       </div>`;
@@ -230,8 +230,8 @@ share-description: "Georgia ballot measures and constitutional amendments. What 
           <div class="result-yes" style="width:${yes}%"></div>
           <div class="result-no" style="width:${no}%"></div>
         </div>
-        <span style="color:var(--color-success);">Yes ${yes}%</span> &nbsp;·&nbsp;
-        <span style="color:var(--color-danger);">No ${no}%</span>
+        <span style="color:var(--color-outcome-yes);">Yes ${yes}%</span> &nbsp;·&nbsp;
+        <span style="color:var(--color-outcome-no);">No ${no}%</span>
       </div>`;
   }
 

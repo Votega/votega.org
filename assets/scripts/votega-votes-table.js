@@ -259,7 +259,7 @@ window.VotegaVotesTable = (function () {
     var pct = function (n) { return Math.round((n / total) * 100); };
 
     var size = 88, cx = 44, cy = 44, r = 40;
-    var COLORS = { yea: 'var(--color-success)', nay: 'var(--color-danger)', other: 'var(--color-text-muted)' };
+    var COLORS = { yea: 'var(--color-outcome-yes)', nay: 'var(--color-outcome-no)', other: 'var(--color-text-muted)' };
     var slices = [
       { label: 'Yea', value: yea, color: COLORS.yea },
       { label: 'Nay', value: nay, color: COLORS.nay },
