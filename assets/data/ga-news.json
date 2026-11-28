@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generatedAt": "2026-11-28T00:51:44.470801+00:00",
+    "generatedAt": "2026-11-28T11:07:51.528043+00:00",
     "source": "Curated Georgia RSS feeds (_data/news_sources.yml)",
     "sources": [
       "Georgia Recorder",
@@ -24,12 +24,12 @@
       "Rep. Rick Allen (GA-12, press)",
       "Gov. Brian Kemp (executive orders)"
     ],
-    "count": 128,
+    "count": 129,
     "windowDays": 45,
-    "entityTagged": 80,
+    "entityTagged": 81,
     "topicCounts": {
+      "elections": 44,
       "budget": 6,
-      "elections": 43,
       "education": 10,
       "courts": 9,
       "ethics": 4,
@@ -39,6 +39,13 @@
     "disclaimer": "Headlines and short excerpts are aggregated for civic information and link to the original publisher. VoteGA does not host article text. Source selection is a curated, published list (_data/news_sources.yml)."
   },
   "entities": {
+    "vg-ga-p-000361": {
+      "name": "Penny Brown Reynolds",
+      "url": null,
+      "candidateIds": [
+        "challenger-penny-brown-reynolds-sos-2026"
+      ]
+    },
     "vg-ga-p-000014": {
       "name": "Bill Hitchens",
       "url": null,
@@ -102,13 +109,6 @@
       "name": "Nikema Williams",
       "url": null,
       "bioguideId": "W000788"
-    },
-    "vg-ga-p-000361": {
-      "name": "Penny Brown Reynolds",
-      "url": null,
-      "candidateIds": [
-        "challenger-penny-brown-reynolds-sos-2026"
-      ]
     },
     "vg-ga-p-000024": {
       "name": "Brian Kemp",
@@ -192,6 +192,20 @@
       "snippet": "The U.S. Fish and Wildlife Service proposed listing the ciliate-leaf tickseed as a threatened species. But how effective is the act that protects it?",
       "entityIds": [],
       "topics": []
+    },
+    {
+      "id": "c30bbcfa9505",
+      "title": "Secretary of State-elect Penny Brown Reynolds lays out plans for licensing reform",
+      "url": "https://www.gpb.org/news/2026/11/27/secretary-of-state-elect-penny-brown-reynolds-lays-out-plans-for-licensing-reform",
+      "source": "GPB News",
+      "publishedAt": "2026-11-27T20:03:00+00:00",
+      "snippet": "Georgia’s secretary of state is often associated with elections, but the office also oversees the state’s professional licensing program.",
+      "entityIds": [
+        "vg-ga-p-000361"
+      ],
+      "topics": [
+        "elections"
+      ]
     },
     {
       "id": "97c6f6501345",
