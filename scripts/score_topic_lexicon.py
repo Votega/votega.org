@@ -52,7 +52,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from lib.meeting_topics import (  # noqa: E402
     ALPR_TERMS, ALPR_VENDOR_LABELS, LAND_USE, TOPIC_RULES, TOPIC_WORD_RULES,
-    agenda_head, alpr_vendors, classify, matched_terms, topic_excerpts,
+    agenda_head, alpr_vendors, classify, drop_empty_headings, matched_terms,
+    topic_excerpts,
 )
 from lib.text_cache import open_cache  # noqa: E402
 
@@ -150,6 +151,8 @@ def main():
         # head only, and the manifest recorded whether this document is one.
         if ent.get('trimmed'):
             text = agenda_head(text)
+        if ent.get('emptyHeadingsDropped'):
+            text = drop_empty_headings(text)
 
         tags = classify(text)
         want = set(topic_tags(args.topic))

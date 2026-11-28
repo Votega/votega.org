@@ -17,6 +17,7 @@ What is pinned, and why:
 Run: python scripts/test_htmltable.py
 """
 
+import datetime
 import os
 import re
 import sys
@@ -121,6 +122,60 @@ BASED = ('<html><head><base href="https://w.example/" /></head><body><table>'
 bm, _ = H.parse_table(BASED, 'https://w.example/gov/boc/agenda.php')
 check(bm and bm[0]['agendaUrl'] == 'https://w.example/Documents/BOC/Oct%2012.pdf',
       'relative links resolve against <base href>, not the page folder: %r' % (bm and bm[0]['agendaUrl']))
+
+print('Several tables, headings and a start date (Ben Hill)')
+
+
+def table(heading, *rows):
+    body = ''.join('<tr><td>%s</td><td>%s</td><td>%s</td></tr>' % r for r in rows)
+    return (heading + '<table><tr><th>Date</th><th>Agenda</th><th>Minutes</th></tr>'
+            + body + '</table>')
+
+
+def a(href):
+    return '<a href="%s">doc</a>' % href
+
+
+BH_URL = 'https://bh.example/county-commissioner-meetings/'
+BH = (table('<h4>Regular Monthly Meetings</h4>',
+            ('November 3, 2026', a('/nov-3/'), ''),
+            ('October 6, 2026', a('/oct-6/'), a('/u/oct.pdf')))
+      + table('<h4><b>Special Called<br/>Meetings</b></h4>',
+              ('October 6, 2026', a('/oct-6-called/'), a('/u/called.pdf')))
+      + table('<h4>Public Hearing</h4>',
+              ('December 1, 2026', a('/dec-1/'), a('&quot;/u/june.pdf')))
+      + table('<h4>Regular Monthly Meetings</h4>',
+              ('December 2, 2025', a('/dec-2/'), a('/u/dec.pdf')))
+      + table('', ('January 5, 2027', a('/jan-5/'), '')))
+
+one, _ = H.parse_table(BH, BH_URL)
+check([m['date'] for m in one] == ['2026-11-03', '2026-10-06'],
+      'by default only the first table is read: %r' % [m['date'] for m in one])
+check(one[0]['id'] == '2026-11-03-meeting', 'and headings change nothing by default')
+
+many, mrep = H.parse_table(BH, BH_URL, all_tables=True, since='2026-01-01')
+mb = {m['id']: m for m in many}
+check(sorted(mb) == ['2026-10-06-regular-monthly-meeting', '2026-10-06-special-called-meeting',
+                     '2026-11-03-regular-monthly-meeting', '2026-12-01-public-hearing',
+                     '2027-01-05-meeting'],
+      'every table read, meeting type from its heading, same-day types distinct, '
+      'a headingless table inherits none: %r' % sorted(mb))
+check(mb.get('2026-10-06-special-called-meeting', {}).get('title')
+      == 'October 6, 2026 Special Called Meeting', 'a <br> in a heading reads as a space')
+check({m['body'] for m in many} == {'Board of Commissioners'}, 'the body is not the heading')
+check(not [m for m in many if m['date'] < '2026-01-01'], 'rows before `since` are dropped')
+check(mrep.get('olderRows') == 1, 'and counted: %r' % mrep.get('olderRows'))
+hearing = mb.get('2026-12-01-public-hearing', {})
+check(hearing.get('minutesUrl', 'missing') is None and hearing.get('agendaUrl')
+      == 'https://bh.example/dec-1/',
+      'an href that starts with a quote is broken markup and is not published')
+check(raises(lambda: H.parse_table(BH, BH_URL, all_tables=True, since='2030-01-01'),
+             'on or after'), 'a start date that leaves nothing -> refuse')
+check(raises(lambda: H.parse_table(BH, BH_URL, since='2026'), 'since'),
+      'a start date that is not YYYY-MM-DD -> refuse')
+dated, _ = H.parse_table(BH, BH_URL, since=datetime.date(2026, 11, 1))
+check([m['date'] for m in dated] == ['2026-11-03'],
+      'an unquoted YAML date works too, with or without all_tables')
 
 print('Failure modes')
 check(raises(lambda: H.parse_table('<html><body><p>nothing</p></body></html>', BASE),
