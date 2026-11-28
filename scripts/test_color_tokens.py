@@ -35,7 +35,6 @@ BASELINE = {
     "_includes/google_analytics.html": 2,       # theme's deprecation banner
     "_posts/2026-05-19-ga-primary-results.md": 2,  # inline button on a published post
     "assets/css/beautifuljekyll-minimal.css": 2,
-    "assets/css/beautifuljekyll.css": 33,       # theme variable defaults, shadows, overlays
 }
 
 HEX = r"#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![0-9A-Za-z_-])"
