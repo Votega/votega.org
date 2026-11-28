@@ -43,8 +43,13 @@ from lib.atomic_io import write_json_atomic
 TOPIC_RULES = {
     'data-center':        ['data center', 'data centre', 'hyperscale', 'data-center'],
     'rezoning':           ['rezon'],
+    # 'special exception' is what many Georgia zoning codes call a special/conditional
+    # use approval. MEASURED 2026-11-27 over 1,058 documents / 45 places: 51 newly
+    # tagged (9 places), 6 of them with no other land-use subject; every match was
+    # zoning business, none a standing heading. Camden and Douglas also say "special
+    # exception variance", which is tagged here as well as 'variance'.
     'special-land-use':   ['special land use', 'special-use', 'slup', 'conditional use',
-                           'land use permit'],
+                           'land use permit', 'special exception'],
     'variance':           ['variance'],
     # Not the bare prefix 'annex': it fired on the building noun "Annex" in meeting
     # location headers ("Courthouse Annex Boardroom | 150 Hudson Ridge …"), which
