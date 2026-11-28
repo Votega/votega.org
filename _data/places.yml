@@ -109,8 +109,14 @@
 #                        exclude_calendars / include_calendars, from_year (default 2026:
 #                        nothing older is kept). See scripts/lib/nimblecal.py.
 #       htmltable keys:  agendas_url (the page carrying a server-rendered Date | Agenda |
-#                        Minutes | Video table), optional body_label. Columns are found by
+#                        Minutes | Video table), optional body_label, all_tables (true = read
+#                        every such table; the heading before each names its meeting type),
+#                        since (YYYY-MM-DD; nothing older is kept). Columns are found by
 #                        header text; see scripts/lib/htmltable.py.
+#       any PDF platform: optional topics_from: minutes (tag topics from the minutes
+#                        only, where the agenda link is a web page rather than a file;
+#                        see scripts/enrich_ocr_meetings.py), drop_empty_headings (true =
+#                        ignore whole lines like "Rezoning Application: NONE").
 #       wpdatatables keys: agendas_url (the public PAGE carrying the grid).
 #                        The rows are not in that HTML — the plugin is
 #                        serverSide, so lib/wpdatatables.py reads them from
@@ -2358,9 +2364,18 @@ places:
     region: South Georgia
     domains:
       meetings:
-        platform: unknown
+        # WordPress page with one Date | Agenda | Minutes table per meeting type per year
+        # (lib/htmltable.py). Only 2026 on: older tables have two-column 2019 headers and
+        # AM/PM same-day hearings the adapter does not label. Most agendas are web pages,
+        # not PDFs. Fingerprinted 2026-11-27.
+        platform: htmltable
         base_url: "https://www.benhillcounty-ga.gov/"
         agendas_url: "https://www.benhillcounty-ga.gov/county-commissioner-meetings/"
+        body_label: "Board of Commissioners"
+        all_tables: true
+        since: "2026-01-01"
+        topics_from: minutes        # the agenda links are web pages, which read as no text
+        drop_empty_headings: true   # minutes print "Rezoning Application: NONE" every month
         schedule:
           - body: Board of Commissioners
             when: "1st Tuesday of every month, 6:00pm"

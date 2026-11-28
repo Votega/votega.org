@@ -766,6 +766,23 @@ def agenda_head(text):
     return text[:m.end()] if m else text
 
 
+# A whole line that is a standing heading with nothing under it: "Rezoning
+# Application: NONE". Anchored at both ends, so a heading followed by business, and
+# "none" inside a sentence, never match.
+_EMPTY_HEADING_RE = re.compile(
+    r"^[ \t]*[A-Za-z][A-Za-z /&'-]{0,60}:[ \t]*(?:none|no action required)\.?[ \t\r]*(?:\n|\Z)",
+    re.I | re.M)
+
+
+def drop_empty_headings(text):
+    """Remove template lines that say nothing happened under a heading. Minutes that
+    print every standing heading (Ben Hill) otherwise tag each meeting with the
+    heading's own words. Opt in per place via domains.meetings.drop_empty_headings."""
+    if not text:
+        return text
+    return _EMPTY_HEADING_RE.sub('', text)
+
+
 def classify(text):
     """Return the sorted list of subject tags whose keywords appear in `text`.
 

@@ -49,7 +49,7 @@ from lib.atomic_io import write_json_atomic  # noqa: E402
 from lib.pdf_text import extract_text, has_ocr  # noqa: E402
 from lib.meeting_topics import (  # noqa: E402
     classify, matched_terms, topic_flags, build_summary, flag_entry,
-    topic_excerpts, agenda_head,
+    topic_excerpts, agenda_head, drop_empty_headings,
 )
 from lib.enrich_runner import (  # noqa: E402
     run_places, run_meetings, report, too_lossy, text_regressed, PlaceOutcome,
@@ -131,14 +131,18 @@ def load_cache(slug):
     return {m['id']: m for m in prior.get('meetings', []) if m.get('id')}
 
 
-def text_source(meeting):
+def text_source(meeting, minutes_only=False):
     """(url, kind) for the PDF to classify: agenda first, else minutes. Video-only
     meetings (Covington's newest rows) yield (None, None) and are skipped.
+
+    `minutes_only` (domains.meetings.topics_from: minutes) is for a place whose agenda
+    link is a web page, not a document (Ben Hill): reading it yields no text, so only
+    the minutes are read, and a meeting without them yet is skipped.
 
     A place whose public link cannot be fetched directly (SharePoint: the published
     link is a folder share) records the real file in `agendaFileUrl` / `minutesFileUrl`;
     that is what is read, and what the cache is keyed on."""
-    if meeting.get('agendaUrl'):
+    if meeting.get('agendaUrl') and not minutes_only:
         return meeting.get('agendaFileUrl') or meeting['agendaUrl'], 'agenda'
     if meeting.get('minutesUrl'):
         return meeting.get('minutesFileUrl') or meeting['minutesUrl'], 'minutes'
@@ -146,7 +150,8 @@ def text_source(meeting):
 
 
 def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False,
-                   slug=None, text_cache=None, from_text_cache=False, session_fetch=None):
+                   slug=None, text_cache=None, from_text_cache=False, session_fetch=None,
+                   minutes_only=False, drop_empty=False):
     """Classify one meeting's PDF. Returns an enriched record, or None to skip.
 
     Reuses the cached record when the agenda/minutes URL is unchanged (no
@@ -177,7 +182,7 @@ def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False,
     meeting's PUBLIC link, never that file URL, which a visitor cannot open.
     """
     mid = meeting.get('id')
-    url, kind = text_source(meeting)
+    url, kind = text_source(meeting, minutes_only)
     if not url:
         return None  # video-only / nothing to read
     public_url = meeting.get('agendaUrl' if kind == 'agenda' else 'minutesUrl') or url
@@ -237,10 +242,14 @@ def enrich_meeting(meeting, cache, reclassify=False, agenda_packet=False,
             text_cache.record(slug, mid, text, method=method, pdf_sha=pdf_sha,
                               source_url=public_url, date=meeting.get('date'),
                               body=meeting.get('body'), title=meeting.get('title'),
-                              trimmed=trimmed)
+                              trimmed=trimmed, empty_headings_dropped=drop_empty)
 
         if trimmed:
             text = agenda_head(text)
+
+    # Applied to fetched and cached text alike (the cache holds the raw text).
+    if drop_empty:
+        text = drop_empty_headings(text)
 
     # If no text could be extracted now (image-only PDF and OCR unavailable, e.g. a
     # local run without tesseract), keep any prior derived tags rather than wiping
@@ -320,6 +329,10 @@ def enrich_place(place, cfg, since, limit, reclassify=False, text_cache=None,
     the unexpected, which lib.enrich_runner contains to this one place.
     """
     slug = place['slug']
+    topics_from = cfg.get('topics_from')
+    if topics_from not in (None, 'minutes'):
+        # Contained to this place by run_places; never silently fall back to agendas.
+        raise ValueError("topics_from must be 'minutes' or absent, got %r" % topics_from)
     data = load_meetings(slug)
     if not data or not data.get('meetings'):
         print('%s: no meetings file yet — run generate_place_meetings.py first' % slug)
@@ -343,7 +356,9 @@ def enrich_place(place, cfg, since, limit, reclassify=False, text_cache=None,
                                      agenda_packet=agenda_packet, slug=slug,
                                      text_cache=text_cache,
                                      from_text_cache=from_text_cache,
-                                     session_fetch=session_fetch),
+                                     session_fetch=session_fetch,
+                                     minutes_only=topics_from == 'minutes',
+                                     drop_empty=bool(cfg.get('drop_empty_headings'))),
             cache=cache)
     finally:
         if session is not None:

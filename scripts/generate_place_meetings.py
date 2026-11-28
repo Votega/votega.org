@@ -181,7 +181,9 @@ def fetch_meetings(cfg, previous=None):
             previous=previous)
     if platform == 'htmltable':
         return fetch_htmltable_meetings(cfg['agendas_url'],
-                                        body=cfg.get('body_label', 'Board of Commissioners'))
+                                        body=cfg.get('body_label', 'Board of Commissioners'),
+                                        all_tables=bool(cfg.get('all_tables')),
+                                        since=cfg.get('since'))
     if platform == 'sharepoint':
         return fetch_sharepoint_meetings(cfg['share_url'], cfg['agenda_folder'],
                                          cfg['minutes_folder'],

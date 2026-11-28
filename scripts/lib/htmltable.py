@@ -27,6 +27,18 @@ meeting type comes from the second cell, and each link is classified by its own 
 (agenda / minutes / video). A link whose text says none of those is ignored, and two
 different documents of one kind in a row are left unlinked, never picked between.
 
+Two opt-in settings, for a page that splits meetings across many tables (Ben Hill: one
+per meeting type per year, in tabs):
+
+  * `all_tables` - read every table with the headers, not just the first. The h1-h6
+    heading just before a table names its meeting type ("Special Called Meetings"), which
+    goes into the title and id, so two types on one date stay two meetings. A table with
+    no heading of its own inherits none. The body is unchanged.
+  * `since` (YYYY-MM-DD) - drop meetings before this date.
+
+An href that begins with a quote (`href='"/uploads/x.pdf'`) is broken markup on the
+source page and is never published.
+
 `parse_table` is pure (HTML in, meetings out) so it is tested offline against a real
 page; `fetch_htmltable_meetings` is the thin fetching wrapper.
 
@@ -65,15 +77,22 @@ class _Tables(HTMLParser):
         self._in_th = False
         self._a = None
         self.base = None
+        self._heading = None      # text of a heading currently open
+        self._last_heading = ''   # the latest heading not yet claimed by a table
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if tag == 'base' and a.get('href') and self.base is None:
             self.base = a['href'].strip()
         if tag == 'table':
-            self._t = {'headers': [], 'rows': []}
+            self._t = {'headers': [], 'rows': [], 'heading': self._last_heading}
+            self._last_heading = ''
             self.tables.append(self._t)
         elif self._t is None:
+            if re.fullmatch(r'h[1-6]', tag):
+                self._heading = ''
+            elif tag == 'br' and self._heading is not None:
+                self._heading += ' '
             return
         elif tag == 'tr':
             self._row = {'cells': [], 'th': []}
@@ -83,13 +102,18 @@ class _Tables(HTMLParser):
             self._a = {'href': a['href'], 'text': ''}
 
     def handle_data(self, data):
+        if self._heading is not None:
+            self._heading += data
         if self._cell is not None:
             self._cell['text'] += data
             if self._a is not None:
                 self._a['text'] += data
 
     def handle_endtag(self, tag):
-        if tag == 'a' and self._a is not None and self._cell is not None:
+        if re.fullmatch(r'h[1-6]', tag) and self._heading is not None:
+            self._last_heading = _clean(self._heading)
+            self._heading = None
+        elif tag == 'a' and self._a is not None and self._cell is not None:
             self._cell['links'].append((self._a['href'], _clean(self._a['text'])))
             self._a = None
         elif tag in ('td', 'th') and self._cell is not None and self._row is not None:
@@ -247,12 +271,45 @@ def _parse_linktext(tables, base_url, body):
             _add_meeting(meetings, seen, body, date, label, urls)
     if not rows:
         return None
-    docs = sum(1 for m in meetings for k in ('agendaUrl', 'minutesUrl') if m[k])
-    return meetings, {'rows': rows, 'skippedRows': skipped, 'documents': docs}
+    return meetings, {'rows': rows, 'skippedRows': skipped}
 
 
-def parse_table(html, base_url, body='Board of Commissioners'):
-    """HTML -> (meetings, report). report: {'rows', 'skippedRows', 'documents'}.
+def _type_label(heading):
+    """A table heading as one meeting's type: "Public Hearings" -> "Public Hearing"."""
+    return re.sub(r'(Meeting|Hearing)s$', r'\1', heading)
+
+
+def _since_iso(since):
+    """`since` as YYYY-MM-DD (YAML hands an unquoted date over as a date object)."""
+    s = str(since)
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', s) or not _iso(*s.split('-')):
+        raise ValueError('since must be a YYYY-MM-DD date, got %r' % since)
+    return s
+
+
+def _finish(meetings, report, since):
+    """Apply the start date, refuse a result that cannot be trusted, sort newest first."""
+    if not meetings:
+        raise ValueError('table found but no row had a parseable date')
+    if since:
+        start = _since_iso(since)
+        kept = [m for m in meetings if m['date'] >= start]
+        report['olderRows'] = len(meetings) - len(kept)
+        meetings = kept
+        if not meetings:
+            raise ValueError('no meeting on or after %s' % start)
+    report['documents'] = sum(1 for m in meetings for k in ('agendaUrl', 'minutesUrl') if m[k])
+    if not report['documents']:
+        raise ValueError('%d meetings but no document links - the page layout has changed'
+                         % len(meetings))
+    meetings.sort(key=lambda m: (m['date'], m['id']), reverse=True)
+    return meetings, report
+
+
+def parse_table(html, base_url, body='Board of Commissioners', all_tables=False,
+                since=None):
+    """HTML -> (meetings, report). report: {'rows', 'skippedRows', 'documents'}, plus
+    'olderRows' when `since` is set.
     Raises ValueError when the page cannot be trusted (see module docstring)."""
     p = _Tables()
     p.feed(html)
@@ -260,63 +317,55 @@ def parse_table(html, base_url, body='Board of Commissioners'):
         # A <base href> redirects every relative link (Whitfield's points at the site
         # root, so `Documents/...` is NOT under the page's own folder).
         base_url = urljoin(base_url, p.base)
-    table = None
+    matched = []
     for t in p.tables:
         ci = {k: _col(t['headers'], k) for k in ('date', 'agenda', 'minutes', 'video')}
         if ci['date'] is not None and (ci['agenda'] is not None or ci['minutes'] is not None):
-            table, cols = t, ci
-            break
-    if table is None or not table['rows']:
+            matched.append((t, ci))
+            if not all_tables:
+                break
+    if not any(t['rows'] for t, _ in matched):
         alt = _parse_linktext(p.tables, base_url, body)
         if alt is None:
             raise ValueError('no meetings table with Date and Agenda/Minutes headers found')
-        meetings, report = alt
-        if not meetings:
-            raise ValueError('table found but no row had a parseable date')
-        if not report['documents']:
-            raise ValueError('%d meetings but no document links - the page layout has changed'
-                             % len(meetings))
-        meetings.sort(key=lambda m: (m['date'], m['id']), reverse=True)
-        return meetings, report
+        return _finish(alt[0], alt[1], since)
 
     def link(cells, idx):
         if idx is None or idx >= len(cells):
             return None
-        links = {_encode(base_url, h) for h, _ in cells[idx]['links']}
+        links = {_encode(base_url, h) for h, _ in cells[idx]['links']
+                 if not h.strip().startswith(('"', "'"))}
         if len(links) != 1:      # none, or two different documents: never pick one
             return None
         return links.pop()
 
-    meetings, skipped, seen = [], [], {}
-    for cells in table['rows']:
-        date = _row_date(cells[cols['date']]) if cols['date'] < len(cells) else None
-        if not date:
-            skipped.append(_clean(' | '.join(c['text'] for c in cells[:2])))
-            continue
-        urls = {'agendaUrl': link(cells, cols['agenda']),
-                'minutesUrl': link(cells, cols['minutes']),
-                'videoUrl': link(cells, cols['video'])}
-        _add_meeting(meetings, seen, body, date, '', urls)
+    meetings, skipped, seen, rows = [], [], {}, 0
+    for table, cols in matched:
+        label = _type_label(table['heading']) if all_tables else ''
+        rows += len(table['rows'])
+        for cells in table['rows']:
+            date = _row_date(cells[cols['date']]) if cols['date'] < len(cells) else None
+            if not date:
+                skipped.append(_clean(' | '.join(c['text'] for c in cells[:2])))
+                continue
+            urls = {'agendaUrl': link(cells, cols['agenda']),
+                    'minutesUrl': link(cells, cols['minutes']),
+                    'videoUrl': link(cells, cols['video'])}
+            _add_meeting(meetings, seen, body, date, label, urls)
 
-    docs = sum(1 for m in meetings for k in ('agendaUrl', 'minutesUrl') if m[k])
-    report = {'rows': len(table['rows']), 'skippedRows': skipped, 'documents': docs}
-    if not meetings:
-        raise ValueError('table found but no row had a parseable date')
-    if not docs:
-        raise ValueError('%d meetings but no document links - the page layout has changed'
-                         % len(meetings))
-    meetings.sort(key=lambda m: (m['date'], m['id']), reverse=True)
-    return meetings, report
+    return _finish(meetings, {'rows': rows, 'skippedRows': skipped}, since)
 
 
-def fetch_htmltable_meetings(agendas_url, body='Board of Commissioners', timeout=40):
+def fetch_htmltable_meetings(agendas_url, body='Board of Commissioners', timeout=40,
+                             all_tables=False, since=None):
     """Returns (meetings, bodies_seen), or (None, None) if the page cannot be read or
     cannot be trusted."""
     raw = fetch_bytes(agendas_url, timeout=timeout, label='htmltable')
     if not raw:
         return None, None
     try:
-        meetings, report = parse_table(raw.decode('utf-8', 'replace'), agendas_url, body=body)
+        meetings, report = parse_table(raw.decode('utf-8', 'replace'), agendas_url, body=body,
+                                       all_tables=all_tables, since=since)
     except ValueError as e:
         print('  htmltable: %s (%s)' % (e, agendas_url), file=sys.stderr)
         return None, None

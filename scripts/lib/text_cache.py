@@ -162,7 +162,8 @@ class TextCache:
 
     # ── write ─────────────────────────────────────────────────────────────────
     def record(self, slug, meeting_id, text, method=None, pdf_sha=None,
-               source_url=None, date=None, body=None, title=None, trimmed=False):
+               source_url=None, date=None, body=None, title=None, trimmed=False,
+               empty_headings_dropped=False):
         """Store `text` and index it under (slug, meeting_id). Returns its sha.
 
         No-op on a reader (`writable=False`) beyond returning the sha, so callers can
@@ -200,6 +201,9 @@ class TextCache:
             # scoring a full packet the site never classified.
             'trimmed': bool(trimmed),
         }
+        if empty_headings_dropped:
+            # Same idea as `trimmed`, for meeting_topics.drop_empty_headings.
+            self._manifest[self.key(slug, meeting_id)]['emptyHeadingsDropped'] = True
         self._dirty = True
         return sha
 
