@@ -18,6 +18,8 @@ share-description: "How Georgians voted early in the November 3, 2026 general el
 {%- comment -%}Archive mode: early voting has closed (by the build date) or the file is marked final (metadata.final, set by generate_ga_early_vote.py --final). Nothing then counts down, and the live-countdown script is not emitted.{%- endcomment -%}
 {%- assign ev_archived = false -%}
 {%- if ev_days_left < 0 or ev.metadata.final %}{% assign ev_archived = true %}{% endif -%}
+{%- comment -%}How this year's totals are qualified in the charts; two separate inline scripts print it.{%- endcomment -%}
+{%- capture ev_now_note %}{% if ev_archived %}through {{ ev.metadata.asOf | date: "%B %-d" }}{% else %}so far{% endif %}{% endcapture -%}
 
 <style>
   .ev-stats { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0 8px; }
@@ -598,7 +600,7 @@ share-description: "How Georgians voted early in the November 3, 2026 general el
   var SAME = {{ ev.metadata.daysBeforeElection }};
   var ARCHIVED = {{ ev_archived }};
   var AS_OF = '{{ ev.metadata.asOf | date: "%B %-d" }}';
-  var NOW_NOTE = ARCHIVED ? 'through ' + AS_OF : 'so far';
+  var NOW_NOTE = '{{ ev_now_note }}';
   var CMP = {{ ev.metadata.comparisons | jsonify }};  // per past year: the day it is compared at, and where its file stops being complete
   function endDay(y) { return y === NOW ? SAME : ((CMP[y] && CMP[y].lastCompleteDaysBefore) || 0); }
   function pointDay(y) { return y === NOW ? SAME : CMP[y].daysBefore; }
@@ -785,6 +787,7 @@ share-description: "How Georgians voted early in the November 3, 2026 general el
   var svg = document.getElementById('sc-svg');
   if (!svg) return;
   var LEAN_YEAR = '{{ lean_last }}';
+  var NOW_NOTE = '{{ ev_now_note }}';
   var DOTS = [
     {%- for c in ev.counties %}{% assign l = c.lean[lean_last] %}
     [{{ c.name | jsonify }}, {{ c.bachelorsPct }}, {{ c.adultPct }}, "{% if l and l.majority %}{{ l.party }}{% endif %}", {{ c.ballots }}, {{ c.turnoutPct }}]{% unless forloop.last %},{% endunless %}
