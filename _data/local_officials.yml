@@ -8324,3 +8324,103 @@ jurisdictions:
         next_election:
         voting: true
         source: "https://results.sos.ga.gov/results/public/api/elections/ben-hill-county-ga/GeneralPrimary51926/data"   # party from the 2026 primary; November result not in the SoS county feed
+
+  - id: oglethorpe
+    name: Oglethorpe County
+    type: county
+    county: Oglethorpe
+    body: Board of Commissioners
+    partisan: true
+    term_years: 4
+    board_size: 6
+    government_form: commission
+    official_url: "https://www.oglethorpecountyga.gov/boc"
+    related_pages:
+    members:
+      - name: "Jay Paul"
+        role: Chair
+        seat: "At-Large"
+        seat_id: "at-large"
+        party: Republican
+        email: "jaypaul@oglethorpecountyga.gov"
+        phone: "(706) 743-5270"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/oglethorpe-county-ga/2024NovGen/data"
+      - name: "Howard Sanders"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: "district-1"
+        leaves_office: 2027-01-01
+        leave_reason: term-ended          # lost the May 2026 Republican primary
+        party: Republican
+        email: "howardsanders514@yahoo.com"
+        phone: "(706) 207-6004"
+        last_elected:
+        term_end: 2026
+        next_election:
+        voting: true
+        source: "https://www.oglethorpecountyga.gov/boc"   # party from the 2026 Republican primary: https://results.sos.ga.gov/results/public/api/elections/oglethorpe-county-ga/GeneralPrimary51926/data
+      - name: "Britt Brooks"
+        role: Commissioner
+        seat: "District 1"
+        seat_id: "district-1"
+        takes_office: 2027-01-01           # general rule: Jan 1 after the election; verify against the local act
+        party: Republican
+        email: ""
+        phone: ""
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/oglethorpe-county-ga/11032026GeneralAndSpecialElection/data"
+      - name: "Andy Saxon"
+        role: Commissioner
+        seat: "District 2"
+        seat_id: "district-2"
+        party: Republican
+        email: "red529@windstream.net"
+        phone: "(706) 743-5919"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/oglethorpe-county-ga/2024NovGen/data"
+      - name: "David Clark"
+        role: Commissioner
+        seat: "District 3"
+        seat_id: "district-3"
+        party: Republican
+        email: "drclarkdist3@windstream.net"
+        phone: "(706) 742-8612"
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/oglethorpe-county-ga/11032026GeneralAndSpecialElection/data"
+      - name: "William C. Brown"
+        role: Commissioner
+        seat: "District 4"
+        seat_id: "district-4"
+        party: Republican
+        email: "wbrownboc4@gmail.com"
+        phone: "(706) 202-0629"
+        last_elected: 2024
+        term_end: 2028
+        next_election: 2028
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/oglethorpe-county-ga/2024NovGen/data"
+      - name: "Tracy Norman"
+        role: Commissioner
+        seat: "District 5"
+        seat_id: "district-5"
+        party: Republican
+        email: "commissionertracynorman@gmail.com"
+        phone: "(706) 207-4003"
+        last_elected: 2026
+        term_end: 2030
+        next_election: 2030
+        voting: true
+        source: "https://results.sos.ga.gov/results/public/api/elections/oglethorpe-county-ga/11032026GeneralAndSpecialElection/data"
