@@ -2349,3 +2349,20 @@ places:
           - body: Board of Commissioners
             when: ""                # e.g. "2nd Tuesday of every month, 9:00 a.m."
             location: ""            # optional
+  
+  - slug: ben-hill
+    name: Ben Hill County
+    type: county
+    fips: "13017"
+    parentCounty: null
+    region: South Georgia
+    domains:
+      meetings:
+        platform: unknown
+        base_url: "https://www.benhillcounty-ga.gov/"
+        agendas_url: "https://www.benhillcounty-ga.gov/county-commissioner-meetings/"
+        schedule:
+          - body: Board of Commissioners
+            when: "1st Tuesday of every month, 6:00pm"
+            location: "Ben Hill County Extension Service Building, 321 Dewey McGlamry Road"
+
